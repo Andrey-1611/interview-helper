@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../../features/interview/views/pages/home_page.dart';
 import '../../features/interview/views/pages/interview_info_page.dart';
@@ -14,7 +16,7 @@ class AppRouterNames {
 class AppRouter {
   static Map<String, Widget Function(BuildContext context)> routes = {
     AppRouterNames.home: (context) => const HomePage(),
-    AppRouterNames.interview: (context) => const InterviewPage(),
+    AppRouterNames.interview: (context) => InterviewPage(random: Random()),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
   };

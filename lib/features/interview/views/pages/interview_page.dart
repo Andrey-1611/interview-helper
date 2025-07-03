@@ -6,7 +6,8 @@ import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
-  const InterviewPage({super.key});
+  final Random random;
+  const InterviewPage({super.key, required this.random});
 
   @override
   State<InterviewPage> createState() => _InterviewPageState();
@@ -17,7 +18,6 @@ class _InterviewPageState extends State<InterviewPage> {
   int _currentPage = 0;
 
   late final int difficult;
-  final Random _random = Random();
 
   late List<String> _selectedQuestions;
   late int selectedQuestionIndex;
@@ -43,7 +43,7 @@ class _InterviewPageState extends State<InterviewPage> {
       }
 
       for (int i = 0; i < 10; i++) {
-        selectedQuestionIndex = _random.nextInt(_selectedQuestions.length);
+        selectedQuestionIndex = widget.random.nextInt(_selectedQuestions.length);
         selectedQuestion = _selectedQuestions[selectedQuestionIndex];
         _pageQuestions.add(selectedQuestion);
       }
