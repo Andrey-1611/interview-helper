@@ -16,14 +16,9 @@ class InterviewPage extends StatefulWidget {
 class _InterviewPageState extends State<InterviewPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-
   late final int difficult;
-
   late List<String> _selectedQuestions;
-  late int selectedQuestionIndex;
-  late String selectedQuestion;
   final List<String> _pageQuestions = [];
-
   final TextEditingController _answerController = TextEditingController();
   final List<String> _answers = List.filled(10, '');
 
@@ -43,11 +38,23 @@ class _InterviewPageState extends State<InterviewPage> {
       }
 
       for (int i = 0; i < 10; i++) {
-        selectedQuestionIndex = widget.random.nextInt(_selectedQuestions.length);
-        selectedQuestion = _selectedQuestions[selectedQuestionIndex];
-        _pageQuestions.add(selectedQuestion);
+        final selectedQuestionIndex = widget.random.nextInt(_selectedQuestions.length);
+        _pageQuestions.add(_selectedQuestions[selectedQuestionIndex]);
       }
     }
+  }
+
+  void _saveCurrentAnswer() {
+    _answers[_currentPage] = _answerController.text.trim();
+  }
+
+  void _navigateToPage(int page) {
+    _saveCurrentAnswer();
+    _pageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 1),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -64,11 +71,11 @@ class _InterviewPageState extends State<InterviewPage> {
       body: PageView.builder(
         itemCount: 10,
         controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (page) {
           setState(() {
-            _answers[_currentPage] = _answerController.text.trim();
             _currentPage = page;
-            _answerController.text = _answers[_currentPage];
+            _answerController.text = _answers[page];
           });
         },
         itemBuilder: (context, index) {
@@ -78,7 +85,7 @@ class _InterviewPageState extends State<InterviewPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  ' Вопрос ${index + 1} - ',
+                  'Вопрос ${index + 1} - ',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
@@ -88,26 +95,22 @@ class _InterviewPageState extends State<InterviewPage> {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.0),
+                    child: TextField(
+                      autofocus: true,
+                      maxLines: null,
+                      minLines: null,
+                      expands: true,
+                      controller: _answerController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(12.0),
                       ),
-                      child: TextField(
-                        autofocus: true,
-                        maxLines: null,
-                        minLines: null,
-                        expands: true,
-                        controller: _answerController,
-                        decoration: InputDecoration(
-                          //filled: true,
-                          //fillColor: Colors.,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(12.0),
-                        ),
-                      ),
+                      onChanged: (value) {
+                        _answers[_currentPage] = value.trim();
+                      },
                     ),
                   ),
                 ),
@@ -115,21 +118,15 @@ class _InterviewPageState extends State<InterviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _currentPage == 0
-                        ? SizedBox.shrink()
+                        ? const SizedBox.shrink()
                         : CustomButton(
-                          textColor: Colors.white,
-                          text: 'Назад',
-                          selectedColor: Colors.blue,
-                          percentsHeight: 0.07,
-                          percentsWidth: 0.29,
-                          onPressed: () {
-                            _pageController.animateToPage(
-                              _currentPage - 1,
-                              duration: Duration(milliseconds: 1),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                        ),
+                      textColor: Colors.white,
+                      text: 'Назад',
+                      selectedColor: Colors.blue,
+                      percentsHeight: 0.07,
+                      percentsWidth: 0.29,
+                      onPressed: () => _navigateToPage(_currentPage - 1),
+                    ),
                     CustomButton(
                       text: _currentPage == 9 ? 'Завершить' : 'Дальше',
                       textColor: Colors.white,
@@ -137,13 +134,12 @@ class _InterviewPageState extends State<InterviewPage> {
                       percentsHeight: 0.07,
                       percentsWidth: 0.29,
                       onPressed: () {
-                        _currentPage == 9
-                            ? _showDialog(context)
-                            : _pageController.animateToPage(
-                              _currentPage + 1,
-                              duration: Duration(milliseconds: 1),
-                              curve: Curves.easeInOut,
-                            );
+                        _saveCurrentAnswer();
+                        if (_currentPage == 9) {
+                          _showDialog(context);
+                        } else {
+                          _navigateToPage(_currentPage + 1);
+                        }
                       },
                     ),
                   ],
@@ -174,12 +170,10 @@ class _InterviewPageState extends State<InterviewPage> {
                 percentsHeight: 0.07,
                 percentsWidth: 1,
                 onPressed: () {
-                  final List<UserInput> userInputs = List.generate(10, (index) {
-                    return UserInput(
-                      question: _pageQuestions[index],
-                      answer: _answers[index],
-                    );
-                  });
+                  final userInputs = List.generate(10, (index) => UserInput(
+                    question: _pageQuestions[index],
+                    answer: _answers[index],
+                  ));
                   Navigator.pushNamed(
                     context,
                     AppRouterNames.results,
