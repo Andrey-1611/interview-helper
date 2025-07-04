@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../data/data_sources/firestore_data_sources/firestore_data_source_interface.dart';
 import '../../data/models/interview.dart';
 
@@ -15,6 +14,7 @@ class ShowInterviewsBloc extends Bloc<ShowInterviewsEvent, ShowInterviewsState> 
       emit(ShowInterviewsLoading());
       try {
         final List<Interview> interviews = await localDataSourceInterface.showInterviews();
+        interviews.sort((a, b) => b.date.compareTo(a.date));
         emit(ShowInterviewsSuccess(interviews: interviews));
       } catch (e) {
         emit(ShowInterviewsFailure(error: e.toString()));
