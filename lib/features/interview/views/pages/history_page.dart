@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/navigation/app_router.dart';
+import '../../../../app/navigation/app_router.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
-import '../../data/data_sources/firestore_data_sources/firestore_data_source.dart';
+import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
 import '../widgets/custom_interview_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return BlocProvider(
       create:
           (context) =>
-              ShowInterviewsBloc(FirestoreDataSource())..add(ShowInterviews()),
+              ShowInterviewsBloc(FirebaseFirestoreDataSource())..add(ShowInterviews()),
       child: _HistoryView(),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../../../app/navigation/app_router.dart';
 import 'history_page.dart';
 import 'initial_page.dart';
 
@@ -11,12 +11,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppRouterNames.userProfile);
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -29,10 +39,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.chat),
             label: 'Собеседование',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'История',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
         ],
       ),
       body: _currentIndex == 0 ? InitialPage() : HistoryPage(),

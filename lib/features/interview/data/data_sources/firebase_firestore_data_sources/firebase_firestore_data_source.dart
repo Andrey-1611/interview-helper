@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/interview.dart';
-import 'firestore_data_source_interface.dart';
+import 'firebase_firestore_data_source_interface.dart';
 
-class FirestoreDataSource implements LocalDataSourceInterface {
+class FirebaseFirestoreDataSource implements FirebaseFirestoreDataSourceInterface {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final String _userId;
   late final Future<void> _init;
 
-  FirestoreDataSource() {
+  FirebaseFirestoreDataSource() {
     _init = _initUserId();
   }
 

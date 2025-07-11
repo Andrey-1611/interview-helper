@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/navigation/app_router.dart';
+import '../../../../app/navigation/app_router.dart';
 import '../widgets/custom_button.dart';
 
 class InitialPage extends StatefulWidget {

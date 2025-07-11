@@ -1,6 +1,6 @@
 import '../../models/interview.dart';
 
-abstract interface class LocalDataSourceInterface {
+abstract interface class FirebaseFirestoreDataSourceInterface {
   Future<void> addInterview(Interview interview);
   Future<List<Interview>> showInterviews();
 }

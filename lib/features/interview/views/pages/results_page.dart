@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../../blocs/check_results_bloc/check_results_bloc.dart';
-import '../../data/data_sources/firestore_data_sources/firestore_data_source.dart';
+import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
 import '../../data/data_sources/remote_data_sources/remote_data_source.dart';
 import '../../data/models/gemini_response.dart';
 import '../../data/models/interview.dart';
@@ -144,7 +144,7 @@ class _ResultsListState extends State<_ResultsList> {
     return BlocProvider(
       create:
           (context) =>
-              AddInterviewBloc(FirestoreDataSource())
+              AddInterviewBloc(FirebaseFirestoreDataSource())
                 ..add(AddInterview(interview: _addInterview())),
       child: BlocBuilder<AddInterviewBloc, AddInterviewState>(
         builder: (context, state) {

@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../../../app/navigation/app_router.dart';
 import '../../../../core/constants/questions.dart';
-import '../../../../core/navigation/app_router.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
   final Random random;
+
   const InterviewPage({super.key, required this.random});
 
   @override
@@ -38,7 +39,9 @@ class _InterviewPageState extends State<InterviewPage> {
       }
 
       for (int i = 0; i < 10; i++) {
-        final selectedQuestionIndex = widget.random.nextInt(_selectedQuestions.length);
+        final selectedQuestionIndex = widget.random.nextInt(
+          _selectedQuestions.length,
+        );
         _pageQuestions.add(_selectedQuestions[selectedQuestionIndex]);
       }
     }
@@ -67,7 +70,6 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: PageView.builder(
         itemCount: 10,
         controller: _pageController,
@@ -93,21 +95,14 @@ class _InterviewPageState extends State<InterviewPage> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       autofocus: true,
                       maxLines: null,
                       minLines: null,
                       expands: true,
                       controller: _answerController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12.0),
-                      ),
                       onChanged: (value) {
                         _answers[_currentPage] = value.trim();
                       },
@@ -120,13 +115,13 @@ class _InterviewPageState extends State<InterviewPage> {
                     _currentPage == 0
                         ? const SizedBox.shrink()
                         : CustomButton(
-                      textColor: Colors.white,
-                      text: 'Назад',
-                      selectedColor: Colors.blue,
-                      percentsHeight: 0.07,
-                      percentsWidth: 0.29,
-                      onPressed: () => _navigateToPage(_currentPage - 1),
-                    ),
+                            textColor: Colors.white,
+                            text: 'Назад',
+                            selectedColor: Colors.blue,
+                            percentsHeight: 0.07,
+                            percentsWidth: 0.29,
+                            onPressed: () => _navigateToPage(_currentPage - 1),
+                          ),
                     CustomButton(
                       text: _currentPage == 9 ? 'Завершить' : 'Дальше',
                       textColor: Colors.white,
@@ -170,10 +165,13 @@ class _InterviewPageState extends State<InterviewPage> {
                 percentsHeight: 0.07,
                 percentsWidth: 1,
                 onPressed: () {
-                  final userInputs = List.generate(10, (index) => UserInput(
-                    question: _pageQuestions[index],
-                    answer: _answers[index],
-                  ));
+                  final userInputs = List.generate(
+                    10,
+                    (index) => UserInput(
+                      question: _pageQuestions[index],
+                      answer: _answers[index],
+                    ),
+                  );
                   Navigator.pushNamed(
                     context,
                     AppRouterNames.results,
