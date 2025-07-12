@@ -49,24 +49,22 @@ class UserProfilePage extends StatelessWidget {
                     context.read<GetUserBloc>().add(GetUser());
                   }
                   return Center(
-                    child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Ваше имя: ${state.userProfile.name}'),
-                          Text('Ваша почта: ${state.userProfile.email}'),
-                          CustomButton(
-                            text: 'Выйти',
-                            selectedColor: Colors.blue,
-                            onPressed: () {
-                              context.read<ClearUserBloc>().add(ClearUser());
-                            },
-                            textColor: Colors.white,
-                            percentsHeight: 0.08,
-                            percentsWidth: 0.35,
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Ваше имя: ${state.userProfile.name}'),
+                        Text('Ваша почта: ${state.userProfile.email}'),
+                        CustomButton(
+                          text: 'Выйти',
+                          selectedColor: Colors.blue,
+                          onPressed: () {
+                            context.read<ClearUserBloc>().add(ClearUser());
+                          },
+                          textColor: Colors.white,
+                          percentsHeight: 0.08,
+                          percentsWidth: 0.35,
+                        ),
+                      ],
                     ),
                   );
                 } else {

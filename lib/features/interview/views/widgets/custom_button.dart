@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -39,7 +40,7 @@ class CustomButton extends StatelessWidget {
           text,
           style: TextStyle(
             color: textColor,
-            fontSize: MediaQuery.sizeOf(context).width * 0.028,
+            fontSize: 13.sp,
           ),
         ),
       ),

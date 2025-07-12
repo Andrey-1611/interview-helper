@@ -43,7 +43,8 @@ class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
       );
       await credential.user?.updateDisplayName(userProfile.name);
       await credential.user?.reload();
-      final user = _toUserProfile(credential.user!);
+      final updatedUser = _firebaseAuth.currentUser!;
+      final user = _toUserProfile(updatedUser);
       return user;
     } catch (e) {
       log(e.toString());
