@@ -7,20 +7,19 @@ import '../widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
   final Random random;
-
-  const InterviewPage({super.key, required this.random});
+  final TextEditingController answerController;
+  final PageController pageController;
+  const InterviewPage({super.key, required this.random, required this.pageController, required this.answerController});
 
   @override
   State<InterviewPage> createState() => _InterviewPageState();
 }
 
 class _InterviewPageState extends State<InterviewPage> {
-  final PageController _pageController = PageController();
   int _currentPage = 0;
   late final int difficult;
   late List<String> _selectedQuestions;
   final List<String> _pageQuestions = [];
-  final TextEditingController _answerController = TextEditingController();
   final List<String> _answers = List.filled(10, '');
 
   @override
@@ -48,12 +47,12 @@ class _InterviewPageState extends State<InterviewPage> {
   }
 
   void _saveCurrentAnswer() {
-    _answers[_currentPage] = _answerController.text.trim();
+    _answers[_currentPage] = widget.answerController.text.trim();
   }
 
   void _navigateToPage(int page) {
     _saveCurrentAnswer();
-    _pageController.animateToPage(
+    widget.pageController.animateToPage(
       page,
       duration: const Duration(milliseconds: 1),
       curve: Curves.easeInOut,
@@ -62,8 +61,8 @@ class _InterviewPageState extends State<InterviewPage> {
 
   @override
   void dispose() {
-    _pageController.dispose();
-    _answerController.dispose();
+    widget.pageController.dispose();
+    widget.answerController.dispose();
     super.dispose();
   }
 
@@ -72,17 +71,17 @@ class _InterviewPageState extends State<InterviewPage> {
     return Scaffold(
       body: PageView.builder(
         itemCount: 10,
-        controller: _pageController,
+        controller: widget.pageController,
         physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (page) {
           setState(() {
             _currentPage = page;
-            _answerController.text = _answers[page];
+            widget.answerController.text = _answers[page];
           });
         },
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(top: 32.0, bottom: 8.0, left: 16.0, right: 16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -95,17 +94,20 @@ class _InterviewPageState extends State<InterviewPage> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      autofocus: true,
-                      maxLines: null,
-                      minLines: null,
-                      expands: true,
-                      controller: _answerController,
-                      onChanged: (value) {
-                        _answers[_currentPage] = value.trim();
-                      },
+                  child: TextField(
+                    autofocus: true,
+                    maxLines: null,
+                    minLines: null,
+                    expands: true,
+                    textAlignVertical: TextAlignVertical.top,
+                    controller: widget.answerController,
+                    onChanged: (value) {
+                      _answers[_currentPage] = value.trim();
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Введите ваш ответ...'
                     ),
                   ),
                 ),

@@ -63,6 +63,6 @@ class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
   }
 
   UserProfile _toUserProfile(User user) {
-    return UserProfile(name: user.displayName ?? '', email: user.email ?? '');
+    return UserProfile(id: user.uid, name: user.displayName ?? '', email: user.email ?? '');
   }
 }

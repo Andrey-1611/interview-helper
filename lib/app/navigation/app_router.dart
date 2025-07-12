@@ -27,7 +27,11 @@ class AppRouter {
     AppRouterNames.signUp: (context) => const SignUpPage(),
     AppRouterNames.userProfile: (context) => const UserProfilePage(),
     AppRouterNames.home: (context) => const HomePage(),
-    AppRouterNames.interview: (context) => InterviewPage(random: Random()),
+    AppRouterNames.interview: (context) => InterviewPage(
+      random: Random(),
+      pageController: PageController(),
+      answerController: TextEditingController(),
+    ),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
   };

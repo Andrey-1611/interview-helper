@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/features/interview/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router.dart';
+import '../../../../core/global_data_sources/local_data_sources_interface.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
 import '../widgets/custom_interview_card.dart';
@@ -17,10 +19,34 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) =>
-              ShowInterviewsBloc(FirebaseFirestoreDataSource())..add(ShowInterviews()),
-      child: _HistoryView(),
+      create: (context) =>
+          GetUserBloc(context.read<LocalDataSourceInterface>())..add(GetUser()),
+      child: BlocConsumer<GetUserBloc, GetUserState>(
+        listener: (context, state) {
+          if (state is GetUserNotAuth || state is GetUserFailure) {
+            Navigator.pushReplacementNamed(context, AppRouterNames.splash);
+          }
+        },
+        builder: (context, state) {
+          //return Text('$state');
+          if (state is GetUserSuccess) {
+            final userId = state.userProfile.id ?? '';
+            return BlocProvider(
+              create: (context) => ShowInterviewsBloc(
+                FirebaseFirestoreDataSource(userId: userId),
+              )..add(ShowInterviews()),
+              child: const _HistoryView(),
+            );
+          } else if (state is GetUserFailure) {
+            return Center(
+              child: Text(
+                'На сервере ведутся работы \nПожалуйста попробуйте позже',
+              ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
@@ -42,11 +68,7 @@ class _HistoryView extends StatelessWidget {
           );
         } else if (state is ShowInterviewsSuccess) {
           if (state.interviews.isEmpty) {
-            return Center(
-              child: Text(
-                'История пуста',
-              ),
-            );
+            return Center(child: Text('История пуста'));
           }
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -66,7 +88,11 @@ class _HistoryView extends StatelessWidget {
                 }
                 return GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, AppRouterNames.interviewInfo, arguments: interview);
+                    Navigator.pushNamed(
+                      context,
+                      AppRouterNames.interviewInfo,
+                      arguments: interview,
+                    );
                   },
                   child: CustomInterviewCard(
                     score: interview.score.toInt(),

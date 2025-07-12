@@ -5,7 +5,9 @@ import 'package:interview_master/features/auth/data/data_sources/firebase_auth_d
 import 'package:interview_master/features/auth/data/models/user_profile.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/navigation/app_router.dart';
+import '../../../../core/global_data_sources/local_data_sources_interface.dart';
 import '../../../interview/views/widgets/custom_button.dart';
+import '../../blocs/set_user/set_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 
 class SignInPage extends StatefulWidget {
@@ -32,8 +34,14 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignInBloc(FirebaseAuthDataSource()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SignInBloc(FirebaseAuthDataSource())),
+        BlocProvider(
+          create: (context) =>
+              SetUserBloc(context.read<LocalDataSourceInterface>()),
+        ),
+      ],
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -96,7 +104,6 @@ class _SignInButton extends StatelessWidget {
   final TextEditingController passwordController;
 
   const _SignInButton({
-    super.key,
     required this.formKey,
     required this.emailController,
     required this.passwordController,
@@ -104,41 +111,56 @@ class _SignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignInBloc, SignInState>(
+    return BlocListener<SetUserBloc, SetUserState>(
       listener: (context, state) {
-        if (state is SignInSuccess) {
-          Navigator.pushNamed(context, AppRouterNames.home);
-        }
-      },
-      builder: (context, state) {
-        if (state is SignInLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state is SignInFailure) {
-          return Center(
-            child: Text(
-              state.error
-            ),
+        if (state is SetUserSuccess) {
+          Navigator.pushReplacementNamed(context, AppRouterNames.home);
+        } else if (state is SetUserFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Произошла ошибка, опробуйте позже')),
           );
         }
-        return CustomButton(
-          text: 'Войти',
-          selectedColor: Colors.blue,
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              context.read<SignInBloc>().add(
-                SignIn(
-                  userProfile: UserProfile(email: emailController.text.trim()),
-                  password: passwordController.text.trim(),
-                ),
-              );
-            }
-          },
-          textColor: Colors.white,
-          percentsHeight: 0.06.sp,
-          percentsWidth: 1.sp,
-        );
       },
+      child: BlocConsumer<SignInBloc, SignInState>(
+        listener: (context, state) {
+          if (state is SignInSuccess) {
+            context.read<SetUserBloc>().add(
+              SetUser(userProfile: state.userProfile),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is SignInLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is SignInFailure) {
+            return Center(
+              child: Text(
+                'На сервере ведутся работы \nПожалуйста попробуйте позже',
+              ),
+            );
+          }
+          return CustomButton(
+            text: 'Войти',
+            selectedColor: Colors.blue,
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                context.read<SignInBloc>().add(
+                  SignIn(
+                    userProfile: UserProfile(
+                      email: emailController.text.trim(),
+                    ),
+                    password: passwordController.text.trim(),
+                  ),
+                );
+              }
+            },
+            textColor: Colors.white,
+            percentsHeight: 0.06.sp,
+            percentsWidth: 1.sp,
+          );
+        },
+      ),
     );
   }
 }

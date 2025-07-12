@@ -11,11 +11,7 @@ final class SignInInitial extends SignInState {}
 
 final class SignInLoading extends SignInState {}
 
-final class SignInFailure extends SignInState {
-  final String error;
-
-  const SignInFailure({required this.error});
-}
+final class SignInFailure extends SignInState {}
 
 final class SignInSuccess extends SignInState {
   final UserProfile userProfile;

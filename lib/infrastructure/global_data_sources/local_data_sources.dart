@@ -4,11 +4,11 @@ import 'package:interview_master/core/global_data_sources/local_data_sources_int
 import 'package:interview_master/features/auth/data/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalDataSources implements LocalDataSourceInterface {
+class LocalDataSource implements LocalDataSourceInterface {
   final SharedPreferences sharedPreferences;
   static const _key = 'user';
 
-  LocalDataSources({required this.sharedPreferences});
+  LocalDataSource({required this.sharedPreferences});
 
 
   @override

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source_interface.dart';
 import 'package:interview_master/features/auth/data/models/user_profile.dart';
@@ -21,7 +20,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         );
         emit(SignInSuccess(userProfile: userProfile));
       } catch (e) {
-        emit(SignInFailure(error: e.toString()));
+        emit(SignInFailure());
       }
     });
   }

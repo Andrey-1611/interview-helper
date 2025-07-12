@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:interview_master/features/interview/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../app/navigation/app_router.dart';
+import '../../../../core/global_data_sources/local_data_sources_interface.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../../blocs/check_results_bloc/check_results_bloc.dart';
 import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
@@ -33,11 +36,18 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
               CheckResultsBloc(RemoteDataSource(gemini: Gemini.instance))
                 ..add(CheckResults(userInputs: userInputs)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              GetUserBloc(context.read<LocalDataSourceInterface>())..add(GetUser()),
+        ),
+      ],
       child: _ResultsView(difficulty: difficulty),
     );
   }
@@ -46,7 +56,7 @@ class _ResultsPageState extends State<ResultsPage> {
 class _ResultsView extends StatelessWidget {
   final int difficulty;
 
-  const _ResultsView({super.key, required this.difficulty});
+  const _ResultsView({required this.difficulty});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +101,6 @@ class _ResultsList extends StatefulWidget {
   final int difficulty;
 
   const _ResultsList({
-    super.key,
     required this.remoteDataSource,
     required this.difficulty,
   });
@@ -110,26 +119,24 @@ class _ResultsListState extends State<_ResultsList> {
   }
 
   int _calculateAverageScore() {
-    final totalScore =
-        widget.remoteDataSource
-            .map((response) => response.score)
-            .reduce((score1, score2) => score1 + score2)
-            .toInt();
+    final totalScore = widget.remoteDataSource
+        .map((response) => response.score)
+        .reduce((score1, score2) => score1 + score2)
+        .toInt();
     return totalScore ~/ widget.remoteDataSource.length;
   }
 
   Interview _addInterview() {
-    final List<Question> questions =
-        widget.remoteDataSource
-            .map(
-              (response) => Question(
-                score: response.score,
-                question: response.userInput.question,
-                userAnswer: response.userInput.answer,
-                correctAnswer: response.correctAnswer,
-              ),
-            )
-            .toList();
+    final List<Question> questions = widget.remoteDataSource
+        .map(
+          (response) => Question(
+            score: response.score,
+            question: response.userInput.question,
+            userAnswer: response.userInput.answer,
+            correctAnswer: response.correctAnswer,
+          ),
+        )
+        .toList();
     final Interview interview = Interview(
       score: _calculateAverageScore().toDouble(),
       difficulty: widget.difficulty,
@@ -141,69 +148,105 @@ class _ResultsListState extends State<_ResultsList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              AddInterviewBloc(FirebaseFirestoreDataSource())
-                ..add(AddInterview(interview: _addInterview())),
-      child: BlocBuilder<AddInterviewBloc, AddInterviewState>(
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Center(
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: MediaQuery.sizeOf(context).width,
-                    height: MediaQuery.sizeOf(context).height * 0.25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(color: Colors.blue, width: 4.0),
-                    ),
-                    child: Text(
-                      'Результат: ${_calculateAverageScore()} %',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.remoteDataSource.length,
-                      itemBuilder: (context, index) {
-                        final response = widget.remoteDataSource[index];
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isShow[index] = !_isShow[index];
-                            });
-                          },
-                          child: CustomInterviewCard(
-                            score: response.score.toInt(),
-                            titleText:
-                                'Вопрос ${index + 1} - ${response.userInput.question}',
-                            firstText:
-                                'Ваш ответ: ${response.userInput.answer}',
-                            secondText:
-                                'Правильный ответ: ${response.correctAnswer}',
-                            titleStyle: Theme.of(context).textTheme.bodyMedium,
-                            subtitleStyle: TextStyle(
-                              overflow:
-                                  _isShow[index]
-                                      ? TextOverflow.visible
-                                      : TextOverflow.ellipsis,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+    return BlocConsumer<GetUserBloc, GetUserState>(
+      listener: (context, state) {
+        if (state is GetUserNotAuth || state is GetUserFailure) {
+          Navigator.pushReplacementNamed(context, AppRouterNames.splash);
+        }
+      },
+      builder: (context, state) {
+        if (state is GetUserSuccess) {
+          final userId = state.userProfile.id ?? '';
+          return BlocProvider(
+            create: (context) =>
+                AddInterviewBloc(FirebaseFirestoreDataSource(userId: userId))
+                  ..add(AddInterview(interview: _addInterview())),
+            child: _ListResultsView(
+              averageScore: _calculateAverageScore(),
+              remoteDataSource: widget.remoteDataSource,
+              isShow: _isShow,
             ),
           );
-        },
-      ),
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
+class _ListResultsView extends StatefulWidget {
+  final int averageScore;
+  final List<GeminiResponses> remoteDataSource;
+  final List<bool> isShow;
+
+  const _ListResultsView({
+    required this.averageScore,
+    required this.remoteDataSource,
+    required this.isShow,
+  });
+
+  @override
+  State<_ListResultsView> createState() => _ListResultsViewState();
+}
+
+class _ListResultsViewState extends State<_ListResultsView> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AddInterviewBloc, AddInterviewState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Center(
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height * 0.25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.blue, width: 4.0),
+                  ),
+                  child: Text(
+                    'Результат: ${widget.averageScore} %',
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.remoteDataSource.length,
+                    itemBuilder: (context, index) {
+                      final response = widget.remoteDataSource[index];
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            widget.isShow[index] = !widget.isShow[index];
+                          });
+                        },
+                        child: CustomInterviewCard(
+                          score: response.score.toInt(),
+                          titleText:
+                              'Вопрос ${index + 1} - ${response.userInput.question}',
+                          firstText: 'Ваш ответ: ${response.userInput.answer}',
+                          secondText:
+                              'Правильный ответ: ${response.correctAnswer}',
+                          titleStyle: Theme.of(context).textTheme.bodyMedium,
+                          subtitleStyle: TextStyle(
+                            overflow: widget.isShow[index]
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

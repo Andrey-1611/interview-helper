@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/features/auth/blocs/set_user/set_user_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router.dart';
+import '../../../../core/global_data_sources/local_data_sources_interface.dart';
 import '../../../interview/views/widgets/custom_button.dart';
 import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../../data/models/user_profile.dart';
@@ -34,8 +37,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignUpBloc(FirebaseAuthDataSource()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SignUpBloc(FirebaseAuthDataSource())),
+        BlocProvider(
+          create: (context) =>
+              SetUserBloc(context.read<LocalDataSourceInterface>()),
+        ),
+      ],
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -105,7 +114,6 @@ class _SignUpButton extends StatelessWidget {
   final TextEditingController passwordController;
 
   const _SignUpButton({
-    super.key,
     required this.formKey,
     required this.nameController,
     required this.emailController,
@@ -114,44 +122,58 @@ class _SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignUpBloc, SignUpState>(
+    return BlocListener<SetUserBloc, SetUserState>(
       listener: (context, state) {
-        if (state is SignUpSuccess) {
-          Navigator.pushNamed(context, AppRouterNames.home);
-        }
-      },
-      builder: (context, state) {
-        if (state is SignUpLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state is SignUpFailure) {
-          return const Center(
-            child: Text(
-              'На сервере ведутся работы \nПожалуйста попробуйте позже',
-            ),
+        if (state is SetUserSuccess) {
+          Navigator.pushReplacementNamed(context, AppRouterNames.home);
+        } else if (state is SetUserFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Произошла ошибка, опробуйте позже')),
           );
         }
-        return CustomButton(
-          text: 'Зарегистрироваться',
-          selectedColor: Colors.blue,
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              context.read<SignUpBloc>().add(
-                SignUp(
-                  userProfile: UserProfile(
-                    email: emailController.text.trim(),
-                    name: nameController.text.trim(),
-                  ),
-                  password: passwordController.text.trim(),
-                ),
-              );
-            }
-          },
-          textColor: Colors.white,
-          percentsHeight: 0.06.sp,
-          percentsWidth: 1.sp,
-        );
       },
+      child: BlocConsumer<SignUpBloc, SignUpState>(
+        listener: (context, state) {
+          if (state is SignUpSuccess) {
+            context.read<SetUserBloc>().add(
+              SetUser(userProfile: state.userProfile),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is SignUpLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is SignUpFailure) {
+            return const Center(
+              child: Text(
+                'На сервере ведутся работы \nПожалуйста попробуйте позже',
+              ),
+            );
+          }
+          return CustomButton(
+            text: 'Зарегистрироваться',
+            selectedColor: Colors.blue,
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                context.read<SignUpBloc>().add(
+                  SignUp(
+                    userProfile: UserProfile(
+                      id: Uuid().v1(),
+                      email: emailController.text.trim(),
+                      name: nameController.text.trim(),
+                    ),
+                    password: passwordController.text.trim(),
+                  ),
+                );
+              }
+            },
+            textColor: Colors.white,
+            percentsHeight: 0.06.sp,
+            percentsWidth: 1.sp,
+          );
+        },
+      ),
     );
   }
 }
