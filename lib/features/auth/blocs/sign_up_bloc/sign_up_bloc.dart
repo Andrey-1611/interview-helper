@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/features/auth/data/models/user_profile.dart';
+import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import '../../data/data_sources/firebase_auth_data_sources/firebase_auth_data_source_interface.dart';
 
 part 'sign_up_event.dart';

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/models/notification.dart';
+import 'package:interview_master/core/global_services/notifications/services/notification_service.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source.dart';
-import 'package:interview_master/features/auth/data/models/user_profile.dart';
+import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/navigation/app_router.dart';
-import '../../../../core/global_data_sources/local_data_sources_interface.dart';
-import '../../../interview/views/widgets/custom_button.dart';
-import '../../blocs/set_user/set_user_bloc.dart';
+import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../interview/presentation/widgets/custom_button.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 
 class SignInPage extends StatefulWidget {
@@ -38,8 +41,10 @@ class _SignInPageState extends State<SignInPage> {
       providers: [
         BlocProvider(create: (context) => SignInBloc(FirebaseAuthDataSource())),
         BlocProvider(
-          create: (context) =>
-              SetUserBloc(context.read<LocalDataSourceInterface>()),
+          create: (context) => SetUserBloc(context.read<UserInterface>()),
+        ),
+        BlocProvider(
+          create: (context) => SendNotificationBloc(NotificationsService()),
         ),
       ],
       child: Scaffold(
@@ -116,8 +121,13 @@ class _SignInButton extends StatelessWidget {
         if (state is SetUserSuccess) {
           Navigator.pushReplacementNamed(context, AppRouterNames.home);
         } else if (state is SetUserFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Произошла ошибка, опробуйте позже')),
+          context.read<SendNotificationBloc>().add(
+            SendNotification(
+              notification: MyNotification(
+                text: 'Ошибка входа',
+                icon: Icon(Icons.warning_amber),
+              ),
+            ),
           );
         }
       },
@@ -128,17 +138,20 @@ class _SignInButton extends StatelessWidget {
               SetUser(userProfile: state.userProfile),
             );
           }
+          if (state is SignInFailure) {
+            context.read<SendNotificationBloc>().add(
+              SendNotification(
+                notification: MyNotification(
+                  text: 'Ошибка входа',
+                  icon: Icon(Icons.warning_amber),
+                ),
+              ),
+            );
+          }
         },
         builder: (context, state) {
           if (state is SignInLoading) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (state is SignInFailure) {
-            return Center(
-              child: Text(
-                'На сервере ведутся работы \nПожалуйста попробуйте позже',
-              ),
-            );
           }
           return CustomButton(
             text: 'Войти',

@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source_interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:interview_master/features/auth/data/models/user_profile.dart';
+import 'package:interview_master/core/global_services/user/models/user_profile.dart';
+
+import '../../../../../core/exceptions/auth_exception.dart';
 
 class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
   final FirebaseAuth _firebaseAuth;
@@ -46,9 +48,18 @@ class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
       final updatedUser = _firebaseAuth.currentUser!;
       final user = _toUserProfile(updatedUser);
       return user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw AuthException('Аккаунт с такой почтой не найден');
+      } else if (e.code == 'wrong-password') {
+        throw AuthException('Неверный пароль');
+      } else if (e.code == 'invalid-email') {
+        throw AuthException('Некорректная почта');
+      } else {
+        throw AuthException('Ошибка входа');
+      }
     } catch (e) {
-      log(e.toString());
-      rethrow;
+      throw AuthException('Произошла неизвестная ошибка');
     }
   }
 
@@ -64,6 +75,10 @@ class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
   }
 
   UserProfile _toUserProfile(User user) {
-    return UserProfile(id: user.uid, name: user.displayName ?? '', email: user.email ?? '');
+    return UserProfile(
+      id: user.uid,
+      name: user.displayName ?? '',
+      email: user.email ?? '',
+    );
   }
 }

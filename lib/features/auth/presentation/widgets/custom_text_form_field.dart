@@ -31,7 +31,7 @@ class CustomTextFormField extends StatelessWidget {
         keyboardType: keyboardType,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Введите $hintText!';
+            return 'Поле $hintText не может быть пустым!';
           } else {
             return null;
           }

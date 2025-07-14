@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/features/interview/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router.dart';
-import '../../../../core/global_data_sources/local_data_sources_interface.dart';
+import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_interface.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
 import '../widgets/custom_interview_card.dart';
@@ -20,7 +21,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          GetUserBloc(context.read<LocalDataSourceInterface>())..add(GetUser()),
+          GetUserBloc(context.read<UserInterface>())..add(GetUser()),
       child: BlocConsumer<GetUserBloc, GetUserState>(
         listener: (context, state) {
           if (state is GetUserNotAuth || state is GetUserFailure) {
@@ -33,7 +34,10 @@ class _HistoryPageState extends State<HistoryPage> {
             final userId = state.userProfile.id ?? '';
             return BlocProvider(
               create: (context) => ShowInterviewsBloc(
-                FirebaseFirestoreDataSource(userId: userId),
+                FirebaseFirestoreDataSource(
+                  FirebaseFirestore.instance,
+                  userId: userId,
+                ),
               )..add(ShowInterviews()),
               child: const _HistoryView(),
             );

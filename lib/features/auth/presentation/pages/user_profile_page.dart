@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/features/auth/blocs/clear_user/clear_user_bloc.dart';
-import 'package:interview_master/features/interview/views/widgets/custom_button.dart';
+import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/services/notification_service.dart';
 import '../../../../app/navigation/app_router.dart';
-import '../../../../core/global_data_sources/local_data_sources_interface.dart';
-import '../../../interview/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/notifications/models/notification.dart';
+import '../../../../core/global_services/user/blocs/clear_user/clear_user_bloc.dart';
+import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../interview/presentation/widgets/custom_button.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -14,13 +17,14 @@ class UserProfilePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              ClearUserBloc(context.read<LocalDataSourceInterface>()),
+          create: (context) => ClearUserBloc(context.read<UserInterface>()),
         ),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<LocalDataSourceInterface>())
-                ..add(GetUser()),
+              GetUserBloc(context.read<UserInterface>())..add(GetUser()),
+        ),
+        BlocProvider(
+          create: (context) => SendNotificationBloc(NotificationsService()),
         ),
       ],
       child: Scaffold(
@@ -30,9 +34,13 @@ class UserProfilePage extends StatelessWidget {
             listener: (context, state) {
               if (state is ClearUserSuccess) {
                 Navigator.pushReplacementNamed(context, AppRouterNames.signIn);
-              } else if (state is ClearUserFailure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Произошла ошибка, опробуйте позже')),
+                context.read<SendNotificationBloc>().add(
+                  SendNotification(
+                    notification: MyNotification(
+                      text: 'Вы успешно вышли из аккаунта!',
+                      icon: Icon(Icons.star),
+                    ),
+                  ),
                 );
               }
             },

@@ -5,12 +5,12 @@ import 'firebase_firestore_data_source_interface.dart';
 
 class FirebaseFirestoreDataSource
     implements FirebaseFirestoreDataSourceInterface {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore;
   final String userId;
   late CollectionReference interviews;
 
-  FirebaseFirestoreDataSource({required this.userId}) {
-    interviews = _firestore.collection('users/$userId/interviews');
+  FirebaseFirestoreDataSource(this._firebaseFirestore, {required this.userId}) {
+    interviews = _firebaseFirestore.collection('users/$userId/interviews');
   }
 
   @override

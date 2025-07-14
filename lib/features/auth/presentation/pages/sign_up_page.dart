@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:interview_master/features/auth/blocs/set_user/set_user_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router.dart';
-import '../../../../core/global_data_sources/local_data_sources_interface.dart';
-import '../../../interview/views/widgets/custom_button.dart';
+import '../../../../core/global_services/notifications/blocs/send_notification_bloc.dart';
+import '../../../../core/global_services/notifications/models/notification.dart';
+import '../../../../core/global_services/notifications/services/notification_service.dart';
+import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../interview/presentation/widgets/custom_button.dart';
 import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
-import '../../data/models/user_profile.dart';
+import '../../../../core/global_services/user/models/user_profile.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -41,8 +44,10 @@ class _SignUpPageState extends State<SignUpPage> {
       providers: [
         BlocProvider(create: (context) => SignUpBloc(FirebaseAuthDataSource())),
         BlocProvider(
-          create: (context) =>
-              SetUserBloc(context.read<LocalDataSourceInterface>()),
+          create: (context) => SetUserBloc(context.read<UserInterface>()),
+        ),
+        BlocProvider(
+          create: (context) => SendNotificationBloc(NotificationsService()),
         ),
       ],
       child: Scaffold(
@@ -127,8 +132,13 @@ class _SignUpButton extends StatelessWidget {
         if (state is SetUserSuccess) {
           Navigator.pushReplacementNamed(context, AppRouterNames.home);
         } else if (state is SetUserFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Произошла ошибка, опробуйте позже')),
+          context.read<SendNotificationBloc>().add(
+            SendNotification(
+              notification: MyNotification(
+                text: 'Ошибка регистрации',
+                icon: Icon(Icons.warning_amber),
+              ),
+            ),
           );
         }
       },
@@ -138,18 +148,20 @@ class _SignUpButton extends StatelessWidget {
             context.read<SetUserBloc>().add(
               SetUser(userProfile: state.userProfile),
             );
+          } else if (state is SignUpFailure) {
+            context.read<SendNotificationBloc>().add(
+              SendNotification(
+                notification: MyNotification(
+                  text: 'Ошибка регистрации',
+                  icon: Icon(Icons.warning_amber),
+                ),
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is SignUpLoading) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (state is SignUpFailure) {
-            return const Center(
-              child: Text(
-                'На сервере ведутся работы \nПожалуйста попробуйте позже',
-              ),
-            );
           }
           return CustomButton(
             text: 'Зарегистрироваться',

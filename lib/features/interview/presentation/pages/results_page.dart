@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:interview_master/features/interview/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router.dart';
-import '../../../../core/global_data_sources/local_data_sources_interface.dart';
+import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_interface.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../../blocs/check_results_bloc/check_results_bloc.dart';
 import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
@@ -45,7 +46,8 @@ class _ResultsPageState extends State<ResultsPage> {
         ),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<LocalDataSourceInterface>())..add(GetUser()),
+              GetUserBloc(context.read<UserInterface>())
+                ..add(GetUser()),
         ),
       ],
       child: _ResultsView(difficulty: difficulty),
@@ -158,9 +160,12 @@ class _ResultsListState extends State<_ResultsList> {
         if (state is GetUserSuccess) {
           final userId = state.userProfile.id ?? '';
           return BlocProvider(
-            create: (context) =>
-                AddInterviewBloc(FirebaseFirestoreDataSource(userId: userId))
-                  ..add(AddInterview(interview: _addInterview())),
+            create: (context) => AddInterviewBloc(
+              FirebaseFirestoreDataSource(
+                FirebaseFirestore.instance,
+                userId: userId,
+              ),
+            )..add(AddInterview(interview: _addInterview())),
             child: _ListResultsView(
               averageScore: _calculateAverageScore(),
               remoteDataSource: widget.remoteDataSource,

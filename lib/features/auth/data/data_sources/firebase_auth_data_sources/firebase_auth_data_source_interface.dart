@@ -1,4 +1,4 @@
-import 'package:interview_master/features/auth/data/models/user_profile.dart';
+import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 
 abstract interface class FirebaseAuthDataSourceInterface {
   Future<UserProfile?> checkCurrentUser();
