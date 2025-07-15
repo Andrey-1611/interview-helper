@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import '../../models/gemini_response.dart';
-import '../../models/user_input.dart';
-import 'remote_data_source_interface.dart';
+import '../models/gemini_response.dart';
+import '../models/user_input.dart';
+import '../repositories/remote_repository.dart';
 
-class RemoteDataSource implements RemoteDataSourceInterface {
+class RemoteDataSource implements RemoteRepository {
   final Gemini gemini;
 
   const RemoteDataSource({required this.gemini});

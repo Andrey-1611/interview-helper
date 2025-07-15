@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/global_services/user/services/user_interface.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source.dart';
+import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
 import '../../blocs/check_current_user_bloc/check_current_user_bloc.dart';
@@ -15,7 +15,7 @@ class SplashPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) =>
-              CheckCurrentUserBloc(FirebaseAuthDataSource())
+              CheckCurrentUserBloc(AuthDataSource())
                 ..add(CheckCurrentUser()),
         ),
         BlocProvider(

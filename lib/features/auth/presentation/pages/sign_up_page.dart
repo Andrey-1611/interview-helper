@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source.dart';
+import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../core/global_services/notifications/blocs/send_notification_bloc.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/notifications/services/notification_service.dart';
+import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
 import '../../../interview/presentation/widgets/custom_button.dart';
@@ -42,9 +43,12 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SignUpBloc(FirebaseAuthDataSource())),
+        BlocProvider(create: (context) => SignUpBloc(AuthDataSource())),
         BlocProvider(
           create: (context) => SetUserBloc(context.read<UserInterface>()),
+        ),
+        BlocProvider(
+          create: (context) => GetUserBloc(context.read<UserInterface>()),
         ),
         BlocProvider(
           create: (context) => SendNotificationBloc(NotificationsService()),
@@ -127,38 +131,59 @@ class _SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SetUserBloc, SetUserState>(
-      listener: (context, state) {
-        if (state is SetUserSuccess) {
-          Navigator.pushReplacementNamed(context, AppRouterNames.home);
-        } else if (state is SetUserFailure) {
-          context.read<SendNotificationBloc>().add(
-            SendNotification(
-              notification: MyNotification(
-                text: 'Ошибка регистрации',
-                icon: Icon(Icons.warning_amber),
-              ),
-            ),
-          );
-        }
-      },
-      child: BlocConsumer<SignUpBloc, SignUpState>(
-        listener: (context, state) {
-          if (state is SignUpSuccess) {
-            context.read<SetUserBloc>().add(
-              SetUser(userProfile: state.userProfile),
-            );
-          } else if (state is SignUpFailure) {
-            context.read<SendNotificationBloc>().add(
-              SendNotification(
-                notification: MyNotification(
-                  text: 'Ошибка регистрации',
-                  icon: Icon(Icons.warning_amber),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignUpBloc, SignUpState>(
+          listener: (context, state) {
+            if (state is SignUpSuccess) {
+              context.read<SetUserBloc>().add(
+                SetUser(userProfile: state.userProfile),
+              );
+            } else if (state is SignUpFailure) {
+              context.read<SendNotificationBloc>().add(
+                SendNotification(
+                  notification: MyNotification(
+                    text: 'Ошибка регистрации',
+                    icon: Icon(Icons.warning_amber),
+                  ),
                 ),
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
+        BlocListener<SetUserBloc, SetUserState>(
+          listener: (context, state) {
+            if (state is SetUserSuccess) {
+              Navigator.pushReplacementNamed(context, AppRouterNames.home);
+              context.read<GetUserBloc>().add(GetUser());
+            } else if (state is SetUserFailure) {
+              context.read<SendNotificationBloc>().add(
+                SendNotification(
+                  notification: MyNotification(
+                    text: 'Ошибка регистрации',
+                    icon: Icon(Icons.warning_amber),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<GetUserBloc, GetUserState>(
+          listener: (context, state) {
+            if (state is GetUserSuccess) {
+              context.read<SendNotificationBloc>().add(
+                SendNotification(
+                  notification: MyNotification(
+                    text: '${state.userProfile.name}, добро пожаловать!',
+                    icon: Icon(Icons.star),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
           if (state is SignUpLoading) {
             return const Center(child: CircularProgressIndicator());

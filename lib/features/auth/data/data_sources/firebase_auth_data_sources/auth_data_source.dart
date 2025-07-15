@@ -1,14 +1,14 @@
 import 'dart:developer';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/firebase_auth_data_source_interface.dart';
+import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 
 import '../../../../../core/exceptions/auth_exception.dart';
 
-class FirebaseAuthDataSource implements FirebaseAuthDataSourceInterface {
+class AuthDataSource implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
 
-  FirebaseAuthDataSource({FirebaseAuth? firebaseAuth})
+  AuthDataSource({FirebaseAuth? firebaseAuth})
     : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   @override

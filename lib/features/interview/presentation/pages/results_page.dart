@@ -7,8 +7,8 @@ import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.
 import '../../../../core/global_services/user/services/user_interface.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../../blocs/check_results_bloc/check_results_bloc.dart';
-import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
-import '../../data/data_sources/remote_data_sources/remote_data_source.dart';
+import '../../data/data_sources/firestore_data_source.dart';
+import '../../data/data_sources/remote_data_source.dart';
 import '../../data/models/gemini_response.dart';
 import '../../data/models/interview.dart';
 import '../../data/models/question.dart';
@@ -161,7 +161,7 @@ class _ResultsListState extends State<_ResultsList> {
           final userId = state.userProfile.id ?? '';
           return BlocProvider(
             create: (context) => AddInterviewBloc(
-              FirebaseFirestoreDataSource(
+              FirestoreDataSource(
                 FirebaseFirestore.instance,
                 userId: userId,
               ),

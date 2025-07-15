@@ -6,7 +6,7 @@ import '../../../../app/navigation/app_router.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
-import '../../data/data_sources/firebase_firestore_data_sources/firebase_firestore_data_source.dart';
+import '../../data/data_sources/firestore_data_source.dart';
 import '../widgets/custom_interview_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -34,7 +34,7 @@ class _HistoryPageState extends State<HistoryPage> {
             final userId = state.userProfile.id ?? '';
             return BlocProvider(
               create: (context) => ShowInterviewsBloc(
-                FirebaseFirestoreDataSource(
+                FirestoreDataSource(
                   FirebaseFirestore.instance,
                   userId: userId,
                 ),

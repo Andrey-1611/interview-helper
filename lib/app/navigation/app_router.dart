@@ -21,7 +21,8 @@ class AppRouterNames {
 }
 
 class AppRouter {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   static Map<String, Widget Function(BuildContext context)> routes = {
     AppRouterNames.splash: (context) => const SplashPage(),
@@ -37,5 +38,4 @@ class AppRouter {
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
   };
-
 }

@@ -21,7 +21,7 @@ class _InitialPageState extends State<InitialPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
+              const Spacer(),
               Text(
                 'Выбери сложность',
                 style: Theme.of(context).textTheme.displayMedium,
@@ -71,7 +71,7 @@ class _InitialPageState extends State<InitialPage> {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               selectedItem == 0
                   ? SizedBox(height: MediaQuery.sizeOf(context).height * 0.06)
                   : CustomButton(

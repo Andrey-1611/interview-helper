@@ -1,15 +1,15 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/interview.dart';
-import 'firebase_firestore_data_source_interface.dart';
+import '../models/interview.dart';
+import '../repositories/firestore_repository.dart';
 
-class FirebaseFirestoreDataSource
-    implements FirebaseFirestoreDataSourceInterface {
+class FirestoreDataSource
+    implements FirestoreRepository {
   final FirebaseFirestore _firebaseFirestore;
   final String userId;
   late CollectionReference interviews;
 
-  FirebaseFirestoreDataSource(this._firebaseFirestore, {required this.userId}) {
+  FirestoreDataSource(this._firebaseFirestore, {required this.userId}) {
     interviews = _firebaseFirestore.collection('users/$userId/interviews');
   }
 
