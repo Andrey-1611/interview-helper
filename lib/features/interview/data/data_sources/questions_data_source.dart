@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:interview_master/core/constants/questions.dart';
 import 'package:interview_master/features/interview/data/repositories/questions_repository.dart';
 

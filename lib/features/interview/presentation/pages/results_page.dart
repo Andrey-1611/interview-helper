@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:interview_master/features/interview/blocs/create_interview_bloc/create_interview_bloc.dart';
+import 'package:interview_master/features/interview/data/data_sources/interview_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
@@ -11,7 +13,6 @@ import '../../data/data_sources/firestore_data_source.dart';
 import '../../data/data_sources/remote_data_source.dart';
 import '../../data/models/gemini_response.dart';
 import '../../data/models/interview.dart';
-import '../../data/models/question.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_interview_card.dart';
 
@@ -46,8 +47,7 @@ class _ResultsPageState extends State<ResultsPage> {
         ),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<UserInterface>())
-                ..add(GetUser()),
+              GetUserBloc(context.read<UserInterface>())..add(GetUser()),
         ),
       ],
       child: _ResultsView(difficulty: difficulty),
@@ -89,9 +89,8 @@ class _ResultsView extends StatelessWidget {
               difficulty: difficulty,
               remoteDataSource: state.geminiResponse,
             );
-          } else {
-            return SizedBox();
           }
+          return const SizedBox();
         },
       ),
     );
@@ -113,6 +112,7 @@ class _ResultsList extends StatefulWidget {
 
 class _ResultsListState extends State<_ResultsList> {
   late final List<bool> _isShow;
+  late final Interview interview;
 
   @override
   void initState() {
@@ -120,61 +120,61 @@ class _ResultsListState extends State<_ResultsList> {
     _isShow = List.generate(widget.remoteDataSource.length, (_) => false);
   }
 
-  int _calculateAverageScore() {
-    final totalScore = widget.remoteDataSource
-        .map((response) => response.score)
-        .reduce((score1, score2) => score1 + score2)
-        .toInt();
-    return totalScore ~/ widget.remoteDataSource.length;
-  }
-
-  Interview _addInterview() {
-    final List<Question> questions = widget.remoteDataSource
-        .map(
-          (response) => Question(
-            score: response.score,
-            question: response.userInput.question,
-            userAnswer: response.userInput.answer,
-            correctAnswer: response.correctAnswer,
-          ),
-        )
-        .toList();
-    final Interview interview = Interview(
-      score: _calculateAverageScore().toDouble(),
-      difficulty: widget.difficulty,
-      date: DateTime.now(),
-      questions: questions,
-    );
-    return interview;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetUserBloc, GetUserState>(
-      listener: (context, state) {
-        if (state is GetUserNotAuth || state is GetUserFailure) {
-          Navigator.pushReplacementNamed(context, AppRouterNames.splash);
-        }
-      },
-      builder: (context, state) {
-        if (state is GetUserSuccess) {
-          final userId = state.userProfile.id ?? '';
-          return BlocProvider(
-            create: (context) => AddInterviewBloc(
-              FirestoreDataSource(
-                FirebaseFirestore.instance,
-                userId: userId,
-              ),
-            )..add(AddInterview(interview: _addInterview())),
-            child: _ListResultsView(
-              averageScore: _calculateAverageScore(),
-              remoteDataSource: widget.remoteDataSource,
-              isShow: _isShow,
-            ),
-          );
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+    return BlocProvider(
+      create: (context) => CreateInterviewBloc(
+        InterviewDataSource(
+          difficulty: widget.difficulty,
+          remoteDataSource: widget.remoteDataSource,
+        ),
+      )..add(CreateInterview()),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<GetUserBloc, GetUserState>(
+            listener: (context, state) {
+              if (state is GetUserNotAuth || state is GetUserFailure) {
+                Navigator.pushReplacementNamed(context, AppRouterNames.splash);
+              }
+            },
+          ),
+          BlocListener<CreateInterviewBloc, CreateInterviewState>(
+            listener: (context, state) {
+              if (state is CreateInterviewSuccess) {
+                interview = state.interview;
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<CreateInterviewBloc, CreateInterviewState>(
+          builder: (context, state) {
+            if (state is CreateInterviewSuccess) {
+              return BlocBuilder<GetUserBloc, GetUserState>(
+                builder: (context, state) {
+                  if (state is GetUserSuccess) {
+                    final userId = state.userProfile.id ?? '';
+                    return BlocProvider(
+                      create: (context) => AddInterviewBloc(
+                        FirestoreDataSource(
+                          FirebaseFirestore.instance,
+                          userId: userId,
+                        ),
+                      )..add(AddInterview(interview: interview)),
+                      child: _ListResultsView(
+                        averageScore: interview.score.toInt(),
+                        remoteDataSource: widget.remoteDataSource,
+                        isShow: _isShow,
+                      ),
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
     );
   }
 }

@@ -32,8 +32,6 @@ class AppRouter {
     AppRouterNames.home: (context) => const HomePage(),
     AppRouterNames.interview: (context) => InterviewPage(
       random: Random(),
-      pageController: PageController(),
-      answerController: TextEditingController(),
     ),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),

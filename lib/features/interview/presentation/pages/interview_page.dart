@@ -9,15 +9,8 @@ import '../widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
   final Random random;
-  final TextEditingController answerController;
-  final PageController pageController;
 
-  const InterviewPage({
-    super.key,
-    required this.random,
-    required this.pageController,
-    required this.answerController,
-  });
+  const InterviewPage({super.key, required this.random});
 
   @override
   State<InterviewPage> createState() => _InterviewPageState();
@@ -28,6 +21,9 @@ class _InterviewPageState extends State<InterviewPage> {
   late final int difficulty;
   final List<String> _answers = List.filled(10, '');
 
+  final TextEditingController answerController = TextEditingController();
+  final PageController pageController = PageController();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -36,8 +32,8 @@ class _InterviewPageState extends State<InterviewPage> {
 
   @override
   void dispose() {
-    widget.pageController.dispose();
-    widget.answerController.dispose();
+    pageController.dispose();
+    answerController.dispose();
     super.dispose();
   }
 
@@ -53,20 +49,20 @@ class _InterviewPageState extends State<InterviewPage> {
             if (state is GetQuestionsSuccess) {
               return PageView.builder(
                 itemCount: 10,
-                controller: widget.pageController,
+                controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (page) {
                   setState(() {
                     _currentPage = page;
-                    widget.answerController.text = _answers[page];
+                    answerController.text = _answers[_currentPage];
                   });
                 },
                 itemBuilder: (context, index) {
                   return _InterviewQuestionPage(
                     currentPage: _currentPage,
-                    answerController: widget.answerController,
+                    answerController: answerController,
                     answers: _answers,
-                    pageController: widget.pageController,
+                    pageController: pageController,
                     difficulty: difficulty,
                     question: state.questions[_currentPage],
                   );
@@ -126,7 +122,7 @@ class _InterviewQuestionPage extends StatelessWidget {
               onChanged: (value) {
                 answers[currentPage] = value.trim();
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'Введите ваш ответ...',
