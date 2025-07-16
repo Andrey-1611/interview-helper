@@ -1,6 +1,5 @@
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/repositories/interview_repository.dart';
-
 import '../models/gemini_response.dart';
 import '../models/question.dart';
 
@@ -8,7 +7,8 @@ class InterviewDataSource implements InterviewRepository {
   final List<GeminiResponses> remoteDataSource;
   final int difficulty;
 
-  InterviewDataSource({required this.difficulty, required this.remoteDataSource});
+  InterviewDataSource({required this.remoteDataSource, required this.difficulty});
+
 
   int _calculateAverageScore() {
     final totalScore = remoteDataSource

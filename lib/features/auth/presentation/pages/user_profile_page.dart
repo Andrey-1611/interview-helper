@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/services/notification_service.dart';
+import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/clear_user/clear_user_bloc.dart';

@@ -29,7 +29,6 @@ class _HistoryPageState extends State<HistoryPage> {
           }
         },
         builder: (context, state) {
-          //return Text('$state');
           if (state is GetUserSuccess) {
             final userId = state.userProfile.id ?? '';
             return BlocProvider(
@@ -56,7 +55,7 @@ class _HistoryPageState extends State<HistoryPage> {
 }
 
 class _HistoryView extends StatelessWidget {
-  const _HistoryView({super.key});
+  const _HistoryView();
 
   @override
   Widget build(BuildContext context) {

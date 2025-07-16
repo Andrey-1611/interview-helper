@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
+import 'package:interview_master/core/global_services/notifications/services/notifications_interface.dart';
 import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
 import 'package:interview_master/features/interview/data/data_sources/questions_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
@@ -64,7 +66,7 @@ class _InterviewPageState extends State<InterviewPage> {
                     answers: _answers,
                     pageController: pageController,
                     difficulty: difficulty,
-                    question: state.questions[_currentPage],
+                    questions: state.questions,
                   );
                 },
               );
@@ -83,7 +85,7 @@ class _InterviewQuestionPage extends StatelessWidget {
   final List<String> answers;
   final PageController pageController;
   final int difficulty;
-  final String question;
+  final List<String> questions;
 
   const _InterviewQuestionPage({
     required this.currentPage,
@@ -91,7 +93,7 @@ class _InterviewQuestionPage extends StatelessWidget {
     required this.answers,
     required this.pageController,
     required this.difficulty,
-    required this.question,
+    required this.questions,
   });
 
   @override
@@ -110,13 +112,17 @@ class _InterviewQuestionPage extends StatelessWidget {
             'Вопрос ${currentPage + 1} - ',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          Text(question, style: Theme.of(context).textTheme.bodyMedium),
+          Text(
+            questions[currentPage],
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           Expanded(
             child: TextField(
               autofocus: true,
               maxLines: null,
               minLines: null,
               expands: true,
+              maxLength: 500,
               textAlignVertical: TextAlignVertical.top,
               controller: answerController,
               onChanged: (value) {
@@ -197,8 +203,10 @@ class _InterviewQuestionPage extends StatelessWidget {
                 onPressed: () {
                   final userInputs = List.generate(
                     10,
-                    (index) =>
-                        UserInput(question: question, answer: answers[index]),
+                    (index) => UserInput(
+                      question: questions[index],
+                      answer: answers[index],
+                    ),
                   );
                   Navigator.pushNamed(
                     context,

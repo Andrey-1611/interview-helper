@@ -78,16 +78,16 @@ class _ResultsView extends StatelessWidget {
         builder: (context, state) {
           if (state is CheckResultsLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is CheckResultsSuccess) {
+            return _ResultsList(
+              difficulty: difficulty,
+              remoteDataSource: state.geminiResponse,
+            );
           } else if (state is CheckResultsFailure) {
             return const Center(
               child: Text(
                 'На сервере ведутся работы \nПожалуйста попробуйте позже',
               ),
-            );
-          } else if (state is CheckResultsSuccess) {
-            return _ResultsList(
-              difficulty: difficulty,
-              remoteDataSource: state.geminiResponse,
             );
           }
           return const SizedBox();
@@ -125,8 +125,8 @@ class _ResultsListState extends State<_ResultsList> {
     return BlocProvider(
       create: (context) => CreateInterviewBloc(
         InterviewDataSource(
-          difficulty: widget.difficulty,
           remoteDataSource: widget.remoteDataSource,
+          difficulty: widget.difficulty,
         ),
       )..add(CreateInterview()),
       child: MultiBlocListener(
@@ -148,9 +148,15 @@ class _ResultsListState extends State<_ResultsList> {
         ],
         child: BlocBuilder<CreateInterviewBloc, CreateInterviewState>(
           builder: (context, state) {
+            if (state is GetUserLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             if (state is CreateInterviewSuccess) {
               return BlocBuilder<GetUserBloc, GetUserState>(
                 builder: (context, state) {
+                  if (state is GetUserLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
                   if (state is GetUserSuccess) {
                     final userId = state.userProfile.id ?? '';
                     return BlocProvider(
@@ -167,11 +173,11 @@ class _ResultsListState extends State<_ResultsList> {
                       ),
                     );
                   }
-                  return const Center(child: CircularProgressIndicator());
+                  return const SizedBox();
                 },
               );
             }
-            return const Center(child: CircularProgressIndicator());
+            return const SizedBox();
           },
         ),
       ),

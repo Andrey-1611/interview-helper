@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import 'package:interview_master/core/global_services/notifications/models/notification.dart';
-import 'package:interview_master/core/global_services/notifications/services/notification_service.dart';
+import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../data/models/interview.dart';
 import '../widgets/custom_interview_card.dart';
 
