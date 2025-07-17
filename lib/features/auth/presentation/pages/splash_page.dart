@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/global_services/user/services/user_interface.dart';
@@ -15,7 +16,7 @@ class SplashPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) =>
-              CheckCurrentUserBloc(AuthDataSource())
+              CheckCurrentUserBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance))
                 ..add(CheckCurrentUser()),
         ),
         BlocProvider(

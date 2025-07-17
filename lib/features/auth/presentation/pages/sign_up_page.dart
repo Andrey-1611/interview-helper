@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
+import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router.dart';
@@ -43,7 +46,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SignUpBloc(AuthDataSource())),
+        BlocProvider(
+          create: (context) =>
+              SignUpBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
+        ),
         BlocProvider(
           create: (context) => SetUserBloc(context.read<UserInterface>()),
         ),
@@ -52,6 +58,16 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         BlocProvider(
           create: (context) => SendNotificationBloc(NotificationsService()),
+        ),
+        BlocProvider(
+          create: (context) => SendEmailVerificationBloc(
+            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => IsEmailVerifiedBloc(
+            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
+          ),
         ),
       ],
       child: Scaffold(
@@ -136,16 +152,57 @@ class _SignUpButton extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is SignUpSuccess) {
-              context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.userProfile),
+              context.read<SendEmailVerificationBloc>().add(
+                SendEmailVerification(),
               );
             } else if (state is SignUpFailure) {
               context.read<SendNotificationBloc>().add(
-                SendNotification(
-                  notification: MyNotification(
-                    text: 'Ошибка регистрации',
-                    icon: Icon(Icons.warning_amber),
-                  ),
+                _sendNotification(
+                  'Ошибка регистрации!',
+                  Icon(Icons.warning_amber),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
+          listener: (context, state) {
+            if (state is SendEmailVerificationSuccess) {
+              context.read<SendNotificationBloc>().add(
+                _sendNotification(
+                  'Писмо отправленно на указанную вами почту!',
+                  Icon(Icons.warning_amber),
+                ),
+              );
+              _showDialog(context);
+            } else if (state is SendEmailVerificationFailure) {
+              context.read<SendNotificationBloc>().add(
+                _sendNotification(
+                  'Ошибка регистрации!',
+                  Icon(Icons.warning_amber),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
+          listener: (context, state) {
+            if (state is IsEmailVerifiedSuccess) {
+              if (state.isEmailVerified.isEmailVerified) {
+                context.read<SetUserBloc>().add(
+                  SetUser(userProfile: state.isEmailVerified.userProfile),
+                );
+              } else {
+                _sendNotification(
+                  'Пожалуйста, подтвердите свою почту!',
+                  Icon(Icons.warning_amber),
+                );
+              }
+            } else if (state is IsEmailVerifiedFailure) {
+              context.read<SendNotificationBloc>().add(
+                _sendNotification(
+                  'Ошибка регистрации!',
+                  Icon(Icons.warning_amber),
                 ),
               );
             }
@@ -158,11 +215,9 @@ class _SignUpButton extends StatelessWidget {
               context.read<GetUserBloc>().add(GetUser());
             } else if (state is SetUserFailure) {
               context.read<SendNotificationBloc>().add(
-                SendNotification(
-                  notification: MyNotification(
-                    text: 'Ошибка регистрации',
-                    icon: Icon(Icons.warning_amber),
-                  ),
+                _sendNotification(
+                  'Ошибка регистрации!',
+                  Icon(Icons.warning_amber),
                 ),
               );
             }
@@ -172,45 +227,98 @@ class _SignUpButton extends StatelessWidget {
           listener: (context, state) {
             if (state is GetUserSuccess) {
               context.read<SendNotificationBloc>().add(
-                SendNotification(
-                  notification: MyNotification(
-                    text: '${state.userProfile.name}, добро пожаловать!',
-                    icon: Icon(Icons.star),
-                  ),
+                _sendNotification(
+                  '${state.userProfile.name}, добро пожаловать!',
+                  Icon(Icons.star),
                 ),
               );
             }
           },
         ),
       ],
-      child: BlocBuilder<SignUpBloc, SignUpState>(
-        builder: (context, state) {
-          if (state is SignUpLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return CustomButton(
-            text: 'Зарегистрироваться',
-            selectedColor: Colors.blue,
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                context.read<SignUpBloc>().add(
-                  SignUp(
-                    userProfile: UserProfile(
-                      id: Uuid().v1(),
-                      email: emailController.text.trim(),
-                      name: nameController.text.trim(),
-                    ),
-                    password: passwordController.text.trim(),
-                  ),
-                );
-              }
-            },
-            textColor: Colors.white,
-            percentsHeight: 0.06.sp,
-            percentsWidth: 1.sp,
-          );
-        },
+      child: _CustomButtonView(
+        formKey: formKey,
+        nameController: nameController,
+        emailController: emailController,
+        passwordController: passwordController,
       ),
+    );
+  }
+
+  SendNotification _sendNotification(String text, Icon icon) {
+    return SendNotification(
+      notification: MyNotification(text: text, icon: icon),
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Подтвердите свою почту'),
+          actions: [
+            CustomButton(
+              text: 'Я Подтвердил',
+              selectedColor: Colors.blue,
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
+              },
+              textColor: Colors.white,
+              percentsHeight: 0.07,
+              percentsWidth: 1,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _CustomButtonView extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const _CustomButtonView({
+    required this.formKey,
+    required this.nameController,
+    required this.emailController,
+    required this.passwordController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      builder: (context, state) {
+        if (state is SignUpLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return CustomButton(
+          text: 'Зарегистрироваться',
+          selectedColor: Colors.blue,
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              context.read<SignUpBloc>().add(
+                SignUp(
+                  userProfile: UserProfile(
+                    id: Uuid().v1(),
+                    email: emailController.text.trim(),
+                    name: nameController.text.trim(),
+                  ),
+                  password: passwordController.text.trim(),
+                ),
+              );
+            }
+          },
+          textColor: Colors.white,
+          percentsHeight: 0.06.sp,
+          percentsWidth: 1.sp,
+        );
+      },
     );
   }
 }

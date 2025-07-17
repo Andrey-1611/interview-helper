@@ -1,20 +1,18 @@
 import 'dart:developer';
+import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 
-import '../../../../../core/exceptions/auth_exception.dart';
-
 class AuthDataSource implements AuthRepository {
-  final FirebaseAuth _firebaseAuth;
+  final FirebaseAuth firebaseAuth;
 
-  AuthDataSource({FirebaseAuth? firebaseAuth})
-    : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  AuthDataSource({required this.firebaseAuth});
 
   @override
   Future<UserProfile> signIn(UserProfile userProfile, String password) async {
     try {
-      final credential = await _firebaseAuth.signInWithEmailAndPassword(
+      final credential = await firebaseAuth.signInWithEmailAndPassword(
         email: userProfile.email,
         password: password,
       );
@@ -27,9 +25,17 @@ class AuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<void> signOut() async {
+  Future<UserProfile> signUp(UserProfile userProfile, String password) async {
     try {
-      await _firebaseAuth.signOut();
+      final credential = await firebaseAuth.createUserWithEmailAndPassword(
+        email: userProfile.email,
+        password: password,
+      );
+      await credential.user?.updateDisplayName(userProfile.name);
+      await credential.user?.reload();
+      final updatedUser = firebaseAuth.currentUser!;
+      final user = _toUserProfile(updatedUser);
+      return user;
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -37,41 +43,59 @@ class AuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> signUp(UserProfile userProfile, String password) async {
+  Future<void> sendEmailVerification() async {
+    final user = firebaseAuth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  @override
+  Future<EmailVerificationResult?> isEmailVerified() async {
     try {
-      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: userProfile.email,
-        password: password,
+      final user = firebaseAuth.currentUser;
+      await user?.reload();
+      if (user == null) return null;
+      final bool isEmailVerified = user.emailVerified;
+      final UserProfile userProfile = UserProfile(
+        id: user.uid,
+        name: user.displayName,
+        email: user.email!,
       );
-      await credential.user?.updateDisplayName(userProfile.name);
-      await credential.user?.reload();
-      final updatedUser = _firebaseAuth.currentUser!;
-      final user = _toUserProfile(updatedUser);
-      return user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw AuthException('Аккаунт с такой почтой не найден');
-      } else if (e.code == 'wrong-password') {
-        throw AuthException('Неверный пароль');
-      } else if (e.code == 'invalid-email') {
-        throw AuthException('Некорректная почта');
-      } else {
-        throw AuthException('Ошибка входа');
-      }
+      return EmailVerificationResult(
+        isEmailVerified: isEmailVerified,
+        userProfile: userProfile,
+      );
     } catch (e) {
-      throw AuthException('Произошла неизвестная ошибка');
+      log(e.toString());
+      rethrow;
     }
   }
 
   @override
   Future<UserProfile?> checkCurrentUser() async {
-    await _firebaseAuth.currentUser?.reload();
-    final currentUser = _firebaseAuth.currentUser;
-    if (currentUser != null) {
-      final userProfile = _toUserProfile(currentUser);
-      return userProfile;
+    try {
+      await firebaseAuth.currentUser?.reload();
+      final currentUser = firebaseAuth.currentUser;
+      if (currentUser != null) {
+        final userProfile = _toUserProfile(currentUser);
+        return userProfile;
+      }
+      return null;
+    }  catch (e) {
+      log(e.toString());
+      rethrow;
     }
-    return null;
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   UserProfile _toUserProfile(User user) {
