@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/theme/theme.dart';
 import 'navigation/app_router.dart';
+import 'navigation/app_router_names.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

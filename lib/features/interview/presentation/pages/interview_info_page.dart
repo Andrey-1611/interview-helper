@@ -10,20 +10,41 @@ class InterviewInfoPage extends StatefulWidget {
 }
 
 class _InterviewInfoPageState extends State<InterviewInfoPage> {
-  late final List<bool> _isShow;
+  final List<bool> _isShow = List.generate(10, (_) => false);
   late final Interview interview;
-
-  @override
-  void initState() {
-    super.initState();
-    _isShow = List.generate(10, (_) => false);
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     interview = ModalRoute.of(context)!.settings.arguments as Interview;
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return _InterviewInfoPageView(
+      interview: interview,
+      isShow: _isShow,
+      changeShow: _changeShow,
+    );
+  }
+
+  void _changeShow(int index) {
+    setState(() {
+      _isShow[index] = !_isShow[index];
+    });
+  }
+}
+
+class _InterviewInfoPageView extends StatelessWidget {
+  final Interview interview;
+  final List<bool> isShow;
+  final ValueChanged<int> changeShow;
+
+  const _InterviewInfoPageView({
+    required this.interview,
+    required this.isShow,
+    required this.changeShow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,34 +73,51 @@ class _InterviewInfoPageState extends State<InterviewInfoPage> {
                 child: ListView.builder(
                   itemCount: interview.questions.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isShow[index] = !_isShow[index];
-                        });
-                      },
-                      child: CustomInterviewCard(
-                        score: interview.questions[index].score.toInt(),
-                        titleText:
-                            'Вопрос ${interview.questions[index].question}',
-                        firstText:
-                            'Ваш ответ: ${interview.questions[index].userAnswer}',
-                        secondText:
-                            'Правильный ответ: ${interview.questions[index].correctAnswer}',
-                        titleStyle: Theme.of(context).textTheme.bodyMedium,
-                        subtitleStyle: TextStyle(
-                          overflow:
-                              _isShow[index]
-                                  ? TextOverflow.visible
-                                  : TextOverflow.ellipsis,
-                        ),
-                      ),
+                    return _QuestionCard(
+                      interview: interview,
+                      index: index,
+                      isShow: isShow,
+                      changeShow: changeShow,
                     );
                   },
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuestionCard extends StatelessWidget {
+  final Interview interview;
+  final int index;
+  final List<bool> isShow;
+  final ValueChanged<int> changeShow;
+
+  const _QuestionCard({
+    required this.interview,
+    required this.index,
+    required this.isShow,
+    required this.changeShow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => changeShow(index),
+      child: CustomInterviewCard(
+        score: interview.questions[index].score.toInt(),
+        titleText: 'Вопрос ${interview.questions[index].question}',
+        firstText: 'Ваш ответ: ${interview.questions[index].userAnswer}',
+        secondText:
+            'Правильный ответ: ${interview.questions[index].correctAnswer}',
+        titleStyle: Theme.of(context).textTheme.bodyMedium,
+        subtitleStyle: TextStyle(
+          overflow: isShow[index]
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis,
         ),
       ),
     );

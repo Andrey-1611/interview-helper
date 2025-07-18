@@ -20,7 +20,7 @@ class CheckResultsBloc extends Bloc<CheckResultsEvent, CheckResultsState> {
             .checkAnswers(event.userInputs);
         emit(CheckResultsSuccess(geminiResponse: geminiResponse));
       } catch (e) {
-        emit(CheckResultsFailure(error: e.toString()));
+        emit(CheckResultsFailure());
       }
     });
   }

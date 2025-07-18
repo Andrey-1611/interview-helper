@@ -10,9 +10,10 @@ sealed class AddInterviewEvent extends Equatable {
 
 final class AddInterview extends AddInterviewEvent {
   final Interview interview;
+  final String userId;
 
-  const AddInterview({required this.interview});
+  const AddInterview({required this.interview, required this.userId});
 
   @override
-  List<Object?> get props => [interview];
+  List<Object?> get props => [interview, userId];
 }

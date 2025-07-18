@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router.dart';
+import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
 import 'history_page.dart';
 import 'initial_page.dart';
@@ -21,38 +22,48 @@ class _HomePageState extends State<HomePage> {
     return BlocProvider(
       create: (context) =>
           GetUserBloc(context.read<UserInterface>())..add(GetUser()),
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRouterNames.userProfile);
-              },
-              icon: Icon(Icons.settings),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Собеседование',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: 'История',
-            ),
-          ],
-        ),
-        body: _currentIndex == 0 ? InitialPage() : HistoryPage(),
+      child: _HomePageView(currentIndex: _currentIndex, changeIndex: _changeIndex),
+    );
+  }
+
+  void _changeIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+}
+
+class _HomePageView extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> changeIndex;
+  const _HomePageView({required this.currentIndex, required this.changeIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppRouterNames.userProfile);
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: changeIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Собеседование',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
+        ],
+      ),
+      body: currentIndex == 0 ? InitialPage() : HistoryPage(),
     );
   }
 }

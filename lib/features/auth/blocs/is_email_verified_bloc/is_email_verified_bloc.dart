@@ -19,7 +19,7 @@ class IsEmailVerifiedBloc
         if (isEmailVerified != null) {
           emit(IsEmailVerifiedSuccess(isEmailVerified: isEmailVerified));
         }
-        emit(IsEmailVerifiedFailure());
+        emit(IsEmailVerifiedLoading());
       } catch (e) {
         emit(IsEmailVerifiedFailure());
       }

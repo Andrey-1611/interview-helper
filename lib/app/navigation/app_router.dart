@@ -8,17 +8,7 @@ import '../../features/interview/presentation/pages/home_page.dart';
 import '../../features/interview/presentation/pages/interview_info_page.dart';
 import '../../features/interview/presentation/pages/interview_page.dart';
 import '../../features/interview/presentation/pages/results_page.dart';
-
-class AppRouterNames {
-  static const splash = '/';
-  static const signIn = '/sign_in';
-  static const signUp = '/sign_up';
-  static const userProfile = '/user_profile';
-  static const home = '/home';
-  static const interview = '/interview';
-  static const results = '/results';
-  static const interviewInfo = '/interview_info';
-}
+import 'app_router_names.dart';
 
 class AppRouter {
   static final GlobalKey<NavigatorState> navigatorKey =

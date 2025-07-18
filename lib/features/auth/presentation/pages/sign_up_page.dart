@@ -5,8 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
+import 'package:interview_master/features/auth/presentation/widgets/custom_email_dialog.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../app/navigation/app_router.dart';
+import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/notifications/services/notifications_service.dart';
@@ -70,62 +71,94 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ],
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Spacer(),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomTextFormField(
-                      controller: _nameController,
-                      hintText: 'Имя',
-                      prefixIcon: const Icon(Icons.person),
-                      keyboardType: TextInputType.name,
+      child: _SignUpPageView(
+        formKey: _formKey,
+        nameController: _nameController,
+        emailController: _emailController,
+        passwordController: _passwordController,
+        isObscure: _isObscure,
+        isObscureChange: isObscureChange,
+      ),
+    );
+  }
+
+  void isObscureChange() {
+    setState(() {
+      _isObscure = !_isObscure;
+    });
+  }
+}
+
+class _SignUpPageView extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final bool isObscure;
+  final VoidCallback isObscureChange;
+
+  const _SignUpPageView({
+    required this.formKey,
+    required this.nameController,
+    required this.emailController,
+    required this.passwordController,
+    required this.isObscure,
+    required this.isObscureChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const Spacer(),
+            Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextFormField(
+                    controller: nameController,
+                    hintText: 'Имя',
+                    prefixIcon: const Icon(Icons.person),
+                    keyboardType: TextInputType.name,
+                  ),
+                  CustomTextFormField(
+                    controller: emailController,
+                    hintText: 'Почта',
+                    prefixIcon: const Icon(Icons.email),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  CustomTextFormField(
+                    controller: passwordController,
+                    hintText: 'Пароль',
+                    prefixIcon: const Icon(Icons.lock),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: isObscure,
+                    iconButton: IconButton(
+                      onPressed: isObscureChange,
+                      icon: const Icon(Icons.remove_red_eye_outlined),
                     ),
-                    CustomTextFormField(
-                      controller: _emailController,
-                      hintText: 'Почта',
-                      prefixIcon: const Icon(Icons.email),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    CustomTextFormField(
-                      controller: _passwordController,
-                      hintText: 'Пароль',
-                      prefixIcon: const Icon(Icons.lock),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: _isObscure,
-                      iconButton: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                        icon: const Icon(Icons.remove_red_eye_outlined),
-                      ),
-                    ),
-                    _SignUpButton(
-                      formKey: _formKey,
-                      nameController: _nameController,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                    ),
-                  ],
-                ),
+                  ),
+                  _SignUpButton(
+                    formKey: formKey,
+                    nameController: nameController,
+                    emailController: emailController,
+                    passwordController: passwordController,
+                  ),
+                ],
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRouterNames.signIn);
-                },
-                child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
-              ),
-            ],
-          ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouterNames.signIn);
+              },
+              child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
+            ),
+          ],
         ),
       ),
     );
@@ -157,10 +190,7 @@ class _SignUpButton extends StatelessWidget {
               );
             } else if (state is SignUpFailure) {
               context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Ошибка регистрации!',
-                  Icon(Icons.warning_amber),
-                ),
+                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
               );
             }
           },
@@ -171,16 +201,13 @@ class _SignUpButton extends StatelessWidget {
               context.read<SendNotificationBloc>().add(
                 _sendNotification(
                   'Писмо отправленно на указанную вами почту!',
-                  Icon(Icons.warning_amber),
+                  Icon(Icons.info),
                 ),
               );
               _showDialog(context);
             } else if (state is SendEmailVerificationFailure) {
               context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Ошибка регистрации!',
-                  Icon(Icons.warning_amber),
-                ),
+                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
               );
             }
           },
@@ -195,15 +222,12 @@ class _SignUpButton extends StatelessWidget {
               } else {
                 _sendNotification(
                   'Пожалуйста, подтвердите свою почту!',
-                  Icon(Icons.warning_amber),
+                  Icon(Icons.error),
                 );
               }
             } else if (state is IsEmailVerifiedFailure) {
               context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Ошибка регистрации!',
-                  Icon(Icons.warning_amber),
-                ),
+                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
               );
             }
           },
@@ -215,10 +239,7 @@ class _SignUpButton extends StatelessWidget {
               context.read<GetUserBloc>().add(GetUser());
             } else if (state is SetUserFailure) {
               context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Ошибка регистрации!',
-                  Icon(Icons.warning_amber),
-                ),
+                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
               );
             }
           },
@@ -256,22 +277,7 @@ class _SignUpButton extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Подтвердите свою почту'),
-          actions: [
-            CustomButton(
-              text: 'Я Подтвердил',
-              selectedColor: Colors.blue,
-              onPressed: () {
-                Navigator.pop(context);
-                context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
-              },
-              textColor: Colors.white,
-              percentsHeight: 0.07,
-              percentsWidth: 1,
-            ),
-          ],
-        );
+        return CustomEmailDialog();
       },
     );
   }

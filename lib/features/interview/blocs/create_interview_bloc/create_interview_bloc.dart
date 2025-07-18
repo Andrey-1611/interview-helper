@@ -17,7 +17,10 @@ class CreateInterviewBloc
     on<CreateInterview>((event, emit) {
       emit(CreateInterviewLoading());
       try {
-        final interview = interviewRepository.createInterview();
+        final interview = interviewRepository.createInterview(
+          event.remoteDataSource,
+          event.difficulty,
+        );
         emit(CreateInterviewSuccess(interview: interview));
       } catch (e) {
         emit(CreateInterviewFailure());

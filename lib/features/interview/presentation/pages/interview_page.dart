@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_interface.dart';
 import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
 import 'package:interview_master/features/interview/data/data_sources/questions_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
+import '../../../../app/navigation/app_router_names.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
@@ -29,7 +28,10 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    difficulty = ModalRoute.of(context)!.settings.arguments as int;
+    difficulty = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as int;
   }
 
   @override
@@ -43,41 +45,66 @@ class _InterviewPageState extends State<InterviewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          GetQuestionsBloc(QuestionsDataSource(random: Random()))
-            ..add(GetQuestions(difficulty: difficulty)),
-      child: Scaffold(
-        body: BlocBuilder<GetQuestionsBloc, GetQuestionsState>(
-          builder: (context, state) {
-            if (state is GetQuestionsSuccess) {
-              return PageView.builder(
-                itemCount: 10,
-                controller: pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (page) {
-                  setState(() {
-                    _currentPage = page;
-                    answerController.text = _answers[_currentPage];
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return _InterviewQuestionPage(
-                    currentPage: _currentPage,
-                    answerController: answerController,
-                    answers: _answers,
-                    pageController: pageController,
-                    difficulty: difficulty,
-                    questions: state.questions,
-                  );
-                },
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+      GetQuestionsBloc(QuestionsDataSource(random: Random()))
+        ..add(GetQuestions(difficulty: difficulty)),
+      child: _InterviewPageView(pageController: pageController,
+        answerController: answerController,
+        currentPage: _currentPage,
+        answers: _answers,
+        difficulty: difficulty,
+        changePage: _changePage,),
+    );
+  }
+
+  void _changePage(int page) {
+    setState(() {
+      _currentPage = page;
+      answerController.text = _answers[_currentPage];
+    });
+  }
+}
+
+class _InterviewPageView extends StatelessWidget {
+  final PageController pageController;
+  final TextEditingController answerController;
+  final int currentPage;
+  final List<String> answers;
+  final int difficulty;
+  final ValueChanged<int> changePage;
+
+  const _InterviewPageView(
+      {required this.pageController, required this.answerController, required this.currentPage, required this.answers, required this.difficulty, required this.changePage});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<GetQuestionsBloc, GetQuestionsState>(
+        builder: (context, state) {
+          if (state is GetQuestionsSuccess) {
+            return PageView.builder(
+              itemCount: 10,
+              controller: pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (page) => changePage(page),
+              itemBuilder: (context, index) {
+                return _InterviewQuestionPage(
+                  currentPage: currentPage,
+                  answerController: answerController,
+                  answers: answers,
+                  pageController: pageController,
+                  difficulty: difficulty,
+                  questions: state.questions,
+                );
+              },
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
 }
+
 
 class _InterviewQuestionPage extends StatelessWidget {
   final int currentPage;
@@ -110,11 +137,17 @@ class _InterviewQuestionPage extends StatelessWidget {
         children: [
           Text(
             'Вопрос ${currentPage + 1} - ',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
           ),
           Text(
             questions[currentPage],
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
           ),
           Expanded(
             child: TextField(
@@ -141,13 +174,13 @@ class _InterviewQuestionPage extends StatelessWidget {
               currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
-                      textColor: Colors.white,
-                      text: 'Назад',
-                      selectedColor: Colors.blue,
-                      percentsHeight: 0.07,
-                      percentsWidth: 0.29,
-                      onPressed: () => _navigateToPage(currentPage - 1),
-                    ),
+                textColor: Colors.white,
+                text: 'Назад',
+                selectedColor: Colors.blue,
+                percentsHeight: 0.07,
+                percentsWidth: 0.29,
+                onPressed: () => _navigateToPage(currentPage - 1),
+              ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 textColor: Colors.white,
@@ -190,7 +223,10 @@ class _InterviewQuestionPage extends StatelessWidget {
         return AlertDialog(
           title: Text(
             'Вы уверены что хотите завершить тестирование?',
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme
+                .of(context)
+                .textTheme
+                .displaySmall,
           ),
           actions: [
             Center(
@@ -203,12 +239,13 @@ class _InterviewQuestionPage extends StatelessWidget {
                 onPressed: () {
                   final userInputs = List.generate(
                     10,
-                    (index) => UserInput(
-                      question: questions[index],
-                      answer: answers[index],
-                    ),
+                        (index) =>
+                        UserInput(
+                          question: questions[index],
+                          answer: answers[index],
+                        ),
                   );
-                  Navigator.pushNamed(
+                  Navigator.pushReplacementNamed(
                     context,
                     AppRouterNames.results,
                     arguments: {

@@ -4,13 +4,8 @@ import '../models/gemini_response.dart';
 import '../models/question.dart';
 
 class InterviewDataSource implements InterviewRepository {
-  final List<GeminiResponses> remoteDataSource;
-  final int difficulty;
 
-  InterviewDataSource({required this.remoteDataSource, required this.difficulty});
-
-
-  int _calculateAverageScore() {
+  int _calculateAverageScore(List<GeminiResponses> remoteDataSource) {
     final totalScore = remoteDataSource
         .map((response) => response.score)
         .reduce((score1, score2) => score1 + score2)
@@ -19,7 +14,7 @@ class InterviewDataSource implements InterviewRepository {
   }
 
   @override
-  Interview createInterview() {
+  Interview createInterview(List<GeminiResponses> remoteDataSource, int difficulty) {
     final List<Question> questions = remoteDataSource
         .map(
           (response) => Question(
@@ -31,7 +26,7 @@ class InterviewDataSource implements InterviewRepository {
         )
         .toList();
     final Interview interview = Interview(
-      score: _calculateAverageScore().toDouble(),
+      score: _calculateAverageScore(remoteDataSource).toDouble(),
       difficulty: difficulty,
       date: DateTime.now(),
       questions: questions,

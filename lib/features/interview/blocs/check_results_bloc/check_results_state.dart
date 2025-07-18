@@ -12,11 +12,7 @@ final class CheckResultsInitial extends CheckResultsState {}
 
 final class CheckResultsLoading extends CheckResultsState {}
 
-final class CheckResultsFailure extends CheckResultsState {
-  final String error;
-
-  CheckResultsFailure({required this.error});
-}
+final class CheckResultsFailure extends CheckResultsState {}
 
 final class CheckResultsSuccess extends CheckResultsState {
   final List<GeminiResponses> geminiResponse;
