@@ -1,10 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
 import 'package:interview_master/features/interview/data/data_sources/questions_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../../../../core/global_services/notifications/models/notification.dart';
+import '../../../auth/presentation/widgets/custom_loading_indicator.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
@@ -28,10 +31,7 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    difficulty = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as int;
+    difficulty = ModalRoute.of(context)!.settings.arguments as int;
   }
 
   @override
@@ -45,14 +45,16 @@ class _InterviewPageState extends State<InterviewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      GetQuestionsBloc(QuestionsDataSource(random: Random()))
-        ..add(GetQuestions(difficulty: difficulty)),
-      child: _InterviewPageView(pageController: pageController,
+          GetQuestionsBloc(QuestionsDataSource(random: Random()))
+            ..add(GetQuestions(difficulty: difficulty)),
+      child: _InterviewPageView(
+        pageController: pageController,
         answerController: answerController,
         currentPage: _currentPage,
         answers: _answers,
         difficulty: difficulty,
-        changePage: _changePage,),
+        changePage: _changePage,
+      ),
     );
   }
 
@@ -72,16 +74,27 @@ class _InterviewPageView extends StatelessWidget {
   final int difficulty;
   final ValueChanged<int> changePage;
 
-  const _InterviewPageView(
-      {required this.pageController, required this.answerController, required this.currentPage, required this.answers, required this.difficulty, required this.changePage});
+  const _InterviewPageView({
+    required this.pageController,
+    required this.answerController,
+    required this.currentPage,
+    required this.answers,
+    required this.difficulty,
+    required this.changePage,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<GetQuestionsBloc, GetQuestionsState>(
-        builder: (context, state) {
-          if (state is GetQuestionsSuccess) {
-            return PageView.builder(
+    return BlocConsumer<GetQuestionsBloc, GetQuestionsState>(
+      listener: (context, state) {
+        if (state is GetQuestionsFailure) {
+          _errorMove(context);
+        }
+      },
+      builder: (context, state) {
+        if (state is GetQuestionsSuccess) {
+          return Scaffold(
+            body: PageView.builder(
               itemCount: 10,
               controller: pageController,
               physics: const NeverScrollableScrollPhysics(),
@@ -96,15 +109,27 @@ class _InterviewPageView extends StatelessWidget {
                   questions: state.questions,
                 );
               },
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+            ),
+          );
+        }
+        return const CustomLoadingIndicator();
+      },
+    );
+  }
+
+  void _errorMove(BuildContext context) {
+    AppRouter.pushReplacementNamed(AppRouterNames.splash);
+    context.read<SendNotificationBloc>().add(
+      _sendNotification('Ошибка получения вопросов', Icon(Icons.error)),
+    );
+  }
+
+  SendNotification _sendNotification(String text, Icon icon) {
+    return SendNotification(
+      notification: MyNotification(text: text, icon: icon),
     );
   }
 }
-
 
 class _InterviewQuestionPage extends StatelessWidget {
   final int currentPage;
@@ -137,17 +162,11 @@ class _InterviewQuestionPage extends StatelessWidget {
         children: [
           Text(
             'Вопрос ${currentPage + 1} - ',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
             questions[currentPage],
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Expanded(
             child: TextField(
@@ -174,13 +193,13 @@ class _InterviewQuestionPage extends StatelessWidget {
               currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
-                textColor: Colors.white,
-                text: 'Назад',
-                selectedColor: Colors.blue,
-                percentsHeight: 0.07,
-                percentsWidth: 0.29,
-                onPressed: () => _navigateToPage(currentPage - 1),
-              ),
+                      textColor: Colors.white,
+                      text: 'Назад',
+                      selectedColor: Colors.blue,
+                      percentsHeight: 0.07,
+                      percentsWidth: 0.29,
+                      onPressed: () => _navigateToPage(currentPage - 1),
+                    ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 textColor: Colors.white,
@@ -223,10 +242,7 @@ class _InterviewQuestionPage extends StatelessWidget {
         return AlertDialog(
           title: Text(
             'Вы уверены что хотите завершить тестирование?',
-            style: Theme
-                .of(context)
-                .textTheme
-                .displaySmall,
+            style: Theme.of(context).textTheme.displaySmall,
           ),
           actions: [
             Center(
@@ -239,14 +255,12 @@ class _InterviewQuestionPage extends StatelessWidget {
                 onPressed: () {
                   final userInputs = List.generate(
                     10,
-                        (index) =>
-                        UserInput(
-                          question: questions[index],
-                          answer: answers[index],
-                        ),
+                    (index) => UserInput(
+                      question: questions[index],
+                      answer: answers[index],
+                    ),
                   );
-                  Navigator.pushReplacementNamed(
-                    context,
+                  AppRouter.pushReplacementNamed(
                     AppRouterNames.results,
                     arguments: {
                       'userInputs': userInputs,

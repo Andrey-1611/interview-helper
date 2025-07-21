@@ -15,13 +15,15 @@ class IsEmailVerifiedBloc
     on<IsEmailVerified>((event, emit) async {
       emit(IsEmailVerifiedLoading());
       try {
-        final EmailVerificationResult? isEmailVerified = await authRepository.isEmailVerified();
-        if (isEmailVerified != null) {
-          emit(IsEmailVerifiedSuccess(isEmailVerified: isEmailVerified));
+        final EmailVerificationResult? isEmailVerified = await authRepository
+            .isEmailVerified();
+        if (isEmailVerified?.isEmailVerified == true) {
+          emit(IsEmailVerifiedSuccess(isEmailVerified: isEmailVerified!));
+        } else {
+          emit(IsEmailNotVerified());
         }
-        emit(IsEmailVerifiedLoading());
       } catch (e) {
-        emit(IsEmailVerifiedFailure());
+        emit(IsEmailVerifiedFailure(e.toString()));
       }
     });
   }

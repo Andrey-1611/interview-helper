@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/features/interview/blocs/create_interview_bloc/create_interview_bloc.dart';
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/interview_data_source.dart';
@@ -11,6 +11,7 @@ import '../../../../core/global_services/notifications/blocs/send_notification_b
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../auth/presentation/widgets/custom_loading_indicator.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../../blocs/check_results_bloc/check_results_bloc.dart';
 import '../../data/data_sources/remote_data_source.dart';
@@ -61,9 +62,6 @@ class _ResultsPageState extends State<ResultsPage> {
             FirestoreDataSource(firebaseFirestore: FirebaseFirestore.instance),
           ),
         ),
-        BlocProvider(
-          create: (context) => SendNotificationBloc(NotificationsService()),
-        ),
       ],
       child: _ResultsPageView(
         difficulty: _difficulty,
@@ -99,7 +97,7 @@ class _ResultsPageView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
             },
             icon: Icon(Icons.home),
           ),
@@ -192,18 +190,18 @@ class _ResultsList extends StatelessWidget {
                     changeShow: changeShow,
                   );
                 }
-                return const Center(child: CircularProgressIndicator());
+                return const CustomLoadingIndicator();
               },
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          return const CustomLoadingIndicator();
         },
       ),
     );
   }
 
   void _errorMove(BuildContext context) {
-    Navigator.pushReplacementNamed(context, AppRouterNames.splash);
+    AppRouter.pushReplacementNamed(AppRouterNames.splash);
     context.read<SendNotificationBloc>().add(
       _sendNotification('Ошибка проверки результатов', Icon(Icons.error)),
     );

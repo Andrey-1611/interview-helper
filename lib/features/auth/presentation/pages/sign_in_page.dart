@@ -1,22 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import 'package:interview_master/core/global_services/notifications/models/notification.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
+import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
+import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
-import '../../../interview/presentation/widgets/custom_button.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
-import '../widgets/custom_email_dialog.dart';
+import '../widgets/custom_auth_button.dart';
+import '../widgets/custom_loading_indicator.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -59,9 +57,6 @@ class _SignInPageState extends State<SignInPage> {
         BlocProvider(
           create: (context) => GetUserBloc(context.read<UserInterface>()),
         ),
-        BlocProvider(
-          create: (context) => SendNotificationBloc(NotificationsService()),
-        ),
       ],
       child: _SignInPageView(
         formKey: _formKey,
@@ -103,44 +98,16 @@ class _SignInPageView extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(),
-            Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomTextFormField(
-                    controller: emailController,
-                    hintText: 'Почта',
-                    prefixIcon: const Icon(Icons.email),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    hintText: 'Пароль',
-                    prefixIcon: const Icon(Icons.lock),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: isObscure,
-                    iconButton: IconButton(
-                      onPressed: isObscureChange,
-                      icon: const Icon(Icons.remove_red_eye_outlined),
-                    ),
-                  ),
-                  _SignInButton(
-                    formKey: formKey,
-                    emailController: emailController,
-                    passwordController: passwordController,
-                  ),
-                ],
-              ),
+            _SignInForm(
+              formKey: formKey,
+              emailController: emailController,
+              passwordController: passwordController,
+              isObscure: isObscure,
+              isObscureChange: isObscureChange,
             ),
+            _PasswordNavigationButton(),
             const Spacer(),
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, AppRouterNames.signUp);
-              },
-              child: const Text('Еще нет аккаунта?  Создать аккаунт'),
-            ),
+            _SignUpNavigationButton(),
           ],
         ),
       ),
@@ -178,17 +145,15 @@ class _SignInButton extends StatelessWidget {
         BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
           listener: (context, state) {
             if (state is IsEmailVerifiedSuccess) {
-              if (state.isEmailVerified.isEmailVerified) {
-                context.read<SetUserBloc>().add(
-                  SetUser(userProfile: state.isEmailVerified.userProfile),
-                );
-              } else {
-                _sendNotification(
-                  'Пожалуйста, подтвердите свою почту!',
-                  Icon(Icons.error),
-                );
-                _showDialog(context);
-              }
+              context.read<SetUserBloc>().add(
+                SetUser(userProfile: state.isEmailVerified.userProfile),
+              );
+            } else if (state is IsEmailNotVerified) {
+              _sendNotification(
+                'Пожалуйста, подтвердите свою почту!',
+                Icon(Icons.error),
+              );
+              AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
             } else if (state is IsEmailVerifiedFailure) {
               _sendNotification('Ошибка входа!', Icon(Icons.error));
             }
@@ -197,17 +162,10 @@ class _SignInButton extends StatelessWidget {
         BlocListener<SetUserBloc, SetUserState>(
           listener: (context, state) {
             if (state is SetUserSuccess) {
-              Navigator.pushReplacementNamed(context, AppRouterNames.home);
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
               context.read<GetUserBloc>().add(GetUser());
             } else if (state is SetUserFailure) {
-              context.read<SendNotificationBloc>().add(
-                SendNotification(
-                  notification: MyNotification(
-                    text: 'Ошибка входа',
-                    icon: Icon(Icons.error),
-                  ),
-                ),
-              );
+              _sendNotification('Ошибка входа!', Icon(Icons.error));
             }
           },
         ),
@@ -215,11 +173,9 @@ class _SignInButton extends StatelessWidget {
           listener: (context, state) {
             if (state is GetUserSuccess) {
               context.read<SendNotificationBloc>().add(
-                SendNotification(
-                  notification: MyNotification(
-                    text: '${state.userProfile.name}, добро пожаловать!',
-                    icon: Icon(Icons.star),
-                  ),
+                _sendNotification(
+                  '${state.userProfile.name}, добро пожаловать!',
+                  Icon(Icons.star),
                 ),
               );
             }
@@ -237,16 +193,6 @@ class _SignInButton extends StatelessWidget {
   SendNotification _sendNotification(String text, Icon icon) {
     return SendNotification(
       notification: MyNotification(text: text, icon: icon),
-    );
-  }
-
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return CustomEmailDialog();
-      },
     );
   }
 }
@@ -267,11 +213,10 @@ class _SignInButtonView extends StatelessWidget {
     return BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         if (state is SignInLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const CustomLoadingIndicator();
         }
-        return CustomButton(
+        return CustomAuthButton(
           text: 'Войти',
-          selectedColor: Colors.blue,
           onPressed: () {
             if (formKey.currentState!.validate()) {
               context.read<SignInBloc>().add(
@@ -282,11 +227,87 @@ class _SignInButtonView extends StatelessWidget {
               );
             }
           },
-          textColor: Colors.white,
-          percentsHeight: 0.06.sp,
-          percentsWidth: 1.sp,
         );
       },
+    );
+  }
+}
+
+class _SignInForm extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final bool isObscure;
+  final VoidCallback isObscureChange;
+
+  const _SignInForm({
+    required this.formKey,
+    required this.emailController,
+    required this.passwordController,
+    required this.isObscure,
+    required this.isObscureChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomTextFormField(
+            controller: emailController,
+            hintText: 'Почта',
+            prefixIcon: const Icon(Icons.email),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          CustomTextFormField(
+            controller: passwordController,
+            hintText: 'Пароль',
+            prefixIcon: const Icon(Icons.lock),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: isObscure,
+            iconButton: IconButton(
+              onPressed: isObscureChange,
+              icon: const Icon(Icons.remove_red_eye_outlined),
+            ),
+          ),
+          _SignInButton(
+            formKey: formKey,
+            emailController: emailController,
+            passwordController: passwordController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PasswordNavigationButton extends StatelessWidget {
+  const _PasswordNavigationButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        AppRouter.pushReplacementNamed(AppRouterNames.changePassword);
+      },
+      child: const Text('Забыли пароль?  Изменить пароль'),
+    );
+  }
+}
+
+class _SignUpNavigationButton extends StatelessWidget {
+  const _SignUpNavigationButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        AppRouter.pushReplacementNamed(AppRouterNames.signUp);
+      },
+      child: const Text('Еще нет аккаунта?  Создать аккаунт'),
     );
   }
 }

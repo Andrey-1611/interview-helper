@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../data/models/interview.dart';
 import '../widgets/custom_interview_card.dart';
 
@@ -55,19 +56,7 @@ class _InterviewInfoPageView extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.sizeOf(context).width,
-                height: MediaQuery.sizeOf(context).height * 0.25,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: Colors.blue, width: 4.0),
-                ),
-                child: Text(
-                  'Результат: ${interview.score.toInt()} %',
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-              ),
+              _AverageScoreContainer(interview: interview),
               const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
@@ -89,6 +78,29 @@ class _InterviewInfoPageView extends StatelessWidget {
     );
   }
 }
+
+class _AverageScoreContainer extends StatelessWidget {
+  final Interview interview;
+  const _AverageScoreContainer({required this.interview});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height * 0.25,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0.sp),
+        border: Border.all(color: Colors.blue, width: 4.0.sp),
+      ),
+      child: Text(
+        'Результат: ${interview.score.toInt()} %',
+        style: Theme.of(context).textTheme.displayLarge,
+      ),
+    );
+  }
+}
+
 
 class _QuestionCard extends StatelessWidget {
   final Interview interview;

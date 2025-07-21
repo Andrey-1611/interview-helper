@@ -1,22 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_sources/auth_data_source.dart';
-import 'package:interview_master/features/auth/presentation/widgets/custom_email_dialog.dart';
+import 'package:interview_master/features/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
-import '../../../../core/global_services/notifications/services/notifications_service.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/blocs/set_user/set_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_interface.dart';
-import '../../../interview/presentation/widgets/custom_button.dart';
-import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../../../../core/global_services/user/models/user_profile.dart';
+import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
+import '../widgets/custom_auth_button.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -52,21 +48,11 @@ class _SignUpPageState extends State<SignUpPage> {
               SignUpBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
         ),
         BlocProvider(
-          create: (context) => SetUserBloc(context.read<UserInterface>()),
-        ),
-        BlocProvider(
-          create: (context) => GetUserBloc(context.read<UserInterface>()),
-        ),
-        BlocProvider(
-          create: (context) => SendNotificationBloc(NotificationsService()),
+          create: (context) =>
+              SignInBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
         ),
         BlocProvider(
           create: (context) => SendEmailVerificationBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(
             AuthDataSource(firebaseAuth: FirebaseAuth.instance),
           ),
         ),
@@ -114,53 +100,92 @@ class _SignUpPageView extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(),
-            Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextFormField(
-                    controller: nameController,
-                    hintText: 'Имя',
-                    prefixIcon: const Icon(Icons.person),
-                    keyboardType: TextInputType.name,
-                  ),
-                  CustomTextFormField(
-                    controller: emailController,
-                    hintText: 'Почта',
-                    prefixIcon: const Icon(Icons.email),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    hintText: 'Пароль',
-                    prefixIcon: const Icon(Icons.lock),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: isObscure,
-                    iconButton: IconButton(
-                      onPressed: isObscureChange,
-                      icon: const Icon(Icons.remove_red_eye_outlined),
-                    ),
-                  ),
-                  _SignUpButton(
-                    formKey: formKey,
-                    nameController: nameController,
-                    emailController: emailController,
-                    passwordController: passwordController,
-                  ),
-                ],
-              ),
+            _SignUpForm(
+              formKey: formKey,
+              nameController: nameController,
+              emailController: emailController,
+              passwordController: passwordController,
+              isObscure: isObscure,
+              isObscureChange: isObscureChange,
             ),
             const Spacer(),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRouterNames.signIn);
-              },
-              child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
-            ),
+            _SignInNavigationButton(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SignUpForm extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final bool isObscure;
+  final VoidCallback isObscureChange;
+
+  const _SignUpForm({
+    required this.formKey,
+    required this.nameController,
+    required this.emailController,
+    required this.passwordController,
+    required this.isObscure,
+    required this.isObscureChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomTextFormField(
+            controller: nameController,
+            hintText: 'Имя',
+            prefixIcon: const Icon(Icons.person),
+            keyboardType: TextInputType.name,
+          ),
+          CustomTextFormField(
+            controller: emailController,
+            hintText: 'Почта',
+            prefixIcon: const Icon(Icons.email),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          CustomTextFormField(
+            controller: passwordController,
+            hintText: 'Пароль',
+            prefixIcon: const Icon(Icons.lock),
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: isObscure,
+            iconButton: IconButton(
+              onPressed: isObscureChange,
+              icon: const Icon(Icons.remove_red_eye_outlined),
+            ),
+          ),
+          _SignUpButton(
+            formKey: formKey,
+            nameController: nameController,
+            emailController: emailController,
+            passwordController: passwordController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SignInNavigationButton extends StatelessWidget {
+  const _SignInNavigationButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, AppRouterNames.signIn);
+      },
+      child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
     );
   }
 }
@@ -185,8 +210,8 @@ class _SignUpButton extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is SignUpSuccess) {
-              context.read<SendEmailVerificationBloc>().add(
-                SendEmailVerification(),
+              AppRouter.pushReplacementNamed(
+                AppRouterNames.emailVerification,
               );
             } else if (state is SignUpFailure) {
               context.read<SendNotificationBloc>().add(
@@ -195,63 +220,26 @@ class _SignUpButton extends StatelessWidget {
             }
           },
         ),
+        BlocListener<SignInBloc, SignInState>(
+          listener: (context, state) {
+            if (state is SignInSuccess) {
+              context.read<SendEmailVerificationBloc>().add(
+                SendEmailVerification(),
+              );
+            }
+          },
+        ),
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Писмо отправленно на указанную вами почту!',
-                  Icon(Icons.info),
-                ),
+              AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
+              _sendNotification(
+                'Письмо с подтверждением отправлено на вашу почту',
+                Icon(Icons.info),
               );
-              _showDialog(context);
             } else if (state is SendEmailVerificationFailure) {
               context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
-              );
-            }
-          },
-        ),
-        BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
-          listener: (context, state) {
-            if (state is IsEmailVerifiedSuccess) {
-              if (state.isEmailVerified.isEmailVerified) {
-                context.read<SetUserBloc>().add(
-                  SetUser(userProfile: state.isEmailVerified.userProfile),
-                );
-              } else {
-                _sendNotification(
-                  'Пожалуйста, подтвердите свою почту!',
-                  Icon(Icons.error),
-                );
-              }
-            } else if (state is IsEmailVerifiedFailure) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
-              );
-            }
-          },
-        ),
-        BlocListener<SetUserBloc, SetUserState>(
-          listener: (context, state) {
-            if (state is SetUserSuccess) {
-              Navigator.pushReplacementNamed(context, AppRouterNames.home);
-              context.read<GetUserBloc>().add(GetUser());
-            } else if (state is SetUserFailure) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
-              );
-            }
-          },
-        ),
-        BlocListener<GetUserBloc, GetUserState>(
-          listener: (context, state) {
-            if (state is GetUserSuccess) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  '${state.userProfile.name}, добро пожаловать!',
-                  Icon(Icons.star),
-                ),
+                _sendNotification('Ошибка входа', Icon(Icons.error)),
               );
             }
           },
@@ -269,16 +257,6 @@ class _SignUpButton extends StatelessWidget {
   SendNotification _sendNotification(String text, Icon icon) {
     return SendNotification(
       notification: MyNotification(text: text, icon: icon),
-    );
-  }
-
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return CustomEmailDialog();
-      },
     );
   }
 }
@@ -301,11 +279,10 @@ class _CustomButtonView extends StatelessWidget {
     return BlocBuilder<SignUpBloc, SignUpState>(
       builder: (context, state) {
         if (state is SignUpLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const CustomLoadingIndicator();
         }
-        return CustomButton(
+        return CustomAuthButton(
           text: 'Зарегистрироваться',
-          selectedColor: Colors.blue,
           onPressed: () {
             if (formKey.currentState!.validate()) {
               context.read<SignUpBloc>().add(
@@ -320,9 +297,6 @@ class _CustomButtonView extends StatelessWidget {
               );
             }
           },
-          textColor: Colors.white,
-          percentsHeight: 0.06.sp,
-          percentsWidth: 1.sp,
         );
       },
     );

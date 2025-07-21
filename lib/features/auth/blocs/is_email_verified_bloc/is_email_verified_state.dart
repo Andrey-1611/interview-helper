@@ -11,7 +11,13 @@ final class IsEmailVerifiedInitial extends IsEmailVerifiedState {}
 
 final class IsEmailVerifiedLoading extends IsEmailVerifiedState {}
 
-final class IsEmailVerifiedFailure extends IsEmailVerifiedState {}
+final class IsEmailVerifiedFailure extends IsEmailVerifiedState {
+  final String e;
+
+  IsEmailVerifiedFailure(this.e);
+}
+
+final class IsEmailNotVerified extends IsEmailVerifiedState {}
 
 final class IsEmailVerifiedSuccess extends IsEmailVerifiedState {
   final EmailVerificationResult isEmailVerified;

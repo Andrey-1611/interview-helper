@@ -45,7 +45,7 @@ class CustomInterviewCard extends StatelessWidget {
 class _ScoreIndicator extends StatelessWidget {
   final int score;
 
-  const _ScoreIndicator({super.key, required this.score});
+  const _ScoreIndicator({required this.score});
 
   @override
   Widget build(BuildContext context) {

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../auth/presentation/widgets/custom_loading_indicator.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../data/data_sources/firestore_data_source.dart';
 import '../../data/models/interview.dart';
@@ -34,9 +35,6 @@ class _HistoryPageState extends State<HistoryPage> {
             FirestoreDataSource(firebaseFirestore: FirebaseFirestore.instance),
           ),
         ),
-        BlocProvider(
-          create: (context) => SendNotificationBloc(NotificationsService()),
-        ),
       ],
       child: _HistoryList(),
     );
@@ -56,8 +54,7 @@ class _HistoryList extends StatelessWidget {
               context.read<ShowInterviewsBloc>().add(
                 ShowInterviews(userId: state.userProfile.id ?? ''),
               );
-            }
-            if (state is GetUserNotAuth || state is GetUserFailure) {
+            } else if (state is GetUserNotAuth || state is GetUserFailure) {
               _errorMove(context);
             }
           },
@@ -75,7 +72,7 @@ class _HistoryList extends StatelessWidget {
   }
 
   void _errorMove(BuildContext context) {
-    Navigator.pushReplacementNamed(context, AppRouterNames.splash);
+    AppRouter.pushReplacementNamed(AppRouterNames.splash);
     context.read<SendNotificationBloc>().add(
       _sendNotification('Ошибка получения данных', Icon(Icons.error)),
     );
@@ -110,7 +107,7 @@ class _HistoryListView extends StatelessWidget {
             ),
           );
         }
-        return const Center(child: CircularProgressIndicator());
+        return const CustomLoadingIndicator();
       },
     );
   }
@@ -125,11 +122,7 @@ class _InterviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          AppRouterNames.interviewInfo,
-          arguments: interview,
-        );
+        AppRouter.pushNamed(AppRouterNames.interviewInfo, arguments: interview);
       },
       child: CustomInterviewCard(
         score: interview.score.toInt(),

@@ -55,17 +55,40 @@ class AuthDataSource implements AuthRepository {
     try {
       final user = firebaseAuth.currentUser;
       await user?.reload();
-      if (user == null) return null;
-      final bool isEmailVerified = user.emailVerified;
+      final newUser = firebaseAuth.currentUser;
+      if (newUser == null) return null;
+      final bool isEmailVerified = newUser.emailVerified;
       final UserProfile userProfile = UserProfile(
-        id: user.uid,
-        name: user.displayName,
-        email: user.email!,
+        id: newUser.uid,
+        name: newUser.displayName,
+        email: newUser.email!,
       );
       return EmailVerificationResult(
         isEmailVerified: isEmailVerified,
         userProfile: userProfile,
       );
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> changeEmail(UserProfile userProfile) async {
+    try {
+      final user = firebaseAuth.currentUser;
+      await user?.verifyBeforeUpdateEmail(userProfile.email);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> changePassword(String password) async {
+    try {
+      final user = firebaseAuth.currentUser;
+      await user?.updatePassword(password);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -82,7 +105,7 @@ class AuthDataSource implements AuthRepository {
         return userProfile;
       }
       return null;
-    }  catch (e) {
+    } catch (e) {
       log(e.toString());
       rethrow;
     }

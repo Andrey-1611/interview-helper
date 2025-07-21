@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/services/notifications_service.dart';
-import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/notifications/models/notification.dart';
-import '../../../../core/global_services/user/blocs/clear_user/clear_user_bloc.dart';
+import '../../../../core/global_services/user/blocs/clear_user_bloc/clear_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
-import '../../../interview/presentation/widgets/custom_button.dart';
+import '../widgets/custom_auth_button.dart';
+import '../widgets/custom_loading_indicator.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -24,9 +24,6 @@ class UserProfilePage extends StatelessWidget {
           create: (context) =>
               GetUserBloc(context.read<UserInterface>())..add(GetUser()),
         ),
-        BlocProvider(
-          create: (context) => SendNotificationBloc(NotificationsService()),
-        ),
       ],
       child: _UserProfilePageView(),
     );
@@ -38,9 +35,20 @@ class _UserProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(child: _SignOutButton()),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            _UserInfo(),
+            _SignOutButton(),
+            const Spacer(),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -53,7 +61,7 @@ class _SignOutButton extends StatelessWidget {
     return BlocListener<ClearUserBloc, ClearUserState>(
       listener: (context, state) {
         if (state is ClearUserSuccess) {
-          Navigator.pushReplacementNamed(context, AppRouterNames.signIn);
+          AppRouter.pushReplacementNamed(AppRouterNames.signIn);
           context.read<SendNotificationBloc>().add(
             _sendNotification(
               'Вы успешно вышли из аккаунта!',
@@ -80,13 +88,28 @@ class _SignOutButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ClearUserBloc, ClearUserState>(
+      builder: (context, state) {
+        if (state is ClearUserLoading) return CustomLoadingIndicator();
+        return CustomAuthButton(
+          text: 'Выйти',
+          onPressed: () {
+            context.read<ClearUserBloc>().add(ClearUser());
+          },
+        );
+      },
+    );
+  }
+}
+
+class _UserInfo extends StatelessWidget {
+  const _UserInfo();
+
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<GetUserBloc, GetUserState>(
       builder: (context, state) {
-        if (state is GetUserLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is GetUserFailure || state is GetUserNotAuth) {
-          return const Center(child: Text('Произошла ошибка, опробуйте позже'));
-        } else if (state is GetUserSuccess) {
+        if (state is GetUserSuccess) {
           if (state.userProfile.name == '') {
             context.read<GetUserBloc>().add(GetUser());
           }
@@ -96,21 +119,11 @@ class _SignOutButtonView extends StatelessWidget {
               children: [
                 Text('Ваше имя: ${state.userProfile.name}'),
                 Text('Ваша почта: ${state.userProfile.email}'),
-                CustomButton(
-                  text: 'Выйти',
-                  selectedColor: Colors.blue,
-                  onPressed: () {
-                    context.read<ClearUserBloc>().add(ClearUser());
-                  },
-                  textColor: Colors.white,
-                  percentsHeight: 0.08,
-                  percentsWidth: 0.35,
-                ),
               ],
             ),
           );
         } else {
-          return Container();
+          return const CustomLoadingIndicator();
         }
       },
     );
