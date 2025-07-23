@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
 import 'package:interview_master/core/global_services/user/services/user_interface.dart';
+import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
+import 'package:interview_master/core/helpers/notification_helpers/email_notification_helepr.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
 import '../../blocs/check_current_user_bloc/check_current_user_bloc.dart';
 
@@ -51,7 +51,7 @@ class _SplashPageView extends StatelessWidget {
             } else if (state is CheckCurrentUserNotExists) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is CheckCurrentUserFailure) {
-              _sendNotification('Ошибка входа!', Icon(Icons.error));
+              AuthNotificationHelper.checkUserErrorNotification(context);
             }
           },
         ),
@@ -62,13 +62,12 @@ class _SplashPageView extends StatelessWidget {
                 SetUser(userProfile: state.isEmailVerified.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
-              _sendNotification(
-                'Пожалуйста, подтвердите свою почту!',
-                Icon(Icons.error),
-              );
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
+              EmailNotificationHelper.emailNotVerifiedNotification(context);
             } else if (state is IsEmailVerifiedFailure) {
-              _sendNotification('Ошибка входа!', Icon(Icons.error));
+              EmailNotificationHelper.emailVerificationErrorNotification(
+                context,
+              );
             }
           },
         ),
@@ -76,19 +75,11 @@ class _SplashPageView extends StatelessWidget {
           listener: (context, state) {
             if (state is SetUserSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-            } else if (state is SetUserFailure) {
-              _sendNotification('Ошибка входа!', Icon(Icons.error));
             }
           },
         ),
       ],
       child: _SplashLogo(),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

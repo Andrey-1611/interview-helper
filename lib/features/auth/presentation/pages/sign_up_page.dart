@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
+import 'package:interview_master/core/helpers/notification_helpers/email_notification_helepr.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/models/user_profile.dart';
 import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';
@@ -46,10 +45,6 @@ class _SignUpPageState extends State<SignUpPage> {
         BlocProvider(
           create: (context) =>
               SignUpBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
-        ),
-        BlocProvider(
-          create: (context) =>
-              SignInBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
         ),
         BlocProvider(
           create: (context) => SendEmailVerificationBloc(
@@ -109,7 +104,7 @@ class _SignUpPageView extends StatelessWidget {
               isObscureChange: isObscureChange,
             ),
             const Spacer(),
-            _SignInNavigationButton(),
+            const _SignInNavigationButton(),
           ],
         ),
       ),
@@ -183,7 +178,7 @@ class _SignInNavigationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Navigator.pushNamed(context, AppRouterNames.signIn);
+        AppRouter.pushReplacementNamed(AppRouterNames.signIn);
       },
       child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
     );
@@ -210,22 +205,11 @@ class _SignUpButton extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is SignUpSuccess) {
-              AppRouter.pushReplacementNamed(
-                AppRouterNames.emailVerification,
-              );
-            } else if (state is SignUpFailure) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка регистрации!', Icon(Icons.error)),
-              );
-            }
-          },
-        ),
-        BlocListener<SignInBloc, SignInState>(
-          listener: (context, state) {
-            if (state is SignInSuccess) {
               context.read<SendEmailVerificationBloc>().add(
                 SendEmailVerification(),
               );
+            } else if (state is SignUpFailure) {
+              AuthNotificationHelper.signUpErrorNotification(context);
             }
           },
         ),
@@ -233,14 +217,9 @@ class _SignUpButton extends StatelessWidget {
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              _sendNotification(
-                'Письмо с подтверждением отправлено на вашу почту',
-                Icon(Icons.info),
-              );
+              EmailNotificationHelper.sendEmailVerificationNotification(context);
             } else if (state is SendEmailVerificationFailure) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка входа', Icon(Icons.error)),
-              );
+              EmailNotificationHelper.emailVerificationErrorNotification(context);
             }
           },
         ),
@@ -251,12 +230,6 @@ class _SignUpButton extends StatelessWidget {
         emailController: emailController,
         passwordController: passwordController,
       ),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

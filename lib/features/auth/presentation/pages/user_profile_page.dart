@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
+import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/clear_user_bloc/clear_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
@@ -62,23 +61,12 @@ class _SignOutButton extends StatelessWidget {
       listener: (context, state) {
         if (state is ClearUserSuccess) {
           AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-          context.read<SendNotificationBloc>().add(
-            _sendNotification(
-              'Вы успешно вышли из аккаунта!',
-              Icon(Icons.star),
-            ),
-          );
+          AuthNotificationHelper.signOutNotification(context);
         } else if (state is ClearUserFailure) {
-          _sendNotification('Ошибка выхода!', Icon(Icons.error));
+          AuthNotificationHelper.signOutErrorNotification(context);
         }
       },
       child: _SignOutButtonView(),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

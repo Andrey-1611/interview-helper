@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/models/notification.dart';
+import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
+import 'package:interview_master/core/helpers/notification_helpers/email_notification_helepr.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
@@ -136,9 +136,7 @@ class _SignInButton extends StatelessWidget {
               context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
             }
             if (state is SignInFailure) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification('Ошибка входа', Icon(Icons.error)),
-              );
+              AuthNotificationHelper.signInErrorNotification(context);
             }
           },
         ),
@@ -149,34 +147,27 @@ class _SignInButton extends StatelessWidget {
                 SetUser(userProfile: state.isEmailVerified.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
-              _sendNotification(
-                'Пожалуйста, подтвердите свою почту!',
-                Icon(Icons.error),
-              );
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
+              EmailNotificationHelper.emailNotVerifiedNotification(context);
             } else if (state is IsEmailVerifiedFailure) {
-              _sendNotification('Ошибка входа!', Icon(Icons.error));
+              EmailNotificationHelper.checkEmailErrorNotification(context);
             }
           },
         ),
         BlocListener<SetUserBloc, SetUserState>(
           listener: (context, state) {
             if (state is SetUserSuccess) {
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
               context.read<GetUserBloc>().add(GetUser());
-            } else if (state is SetUserFailure) {
-              _sendNotification('Ошибка входа!', Icon(Icons.error));
             }
           },
         ),
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserSuccess) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  '${state.userProfile.name}, добро пожаловать!',
-                  Icon(Icons.star),
-                ),
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+              AuthNotificationHelper.greetingNotification(
+                context,
+                state.userProfile.name!,
               );
             }
           },
@@ -187,12 +178,6 @@ class _SignInButton extends StatelessWidget {
         emailController: emailController,
         passwordController: passwordController,
       ),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

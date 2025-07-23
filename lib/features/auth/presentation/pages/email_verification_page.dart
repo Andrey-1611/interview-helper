@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
+import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_loading_indicator.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
 import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../../core/helpers/notification_helpers/email_notification_helepr.dart';
 import '../../blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 
 class EmailVerificationPage extends StatefulWidget {
@@ -84,12 +84,7 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  'Письмо с подтверждением отправлено на вашу почту',
-                  Icon(Icons.info),
-                ),
-              );
+              EmailNotificationHelper.sendEmailVerificationNotification(context);
             }
           },
         ),
@@ -100,12 +95,10 @@ class _EmailVerificationButton extends StatelessWidget {
                 SetUser(userProfile: state.isEmailVerified.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
-              _sendNotification(
-                'Пожалуйста, подтвердите свою почту!',
-                Icon(Icons.error),
-              );
+              EmailNotificationHelper.emailNotVerifiedNotification(context);
             } else if (state is IsEmailVerifiedFailure) {
-              _errorMove(context);
+              AppRouter.pushReplacementNamed(AppRouterNames.signUp);
+              EmailNotificationHelper.emailVerificationErrorNotification(context);
             }
           },
         ),
@@ -114,38 +107,18 @@ class _EmailVerificationButton extends StatelessWidget {
             if (state is SetUserSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.home);
               context.read<GetUserBloc>().add(GetUser());
-            } else if (state is SetUserFailure) {
-              _errorMove(context);
             }
           },
         ),
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserSuccess) {
-              context.read<SendNotificationBloc>().add(
-                _sendNotification(
-                  '${state.userProfile.name}, добро пожаловать!',
-                  Icon(Icons.star),
-                ),
-              );
+              AuthNotificationHelper.greetingNotification(context, state.userProfile.name!);
             }
           },
         ),
       ],
       child: _EmailVerificationButtonView(),
-    );
-  }
-
-  void _errorMove(BuildContext context) {
-    AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-    context.read<SendNotificationBloc>().add(
-      _sendNotification('Ошибка проверки почты', Icon(Icons.error)),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

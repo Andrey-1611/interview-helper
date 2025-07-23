@@ -14,7 +14,7 @@ final class IsEmailVerifiedLoading extends IsEmailVerifiedState {}
 final class IsEmailVerifiedFailure extends IsEmailVerifiedState {
   final String e;
 
-  IsEmailVerifiedFailure(this.e);
+  const IsEmailVerifiedFailure(this.e);
 }
 
 final class IsEmailNotVerified extends IsEmailVerifiedState {}

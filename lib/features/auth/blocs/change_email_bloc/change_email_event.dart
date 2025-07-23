@@ -10,7 +10,7 @@ sealed class ChangeEmailEvent extends Equatable {
 final class ChangeEmail extends ChangeEmailEvent {
   final UserProfile userProfile;
 
-  const ChangeEmail({required this.userProfile});
+  const ChangeEmail({required this.userProfile,});
 
   @override
   List<Object?> get props => [userProfile];
