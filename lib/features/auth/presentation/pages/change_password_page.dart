@@ -8,7 +8,7 @@ import '../../../../core/global_services/notifications/blocs/send_notification_b
 import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../blocs/change_password_bloc/change_password_bloc.dart';
 import '../widgets/custom_auth_button.dart';
-import '../widgets/custom_loading_indicator.dart';
+import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ChangePasswordBloc(
-        AuthDataSource(firebaseAuth: FirebaseAuth.instance),
+        AuthDataSource(FirebaseAuth.instance),
       ),
       child: _ChangePasswordPageView(passwordController: _passwordController),
     );

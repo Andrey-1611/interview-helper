@@ -1,16 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:intl/intl.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_interface.dart';
-import '../../../auth/presentation/widgets/custom_loading_indicator.dart';
+import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
-import '../../data/data_sources/firestore_data_source.dart';
 import '../../data/models/interview.dart';
 import '../widgets/custom_interview_card.dart';
 
@@ -28,12 +25,11 @@ class _HistoryPageState extends State<HistoryPage> {
       providers: [
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<UserInterface>())..add(GetUser()),
+              GetUserBloc(DiContainer.userRepository)..add(GetUser()),
         ),
         BlocProvider(
-          create: (context) => ShowInterviewsBloc(
-            FirestoreDataSource(firebaseFirestore: FirebaseFirestore.instance),
-          ),
+          create: (context) =>
+              ShowInterviewsBloc(DiContainer.firestoreRepository),
         ),
       ],
       child: _HistoryList(),
@@ -50,37 +46,29 @@ class _HistoryList extends StatelessWidget {
       listeners: [
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
+            if (state is GetUserLoading) {
+              DialogHelper.showLoadingDialog(context);
+            }
             if (state is GetUserSuccess) {
               context.read<ShowInterviewsBloc>().add(
                 ShowInterviews(userId: state.userProfile.id ?? ''),
               );
-            } else if (state is GetUserNotAuth || state is GetUserFailure) {
-              _errorMove(context);
             }
           },
         ),
         BlocListener<ShowInterviewsBloc, ShowInterviewsState>(
           listener: (context, state) {
+            if (state is ShowInterviewsSuccess) {
+              AppRouter.pop();
+            }
             if (state is ShowInterviewsFailure) {
-              _errorMove(context);
+              AppRouter.pop();
+              NotificationHelper.interview.showInterviewsErrorNotification(context);
             }
           },
         ),
       ],
       child: _HistoryListView(),
-    );
-  }
-
-  void _errorMove(BuildContext context) {
-    AppRouter.pushReplacementNamed(AppRouterNames.splash);
-    context.read<SendNotificationBloc>().add(
-      _sendNotification('Ошибка получения данных', Icon(Icons.error)),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }
@@ -107,7 +95,7 @@ class _HistoryListView extends StatelessWidget {
             ),
           );
         }
-        return const CustomLoadingIndicator();
+        return const SizedBox.shrink();
       },
     );
   }

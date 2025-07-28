@@ -7,7 +7,7 @@ import '../repositories/remote_repository.dart';
 class RemoteDataSource implements RemoteRepository {
   final Gemini gemini;
 
-  const RemoteDataSource({required this.gemini});
+  const RemoteDataSource(this.gemini);
 
 
   @override

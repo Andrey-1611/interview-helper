@@ -1,5 +1,5 @@
 import '../models/notification.dart';
 
-abstract interface class NotificationsInterface {
+abstract interface class NotificationsRepository {
   void sendNotification(MyNotification notification);
 }

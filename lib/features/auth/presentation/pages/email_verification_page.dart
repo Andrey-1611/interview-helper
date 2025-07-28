@@ -1,17 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
-import 'package:interview_master/features/auth/presentation/widgets/custom_loading_indicator.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_interface.dart';
-import '../../../../core/helpers/notification_helpers/email_notification_helepr.dart';
+import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../../blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 
 class EmailVerificationPage extends StatefulWidget {
@@ -22,26 +19,22 @@ class EmailVerificationPage extends StatefulWidget {
 }
 
 class _EmailVerificationPageState extends State<EmailVerificationPage> {
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => SendEmailVerificationBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          ),
+          create: (context) =>
+              SendEmailVerificationBloc(DiContainer.authRepository),
         ),
         BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          ),
+          create: (context) => IsEmailVerifiedBloc(DiContainer.authRepository),
         ),
         BlocProvider(
-          create: (context) => SetUserBloc(context.read<UserInterface>()),
+          create: (context) => SetUserBloc(DiContainer.userRepository),
         ),
         BlocProvider(
-          create: (context) => GetUserBloc(context.read<UserInterface>()),
+          create: (context) => GetUserBloc(DiContainer.userRepository),
         ),
       ],
       child: _EmailVerificationPageView(),
@@ -54,17 +47,17 @@ class _EmailVerificationPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-              const _EmailVerificationButton(),
-              const _SendEmailVerificationButton(),
-              const Spacer(),
+              Spacer(),
+              _EmailVerificationButton(),
+              _SendEmailVerificationButton(),
+              Spacer(),
               _NavigationButton(),
             ],
           ),
@@ -84,28 +77,35 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              EmailNotificationHelper.sendEmailVerificationNotification(context);
+              NotificationHelper.email.sendEmailVerificationNotification(
+                context,
+              );
             }
           },
         ),
         BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
           listener: (context, state) {
-            if (state is IsEmailVerifiedSuccess) {
+            if (state is IsEmailVerifiedLoading) {
+              DialogHelper.showLoadingDialog(context);
+            } else if (state is IsEmailVerifiedSuccess) {
               context.read<SetUserBloc>().add(
                 SetUser(userProfile: state.isEmailVerified.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
-              EmailNotificationHelper.emailNotVerifiedNotification(context);
+              AppRouter.pop();
+              NotificationHelper.email.emailNotVerifiedNotification(context);
             } else if (state is IsEmailVerifiedFailure) {
+              AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-              EmailNotificationHelper.emailVerificationErrorNotification(context);
+              NotificationHelper.email.emailVerificationErrorNotification(
+                context,
+              );
             }
           },
         ),
         BlocListener<SetUserBloc, SetUserState>(
           listener: (context, state) {
             if (state is SetUserSuccess) {
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
               context.read<GetUserBloc>().add(GetUser());
             }
           },
@@ -113,7 +113,12 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserSuccess) {
-              AuthNotificationHelper.greetingNotification(context, state.userProfile.name!);
+              AppRouter.pop();
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+              NotificationHelper.auth.greetingNotification(
+                context,
+                state.userProfile.name!,
+              );
             }
           },
         ),
@@ -128,17 +133,10 @@ class _EmailVerificationButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IsEmailVerifiedBloc, IsEmailVerifiedState>(
-      builder: (context, state) {
-        if (state is IsEmailVerifiedLoading) {
-          return const CustomLoadingIndicator();
-        }
-        return CustomAuthButton(
-          text: 'Подтвердил',
-          onPressed: () {
-            context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
-          },
-        );
+    return CustomAuthButton(
+      text: 'Подтвердил',
+      onPressed: () {
+        context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
       },
     );
   }

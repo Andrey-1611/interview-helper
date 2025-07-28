@@ -6,9 +6,9 @@ import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/global_services/notifications/models/notification.dart';
-import 'notifications_interface.dart';
+import 'notifications_repository.dart';
 
-class NotificationsService implements NotificationsInterface {
+class NotificationsService implements NotificationsRepository {
   @override
   void sendNotification(MyNotification notification) {
     final navigatorKey = AppRouter.navigatorKey;

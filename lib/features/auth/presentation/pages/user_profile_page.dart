@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/features/auth/blocs/sign_out_bloc/sign_out_bloc.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/clear_user_bloc/clear_user_bloc.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_interface.dart';
+import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../widgets/custom_auth_button.dart';
-import '../widgets/custom_loading_indicator.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -17,11 +18,14 @@ class UserProfilePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ClearUserBloc(context.read<UserInterface>()),
+          create: (context) => SignOutBloc(DiContainer.authRepository),
+        ),
+        BlocProvider(
+          create: (context) => ClearUserBloc(DiContainer.userRepository),
         ),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<UserInterface>())..add(GetUser()),
+              GetUserBloc(DiContainer.userRepository)..add(GetUser()),
         ),
       ],
       child: _UserProfilePageView(),
@@ -57,15 +61,30 @@ class _SignOutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ClearUserBloc, ClearUserState>(
-      listener: (context, state) {
-        if (state is ClearUserSuccess) {
-          AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-          AuthNotificationHelper.signOutNotification(context);
-        } else if (state is ClearUserFailure) {
-          AuthNotificationHelper.signOutErrorNotification(context);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignOutBloc, SignOutState>(
+          listener: (context, state) {
+            if (state is SignOuLoading) {
+              DialogHelper.showLoadingDialog(context);
+            } else if (state is SignOutSuccess) {
+              context.read<ClearUserBloc>();
+            }
+          },
+        ),
+        BlocListener<ClearUserBloc, ClearUserState>(
+          listener: (context, state) {
+            if (state is ClearUserSuccess) {
+              AppRouter.pop();
+              NotificationHelper.auth.signOutNotification(context);
+              AppRouter.pushReplacementNamed(AppRouterNames.signIn);
+            } else if (state is ClearUserFailure) {
+              AppRouter.pop();
+              NotificationHelper.auth.signOutErrorNotification(context);
+            }
+          },
+        ),
+      ],
       child: _SignOutButtonView(),
     );
   }
@@ -76,15 +95,10 @@ class _SignOutButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClearUserBloc, ClearUserState>(
-      builder: (context, state) {
-        if (state is ClearUserLoading) return CustomLoadingIndicator();
-        return CustomAuthButton(
-          text: 'Выйти',
-          onPressed: () {
-            context.read<ClearUserBloc>().add(ClearUser());
-          },
-        );
+    return CustomAuthButton(
+      text: 'Выйти',
+      onPressed: () {
+        context.read<ClearUserBloc>().add(ClearUser());
       },
     );
   }
@@ -98,9 +112,6 @@ class _UserInfo extends StatelessWidget {
     return BlocBuilder<GetUserBloc, GetUserState>(
       builder: (context, state) {
         if (state is GetUserSuccess) {
-          if (state.userProfile.name == '') {
-            context.read<GetUserBloc>().add(GetUser());
-          }
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +122,7 @@ class _UserInfo extends StatelessWidget {
             ),
           );
         } else {
-          return const CustomLoadingIndicator();
+          return const SizedBox.shrink();
         }
       },
     );

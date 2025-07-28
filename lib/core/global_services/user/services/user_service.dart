@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:interview_master/core/global_services/user/services/user_interface.dart';
+import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserService implements UserInterface {
+class UserService implements UserRepository {
   final SharedPreferences sharedPreferences;
   static const _key = 'user';
 

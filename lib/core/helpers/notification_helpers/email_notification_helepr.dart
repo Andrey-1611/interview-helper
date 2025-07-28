@@ -4,7 +4,7 @@ import '../../global_services/notifications/blocs/send_notification_bloc/send_no
 import '../../global_services/notifications/models/notification.dart';
 
 class EmailNotificationHelper {
-  static void sendEmailVerificationNotification(BuildContext context) {
+  void sendEmailVerificationNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Письмо с подтверждением отправлено на вашу почту!',
@@ -13,7 +13,7 @@ class EmailNotificationHelper {
     );
   }
 
-  static void sendNewEmailVerificationNotification(BuildContext context) {
+  void sendNewEmailVerificationNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Письмо с подтверждением отправлено на вашу новую почту!',
@@ -22,7 +22,7 @@ class EmailNotificationHelper {
     );
   }
 
-  static void emailNotVerifiedNotification(BuildContext context) {
+  void emailNotVerifiedNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Пожалуйста, подтвердите свою почту!',
@@ -31,7 +31,7 @@ class EmailNotificationHelper {
     );
   }
 
-  static void emailVerificationErrorNotification(BuildContext context) {
+  void emailVerificationErrorNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка проверки почты, попробуйте позже!',
@@ -40,7 +40,7 @@ class EmailNotificationHelper {
     );
   }
 
-  static void checkEmailErrorNotification(BuildContext context) {
+  void checkEmailErrorNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка проверки почты, попробуйте позже!',
@@ -49,7 +49,7 @@ class EmailNotificationHelper {
     );
   }
 
-  static void changeEmailErrorNotification(BuildContext context) {
+  void changeEmailErrorNotification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка изменения почты, проверьте введенные данные!',

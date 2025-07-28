@@ -7,8 +7,8 @@ class FirestoreDataSource implements FirestoreRepository {
   final FirebaseFirestore _firebaseFirestore;
   late CollectionReference interviews;
 
-  FirestoreDataSource({required FirebaseFirestore firebaseFirestore})
-    : _firebaseFirestore = firebaseFirestore;
+  FirestoreDataSource(this._firebaseFirestore);
+
 
   @override
   Future<void> addInterview(Interview interview, String userId) async {

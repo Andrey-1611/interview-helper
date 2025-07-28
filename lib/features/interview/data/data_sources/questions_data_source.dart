@@ -8,7 +8,7 @@ class QuestionsDataSource implements QuestionsRepository {
   final List<String> _pageQuestions = [];
   final questions = FlutterInterviewQuestions();
 
-  QuestionsDataSource({required this.random});
+  QuestionsDataSource(this.random);
 
   @override
   List<String> getQuestions(int difficulty) {

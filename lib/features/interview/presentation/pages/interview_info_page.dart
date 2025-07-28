@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/app/navigation/app_router_names.dart';
 import '../../data/models/interview.dart';
-import '../widgets/custom_interview_card.dart';
+import '../widgets/custom_question_card.dart';
 
 class InterviewInfoPage extends StatefulWidget {
   const InterviewInfoPage({super.key});
@@ -11,7 +13,6 @@ class InterviewInfoPage extends StatefulWidget {
 }
 
 class _InterviewInfoPageState extends State<InterviewInfoPage> {
-  final List<bool> _isShow = List.generate(10, (_) => false);
   late final Interview interview;
 
   @override
@@ -22,37 +23,21 @@ class _InterviewInfoPageState extends State<InterviewInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _InterviewInfoPageView(
-      interview: interview,
-      isShow: _isShow,
-      changeShow: _changeShow,
-    );
-  }
-
-  void _changeShow(int index) {
-    setState(() {
-      _isShow[index] = !_isShow[index];
-    });
+    return _InterviewInfoPageView(interview: interview);
   }
 }
 
 class _InterviewInfoPageView extends StatelessWidget {
   final Interview interview;
-  final List<bool> isShow;
-  final ValueChanged<int> changeShow;
 
-  const _InterviewInfoPageView({
-    required this.interview,
-    required this.isShow,
-    required this.changeShow,
-  });
+  const _InterviewInfoPageView({required this.interview});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             children: [
@@ -62,12 +47,7 @@ class _InterviewInfoPageView extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: interview.questions.length,
                   itemBuilder: (context, index) {
-                    return _QuestionCard(
-                      interview: interview,
-                      index: index,
-                      isShow: isShow,
-                      changeShow: changeShow,
-                    );
+                    return _QuestionCard(interview: interview, index: index);
                   },
                 ),
               ),
@@ -81,6 +61,7 @@ class _InterviewInfoPageView extends StatelessWidget {
 
 class _AverageScoreContainer extends StatelessWidget {
   final Interview interview;
+
   const _AverageScoreContainer({required this.interview});
 
   @override
@@ -101,36 +82,24 @@ class _AverageScoreContainer extends StatelessWidget {
   }
 }
 
-
 class _QuestionCard extends StatelessWidget {
   final Interview interview;
   final int index;
-  final List<bool> isShow;
-  final ValueChanged<int> changeShow;
 
-  const _QuestionCard({
-    required this.interview,
-    required this.index,
-    required this.isShow,
-    required this.changeShow,
-  });
+  const _QuestionCard({required this.interview, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => changeShow(index),
-      child: CustomInterviewCard(
-        score: interview.questions[index].score.toInt(),
-        titleText: 'Вопрос ${interview.questions[index].question}',
-        firstText: 'Ваш ответ: ${interview.questions[index].userAnswer}',
-        secondText:
-            'Правильный ответ: ${interview.questions[index].correctAnswer}',
-        titleStyle: Theme.of(context).textTheme.bodyMedium,
-        subtitleStyle: TextStyle(
-          overflow: isShow[index]
-              ? TextOverflow.visible
-              : TextOverflow.ellipsis,
-        ),
+      onTap: () {
+        AppRouter.pushNamed(
+          AppRouterNames.questionInfo,
+          arguments: interview.questions[index],
+        );
+      },
+      child: CustomQuestionCard(
+        text: 'Вопрос ${interview.questions[index].question}',
+        trailing: true,
       ),
     );
   }

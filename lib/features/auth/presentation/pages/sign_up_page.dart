@@ -1,17 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
-import 'package:interview_master/core/helpers/notification_helpers/email_notification_helepr.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/models/user_profile.dart';
+import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';
-import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -43,13 +41,11 @@ class _SignUpPageState extends State<SignUpPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              SignUpBloc(AuthDataSource(firebaseAuth: FirebaseAuth.instance)),
+          create: (context) => SignUpBloc(DiContainer.authRepository),
         ),
         BlocProvider(
-          create: (context) => SendEmailVerificationBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          ),
+          create: (context) =>
+              SendEmailVerificationBloc(DiContainer.authRepository),
         ),
       ],
       child: _SignUpPageView(
@@ -90,6 +86,7 @@ class _SignUpPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -204,22 +201,27 @@ class _SignUpButton extends StatelessWidget {
       listeners: [
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
-            if (state is SignUpSuccess) {
+            if (state is SignUpLoading) {
+              DialogHelper.showLoadingDialog(context);
+            } else if (state is SignUpSuccess) {
               context.read<SendEmailVerificationBloc>().add(
                 SendEmailVerification(),
               );
             } else if (state is SignUpFailure) {
-              AuthNotificationHelper.signUpErrorNotification(context);
+              AppRouter.pop();
+              NotificationHelper.auth.signUpErrorNotification(context);
             }
           },
         ),
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
+              AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              EmailNotificationHelper.sendEmailVerificationNotification(context);
+              NotificationHelper.email.sendEmailVerificationNotification(context);
             } else if (state is SendEmailVerificationFailure) {
-              EmailNotificationHelper.emailVerificationErrorNotification(context);
+              AppRouter.pop();
+              NotificationHelper.email.emailVerificationErrorNotification(context);
             }
           },
         ),
@@ -249,28 +251,21 @@ class _CustomButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpBloc, SignUpState>(
-      builder: (context, state) {
-        if (state is SignUpLoading) {
-          return const CustomLoadingIndicator();
+    return CustomAuthButton(
+      text: 'Зарегистрироваться',
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          context.read<SignUpBloc>().add(
+            SignUp(
+              userProfile: UserProfile(
+                id: Uuid().v1(),
+                email: emailController.text.trim(),
+                name: nameController.text.trim(),
+              ),
+              password: passwordController.text.trim(),
+            ),
+          );
         }
-        return CustomAuthButton(
-          text: 'Зарегистрироваться',
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              context.read<SignUpBloc>().add(
-                SignUp(
-                  userProfile: UserProfile(
-                    id: Uuid().v1(),
-                    email: emailController.text.trim(),
-                    name: nameController.text.trim(),
-                  ),
-                  password: passwordController.text.trim(),
-                ),
-              );
-            }
-          },
-        );
       },
     );
   }

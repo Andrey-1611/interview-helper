@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/user/services/user_interface.dart';
-import 'package:interview_master/core/helpers/notification_helpers/auth_notification_helper.dart';
-import 'package:interview_master/core/helpers/notification_helpers/email_notification_helepr.dart';
+import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
-import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
 import '../../blocs/check_current_user_bloc/check_current_user_bloc.dart';
@@ -19,17 +16,15 @@ class SplashPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CheckCurrentUserBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          )..add(CheckCurrentUser()),
+          create: (context) =>
+              CheckCurrentUserBloc(DiContainer.authRepository)
+                ..add(CheckCurrentUser()),
         ),
         BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(
-            AuthDataSource(firebaseAuth: FirebaseAuth.instance),
-          ),
+          create: (context) => IsEmailVerifiedBloc(DiContainer.authRepository),
         ),
         BlocProvider(
-          create: (context) => SetUserBloc(context.read<UserInterface>()),
+          create: (context) => SetUserBloc(DiContainer.userRepository),
         ),
       ],
       child: _SplashPageView(),
@@ -51,7 +46,7 @@ class _SplashPageView extends StatelessWidget {
             } else if (state is CheckCurrentUserNotExists) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is CheckCurrentUserFailure) {
-              AuthNotificationHelper.checkUserErrorNotification(context);
+              NotificationHelper.auth.checkUserErrorNotification(context);
             }
           },
         ),
@@ -63,9 +58,9 @@ class _SplashPageView extends StatelessWidget {
               );
             } else if (state is IsEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              EmailNotificationHelper.emailNotVerifiedNotification(context);
+              NotificationHelper.email.emailNotVerifiedNotification(context);
             } else if (state is IsEmailVerifiedFailure) {
-              EmailNotificationHelper.emailVerificationErrorNotification(
+              NotificationHelper.email.emailVerificationErrorNotification(
                 context,
               );
             }

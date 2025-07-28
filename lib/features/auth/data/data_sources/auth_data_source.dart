@@ -5,14 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 
 class AuthDataSource implements AuthRepository {
-  final FirebaseAuth firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
-  AuthDataSource({required this.firebaseAuth});
+  AuthDataSource(this._firebaseAuth);
 
   @override
   Future<UserProfile> signIn(UserProfile userProfile, String password) async {
     try {
-      final credential = await firebaseAuth.signInWithEmailAndPassword(
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: userProfile.email,
         password: password,
       );
@@ -27,13 +27,13 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<UserProfile> signUp(UserProfile userProfile, String password) async {
     try {
-      final credential = await firebaseAuth.createUserWithEmailAndPassword(
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: userProfile.email,
         password: password,
       );
       await credential.user?.updateDisplayName(userProfile.name);
       await credential.user?.reload();
-      final updatedUser = firebaseAuth.currentUser!;
+      final updatedUser = _firebaseAuth.currentUser!;
       final user = _toUserProfile(updatedUser);
       return user;
     } catch (e) {
@@ -44,7 +44,7 @@ class AuthDataSource implements AuthRepository {
 
   @override
   Future<void> sendEmailVerification() async {
-    final user = firebaseAuth.currentUser;
+    final user = _firebaseAuth.currentUser;
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
     }
@@ -53,9 +53,9 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<EmailVerificationResult?> isEmailVerified() async {
     try {
-      final user = firebaseAuth.currentUser;
+      final user = _firebaseAuth.currentUser;
       await user?.reload();
-      final newUser = firebaseAuth.currentUser;
+      final newUser = _firebaseAuth.currentUser;
       if (newUser == null) return null;
       final bool isEmailVerified = newUser.emailVerified;
       final UserProfile userProfile = UserProfile(
@@ -76,7 +76,7 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<void> changeEmail(UserProfile userProfile) async {
     try {
-      final user = firebaseAuth.currentUser;
+      final user = _firebaseAuth.currentUser;
       await user?.verifyBeforeUpdateEmail(userProfile.email);
     } catch (e) {
       log(e.toString());
@@ -87,7 +87,7 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<void> changePassword(String password) async {
     try {
-      final user = firebaseAuth.currentUser;
+      final user = _firebaseAuth.currentUser;
       await user?.updatePassword(password);
     } catch (e) {
       log(e.toString());
@@ -98,8 +98,8 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<UserProfile?> checkCurrentUser() async {
     try {
-      await firebaseAuth.currentUser?.reload();
-      final currentUser = firebaseAuth.currentUser;
+      await _firebaseAuth.currentUser?.reload();
+      final currentUser = _firebaseAuth.currentUser;
       if (currentUser != null) {
         final userProfile = _toUserProfile(currentUser);
         return userProfile;
@@ -114,7 +114,7 @@ class AuthDataSource implements AuthRepository {
   @override
   Future<void> signOut() async {
     try {
-      await firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
     } catch (e) {
       log(e.toString());
       rethrow;

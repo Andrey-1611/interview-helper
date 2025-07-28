@@ -1,20 +1,14 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/notifications/blocs/send_notification_bloc/send_notification_bloc.dart';
+import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
-import 'package:interview_master/features/interview/data/data_sources/questions_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/notifications/models/notification.dart';
-import '../../../auth/presentation/widgets/custom_loading_indicator.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
-  final Random random;
-
-  const InterviewPage({super.key, required this.random});
+  const InterviewPage({super.key});
 
   @override
   State<InterviewPage> createState() => _InterviewPageState();
@@ -45,7 +39,7 @@ class _InterviewPageState extends State<InterviewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          GetQuestionsBloc(QuestionsDataSource(random: Random()))
+          GetQuestionsBloc(DiContainer.questionsRepository)
             ..add(GetQuestions(difficulty: difficulty)),
       child: _InterviewPageView(
         pageController: pageController,
@@ -85,12 +79,7 @@ class _InterviewPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetQuestionsBloc, GetQuestionsState>(
-      listener: (context, state) {
-        if (state is GetQuestionsFailure) {
-          _errorMove(context);
-        }
-      },
+    return BlocBuilder<GetQuestionsBloc, GetQuestionsState>(
       builder: (context, state) {
         if (state is GetQuestionsSuccess) {
           return Scaffold(
@@ -112,21 +101,8 @@ class _InterviewPageView extends StatelessWidget {
             ),
           );
         }
-        return const CustomLoadingIndicator();
+        return const SizedBox.shrink();
       },
-    );
-  }
-
-  void _errorMove(BuildContext context) {
-    AppRouter.pushReplacementNamed(AppRouterNames.splash);
-    context.read<SendNotificationBloc>().add(
-      _sendNotification('Ошибка получения вопросов', Icon(Icons.error)),
-    );
-  }
-
-  SendNotification _sendNotification(String text, Icon icon) {
-    return SendNotification(
-      notification: MyNotification(text: text, icon: icon),
     );
   }
 }

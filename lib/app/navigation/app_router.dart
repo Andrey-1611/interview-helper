@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:interview_master/features/auth/presentation/pages/change_email_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/change_password_page.dart';
@@ -7,6 +6,7 @@ import 'package:interview_master/features/auth/presentation/pages/sign_in_page.d
 import 'package:interview_master/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/splash_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/user_profile_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/question_info_page.dart';
 import '../../features/interview/presentation/pages/home_page.dart';
 import '../../features/interview/presentation/pages/interview_info_page.dart';
 import '../../features/interview/presentation/pages/interview_page.dart';
@@ -19,6 +19,7 @@ class AppRouter {
 
   static Map<String, Widget Function(BuildContext context)> routes = {
     AppRouterNames.splash: (context) => const SplashPage(),
+    //AppRouterNames.mainAuth: (context) => const MainAuthPage(),
     AppRouterNames.signIn: (context) => const SignInPage(),
     AppRouterNames.signUp: (context) => const SignUpPage(),
     AppRouterNames.emailVerification: (context) => const EmailVerificationPage(),
@@ -26,11 +27,10 @@ class AppRouter {
     AppRouterNames.changePassword: (context) => const ChangePasswordPage(),
     AppRouterNames.userProfile: (context) => const UserProfilePage(),
     AppRouterNames.home: (context) => const HomePage(),
-    AppRouterNames.interview: (context) => InterviewPage(
-      random: Random(),
-    ),
+    AppRouterNames.interview: (context) => const InterviewPage(),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
+    AppRouterNames.questionInfo: (context) => const QuestionInfoPage(),
   };
 
   static void pushNamed(String route, {Object? arguments}) {
