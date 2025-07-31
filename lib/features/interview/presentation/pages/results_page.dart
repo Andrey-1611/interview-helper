@@ -109,9 +109,9 @@ class _ResultsList extends StatelessWidget {
                 ),
               );
             } else if (state is CheckResultsFailure) {
-              NotificationHelper.interview.checkInterviewsErrorNotification(
-                context,
-              );
+              AppRouter.pop();
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+              NotificationHelper.interview.checkInterviewsError(context);
             }
           },
         ),
@@ -141,9 +141,7 @@ class _ResultsList extends StatelessWidget {
               AppRouter.pop();
             } else if (state is AddInterviewFailure) {
               AppRouter.pop();
-              NotificationHelper.interview.checkInterviewsErrorNotification(
-                context,
-              );
+              NotificationHelper.interview.checkInterviewsError(context);
             }
           },
         ),
@@ -247,7 +245,8 @@ class _QuestionCard extends StatelessWidget {
       },
       child: CustomQuestionCard(
         text: 'Вопрос ${index + 1} - ${response.userInput.question}',
-        trailing: true,
+        isQuestionCard: true,
+        score: response.score.toInt(),
       ),
     );
   }

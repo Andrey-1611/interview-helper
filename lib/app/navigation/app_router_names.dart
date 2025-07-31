@@ -9,6 +9,7 @@ class AppRouterNames {
   static const userProfile = '/user_profile';
   static const home = '/home';
   static const interview = '/interview';
+  static const interviewFinish = '/interview_finish';
   static const results = '/results';
   static const interviewInfo = '/interview_info';
   static const questionInfo = 'question_info';

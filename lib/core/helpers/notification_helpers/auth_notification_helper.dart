@@ -4,19 +4,19 @@ import '../../global_services/notifications/blocs/send_notification_bloc/send_no
 import '../../global_services/notifications/models/notification.dart';
 
 class AuthNotificationHelper {
-  void greetingNotification(BuildContext context, String name) {
+  void greeting(BuildContext context, String name) {
     context.read<SendNotificationBloc>().add(
       _sendNotification('$name, добро пожаловать!', Icon(Icons.star)),
     );
   }
 
-  void signOutNotification(BuildContext context) {
+  void signOut(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification('Вы успешно вышли из аккаунта!', Icon(Icons.star)),
     );
   }
 
-  void checkUserErrorNotification(BuildContext context) {
+  void checkUserError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка проверки пользователя, попробуйте позже!',
@@ -25,7 +25,7 @@ class AuthNotificationHelper {
     );
   }
 
-  void signInErrorNotification(BuildContext context) {
+  void signInError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка входа, проверьте введенные данные!',
@@ -34,7 +34,7 @@ class AuthNotificationHelper {
     );
   }
 
-  void signUpErrorNotification(BuildContext context) {
+  void signUpError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка регистрации, проверьте введенные данные!',
@@ -43,7 +43,7 @@ class AuthNotificationHelper {
     );
   }
 
-  void signOutErrorNotification(BuildContext context) {
+  void signOutError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification('Ошибка выхода, попробуйте позже!', Icon(Icons.error)),
     );

@@ -44,9 +44,14 @@ class AuthDataSource implements AuthRepository {
 
   @override
   Future<void> sendEmailVerification() async {
-    final user = _firebaseAuth.currentUser;
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -58,11 +63,7 @@ class AuthDataSource implements AuthRepository {
       final newUser = _firebaseAuth.currentUser;
       if (newUser == null) return null;
       final bool isEmailVerified = newUser.emailVerified;
-      final UserProfile userProfile = UserProfile(
-        id: newUser.uid,
-        name: newUser.displayName,
-        email: newUser.email!,
-      );
+      final UserProfile userProfile = _toUserProfile(newUser);
       return EmailVerificationResult(
         isEmailVerified: isEmailVerified,
         userProfile: userProfile,
@@ -85,10 +86,9 @@ class AuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<void> changePassword(String password) async {
+  Future<void> changePassword(UserProfile userProfile) async {
     try {
-      final user = _firebaseAuth.currentUser;
-      await user?.updatePassword(password);
+      await _firebaseAuth.sendPasswordResetEmail(email: userProfile.email);
     } catch (e) {
       log(e.toString());
       rethrow;

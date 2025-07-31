@@ -5,4 +5,3 @@ class UserInput {
   UserInput({required this.question, required this.answer});
 }
 
-

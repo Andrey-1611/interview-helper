@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 
 class CustomQuestionCard extends StatelessWidget {
   final String text;
-  final bool trailing;
+  final int? score;
+  final bool isQuestionCard;
 
-  const CustomQuestionCard({super.key, required this.text, required this.trailing});
+  const CustomQuestionCard({
+    super.key,
+    required this.text,
+    required this.isQuestionCard,
+    this.score,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +22,30 @@ class CustomQuestionCard extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: EdgeInsets.all(20.0),
+        leading: isQuestionCard ? _ScoreIndicator(score: score!) : null,
         title: Text(text),
-        trailing: trailing ? Icon(Icons.chevron_right) : null,
+        trailing: isQuestionCard ? Icon(Icons.chevron_right) : null,
+      ),
+    );
+  }
+}
+
+class _ScoreIndicator extends StatelessWidget {
+  final int score;
+
+  const _ScoreIndicator({required this.score});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 80,
+      width: 80,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CircularProgressIndicator(value: score / 100),
+          Text('${score.toInt()} %'),
+        ],
       ),
     );
   }

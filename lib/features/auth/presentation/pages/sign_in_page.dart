@@ -185,7 +185,7 @@ class _SignInButton extends StatelessWidget {
             }
             if (state is SignInFailure) {
               AppRouter.pop();
-              NotificationHelper.auth.signInErrorNotification(context);
+              NotificationHelper.auth.signInError(context);
             }
           },
         ),
@@ -198,10 +198,10 @@ class _SignInButton extends StatelessWidget {
             } else if (state is IsEmailNotVerified) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              NotificationHelper.email.emailNotVerifiedNotification(context);
+              NotificationHelper.email.emailNotVerified(context);
             } else if (state is IsEmailVerifiedFailure) {
               AppRouter.pop();
-              NotificationHelper.email.checkEmailErrorNotification(context);
+              NotificationHelper.email.checkEmailError(context);
             }
           },
         ),
@@ -217,7 +217,7 @@ class _SignInButton extends StatelessWidget {
             if (state is GetUserSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greetingNotification(context, state.userProfile.name!);
+              NotificationHelper.auth.greeting(context, state.userProfile.name!);
             }
           },
         ),

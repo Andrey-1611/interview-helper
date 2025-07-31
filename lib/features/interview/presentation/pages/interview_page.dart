@@ -185,7 +185,7 @@ class _InterviewQuestionPage extends StatelessWidget {
                 onPressed: () {
                   _saveCurrentAnswer();
                   if (currentPage == 9) {
-                    _showDialog(context);
+                    _show(context);
                   } else {
                     _navigateToPage(currentPage + 1);
                   }
@@ -211,44 +211,30 @@ class _InterviewQuestionPage extends StatelessWidget {
     );
   }
 
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Вы уверены что хотите завершить тестирование?',
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
-          actions: [
-            Center(
-              child: CustomButton(
-                text: 'Завершить',
-                selectedColor: Colors.blue,
-                textColor: Colors.white,
-                percentsHeight: 0.07,
-                percentsWidth: 1,
-                onPressed: () {
-                  final userInputs = List.generate(
-                    10,
-                    (index) => UserInput(
-                      question: questions[index],
-                      answer: answers[index],
-                    ),
-                  );
-                  AppRouter.pushReplacementNamed(
-                    AppRouterNames.results,
-                    arguments: {
-                      'userInputs': userInputs,
-                      'difficulty': difficulty,
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
+  void _show(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.white,
+        content: Text(
+          'Вы уверены что хотите завершить тестирование?',
+          style: TextStyle(color: Colors.black),
+        ),
+        action: SnackBarAction(
+          textColor: Colors.black,
+          label: 'OK',
+          onPressed: () {
+            final userInputs = List.generate(
+              10,
+              (index) =>
+                  UserInput(question: questions[index], answer: answers[index]),
+            );
+            AppRouter.pushReplacementNamed(
+              AppRouterNames.results,
+              arguments: {'userInputs': userInputs, 'difficulty': difficulty},
+            );
+          },
+        ),
+      ),
     );
   }
 }

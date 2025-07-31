@@ -76,11 +76,11 @@ class _SignOutButton extends StatelessWidget {
           listener: (context, state) {
             if (state is ClearUserSuccess) {
               AppRouter.pop();
-              NotificationHelper.auth.signOutNotification(context);
+              NotificationHelper.auth.signOut(context);
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is ClearUserFailure) {
               AppRouter.pop();
-              NotificationHelper.auth.signOutErrorNotification(context);
+              NotificationHelper.auth.signOutError(context);
             }
           },
         ),

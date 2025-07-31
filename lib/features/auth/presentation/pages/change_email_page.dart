@@ -21,6 +21,7 @@ class ChangeEmailPage extends StatefulWidget {
 
 class _ChangeEmailPageState extends State<ChangeEmailPage> {
   final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +34,22 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
           create: (context) => SignOutBloc(DiContainer.authRepository),
         ),
       ],
-      child: _ChangeEmailPageView(emailController: _emailController),
+      child: _ChangeEmailPageView(
+        emailController: _emailController,
+        formKey: _formKey,
+      ),
     );
   }
 }
 
 class _ChangeEmailPageView extends StatelessWidget {
   final TextEditingController emailController;
+  final GlobalKey<FormState> formKey;
 
-  const _ChangeEmailPageView({required this.emailController});
+  const _ChangeEmailPageView({
+    required this.emailController,
+    required this.formKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +57,22 @@ class _ChangeEmailPageView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              _EmailForm(emailController: emailController),
-              _ChangeEmailButton(emailController: emailController),
-              const Spacer(),
-              _NavigationButton(),
-            ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(),
+                _EmailForm(emailController: emailController),
+                _ChangeEmailButton(
+                  emailController: emailController,
+                  formKey: formKey,
+                ),
+                const Spacer(),
+                _NavigationButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,8 +98,12 @@ class _EmailForm extends StatelessWidget {
 
 class _ChangeEmailButton extends StatelessWidget {
   final TextEditingController emailController;
+  final GlobalKey<FormState> formKey;
 
-  const _ChangeEmailButton({required this.emailController});
+  const _ChangeEmailButton({
+    required this.emailController,
+    required this.formKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +117,7 @@ class _ChangeEmailButton extends StatelessWidget {
               context.read<SignOutBloc>().add(SignOut());
             } else if (state is ChangeEmailFailure) {
               AppRouter.pop();
-              NotificationHelper.email.changeEmailErrorNotification(context);
+              NotificationHelper.email.changeEmailError(context);
             }
           },
         ),
@@ -107,20 +126,27 @@ class _ChangeEmailButton extends StatelessWidget {
             if (state is SignOutSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-              NotificationHelper.email.sendNewEmailVerificationNotification(context);
+              NotificationHelper.email.sendNewEmailVerification(context);
             }
           },
         ),
       ],
-      child: _ChangeEmailButtonView(emailController: emailController),
+      child: _ChangeEmailButtonView(
+        emailController: emailController,
+        formKey: formKey,
+      ),
     );
   }
 }
 
 class _ChangeEmailButtonView extends StatelessWidget {
   final TextEditingController emailController;
+  final GlobalKey<FormState> formKey;
 
-  const _ChangeEmailButtonView({required this.emailController});
+  const _ChangeEmailButtonView({
+    required this.emailController,
+    required this.formKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -132,11 +158,13 @@ class _ChangeEmailButtonView extends StatelessWidget {
         return CustomAuthButton(
           text: 'Подтвердить',
           onPressed: () {
-            context.read<ChangeEmailBloc>().add(
-              ChangeEmail(
-                userProfile: UserProfile(email: emailController.text.trim()),
-              ),
-            );
+            if (formKey.currentState!.validate()) {
+              context.read<ChangeEmailBloc>().add(
+                ChangeEmail(
+                  userProfile: UserProfile(email: emailController.text.trim()),
+                ),
+              );
+            }
           },
         );
       },

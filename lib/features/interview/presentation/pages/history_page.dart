@@ -63,7 +63,7 @@ class _HistoryList extends StatelessWidget {
             }
             if (state is ShowInterviewsFailure) {
               AppRouter.pop();
-              NotificationHelper.interview.showInterviewsErrorNotification(context);
+              NotificationHelper.interview.showInterviewsError(context);
             }
           },
         ),

@@ -1,4 +1,3 @@
-
 import 'package:interview_master/features/interview/data/models/user_input.dart';
 
 class GeminiResponses {

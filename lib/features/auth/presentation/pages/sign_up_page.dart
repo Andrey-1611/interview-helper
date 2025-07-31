@@ -209,7 +209,7 @@ class _SignUpButton extends StatelessWidget {
               );
             } else if (state is SignUpFailure) {
               AppRouter.pop();
-              NotificationHelper.auth.signUpErrorNotification(context);
+              NotificationHelper.auth.signUpError(context);
             }
           },
         ),
@@ -218,10 +218,10 @@ class _SignUpButton extends StatelessWidget {
             if (state is SendEmailVerificationSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              NotificationHelper.email.sendEmailVerificationNotification(context);
+              NotificationHelper.email.sendEmailVerification(context);
             } else if (state is SendEmailVerificationFailure) {
               AppRouter.pop();
-              NotificationHelper.email.emailVerificationErrorNotification(context);
+              NotificationHelper.email.emailVerificationError(context);
             }
           },
         ),

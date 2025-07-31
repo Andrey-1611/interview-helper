@@ -84,7 +84,7 @@ class _Question extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomQuestionCard(
       text: 'Вопрос: ${question.question}',
-      trailing: false,
+      isQuestionCard: false,
     );
   }
 }
@@ -98,7 +98,7 @@ class _UserAnswer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomQuestionCard(
       text: 'Ваш ответ: ${question.userAnswer}',
-      trailing: false,
+      isQuestionCard: false,
     );
   }
 }
@@ -112,7 +112,7 @@ class _CorrectAnswer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomQuestionCard(
       text: 'Правильный ответ: ${question.correctAnswer}',
-      trailing: false,
+      isQuestionCard: false,
     );
   }
 }

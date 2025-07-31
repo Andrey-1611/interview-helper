@@ -4,7 +4,16 @@ import '../../global_services/notifications/blocs/send_notification_bloc/send_no
 import '../../global_services/notifications/models/notification.dart';
 
 class EmailNotificationHelper {
-  void sendEmailVerificationNotification(BuildContext context) {
+  void sendPasswordResetEmail(BuildContext context) {
+    context.read<SendNotificationBloc>().add(
+      _sendNotification(
+        'Письмо со сбросом пароля отправлено на вашу почту!',
+        Icon(Icons.info),
+      ),
+    );
+  }
+
+  void sendEmailVerification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Письмо с подтверждением отправлено на вашу почту!',
@@ -13,7 +22,7 @@ class EmailNotificationHelper {
     );
   }
 
-  void sendNewEmailVerificationNotification(BuildContext context) {
+  void sendNewEmailVerification(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Письмо с подтверждением отправлено на вашу новую почту!',
@@ -22,7 +31,7 @@ class EmailNotificationHelper {
     );
   }
 
-  void emailNotVerifiedNotification(BuildContext context) {
+  void emailNotVerified(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Пожалуйста, подтвердите свою почту!',
@@ -31,7 +40,16 @@ class EmailNotificationHelper {
     );
   }
 
-  void emailVerificationErrorNotification(BuildContext context) {
+  void sendPasswordResetEmailError(BuildContext context) {
+    context.read<SendNotificationBloc>().add(
+      _sendNotification(
+        'Ошибка отправки письма со сбросом пароля, попробуйте позже!!',
+        Icon(Icons.info),
+      ),
+    );
+  }
+
+  void emailVerificationError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка проверки почты, попробуйте позже!',
@@ -40,7 +58,7 @@ class EmailNotificationHelper {
     );
   }
 
-  void checkEmailErrorNotification(BuildContext context) {
+  void checkEmailError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка проверки почты, попробуйте позже!',
@@ -49,7 +67,7 @@ class EmailNotificationHelper {
     );
   }
 
-  void changeEmailErrorNotification(BuildContext context) {
+  void changeEmailError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка изменения почты, проверьте введенные данные!',

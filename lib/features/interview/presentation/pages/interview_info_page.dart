@@ -99,7 +99,8 @@ class _QuestionCard extends StatelessWidget {
       },
       child: CustomQuestionCard(
         text: 'Вопрос ${interview.questions[index].question}',
-        trailing: true,
+        isQuestionCard: true,
+        score: interview.questions[index].score.toInt(),
       ),
     );
   }

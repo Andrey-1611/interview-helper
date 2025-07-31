@@ -7,7 +7,7 @@ abstract interface class AuthRepository {
   Future<void> sendEmailVerification();
   Future<EmailVerificationResult?> isEmailVerified();
   Future<void> changeEmail(UserProfile userProfile);
-  Future<void> changePassword(String password);
+  Future<void> changePassword(UserProfile userProfile);
   Future<UserProfile?> checkCurrentUser();
   Future<void> signOut();
 }

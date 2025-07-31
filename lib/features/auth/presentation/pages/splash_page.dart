@@ -46,7 +46,7 @@ class _SplashPageView extends StatelessWidget {
             } else if (state is CheckCurrentUserNotExists) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is CheckCurrentUserFailure) {
-              NotificationHelper.auth.checkUserErrorNotification(context);
+              NotificationHelper.auth.checkUserError(context);
             }
           },
         ),
@@ -58,9 +58,9 @@ class _SplashPageView extends StatelessWidget {
               );
             } else if (state is IsEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              NotificationHelper.email.emailNotVerifiedNotification(context);
+              NotificationHelper.email.emailNotVerified(context);
             } else if (state is IsEmailVerifiedFailure) {
-              NotificationHelper.email.emailVerificationErrorNotification(
+              NotificationHelper.email.emailVerificationError(
                 context,
               );
             }

@@ -28,6 +28,7 @@ class AppRouter {
     AppRouterNames.userProfile: (context) => const UserProfilePage(),
     AppRouterNames.home: (context) => const HomePage(),
     AppRouterNames.interview: (context) => const InterviewPage(),
+    AppRouterNames.interviewFinish: (context) => const InterviewPage(),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
     AppRouterNames.questionInfo: (context) => const QuestionInfoPage(),

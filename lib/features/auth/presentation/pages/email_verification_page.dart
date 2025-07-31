@@ -77,7 +77,7 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              NotificationHelper.email.sendEmailVerificationNotification(
+              NotificationHelper.email.sendEmailVerification(
                 context,
               );
             }
@@ -93,11 +93,11 @@ class _EmailVerificationButton extends StatelessWidget {
               );
             } else if (state is IsEmailNotVerified) {
               AppRouter.pop();
-              NotificationHelper.email.emailNotVerifiedNotification(context);
+              NotificationHelper.email.emailNotVerified(context);
             } else if (state is IsEmailVerifiedFailure) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-              NotificationHelper.email.emailVerificationErrorNotification(
+              NotificationHelper.email.emailVerificationError(
                 context,
               );
             }
@@ -115,7 +115,7 @@ class _EmailVerificationButton extends StatelessWidget {
             if (state is GetUserSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greetingNotification(
+              NotificationHelper.auth.greeting(
                 context,
                 state.userProfile.name!,
               );

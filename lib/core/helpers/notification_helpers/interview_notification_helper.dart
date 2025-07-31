@@ -4,7 +4,7 @@ import '../../global_services/notifications/blocs/send_notification_bloc/send_no
 import '../../global_services/notifications/models/notification.dart';
 
 class InterviewNotificationHelper {
-  void showInterviewsErrorNotification(BuildContext context) {
+  void showInterviewsError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка загрузки данных, попробуйте позже!',
@@ -13,7 +13,7 @@ class InterviewNotificationHelper {
     );
   }
 
-  void checkInterviewsErrorNotification(BuildContext context) {
+  void checkInterviewsError(BuildContext context) {
     context.read<SendNotificationBloc>().add(
       _sendNotification(
         'Ошибка оценки результатов, попробуйте позже!',
