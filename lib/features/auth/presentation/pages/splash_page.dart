@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
 import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
-import '../../blocs/check_current_user_bloc/check_current_user_bloc.dart';
+import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/user/services/user_repository.dart';
+import '../../data/repositories/auth_repository.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -17,14 +17,10 @@ class SplashPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) =>
-              CheckCurrentUserBloc(DiContainer.authRepository)
-                ..add(CheckCurrentUser()),
+              GetUserBloc(context.read<UserRepository>())..add(GetUser()),
         ),
         BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(DiContainer.authRepository),
-        ),
-        BlocProvider(
-          create: (context) => SetUserBloc(DiContainer.userRepository),
+          create: (context) => IsEmailVerifiedBloc(context.read<AuthRepository>()),
         ),
       ],
       child: _SplashPageView(),
@@ -39,13 +35,13 @@ class _SplashPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<CheckCurrentUserBloc, CheckCurrentUserState>(
+        BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
-            if (state is CheckCurrentUserExists) {
+            if (state is GetUserSuccess) {
               context.read<IsEmailVerifiedBloc>().add(CheckEmailVerified());
-            } else if (state is CheckCurrentUserNotExists) {
+            } else if (state is GetUserNotAuth) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-            } else if (state is CheckCurrentUserFailure) {
+            } else if (state is GetUserFailure) {
               NotificationHelper.auth.checkUserError(context);
             }
           },
@@ -53,22 +49,11 @@ class _SplashPageView extends StatelessWidget {
         BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
           listener: (context, state) {
             if (state is IsEmailVerifiedSuccess) {
-              context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.result.userProfile),
-              );
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is IsEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is IsEmailVerifiedFailure) {
-              NotificationHelper.email.emailVerificationError(
-                context,
-              );
-            }
-          },
-        ),
-        BlocListener<SetUserBloc, SetUserState>(
-          listener: (context, state) {
-            if (state is SetUserSuccess) {
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
+              NotificationHelper.email.emailVerificationError(context);
             }
           },
         ),

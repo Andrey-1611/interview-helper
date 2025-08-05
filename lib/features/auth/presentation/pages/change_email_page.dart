@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
+import 'package:interview_master/core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
+import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
+import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
+import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../blocs/check_current_user_bloc/check_current_user_bloc.dart';
 import '../../blocs/delete_account_bloc/delete_account_bloc.dart';
 import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
 
@@ -42,13 +44,17 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CheckCurrentUserBloc(DiContainer.authRepository),
+          create: (context) => GetUserBloc(context.read<UserRepository>()),
         ),
         BlocProvider(
-          create: (context) => DeleteAccountBloc(DiContainer.authRepository),
+          create: (context) => DeleteAccountBloc(context.read<AuthRepository>()),
         ),
         BlocProvider(
-          create: (context) => SignUpBloc(DiContainer.authRepository),
+          create: (context) => SignUpBloc(context.read<AuthRepository>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              SendEmailVerificationBloc(context.read<AuthRepository>()),
         ),
       ],
       child: _ChangeEmailPageView(
@@ -101,22 +107,6 @@ class _ChangeEmailPageView extends StatelessWidget {
   }
 }
 
-class _EmailForm extends StatelessWidget {
-  final TextEditingController emailController;
-
-  const _EmailForm({required this.emailController});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomTextFormField(
-      controller: emailController,
-      hintText: 'Почта',
-      prefixIcon: Icon(Icons.email),
-      keyboardType: TextInputType.emailAddress,
-    );
-  }
-}
-
 class _ChangeEmailButton extends StatelessWidget {
   final TextEditingController emailController;
   final GlobalKey<FormState> formKey;
@@ -133,14 +123,14 @@ class _ChangeEmailButton extends StatelessWidget {
     late final UserProfile user;
     return MultiBlocListener(
       listeners: [
-        BlocListener<CheckCurrentUserBloc, CheckCurrentUserState>(
+        BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
-            if (state is CheckCurrentUserLoading) {
+            if (state is GetUserLoading) {
               DialogHelper.showLoadingDialog(context);
-            } else if (state is CheckCurrentUserExists) {
+            } else if (state is GetUserSuccess) {
               user = state.userProfile;
               context.read<DeleteAccountBloc>().add(DeleteAccount());
-            } else if (state is CheckCurrentUserFailure) {
+            } else if (state is GetUserFailure) {
               AppRouter.pop();
               NotificationHelper.email.changeEmailError(context);
             }
@@ -167,6 +157,18 @@ class _ChangeEmailButton extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is SignUpSuccess) {
+              context.read<SendEmailVerificationBloc>().add(
+                SendEmailVerification(),
+              );
+            } else if (state is SignUpFailure) {
+              AppRouter.pop();
+              NotificationHelper.email.changeEmailError(context);
+            }
+          },
+        ),
+        BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
+          listener: (context, state) {
+            if (state is SendEmailVerificationSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(
                 AppRouterNames.emailVerification,
@@ -203,9 +205,25 @@ class _ChangeEmailButtonView extends StatelessWidget {
       text: 'Подтвердить',
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          context.read<CheckCurrentUserBloc>().add(CheckCurrentUser());
+          context.read<GetUserBloc>().add(GetUser());
         }
       },
+    );
+  }
+}
+
+class _EmailForm extends StatelessWidget {
+  final TextEditingController emailController;
+
+  const _EmailForm({required this.emailController});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomTextFormField(
+      controller: emailController,
+      hintText: 'Почта',
+      prefixIcon: Icon(Icons.email),
+      keyboardType: TextInputType.emailAddress,
     );
   }
 }

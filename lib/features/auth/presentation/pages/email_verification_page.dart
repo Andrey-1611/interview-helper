@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/blocs/set_user_bloc/set_user_bloc.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../../blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
+import '../../data/repositories/auth_repository.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   const EmailVerificationPage({super.key});
@@ -31,18 +31,15 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       providers: [
         BlocProvider(
           create: (context) =>
-              SendEmailVerificationBloc(DiContainer.authRepository),
+              SendEmailVerificationBloc(context.read<AuthRepository>()),
         ),
         BlocProvider(
           create: (context) =>
-              IsEmailVerifiedBloc(DiContainer.authRepository)
+              IsEmailVerifiedBloc(context.read<AuthRepository>())
                 ..add(WatchEmailVerified()),
         ),
         BlocProvider(
-          create: (context) => SetUserBloc(DiContainer.userRepository),
-        ),
-        BlocProvider(
-          create: (context) => GetUserBloc(DiContainer.userRepository),
+          create: (context) => GetUserBloc(context.read<UserRepository>()),
         ),
       ],
       child: _EmailVerificationPageView(password: password),
@@ -94,19 +91,10 @@ class _EmailVerificationForm extends StatelessWidget {
         BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
           listener: (context, state) {
             if (state is IsEmailVerifiedSuccess) {
-              context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.result.userProfile),
-              );
+              context.read<GetUserBloc>().add(GetUser());
             } else if (state is IsEmailVerifiedFailure) {
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
               NotificationHelper.email.emailVerificationError(context);
-            }
-          },
-        ),
-        BlocListener<SetUserBloc, SetUserState>(
-          listener: (context, state) {
-            if (state is SetUserSuccess) {
-              context.read<GetUserBloc>().add(GetUser());
             }
           },
         ),
@@ -118,6 +106,9 @@ class _EmailVerificationForm extends StatelessWidget {
                 context,
                 state.userProfile.name!,
               );
+            } else if (state is GetUserFailure) {
+              AppRouter.pushReplacementNamed(AppRouterNames.signUp);
+              NotificationHelper.email.emailVerificationError(context);
             }
           },
         ),

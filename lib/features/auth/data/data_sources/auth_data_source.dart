@@ -91,37 +91,10 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
-  Future<void> changeEmail(UserProfile userProfile) async {
-    try {
-      final user = _firebaseAuth.currentUser;
-      await user?.verifyBeforeUpdateEmail(userProfile.email);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
-  }
-
-  @override
+    @override
   Future<void> changePassword(UserProfile userProfile) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: userProfile.email);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
-  }
-
-  @override
-  Future<UserProfile?> checkCurrentUser() async {
-    try {
-      await _firebaseAuth.currentUser?.reload();
-      final currentUser = _firebaseAuth.currentUser;
-      if (currentUser != null) {
-        final userProfile = _toUserProfile(currentUser);
-        return userProfile;
-      }
-      return null;
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -138,14 +111,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  UserProfile _toUserProfile(User user) {
-    return UserProfile(
-      id: user.uid,
-      name: user.displayName ?? '',
-      email: user.email ?? '',
-    );
-  }
-
   @override
   Future<void> deleteAccount() async {
     try {
@@ -154,5 +119,13 @@ class AuthDataSource implements AuthRepository {
       log(e.toString());
       rethrow;
     }
+  }
+
+  UserProfile _toUserProfile(User user) {
+    return UserProfile(
+      id: user.uid,
+      name: user.displayName ?? '',
+      email: user.email ?? '',
+    );
   }
 }

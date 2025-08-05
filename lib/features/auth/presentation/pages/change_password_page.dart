@@ -1,13 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
-import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../blocs/change_password_bloc/change_password_bloc.dart';
+import '../../data/repositories/auth_repository.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -32,7 +31,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ChangePasswordBloc(AuthDataSource(FirebaseAuth.instance)),
+          ChangePasswordBloc(context.read<AuthRepository>()),
       child: _ChangePasswordPageView(
         emailController: _emailController,
         formKey: _formKey,

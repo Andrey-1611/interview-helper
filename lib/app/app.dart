@@ -10,20 +10,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(430, 932),
-      minTextAdapt: true,
-      builder: (_, _) {
-        return GlobalBlocProvider(
-          child: MaterialApp(
+    return GlobalBlocProvider(
+      child: ScreenUtilInit(
+        designSize: const Size(430, 932),
+        minTextAdapt: true,
+        builder: (_, _) {
+          return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: AppTheme.getTheme(),
             navigatorKey: AppRouter.navigatorKey,
             initialRoute: AppRouterNames.splash,
             routes: AppRouter.routes,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
