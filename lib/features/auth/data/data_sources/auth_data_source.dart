@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
@@ -56,17 +57,33 @@ class AuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<EmailVerificationResult?> isEmailVerified() async {
+  Future<EmailVerificationResult?> checkEmailVerified() async {
     try {
       final user = _firebaseAuth.currentUser;
-      await user?.reload();
-      final newUser = _firebaseAuth.currentUser;
-      if (newUser == null) return null;
-      final bool isEmailVerified = newUser.emailVerified;
-      final UserProfile userProfile = _toUserProfile(newUser);
+      final bool isEmailVerified = user!.emailVerified;
+      final UserProfile userProfile = _toUserProfile(user);
       return EmailVerificationResult(
         isEmailVerified: isEmailVerified,
         userProfile: userProfile,
+      );
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<EmailVerificationResult?> watchEmailVerified() async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+      while (!user!.emailVerified) {
+        await user.reload();
+        user = _firebaseAuth.currentUser;
+        await Future.delayed(const Duration(seconds: 3));
+      }
+      return EmailVerificationResult(
+        isEmailVerified: true,
+        userProfile: _toUserProfile(user),
       );
     } catch (e) {
       log(e.toString());
@@ -127,5 +144,15 @@ class AuthDataSource implements AuthRepository {
       name: user.displayName ?? '',
       email: user.email ?? '',
     );
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      await _firebaseAuth.currentUser?.delete();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }

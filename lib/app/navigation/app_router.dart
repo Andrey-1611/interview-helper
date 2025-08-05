@@ -19,7 +19,6 @@ class AppRouter {
 
   static Map<String, Widget Function(BuildContext context)> routes = {
     AppRouterNames.splash: (context) => const SplashPage(),
-    //AppRouterNames.mainAuth: (context) => const MainAuthPage(),
     AppRouterNames.signIn: (context) => const SignInPage(),
     AppRouterNames.signUp: (context) => const SignUpPage(),
     AppRouterNames.emailVerification: (context) => const EmailVerificationPage(),

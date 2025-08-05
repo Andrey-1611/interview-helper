@@ -1,6 +1,5 @@
 class AppRouterNames {
   static const splash = '/';
-  //static const mainAuth = '/main_auth';
   static const signIn = '/sign_in';
   static const signUp = '/sign_up';
   static const emailVerification = '/email_verification';

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -19,6 +17,14 @@ class EmailVerificationPage extends StatefulWidget {
 }
 
 class _EmailVerificationPageState extends State<EmailVerificationPage> {
+  late final String password;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    password = ModalRoute.of(context)!.settings.arguments as String;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -28,7 +34,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
               SendEmailVerificationBloc(DiContainer.authRepository),
         ),
         BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(DiContainer.authRepository),
+          create: (context) =>
+              IsEmailVerifiedBloc(DiContainer.authRepository)
+                ..add(WatchEmailVerified()),
         ),
         BlocProvider(
           create: (context) => SetUserBloc(DiContainer.userRepository),
@@ -37,28 +45,30 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
           create: (context) => GetUserBloc(DiContainer.userRepository),
         ),
       ],
-      child: _EmailVerificationPageView(),
+      child: _EmailVerificationPageView(password: password),
     );
   }
 }
 
 class _EmailVerificationPageView extends StatelessWidget {
-  const _EmailVerificationPageView();
+  final String password;
+
+  const _EmailVerificationPageView({required this.password});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
-              _EmailVerificationButton(),
-              _SendEmailVerificationButton(),
-              Spacer(),
-              _NavigationButton(),
+              const Spacer(),
+              const _EmailVerificationForm(),
+              const _SendEmailVerificationButton(),
+              const Spacer(),
+              _NavigationButton(password: password),
             ],
           ),
         ),
@@ -67,8 +77,8 @@ class _EmailVerificationPageView extends StatelessWidget {
   }
 }
 
-class _EmailVerificationButton extends StatelessWidget {
-  const _EmailVerificationButton();
+class _EmailVerificationForm extends StatelessWidget {
+  const _EmailVerificationForm();
 
   @override
   Widget build(BuildContext context) {
@@ -77,29 +87,19 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              NotificationHelper.email.sendEmailVerification(
-                context,
-              );
+              NotificationHelper.email.sendEmailVerification(context);
             }
           },
         ),
         BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
           listener: (context, state) {
-            if (state is IsEmailVerifiedLoading) {
-              DialogHelper.showLoadingDialog(context);
-            } else if (state is IsEmailVerifiedSuccess) {
+            if (state is IsEmailVerifiedSuccess) {
               context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.isEmailVerified.userProfile),
+                SetUser(userProfile: state.result.userProfile),
               );
-            } else if (state is IsEmailNotVerified) {
-              AppRouter.pop();
-              NotificationHelper.email.emailNotVerified(context);
             } else if (state is IsEmailVerifiedFailure) {
-              AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-              NotificationHelper.email.emailVerificationError(
-                context,
-              );
+              NotificationHelper.email.emailVerificationError(context);
             }
           },
         ),
@@ -113,7 +113,6 @@ class _EmailVerificationButton extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserSuccess) {
-              AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
               NotificationHelper.auth.greeting(
                 context,
@@ -123,22 +122,17 @@ class _EmailVerificationButton extends StatelessWidget {
           },
         ),
       ],
-      child: _EmailVerificationButtonView(),
+      child: _EmailVerificationFormView(),
     );
   }
 }
 
-class _EmailVerificationButtonView extends StatelessWidget {
-  const _EmailVerificationButtonView();
+class _EmailVerificationFormView extends StatelessWidget {
+  const _EmailVerificationFormView();
 
   @override
   Widget build(BuildContext context) {
-    return CustomAuthButton(
-      text: 'Подтвердил',
-      onPressed: () {
-        context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
-      },
-    );
+    return Text('Подтвердите свою почту');
   }
 }
 
@@ -157,13 +151,18 @@ class _SendEmailVerificationButton extends StatelessWidget {
 }
 
 class _NavigationButton extends StatelessWidget {
-  const _NavigationButton();
+  final String password;
+
+  const _NavigationButton({required this.password});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        AppRouter.pushReplacementNamed(AppRouterNames.changeEmail);
+        AppRouter.pushReplacementNamed(
+          AppRouterNames.changeEmail,
+          arguments: password,
+        );
       },
       child: const Text('Не приходит письмо?  Изменить почту'),
     );

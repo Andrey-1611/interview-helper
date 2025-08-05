@@ -12,16 +12,27 @@ class IsEmailVerifiedBloc
   final AuthRepository authRepository;
 
   IsEmailVerifiedBloc(this.authRepository) : super(IsEmailVerifiedInitial()) {
-    on<IsEmailVerified>((event, emit) async {
+    on<CheckEmailVerified>((event, emit) async {
       emit(IsEmailVerifiedLoading());
       try {
-        final EmailVerificationResult? isEmailVerified = await authRepository
-            .isEmailVerified();
-        if (isEmailVerified?.isEmailVerified == true) {
-          emit(IsEmailVerifiedSuccess(isEmailVerified: isEmailVerified!));
+        final EmailVerificationResult? result = await authRepository
+            .checkEmailVerified();
+        if (result?.isEmailVerified == true) {
+          emit(IsEmailVerifiedSuccess(result: result!));
         } else {
           emit(IsEmailNotVerified());
         }
+      } catch (e) {
+        emit(IsEmailVerifiedFailure(e.toString()));
+      }
+    });
+
+    on<WatchEmailVerified>((event, emit) async {
+      emit(IsEmailVerifiedLoading());
+      try {
+        final EmailVerificationResult? result = await authRepository
+            .watchEmailVerified();
+        emit(IsEmailVerifiedSuccess(result: result!));
       } catch (e) {
         emit(IsEmailVerifiedFailure(e.toString()));
       }

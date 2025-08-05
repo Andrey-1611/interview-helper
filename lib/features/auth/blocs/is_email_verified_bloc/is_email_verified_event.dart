@@ -7,4 +7,6 @@ sealed class IsEmailVerifiedEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class IsEmailVerified extends IsEmailVerifiedEvent {}
+final class CheckEmailVerified extends IsEmailVerifiedEvent {}
+
+final class WatchEmailVerified extends IsEmailVerifiedEvent {}

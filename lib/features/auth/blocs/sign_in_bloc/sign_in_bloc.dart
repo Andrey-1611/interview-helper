@@ -7,10 +7,10 @@ part 'sign_in_event.dart';
 
 part 'sign_in_state.dart';
 
-class SignInBloc extends Bloc<SignInEvent, SignInState> {
+class SignUpBloc extends Bloc<SignInEvent, SignInState> {
   final AuthRepository authRepository;
 
-  SignInBloc(this.authRepository) : super(SignInInitial()) {
+  SignUpBloc(this.authRepository) : super(SignInInitial()) {
     on<SignIn>((event, emit) async {
       emit(SignInLoading());
       try {

@@ -42,7 +42,7 @@ class _SplashPageView extends StatelessWidget {
         BlocListener<CheckCurrentUserBloc, CheckCurrentUserState>(
           listener: (context, state) {
             if (state is CheckCurrentUserExists) {
-              context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
+              context.read<IsEmailVerifiedBloc>().add(CheckEmailVerified());
             } else if (state is CheckCurrentUserNotExists) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is CheckCurrentUserFailure) {
@@ -54,11 +54,10 @@ class _SplashPageView extends StatelessWidget {
           listener: (context, state) {
             if (state is IsEmailVerifiedSuccess) {
               context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.isEmailVerified.userProfile),
+                SetUser(userProfile: state.result.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
-              AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
-              NotificationHelper.email.emailNotVerified(context);
+              AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is IsEmailVerifiedFailure) {
               NotificationHelper.email.emailVerificationError(
                 context,

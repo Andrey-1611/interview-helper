@@ -185,7 +185,7 @@ class _InterviewQuestionPage extends StatelessWidget {
                 onPressed: () {
                   _saveCurrentAnswer();
                   if (currentPage == 9) {
-                    _show(context);
+                    _navigateToResult();
                   } else {
                     _navigateToPage(currentPage + 1);
                   }
@@ -211,30 +211,14 @@ class _InterviewQuestionPage extends StatelessWidget {
     );
   }
 
-  void _show(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.white,
-        content: Text(
-          'Вы уверены что хотите завершить тестирование?',
-          style: TextStyle(color: Colors.black),
-        ),
-        action: SnackBarAction(
-          textColor: Colors.black,
-          label: 'OK',
-          onPressed: () {
-            final userInputs = List.generate(
-              10,
-              (index) =>
-                  UserInput(question: questions[index], answer: answers[index]),
-            );
-            AppRouter.pushReplacementNamed(
-              AppRouterNames.results,
-              arguments: {'userInputs': userInputs, 'difficulty': difficulty},
-            );
-          },
-        ),
-      ),
+  void _navigateToResult() {
+    final userInputs = List.generate(
+      10,
+      (index) => UserInput(question: questions[index], answer: answers[index]),
+    );
+    AppRouter.pushReplacementNamed(
+      AppRouterNames.results,
+      arguments: {'userInputs': userInputs, 'difficulty': difficulty},
     );
   }
 }

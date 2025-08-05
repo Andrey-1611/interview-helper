@@ -9,6 +9,8 @@ sealed class CheckCurrentUserState extends Equatable {
 
 final class CheckCurrentUserInitial extends CheckCurrentUserState {}
 
+final class CheckCurrentUserLoading extends CheckCurrentUserState {}
+
 final class CheckCurrentUserFailure extends CheckCurrentUserState {}
 
 final class CheckCurrentUserNotExists extends CheckCurrentUserState {}

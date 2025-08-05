@@ -40,7 +40,7 @@ class _SignInPageState extends State<SignInPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => SignInBloc(DiContainer.authRepository),
+          create: (context) => SignUpBloc(DiContainer.authRepository),
         ),
         BlocProvider(
           create: (context) => IsEmailVerifiedBloc(DiContainer.authRepository),
@@ -176,12 +176,12 @@ class _SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<SignInBloc, SignInState>(
+        BlocListener<SignUpBloc, SignInState>(
           listener: (context, state) {
             if (state is SignInLoading) {
               DialogHelper.showLoadingDialog(context);
             } else if (state is SignInSuccess) {
-              context.read<IsEmailVerifiedBloc>().add(IsEmailVerified());
+              context.read<IsEmailVerifiedBloc>().add(CheckEmailVerified());
             }
             if (state is SignInFailure) {
               AppRouter.pop();
@@ -193,11 +193,14 @@ class _SignInButton extends StatelessWidget {
           listener: (context, state) {
             if (state is IsEmailVerifiedSuccess) {
               context.read<SetUserBloc>().add(
-                SetUser(userProfile: state.isEmailVerified.userProfile),
+                SetUser(userProfile: state.result.userProfile),
               );
             } else if (state is IsEmailNotVerified) {
               AppRouter.pop();
-              AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
+              AppRouter.pushReplacementNamed(
+                AppRouterNames.emailVerification,
+                arguments: passwordController.text.trim(),
+              );
               NotificationHelper.email.emailNotVerified(context);
             } else if (state is IsEmailVerifiedFailure) {
               AppRouter.pop();
@@ -217,7 +220,10 @@ class _SignInButton extends StatelessWidget {
             if (state is GetUserSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greeting(context, state.userProfile.name!);
+              NotificationHelper.auth.greeting(
+                context,
+                state.userProfile.name!,
+              );
             }
           },
         ),
@@ -248,7 +254,7 @@ class _SignInButtonView extends StatelessWidget {
       text: 'Войти',
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          context.read<SignInBloc>().add(
+          context.read<SignUpBloc>().add(
             SignIn(
               userProfile: UserProfile(email: emailController.text.trim()),
               password: passwordController.text.trim(),

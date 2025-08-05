@@ -20,10 +20,10 @@ final class IsEmailVerifiedFailure extends IsEmailVerifiedState {
 final class IsEmailNotVerified extends IsEmailVerifiedState {}
 
 final class IsEmailVerifiedSuccess extends IsEmailVerifiedState {
-  final EmailVerificationResult isEmailVerified;
+  final EmailVerificationResult result;
 
-  const IsEmailVerifiedSuccess({required this.isEmailVerified});
+  const IsEmailVerifiedSuccess({required this.result});
 
   @override
-  List<Object> get props => [isEmailVerified];
+  List<Object> get props => [result];
 }

@@ -23,6 +23,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
@@ -107,6 +113,7 @@ class _ChangePasswordButton extends StatelessWidget {
         } else if (state is ChangePasswordSuccess) {
           Navigator.pop(context);
           NotificationHelper.email.sendPasswordResetEmail(context);
+          AppRouter.pushReplacementNamed(AppRouterNames.signIn);
         } else if (state is ChangePasswordFailure) {
           Navigator.pop(context);
           NotificationHelper.email.sendPasswordResetEmailError(context);

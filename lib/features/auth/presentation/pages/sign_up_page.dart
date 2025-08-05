@@ -217,8 +217,11 @@ class _SignUpButton extends StatelessWidget {
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
               AppRouter.pop();
-              AppRouter.pushReplacementNamed(AppRouterNames.emailVerification);
               NotificationHelper.email.sendEmailVerification(context);
+              AppRouter.pushReplacementNamed(
+                AppRouterNames.emailVerification,
+                arguments: passwordController.text.trim(),
+              );
             } else if (state is SendEmailVerificationFailure) {
               AppRouter.pop();
               NotificationHelper.email.emailVerificationError(context);

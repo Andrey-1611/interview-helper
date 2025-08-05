@@ -10,6 +10,7 @@ class CheckCurrentUserBloc extends Bloc<CheckCurrentUserEvent, CheckCurrentUserS
   final AuthRepository authRepository;
   CheckCurrentUserBloc(this.authRepository) : super(CheckCurrentUserInitial()) {
     on<CheckCurrentUser>((event, emit) async {
+      emit(CheckCurrentUserLoading());
       try {
         final user = await authRepository.checkCurrentUser();
         if (user != null) {
