@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
-import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
-import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../blocs/delete_account_bloc/delete_account_bloc.dart';
-import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
+import '../blocs/delete_account_bloc/delete_account_bloc.dart';
+import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
+import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 
 class ChangeEmailPage extends StatefulWidget {
   const ChangeEmailPage({super.key});
@@ -44,17 +43,17 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => GetUserBloc(context.read<UserRepository>()),
-        ),
-        BlocProvider(
-          create: (context) => DeleteAccountBloc(context.read<AuthRepository>()),
-        ),
-        BlocProvider(
-          create: (context) => SignUpBloc(context.read<AuthRepository>()),
+          create: (context) => GetUserBloc(DIContainer.userRepository),
         ),
         BlocProvider(
           create: (context) =>
-              SendEmailVerificationBloc(context.read<AuthRepository>()),
+              DeleteAccountBloc(DIContainer.deleteAccount),
+        ),
+        BlocProvider(
+          create: (context) => SignUpBloc(DIContainer.signUp),
+        ),
+        BlocProvider(
+          create: (context) => SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
       ],
       child: _ChangeEmailPageView(

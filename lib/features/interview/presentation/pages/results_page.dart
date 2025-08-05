@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
 import 'package:interview_master/features/interview/blocs/create_interview_bloc/create_interview_bloc.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
-import 'package:interview_master/features/interview/data/repositories/firestore_repository.dart';
-import 'package:interview_master/features/interview/data/repositories/interview_repository.dart';
-import 'package:interview_master/features/interview/data/repositories/remote_repository.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
@@ -44,19 +41,19 @@ class _ResultsPageState extends State<ResultsPage> {
       providers: [
         BlocProvider(
           create: (context) =>
-              CheckResultsBloc(context.read<RemoteRepository>())
+              CheckResultsBloc(DIContainer.remoteRepository)
                 ..add(CheckResults(userInputs: _userInputs)),
         ),
         BlocProvider(
           create: (context) =>
-              CreateInterviewBloc(context.read<InterviewRepository>()),
+              CreateInterviewBloc(DIContainer.interviewRepository),
         ),
         BlocProvider(
-          create: (context) => GetUserBloc(context.read<UserRepository>()),
+          create: (context) => GetUserBloc(DIContainer.userRepository),
         ),
         BlocProvider(
           create: (context) =>
-              AddInterviewBloc(context.read<FirestoreRepository>()),
+              AddInterviewBloc(DIContainer.firestoreRepository),
         ),
       ],
       child: _ResultsPageView(difficulty: _difficulty),

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
-import 'package:interview_master/features/auth/blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/models/user_profile.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
-import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
-import '../../data/repositories/auth_repository.dart';
+import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
+import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -40,12 +40,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => SignUpBloc(context.read<AuthRepository>()),
-        ),
+        BlocProvider(create: (context) => SignUpBloc(DIContainer.signUp)),
         BlocProvider(
           create: (context) =>
-              SendEmailVerificationBloc(context.read<AuthRepository>()),
+              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
       ],
       child: _SignUpPageView(

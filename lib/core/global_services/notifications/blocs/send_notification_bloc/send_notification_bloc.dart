@@ -7,12 +7,12 @@ part 'send_notification_event.dart';
 part 'send_notification_state.dart';
 
 class SendNotificationBloc extends Bloc<SendNotificationEvent, SendNotificationState> {
-  final NotificationsRepository notificationsInterface;
-  SendNotificationBloc(this.notificationsInterface) : super(SendNotificationInitial()) {
+  final NotificationsRepository _notificationsRepository;
+  SendNotificationBloc(this._notificationsRepository) : super(SendNotificationInitial()) {
     on<SendNotification>((event, emit) {
       emit(SendNotificationLoading());
       try {
-        notificationsInterface.sendNotification(event.notification);
+        _notificationsRepository.sendNotification(event.notification);
         emit(SendNotificationSuccess());
       } catch (e) {
         emit(SendNotificationFailure());

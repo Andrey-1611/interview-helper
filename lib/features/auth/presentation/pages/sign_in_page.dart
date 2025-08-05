@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
+import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_repository.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
-import '../../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
-import '../../data/repositories/auth_repository.dart';
+import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
+import '../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 
 class SignInPage extends StatefulWidget {
@@ -40,18 +39,17 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => SignInBloc(DIContainer.signIn)),
         BlocProvider(
-          create: (context) => SignUpBloc(context.read<AuthRepository>()),
-        ),
-        BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(context.read<AuthRepository>()),
+          create: (context) =>
+              CheckEmailVerifiedBloc(DIContainer.checkEmailVerified),
         ),
         BlocProvider(
           create: (context) =>
-              SendEmailVerificationBloc(context.read<AuthRepository>()),
+              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
         BlocProvider(
-          create: (context) => GetUserBloc(context.read<UserRepository>()),
+          create: (context) => GetUserBloc(DIContainer.userRepository),
         ),
       ],
       child: _SignInPageView(
@@ -177,12 +175,12 @@ class _SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<SignUpBloc, SignInState>(
+        BlocListener<SignInBloc, SignInState>(
           listener: (context, state) {
             if (state is SignInLoading) {
               DialogHelper.showLoadingDialog(context);
             } else if (state is SignInSuccess) {
-              context.read<IsEmailVerifiedBloc>().add(CheckEmailVerified());
+              context.read<CheckEmailVerifiedBloc>().add(CheckEmailVerified());
             }
             if (state is SignInFailure) {
               AppRouter.pop();
@@ -190,15 +188,15 @@ class _SignInButton extends StatelessWidget {
             }
           },
         ),
-        BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
+        BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
           listener: (context, state) {
-            if (state is IsEmailVerifiedSuccess) {
+            if (state is CheckEmailVerifiedSuccess) {
               context.read<GetUserBloc>().add(GetUser());
-            } else if (state is IsEmailNotVerified) {
+            } else if (state is CheckEmailNotVerified) {
               context.read<SendEmailVerificationBloc>().add(
                 SendEmailVerification(),
               );
-            } else if (state is IsEmailVerifiedFailure) {
+            } else if (state is CheckEmailVerifiedFailure) {
               AppRouter.pop();
               NotificationHelper.email.checkEmailError(context);
             }
@@ -261,7 +259,7 @@ class _SignInButtonView extends StatelessWidget {
       text: 'Войти',
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          context.read<SignUpBloc>().add(
+          context.read<SignInBloc>().add(
             SignIn(
               userProfile: UserProfile(email: emailController.text.trim()),
               password: passwordController.text.trim(),

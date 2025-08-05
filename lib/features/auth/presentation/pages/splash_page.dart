@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
-import 'package:interview_master/features/auth/blocs/is_email_verified_bloc/is_email_verified_bloc.dart';
+import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/services/user_repository.dart';
-import '../../data/repositories/auth_repository.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -17,10 +16,11 @@ class SplashPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<UserRepository>())..add(GetUser()),
+              GetUserBloc(DIContainer.userRepository)..add(GetUser()),
         ),
         BlocProvider(
-          create: (context) => IsEmailVerifiedBloc(context.read<AuthRepository>()),
+          create: (context) =>
+              CheckEmailVerifiedBloc(DIContainer.checkEmailVerified),
         ),
       ],
       child: _SplashPageView(),
@@ -38,7 +38,7 @@ class _SplashPageView extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserSuccess) {
-              context.read<IsEmailVerifiedBloc>().add(CheckEmailVerified());
+              context.read<CheckEmailVerifiedBloc>().add(CheckEmailVerified());
             } else if (state is GetUserNotAuth) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is GetUserFailure) {
@@ -46,13 +46,13 @@ class _SplashPageView extends StatelessWidget {
             }
           },
         ),
-        BlocListener<IsEmailVerifiedBloc, IsEmailVerifiedState>(
+        BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
           listener: (context, state) {
-            if (state is IsEmailVerifiedSuccess) {
+            if (state is CheckEmailVerifiedSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-            } else if (state is IsEmailNotVerified) {
+            } else if (state is CheckEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-            } else if (state is IsEmailVerifiedFailure) {
+            } else if (state is CheckEmailVerifiedFailure) {
               NotificationHelper.email.emailVerificationError(context);
             }
           },

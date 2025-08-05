@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
-import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 
-class AuthDataSource implements AuthRepository {
+class AuthDataSource {
   final FirebaseAuth _firebaseAuth;
 
   AuthDataSource(this._firebaseAuth);
 
-  @override
   Future<UserProfile> signIn(UserProfile userProfile, String password) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -25,7 +23,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<UserProfile> signUp(UserProfile userProfile, String password) async {
     try {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -43,7 +40,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<void> sendEmailVerification() async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -56,7 +52,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<EmailVerificationResult?> checkEmailVerified() async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -72,7 +67,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<EmailVerificationResult?> watchEmailVerified() async {
     try {
       User? user = _firebaseAuth.currentUser;
@@ -91,7 +85,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-    @override
   Future<void> changePassword(UserProfile userProfile) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: userProfile.email);
@@ -101,7 +94,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
@@ -111,7 +103,6 @@ class AuthDataSource implements AuthRepository {
     }
   }
 
-  @override
   Future<void> deleteAccount() async {
     try {
       await _firebaseAuth.currentUser?.delete();

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/user/services/user_repository.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
-import 'package:interview_master/features/auth/blocs/sign_out_bloc/sign_out_bloc.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
-import '../../data/repositories/auth_repository.dart';
+import '../blocs/sign_out_bloc/sign_out_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 
 class UserProfilePage extends StatelessWidget {
@@ -17,12 +16,10 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => SignOutBloc(context.read<AuthRepository>()),
-        ),
+        BlocProvider(create: (context) => SignOutBloc(DIContainer.signOut)),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(context.read<UserRepository>())..add(GetUser()),
+              GetUserBloc(DIContainer.userRepository)..add(GetUser()),
         ),
       ],
       child: _UserProfilePageView(),
@@ -35,17 +32,17 @@ class _UserProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Scaffold(
-        appBar: AppBar(),
-        body: Column(
+    return Scaffold(
+      appBar: AppBar(),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(),
+            Spacer(),
             _UserInfo(),
             _SignOutButton(),
-            const Spacer(),
+            Spacer(),
           ],
         ),
       ),
@@ -66,7 +63,7 @@ class _SignOutButton extends StatelessWidget {
               DialogHelper.showLoadingDialog(context);
             } else if (state is GetUserSuccess) {
               AppRouter.pop();
-            } else if (state is SignOutFailure) {
+            } else if (state is GetUserFailure) {
               AppRouter.pop();
               NotificationHelper.auth.signOutError(context);
             }
@@ -74,11 +71,11 @@ class _SignOutButton extends StatelessWidget {
         ),
         BlocListener<SignOutBloc, SignOutState>(
           listener: (context, state) {
-            if (state is SignOuLoading) {
+            if (state is SignOutLoading) {
               DialogHelper.showLoadingDialog(context);
             } else if (state is SignOutSuccess) {
               AppRouter.pop();
-              NotificationHelper.auth.signOut(context);
+              //NotificationHelper.auth.signOut(context);
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is SignOutFailure) {
               AppRouter.pop();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
-import 'package:interview_master/features/interview/data/repositories/questions_repository.dart';
+import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../data/models/user_input.dart';
@@ -39,7 +39,7 @@ class _InterviewPageState extends State<InterviewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          GetQuestionsBloc(context.read<QuestionsRepository>())
+          GetQuestionsBloc(DIContainer.questionsRepository)
             ..add(GetQuestions(difficulty: difficulty)),
       child: _InterviewPageView(
         pageController: pageController,

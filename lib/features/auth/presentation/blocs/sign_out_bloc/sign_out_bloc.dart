@@ -1,19 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/features/auth/data/repositories/auth_repository.dart';
+import 'package:interview_master/features/auth/domain/use_cases/sign_out_use_case.dart';
 
 part 'sign_out_event.dart';
+
 part 'sign_out_state.dart';
 
 class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
-  final AuthRepository authRepository;
-  SignOutBloc(this.authRepository) : super(SignOutInitial()) {
+  final SignOutUseCase _signOutUseCase;
+
+  SignOutBloc(this._signOutUseCase) : super(SignOutInitial()) {
     on<SignOut>((event, emit) async {
-      emit(SignOuLoading());
+      emit(SignOutLoading());
       try {
-        await authRepository.signOut();
+        await _signOutUseCase.call();
         emit(SignOutSuccess());
-      }  catch (e) {
+      } catch (e) {
         emit(SignOutFailure());
       }
     });
