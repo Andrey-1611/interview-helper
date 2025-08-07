@@ -4,11 +4,11 @@ import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../blocs/delete_account_bloc/delete_account_bloc.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -43,7 +43,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.userRepository),
+          create: (context) => GetUserBloc(DIContainer.getUser),
         ),
         BlocProvider(
           create: (context) =>
@@ -119,7 +119,7 @@ class _ChangeEmailButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final UserProfile user;
+    late final MyUser user;
     return MultiBlocListener(
       listeners: [
         BlocListener<GetUserBloc, GetUserState>(
@@ -127,7 +127,7 @@ class _ChangeEmailButton extends StatelessWidget {
             if (state is GetUserLoading) {
               DialogHelper.showLoadingDialog(context);
             } else if (state is GetUserSuccess) {
-              user = state.userProfile;
+              user = state.user;
               context.read<DeleteAccountBloc>().add(DeleteAccount());
             } else if (state is GetUserFailure) {
               AppRouter.pop();
@@ -140,7 +140,7 @@ class _ChangeEmailButton extends StatelessWidget {
             if (state is DeleteAccountSuccess) {
               context.read<SignUpBloc>().add(
                 SignUp(
-                  userProfile: UserProfile(
+                  myUser: MyUser(
                     email: emailController.text.trim(),
                     name: user.name,
                   ),

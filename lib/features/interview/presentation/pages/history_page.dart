@@ -7,8 +7,8 @@ import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
-import '../../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../data/models/interview.dart';
+import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../widgets/custom_interview_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -24,12 +24,10 @@ class _HistoryPageState extends State<HistoryPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              GetUserBloc(DIContainer.userRepository)..add(GetUser()),
+          create: (context) => GetUserBloc(DIContainer.getUser)..add(GetUser()),
         ),
         BlocProvider(
-          create: (context) =>
-              ShowInterviewsBloc(DIContainer.firestoreRepository),
+          create: (context) => ShowInterviewsBloc(DIContainer.showInterviews),
         ),
       ],
       child: _HistoryList(),
@@ -51,7 +49,7 @@ class _HistoryList extends StatelessWidget {
             }
             if (state is GetUserSuccess) {
               context.read<ShowInterviewsBloc>().add(
-                ShowInterviews(userId: state.userProfile.id ?? ''),
+                ShowInterviews(userId: state.user.id ?? ''),
               );
             }
           },
@@ -123,15 +121,12 @@ class _InterviewCard extends StatelessWidget {
   }
 
   String _chooseDifficulty(int difficult) {
-    String difficultly = '';
-    switch (difficult) {
-      case 1:
-        difficultly = 'Junior';
-      case 2:
-        difficultly = 'Middle';
-      case 3:
-        difficultly = 'Senior';
-    }
+    final String difficultly = switch (difficult) {
+      1 => 'Junior',
+      2 => 'Middle',
+      3 => 'Senior',
+      int() => '',
+    };
     return difficultly;
   }
 }

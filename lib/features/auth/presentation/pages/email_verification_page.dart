@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/user/services/user_repository.dart';
-import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
@@ -39,7 +37,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                 ..add(WatchEmailVerified()),
         ),
         BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.userRepository),
+          create: (context) => GetUserBloc(DIContainer.getUser),
         ),
       ],
       child: _EmailVerificationPageView(password: password),
@@ -104,7 +102,7 @@ class _EmailVerificationForm extends StatelessWidget {
               AppRouter.pushReplacementNamed(AppRouterNames.home);
               NotificationHelper.auth.greeting(
                 context,
-                state.userProfile.name!,
+                state.user.name!,
               );
             } else if (state is GetUserFailure) {
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);

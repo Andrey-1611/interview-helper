@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> {
               SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
         BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.userRepository),
+          create: (context) => GetUserBloc(DIContainer.getUser),
         ),
       ],
       child: _SignInPageView(
@@ -222,10 +222,7 @@ class _SignInButton extends StatelessWidget {
             if (state is GetUserSuccess) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greeting(
-                context,
-                state.userProfile.name!,
-              );
+              NotificationHelper.auth.greeting(context, state.user.name!);
             } else if (state is GetUserFailure) {
               AppRouter.pop();
               NotificationHelper.email.emailVerificationError(context);
@@ -261,7 +258,7 @@ class _SignInButtonView extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           context.read<SignInBloc>().add(
             SignIn(
-              userProfile: UserProfile(email: emailController.text.trim()),
+              user: MyUser(email: emailController.text.trim()),
               password: passwordController.text.trim(),
             ),
           );

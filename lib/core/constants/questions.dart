@@ -1,5 +1,5 @@
 class FlutterInterviewQuestions {
-  final List<String> flutterInterviewQuestionsJunior = [
+  static const List<String> flutterInterviewQuestionsJunior = [
     'Что такое Flutter и чем он отличается от других фреймворков для мобильной разработки?',
     'Какие основные компоненты Flutter?',
     'В чем отличие между StatefulWidget и StatelessWidget?',
@@ -196,7 +196,7 @@ class FlutterInterviewQuestions {
     'Как использовать `TextField',
   ];
 
-  final List<String> flutterInterviewQuestionsMiddle = [
+  static const List<String> flutterInterviewQuestionsMiddle = [
   'Какие основные принципы архитектуры Flutter?',
   'Чем отличается InheritedWidget от InheritedModel?',
   'Как работает система навигации в Flutter 2.0?',
@@ -331,7 +331,7 @@ class FlutterInterviewQuestions {
   'Как создать динамическое приложение с базой данных?',
   ];
 
-  final List<String> flutterInterviewQuestionsSenior = [
+  static const List<String> flutterInterviewQuestionsSenior = [
   'Какую архитектуру приложения вы предпочитаете в Flutter и почему?',
   'Каковы основные принципы проектирования архитектуры в Flutter для масштабируемых приложений?',
   'Как вы обычно решаете проблемы с производительностью в сложных Flutter приложениях?',

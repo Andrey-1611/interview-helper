@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/features/interview/blocs/get_questions_bloc/get_questions_bloc.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../../data/models/question.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
@@ -17,6 +15,7 @@ class InterviewPage extends StatefulWidget {
 class _InterviewPageState extends State<InterviewPage> {
   int _currentPage = 0;
   late final int difficulty;
+  late final List<String> _questions;
   final List<String> _answers = List.filled(10, '');
 
   final TextEditingController answerController = TextEditingController();
@@ -25,7 +24,11 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    difficulty = ModalRoute.of(context)!.settings.arguments as int;
+    difficulty = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as int;
+    _questions = Question.fromDifficulty(difficulty);
   }
 
   @override
@@ -37,18 +40,14 @@ class _InterviewPageState extends State<InterviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          GetQuestionsBloc(DIContainer.questionsRepository)
-            ..add(GetQuestions(difficulty: difficulty)),
-      child: _InterviewPageView(
-        pageController: pageController,
-        answerController: answerController,
-        currentPage: _currentPage,
-        answers: _answers,
-        difficulty: difficulty,
-        changePage: _changePage,
-      ),
+    return _InterviewPageView(
+      pageController: pageController,
+      answerController: answerController,
+      currentPage: _currentPage,
+      answers: _answers,
+      difficulty: difficulty,
+      changePage: _changePage,
+      questions: _questions,
     );
   }
 
@@ -65,6 +64,7 @@ class _InterviewPageView extends StatelessWidget {
   final TextEditingController answerController;
   final int currentPage;
   final List<String> answers;
+  final List<String> questions;
   final int difficulty;
   final ValueChanged<int> changePage;
 
@@ -73,36 +73,30 @@ class _InterviewPageView extends StatelessWidget {
     required this.answerController,
     required this.currentPage,
     required this.answers,
+    required this.questions,
     required this.difficulty,
     required this.changePage,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetQuestionsBloc, GetQuestionsState>(
-      builder: (context, state) {
-        if (state is GetQuestionsSuccess) {
-          return Scaffold(
-            body: PageView.builder(
-              itemCount: 10,
-              controller: pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (page) => changePage(page),
-              itemBuilder: (context, index) {
-                return _InterviewQuestionPage(
-                  currentPage: currentPage,
-                  answerController: answerController,
-                  answers: answers,
-                  pageController: pageController,
-                  difficulty: difficulty,
-                  questions: state.questions,
-                );
-              },
-            ),
+    return Scaffold(
+      body: PageView.builder(
+        itemCount: 10,
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (page) => changePage(page),
+        itemBuilder: (context, index) {
+          return _InterviewQuestionPage(
+              currentPage: currentPage,
+              answerController: answerController,
+              answers: answers,
+              pageController: pageController,
+              difficulty: difficulty,
+              questions: questions,
           );
-        }
-        return const SizedBox.shrink();
-      },
+        },
+      ),
     );
   }
 }
@@ -138,11 +132,17 @@ class _InterviewQuestionPage extends StatelessWidget {
         children: [
           Text(
             'Вопрос ${currentPage + 1} - ',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
           ),
           Text(
             questions[currentPage],
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
           ),
           Expanded(
             child: TextField(
@@ -169,13 +169,13 @@ class _InterviewQuestionPage extends StatelessWidget {
               currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
-                      textColor: Colors.white,
-                      text: 'Назад',
-                      selectedColor: Colors.blue,
-                      percentsHeight: 0.07,
-                      percentsWidth: 0.29,
-                      onPressed: () => _navigateToPage(currentPage - 1),
-                    ),
+                textColor: Colors.white,
+                text: 'Назад',
+                selectedColor: Colors.blue,
+                percentsHeight: 0.07,
+                percentsWidth: 0.29,
+                onPressed: () => _navigateToPage(currentPage - 1),
+              ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 textColor: Colors.white,
@@ -214,7 +214,8 @@ class _InterviewQuestionPage extends StatelessWidget {
   void _navigateToResult() {
     final userInputs = List.generate(
       10,
-      (index) => UserInput(question: questions[index], answer: answers[index]),
+          (index) =>
+          UserInput(question: questions[index], answer: answers[index]),
     );
     AppRouter.pushReplacementNamed(
       AppRouterNames.results,

@@ -5,7 +5,7 @@ import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart'
 import 'package:uuid/uuid.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/models/user_profile.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -243,7 +243,7 @@ class _CustomButtonView extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           context.read<SignUpBloc>().add(
             SignUp(
-              userProfile: UserProfile(
+              myUser: MyUser(
                 id: Uuid().v1(),
                 email: emailController.text.trim(),
                 name: nameController.text.trim(),

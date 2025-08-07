@@ -1,10 +1,10 @@
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 
 abstract interface class AuthRepository {
-  Future<UserProfile> signIn(UserProfile userProfile, String password);
-  Future<void> changePassword(UserProfile userProfile);
-  Future<UserProfile> signUp(UserProfile userProfile, String password);
+  Future<MyUser> signIn(MyUser user, String password);
+  Future<void> changePassword(MyUser user);
+  Future<MyUser> signUp(MyUser user, String password);
   Future<void> sendEmailVerification();
   Future<EmailVerificationResult?> checkEmailVerified();
   Future<EmailVerificationResult?> watchEmailVerified();

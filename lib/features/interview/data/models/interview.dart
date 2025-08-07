@@ -1,5 +1,9 @@
 import 'package:interview_master/features/interview/data/models/question.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'interview.g.dart';
+
+@JsonSerializable()
 class Interview {
   final double score;
   final int difficulty;
@@ -13,21 +17,21 @@ class Interview {
     required this.questions,
   });
 
-  factory Interview.fromMap(Map<String, dynamic> map) {
-    return Interview(
-      score: map['score'] as double,
-      difficulty: map['difficulty'] as int,
-      date: DateTime.parse(map['date'] as String),
-      questions: (map['questions'] as List).map((question) => Question.fromMap(question as Map<String, dynamic>)).toList()
-    );
-  }
+  factory Interview.fromJson(Map<String, dynamic> map) =>
+      _$InterviewFromJson(map);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'score': score,
-      'difficulty': difficulty,
-      'date': date.toIso8601String(),
-      'questions': questions.map((question) => question.toMap()).toList(),
-    };
+  Map<String, dynamic> toJson() => _$InterviewToJson(this);
+
+  factory Interview.fromQuestions(List<Question> questions, int difficulty) {
+    final averageScore =
+        questions.map((q) => q.score).reduce((a, b) => a + b) /
+        questions.length;
+
+    return Interview(
+      score: averageScore,
+      difficulty: difficulty,
+      date: DateTime.now(),
+      questions: questions,
+    );
   }
 }

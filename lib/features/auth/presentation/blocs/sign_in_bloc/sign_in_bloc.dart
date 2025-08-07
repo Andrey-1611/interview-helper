@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
+
+import '../../../../../core/global_services/user/data/models/my_user.dart';
 
 part 'sign_in_event.dart';
 
@@ -14,11 +15,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignIn>((event, emit) async {
       emit(SignInLoading());
       try {
-        final userProfile = await signInUseCase.call(
-          event.userProfile,
+        final user = await signInUseCase.call(
+          event.user,
           event.password,
         );
-        emit(SignInSuccess(userProfile: userProfile));
+        emit(SignInSuccess(user: user));
       } catch (e) {
         emit(SignInFailure(error: e.toString()));
       }

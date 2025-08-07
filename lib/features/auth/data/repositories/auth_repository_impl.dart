@@ -1,21 +1,22 @@
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
-import 'package:interview_master/features/auth/data/data_sources/auth_data_source.dart';
+import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 
+import '../../../../core/global_services/user/data/models/my_user.dart';
+
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthDataSource _authDataSource;
+  final FirebaseAuthDataSource _authDataSource;
 
   AuthRepositoryImpl(this._authDataSource);
 
   @override
-  Future<UserProfile> signIn(UserProfile userProfile, String password) async {
-    return await _authDataSource.signIn(userProfile, password);
+  Future<MyUser> signIn(MyUser user, String password) async {
+    return await _authDataSource.signIn(user, password);
   }
 
   @override
-  Future<void> changePassword(UserProfile userProfile) async {
-    await _authDataSource.changePassword(userProfile);
+  Future<void> changePassword(MyUser user) async {
+    await _authDataSource.changePassword(user);
   }
 
   @override
@@ -39,8 +40,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserProfile> signUp(UserProfile userProfile, String password) async {
-    return await _authDataSource.signUp(userProfile, password);
+  Future<MyUser> signUp(MyUser user, String password) async {
+    return await _authDataSource.signUp(user, password);
   }
 
   @override

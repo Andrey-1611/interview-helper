@@ -1,11 +1,11 @@
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 
 class EmailVerificationResult {
   final bool isEmailVerified;
-  final UserProfile userProfile;
+  final MyUser user;
 
   EmailVerificationResult({
     required this.isEmailVerified,
-    required this.userProfile,
+    required this.user,
   });
 }

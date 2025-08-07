@@ -3,17 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
-import 'package:interview_master/features/interview/blocs/create_interview_bloc/create_interview_bloc.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../blocs/add_interview_bloc/add_interview_bloc.dart';
-import '../../blocs/check_results_bloc/check_results_bloc.dart';
-import '../../data/models/gemini_response.dart';
 import '../../data/models/interview.dart';
 import '../../data/models/user_input.dart';
+import '../blocs/add_interview_bloc/add_interview_bloc.dart';
+import '../blocs/check_results_bloc/check_results_bloc.dart';
 
 class ResultsPage extends StatefulWidget {
   const ResultsPage({super.key});
@@ -23,7 +21,7 @@ class ResultsPage extends StatefulWidget {
 }
 
 class _ResultsPageState extends State<ResultsPage> {
-  late List<UserInput> _userInputs;
+  late final List<UserInput> _userInputs;
   late final int _difficulty;
 
   @override
@@ -41,19 +39,15 @@ class _ResultsPageState extends State<ResultsPage> {
       providers: [
         BlocProvider(
           create: (context) =>
-              CheckResultsBloc(DIContainer.remoteRepository)
+              CheckResultsBloc(DIContainer.checkResults)
                 ..add(CheckResults(userInputs: _userInputs)),
         ),
         BlocProvider(
-          create: (context) =>
-              CreateInterviewBloc(DIContainer.interviewRepository),
-        ),
-        BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.userRepository),
+          create: (context) => GetUserBloc(DIContainer.getUser),
         ),
         BlocProvider(
           create: (context) =>
-              AddInterviewBloc(DIContainer.firestoreRepository),
+              AddInterviewBloc(DIContainer.addInterview),
         ),
       ],
       child: _ResultsPageView(difficulty: _difficulty),
@@ -92,8 +86,7 @@ class _ResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<GeminiResponses>? remoteDataSource;
-    Interview? interview;
+    final List<Question> questions = [];
     return MultiBlocListener(
       listeners: [
         BlocListener<CheckResultsBloc, CheckResultsState>(
@@ -101,25 +94,12 @@ class _ResultsList extends StatelessWidget {
             if (state is CheckResultsLoading) {
               DialogHelper.showLoadingDialog(context);
             } else if (state is CheckResultsSuccess) {
-              remoteDataSource = state.geminiResponse;
-              context.read<CreateInterviewBloc>().add(
-                CreateInterview(
-                  remoteDataSource: remoteDataSource!,
-                  difficulty: difficulty,
-                ),
-              );
+              questions.addAll(state.questions);
+              context.read<GetUserBloc>().add(GetUser());
             } else if (state is CheckResultsFailure) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
               NotificationHelper.interview.checkInterviewsError(context);
-            }
-          },
-        ),
-        BlocListener<CreateInterviewBloc, CreateInterviewState>(
-          listener: (context, state) {
-            if (state is CreateInterviewSuccess) {
-              interview = state.interview;
-              context.read<GetUserBloc>().add(GetUser());
             }
           },
         ),
@@ -128,8 +108,8 @@ class _ResultsList extends StatelessWidget {
             if (state is GetUserSuccess) {
               context.read<AddInterviewBloc>().add(
                 AddInterview(
-                  interview: interview!,
-                  userId: state.userProfile.id ?? '',
+                  interview: Interview.fromQuestions(questions, difficulty),
+                  userId: state.user.id ?? '',
                 ),
               );
             }
@@ -146,20 +126,15 @@ class _ResultsList extends StatelessWidget {
           },
         ),
       ],
-      child: BlocBuilder<CreateInterviewBloc, CreateInterviewState>(
+      child: BlocBuilder<CheckResultsBloc, CheckResultsState>(
         builder: (context, state) {
-          if (state is CreateInterviewSuccess) {
-            interview = state.interview;
-            return BlocBuilder<CheckResultsBloc, CheckResultsState>(
-              builder: (context, state) {
-                if (state is CheckResultsSuccess) {
-                  return _ListResultsView(
-                    averageScore: interview!.score.toInt(),
-                    remoteDataSource: state.geminiResponse,
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+          if (state is CheckResultsSuccess) {
+            return _ListResultsView(
+              averageScore: Interview.fromQuestions(
+                state.questions,
+                difficulty,
+              ).score.toInt(),
+              questions: state.questions,
             );
           }
           return const SizedBox.shrink();
@@ -171,12 +146,9 @@ class _ResultsList extends StatelessWidget {
 
 class _ListResultsView extends StatefulWidget {
   final int averageScore;
-  final List<GeminiResponses> remoteDataSource;
+  final List<Question> questions;
 
-  const _ListResultsView({
-    required this.averageScore,
-    required this.remoteDataSource,
-  });
+  const _ListResultsView({required this.averageScore, required this.questions});
 
   @override
   State<_ListResultsView> createState() => _ListResultsViewState();
@@ -208,10 +180,10 @@ class _ListResultsViewState extends State<_ListResultsView> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: widget.remoteDataSource.length,
+                    itemCount: widget.questions.length,
                     itemBuilder: (context, index) {
-                      final response = widget.remoteDataSource[index];
-                      return _QuestionCard(response: response, index: index);
+                      final Question question = widget.questions[index];
+                      return _QuestionCard(question: question, index: index);
                     },
                   ),
                 ),
@@ -225,17 +197,10 @@ class _ListResultsViewState extends State<_ListResultsView> {
 }
 
 class _QuestionCard extends StatelessWidget {
-  final GeminiResponses response;
+  final Question question;
   final int index;
 
-  const _QuestionCard({required this.response, required this.index});
-
-  Question get question => Question(
-    score: response.score,
-    question: response.userInput.question,
-    userAnswer: response.userInput.answer,
-    correctAnswer: response.correctAnswer,
-  );
+  const _QuestionCard({required this.question, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -244,9 +209,9 @@ class _QuestionCard extends StatelessWidget {
         AppRouter.pushNamed(AppRouterNames.questionInfo, arguments: question);
       },
       child: CustomQuestionCard(
-        text: 'Вопрос ${index + 1} - ${response.userInput.question}',
+        text: 'Вопрос ${index + 1} - ${question.question}',
         isQuestionCard: true,
-        score: response.score.toInt(),
+        score: question.score.toInt(),
       ),
     );
   }

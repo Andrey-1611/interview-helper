@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/global_services/user/models/user_profile.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
-import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../blocs/change_password_bloc/change_password_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -144,7 +143,7 @@ class _ChangePasswordButtonView extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           context.read<ChangePasswordBloc>().add(
             ChangePassword(
-              userProfile: UserProfile(email: emailController.text.trim()),
+              user: MyUser(email: emailController.text.trim()),
             ),
           );
         }

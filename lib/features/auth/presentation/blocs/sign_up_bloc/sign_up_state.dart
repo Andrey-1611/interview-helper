@@ -14,10 +14,10 @@ final class SignUpLoading extends SignUpState {}
 final class SignUpFailure extends SignUpState {}
 
 final class SignUpSuccess extends SignUpState {
-  final UserProfile userProfile;
+  final MyUser user;
 
-  const SignUpSuccess({required this.userProfile});
+  const SignUpSuccess({required this.user});
 
   @override
-  List<Object> get props => [userProfile];
+  List<Object> get props => [user];
 }

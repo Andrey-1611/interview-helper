@@ -16,10 +16,10 @@ final class GetUserFailure extends GetUserState {}
 final class GetUserNotAuth extends GetUserState {}
 
 final class GetUserSuccess extends GetUserState {
-  final UserProfile userProfile;
+  final MyUser user;
 
-  const GetUserSuccess({required this.userProfile});
+  const GetUserSuccess({required this.user});
 
   @override
-  List<Object> get props => [userProfile];
+  List<Object> get props => [user];
 }

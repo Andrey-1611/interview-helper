@@ -21,10 +21,10 @@ final class SignInFailure extends SignInState {
 }
 
 final class SignInSuccess extends SignInState {
-  final UserProfile userProfile;
+  final MyUser user;
 
-  const SignInSuccess({required this.userProfile});
+  const SignInSuccess({required this.user});
 
   @override
-  List<Object> get props => [userProfile];
+  List<Object> get props => [user];
 }

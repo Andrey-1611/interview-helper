@@ -1,19 +1,17 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/interview.dart';
-import '../repositories/firestore_repository.dart';
+import '../../domain/repositories/remote_repository.dart';
 
-class FirestoreDataSource implements FirestoreRepository {
+class FirestoreDataSource implements RemoteRepository {
   final FirebaseFirestore _firebaseFirestore;
-  late CollectionReference interviews;
 
   FirestoreDataSource(this._firebaseFirestore);
-
 
   @override
   Future<void> addInterview(Interview interview, String userId) async {
     try {
-      await _getInterviewCollection(userId).add(interview.toMap());
+      await _getInterviewCollection(userId).add(interview.toJson());
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -27,9 +25,10 @@ class FirestoreDataSource implements FirestoreRepository {
       final myInterviews = data.docs
           .map(
             (interview) =>
-                Interview.fromMap(interview.data() as Map<String, dynamic>),
+                Interview.fromJson(interview.data() as Map<String, dynamic>),
           )
           .toList();
+      myInterviews.sort((a, b) => b.date.compareTo(a.date));
       return myInterviews;
     } catch (e) {
       log(e.toString());

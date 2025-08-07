@@ -16,7 +16,7 @@ class SplashPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) =>
-              GetUserBloc(DIContainer.userRepository)..add(GetUser()),
+              GetUserBloc(DIContainer.getUser)..add(GetUser()),
         ),
         BlocProvider(
           create: (context) =>

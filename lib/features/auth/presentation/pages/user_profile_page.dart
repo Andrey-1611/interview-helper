@@ -19,7 +19,7 @@ class UserProfilePage extends StatelessWidget {
         BlocProvider(create: (context) => SignOutBloc(DIContainer.signOut)),
         BlocProvider(
           create: (context) =>
-              GetUserBloc(DIContainer.userRepository)..add(GetUser()),
+              GetUserBloc(DIContainer.getUser)..add(GetUser()),
         ),
       ],
       child: _UserProfilePageView(),
@@ -115,8 +115,8 @@ class _UserInfo extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Ваше имя: ${state.userProfile.name}'),
-                Text('Ваша почта: ${state.userProfile.email}'),
+                Text('Ваше имя: ${state.user.name}'),
+                Text('Ваша почта: ${state.user.email}'),
               ],
             ),
           );
