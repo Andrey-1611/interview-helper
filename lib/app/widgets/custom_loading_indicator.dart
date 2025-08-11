@@ -5,16 +5,6 @@ class CustomLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Center(child: CircularProgressIndicator()),
-          SizedBox(height: 4,),
-          Text('Подождите...')
-        ],
-      ),
-    );
+    return const Center(child: CircularProgressIndicator(),);
   }
 }

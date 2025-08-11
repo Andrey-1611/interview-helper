@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/helpers/notification_helpers/notification_helper.dart';
+import '../../../../core/helpers/toast_helpers/toast_helper.dart';
 import '../../data/models/interview.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../widgets/custom_interview_card.dart';
@@ -44,24 +44,19 @@ class _HistoryList extends StatelessWidget {
       listeners: [
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
-            if (state is GetUserLoading) {
-              DialogHelper.showLoadingDialog(context);
-            }
             if (state is GetUserSuccess) {
               context.read<ShowInterviewsBloc>().add(
                 ShowInterviews(userId: state.user.id ?? ''),
               );
+            } else if (state is GetUserFailure) {
+              ToastHelper.unknownError();
             }
           },
         ),
         BlocListener<ShowInterviewsBloc, ShowInterviewsState>(
           listener: (context, state) {
-            if (state is ShowInterviewsSuccess) {
-              AppRouter.pop();
-            }
             if (state is ShowInterviewsFailure) {
-              AppRouter.pop();
-              NotificationHelper.interview.showInterviewsError(context);
+              ToastHelper.loadingError();
             }
           },
         ),
@@ -78,7 +73,9 @@ class _HistoryListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ShowInterviewsBloc, ShowInterviewsState>(
       builder: (context, state) {
-        if (state is ShowInterviewsSuccess) {
+        if (state is ShowInterviewsLoading) {
+          return CustomLoadingIndicator();
+        } else if (state is ShowInterviewsSuccess) {
           if (state.interviews.isEmpty) {
             return const Center(child: Text('История пуста'));
           }
@@ -112,21 +109,11 @@ class _InterviewCard extends StatelessWidget {
       },
       child: CustomInterviewCard(
         score: interview.score.toInt(),
-        titleText: 'Сложность: ${_chooseDifficulty(interview.difficulty)}',
+        titleText: 'Сложность: ${interview.difficulty}',
         firstText: DateFormat('dd/MM/yyyy HH:mm').format(interview.date),
         titleStyle: Theme.of(context).textTheme.bodyMedium,
         subtitleStyle: Theme.of(context).textTheme.bodySmall,
       ),
     );
-  }
-
-  String _chooseDifficulty(int difficult) {
-    final String difficultly = switch (difficult) {
-      1 => 'Junior',
-      2 => 'Middle',
-      3 => 'Senior',
-      int() => '',
-    };
-    return difficultly;
   }
 }

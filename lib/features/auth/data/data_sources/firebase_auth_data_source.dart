@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/global_services/user/data/models/my_user.dart';
+
+import '../../../../app/global_services/user/data/models/my_user.dart';
 
 class FirebaseAuthDataSource {
   final FirebaseAuth _firebaseAuth;
@@ -31,8 +32,8 @@ class FirebaseAuthDataSource {
       );
       await credential.user?.updateDisplayName(myUser.name);
       await credential.user?.reload();
-      final updatedUser = _firebaseAuth.currentUser!;
-      final user = _toUserProfile(updatedUser);
+      final updatedUser = _firebaseAuth.currentUser;
+      final user = _toUserProfile(updatedUser!);
       return user;
     } catch (e) {
       log(e.toString());
@@ -67,7 +68,7 @@ class FirebaseAuthDataSource {
     }
   }
 
-  Future<EmailVerificationResult?> watchEmailVerified() async {
+   Future<EmailVerificationResult?> watchEmailVerified() async {
     try {
       User? user = _firebaseAuth.currentUser;
       while (!user!.emailVerified) {

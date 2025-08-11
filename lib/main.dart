@@ -4,5 +4,5 @@ import 'app/initialization/app_initializer.dart';
 
 void main() async {
   await AppInitializer.init();
-  runApp(const MyApp());
+  runApp(const App());
 }

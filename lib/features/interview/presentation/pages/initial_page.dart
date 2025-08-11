@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../../data/models/interview.dart';
 import '../widgets/custom_button.dart';
 
 class InitialPage extends StatefulWidget {
@@ -15,7 +16,10 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _InitialPageView(selectedItem: _selectedItem, changeItem: _changeItem,);
+    return _InitialPageView(
+      selectedItem: _selectedItem,
+      changeItem: _changeItem,
+    );
   }
 
   void _changeItem(int item) {
@@ -25,11 +29,14 @@ class _InitialPageState extends State<InitialPage> {
   }
 }
 
-
 class _InitialPageView extends StatelessWidget {
   final int selectedItem;
   final ValueChanged<int> changeItem;
-  const _InitialPageView({required this.selectedItem, required this.changeItem});
+
+  const _InitialPageView({
+    required this.selectedItem,
+    required this.changeItem,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +72,10 @@ class _ChooseText extends StatelessWidget {
   }
 }
 
-
 class _ChooseForm extends StatelessWidget {
   final int selectedItem;
   final ValueChanged<int> changeItem;
+
   const _ChooseForm({required this.selectedItem, required this.changeItem});
 
   @override
@@ -80,8 +87,7 @@ class _ChooseForm extends StatelessWidget {
         CustomButton(
           text: 'Junior',
           textColor: selectedItem == 1 ? Colors.white : Colors.black,
-          selectedColor:
-          selectedItem == 1 ? Colors.blue : Colors.white,
+          selectedColor: selectedItem == 1 ? Colors.blue : Colors.white,
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(1),
@@ -89,8 +95,7 @@ class _ChooseForm extends StatelessWidget {
         CustomButton(
           text: 'Middle',
           textColor: selectedItem == 2 ? Colors.white : Colors.black,
-          selectedColor:
-          selectedItem == 2 ? Colors.blue : Colors.white,
+          selectedColor: selectedItem == 2 ? Colors.blue : Colors.white,
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(2),
@@ -98,8 +103,7 @@ class _ChooseForm extends StatelessWidget {
         CustomButton(
           text: 'Senior',
           textColor: selectedItem == 3 ? Colors.white : Colors.black,
-          selectedColor:
-          selectedItem == 3 ? Colors.blue : Colors.white,
+          selectedColor: selectedItem == 3 ? Colors.blue : Colors.white,
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(3),
@@ -109,9 +113,9 @@ class _ChooseForm extends StatelessWidget {
   }
 }
 
-
 class _InterviewButton extends StatelessWidget {
   final int selectedItem;
+
   const _InterviewButton({required this.selectedItem});
 
   @override
@@ -119,17 +123,17 @@ class _InterviewButton extends StatelessWidget {
     return selectedItem == 0
         ? SizedBox(height: MediaQuery.sizeOf(context).height * 0.06)
         : CustomButton(
-      text: 'Начать',
-      selectedColor: Colors.blue,
-      onPressed: () {
-        AppRouter.pushReplacementNamed(
-          AppRouterNames.interview,
-          arguments: selectedItem,
-        );
-      },
-      textColor: Colors.white,
-      percentsHeight: 0.06,
-      percentsWidth: 1,
-    );
+            text: 'Начать',
+            selectedColor: Colors.blue,
+            onPressed: () {
+              AppRouter.pushReplacementNamed(
+                AppRouterNames.interview,
+                arguments: Interview.difficultly(selectedItem),
+              );
+            },
+            textColor: Colors.white,
+            percentsHeight: 0.06,
+            percentsWidth: 1,
+          );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../blocs/change_password_bloc/change_password_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -111,11 +111,11 @@ class _ChangePasswordButton extends StatelessWidget {
           DialogHelper.showLoadingDialog(context);
         } else if (state is ChangePasswordSuccess) {
           Navigator.pop(context);
-          NotificationHelper.email.sendPasswordResetEmail(context);
+          ToastHelper.sendPasswordResetEmail(emailController.text);
           AppRouter.pushReplacementNamed(AppRouterNames.signIn);
         } else if (state is ChangePasswordFailure) {
           Navigator.pop(context);
-          NotificationHelper.email.sendPasswordResetEmailError(context);
+          ToastHelper.unknownError();
         }
       },
       child: _ChangePasswordButtonView(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -15,8 +15,7 @@ class SplashPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              GetUserBloc(DIContainer.getUser)..add(GetUser()),
+          create: (context) => GetUserBloc(DIContainer.getUser)..add(GetUser()),
         ),
         BlocProvider(
           create: (context) =>
@@ -42,7 +41,7 @@ class _SplashPageView extends StatelessWidget {
             } else if (state is GetUserNotAuth) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is GetUserFailure) {
-              NotificationHelper.auth.checkUserError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -53,7 +52,7 @@ class _SplashPageView extends StatelessWidget {
             } else if (state is CheckEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
             } else if (state is CheckEmailVerifiedFailure) {
-              NotificationHelper.email.emailVerificationError(context);
+              ToastHelper.unknownError();
             }
           },
         ),

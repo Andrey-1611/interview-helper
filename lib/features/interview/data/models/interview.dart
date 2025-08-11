@@ -3,10 +3,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'interview.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Interview {
-  final double score;
-  final int difficulty;
+  final int score;
+  final String difficulty;
   final DateTime date;
   final List<Question> questions;
 
@@ -17,21 +17,28 @@ class Interview {
     required this.questions,
   });
 
-  factory Interview.fromJson(Map<String, dynamic> map) =>
-      _$InterviewFromJson(map);
+  factory Interview.fromJson(Map<String, dynamic> json) =>
+      _$InterviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$InterviewToJson(this);
 
-  factory Interview.fromQuestions(List<Question> questions, int difficulty) {
+  factory Interview.fromQuestions(List<Question> questions, String difficulty) {
     final averageScore =
         questions.map((q) => q.score).reduce((a, b) => a + b) /
         questions.length;
 
     return Interview(
-      score: averageScore,
+      score: averageScore.toInt(),
       difficulty: difficulty,
       date: DateTime.now(),
       questions: questions,
     );
   }
+
+  static String difficultly(int selectedItem) => switch (selectedItem) {
+    1 => 'junior',
+    2 => 'middle',
+    3 => 'senior',
+    _ => '',
+  };
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import 'history_page.dart';
 import 'initial_page.dart';
@@ -43,7 +44,7 @@ class _HomePageView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              AppRouter.pushNamed(AppRouterNames.userProfile);
+              AppRouter.pushNamed(AppRouterNames.myUserProfile);
             },
             icon: Icon(Icons.settings),
           ),
@@ -53,8 +54,20 @@ class _HomePageView extends StatelessWidget {
         currentIndex: currentIndex,
         changeIndex: changeIndex,
       ),
-      body: currentIndex == 0 ? InitialPage() : HistoryPage(),
+      body: _body(currentIndex),
     );
+  }
+
+  Widget _body(int currentIndex) {
+    switch (currentIndex) {
+      case 0:
+        return InitialPage();
+      case 1:
+        return HistoryPage();
+      case 2:
+        return UsersRatingPage();
+    }
+    return SizedBox.shrink();
   }
 }
 
@@ -75,6 +88,7 @@ class _BottomNavigationBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Собеседование'),
         BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
+        BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Рейтинг'),
       ],
     );
   }

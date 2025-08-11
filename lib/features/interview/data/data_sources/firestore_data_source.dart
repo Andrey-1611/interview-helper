@@ -1,42 +1,62 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
 import '../models/interview.dart';
-import '../../domain/repositories/remote_repository.dart';
 
-class FirestoreDataSource implements RemoteRepository {
+class FirestoreDataSource {
   final FirebaseFirestore _firebaseFirestore;
 
   FirestoreDataSource(this._firebaseFirestore);
 
-  @override
+  CollectionReference _usersCollection() {
+    return _firebaseFirestore.collection('users');
+  }
+
+  CollectionReference _interviewsCollection(String userId) {
+    return _firebaseFirestore
+        .collection('users')
+        .doc(userId)
+        .collection('interviews');
+  }
+
+  Future<void> saveUser(UserData user) async {
+    try {
+      await _usersCollection().doc(user.id).set(user.toJson());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+
+  Future<List<UserData>> showUsers() async {
+    final data = await _usersCollection().get();
+    final List<UserData> users = data.docs
+        .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+    return users;
+  }
+
   Future<void> addInterview(Interview interview, String userId) async {
     try {
-      await _getInterviewCollection(userId).add(interview.toJson());
+      await _interviewsCollection(userId).add(interview.toJson());
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  @override
   Future<List<Interview>> showInterviews(String userId) async {
     try {
-      final data = await _getInterviewCollection(userId).get();
-      final myInterviews = data.docs
-          .map(
-            (interview) =>
-                Interview.fromJson(interview.data() as Map<String, dynamic>),
-          )
+      final data = await _interviewsCollection(userId).get();
+      final List<Interview> interviews = data.docs
+          .map((doc) => Interview.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-      myInterviews.sort((a, b) => b.date.compareTo(a.date));
-      return myInterviews;
+      interviews.sort((a, b) => b.date.compareTo(a.date));
+      return interviews;
     } catch (e) {
       log(e.toString());
       rethrow;
     }
-  }
-
-  CollectionReference _getInterviewCollection(String userId) {
-    return _firebaseFirestore.collection('users/$userId/interviews');
   }
 }

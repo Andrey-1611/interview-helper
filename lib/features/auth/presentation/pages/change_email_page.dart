@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
-import 'package:interview_master/core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../../../core/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
 import '../blocs/delete_account_bloc/delete_account_bloc.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -131,7 +131,7 @@ class _ChangeEmailButton extends StatelessWidget {
               context.read<DeleteAccountBloc>().add(DeleteAccount());
             } else if (state is GetUserFailure) {
               AppRouter.pop();
-              NotificationHelper.email.changeEmailError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -149,7 +149,7 @@ class _ChangeEmailButton extends StatelessWidget {
               );
             } else if (state is DeleteAccountFailure) {
               AppRouter.pop();
-              NotificationHelper.email.changeEmailError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -161,7 +161,7 @@ class _ChangeEmailButton extends StatelessWidget {
               );
             } else if (state is SignUpFailure) {
               AppRouter.pop();
-              NotificationHelper.email.changeEmailError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -173,10 +173,10 @@ class _ChangeEmailButton extends StatelessWidget {
                 AppRouterNames.emailVerification,
                 arguments: password,
               );
-              NotificationHelper.email.sendNewEmailVerification(context);
+              ToastHelper.sendEmailVerification(emailController.text);
             } else if (state is SignUpFailure) {
               AppRouter.pop();
-              NotificationHelper.email.changeEmailError(context);
+              ToastHelper.unknownError();
             }
           },
         ),

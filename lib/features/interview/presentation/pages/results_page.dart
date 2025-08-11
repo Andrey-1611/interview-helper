@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/notification_helpers/notification_helper.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../core/helpers/toast_helpers/toast_helper.dart';
 import '../../data/models/interview.dart';
 import '../../data/models/user_input.dart';
 import '../blocs/add_interview_bloc/add_interview_bloc.dart';
@@ -22,7 +22,7 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
   late final List<UserInput> _userInputs;
-  late final int _difficulty;
+  late final String _difficulty;
 
   @override
   void didChangeDependencies() async {
@@ -30,7 +30,7 @@ class _ResultsPageState extends State<ResultsPage> {
     final data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _userInputs = data['userInputs'] as List<UserInput>;
-    _difficulty = data['difficulty'] as int;
+    _difficulty = data['difficulty'] as String;
   }
 
   @override
@@ -42,12 +42,9 @@ class _ResultsPageState extends State<ResultsPage> {
               CheckResultsBloc(DIContainer.checkResults)
                 ..add(CheckResults(userInputs: _userInputs)),
         ),
+        BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
         BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.getUser),
-        ),
-        BlocProvider(
-          create: (context) =>
-              AddInterviewBloc(DIContainer.addInterview),
+          create: (context) => AddInterviewBloc(DIContainer.addInterview),
         ),
       ],
       child: _ResultsPageView(difficulty: _difficulty),
@@ -56,7 +53,7 @@ class _ResultsPageState extends State<ResultsPage> {
 }
 
 class _ResultsPageView extends StatelessWidget {
-  final int difficulty;
+  final String difficulty;
 
   const _ResultsPageView({required this.difficulty});
 
@@ -80,7 +77,7 @@ class _ResultsPageView extends StatelessWidget {
 }
 
 class _ResultsList extends StatelessWidget {
-  final int difficulty;
+  final String difficulty;
 
   const _ResultsList({required this.difficulty});
 
@@ -99,7 +96,7 @@ class _ResultsList extends StatelessWidget {
             } else if (state is CheckResultsFailure) {
               AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.interview.checkInterviewsError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -121,7 +118,7 @@ class _ResultsList extends StatelessWidget {
               AppRouter.pop();
             } else if (state is AddInterviewFailure) {
               AppRouter.pop();
-              NotificationHelper.interview.checkInterviewsError(context);
+              ToastHelper.unknownError();
             }
           },
         ),

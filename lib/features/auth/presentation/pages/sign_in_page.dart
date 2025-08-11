@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/global_services/user/data/models/my_user.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
-import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../widgets/custom_auth_button.dart';
@@ -48,9 +48,7 @@ class _SignInPageState extends State<SignInPage> {
           create: (context) =>
               SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
-        BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.getUser),
-        ),
+        BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
       ],
       child: _SignInPageView(
         formKey: _formKey,
@@ -184,21 +182,22 @@ class _SignInButton extends StatelessWidget {
             }
             if (state is SignInFailure) {
               AppRouter.pop();
-              NotificationHelper.auth.signInError(context);
+              ToastHelper.signInError();
             }
           },
         ),
         BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
           listener: (context, state) {
             if (state is CheckEmailVerifiedSuccess) {
-              context.read<GetUserBloc>().add(GetUser());
+              AppRouter.pop();
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is CheckEmailNotVerified) {
               context.read<SendEmailVerificationBloc>().add(
                 SendEmailVerification(),
               );
             } else if (state is CheckEmailVerifiedFailure) {
               AppRouter.pop();
-              NotificationHelper.email.checkEmailError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -210,22 +209,10 @@ class _SignInButton extends StatelessWidget {
                 AppRouterNames.emailVerification,
                 arguments: passwordController.text.trim(),
               );
-              NotificationHelper.email.sendEmailVerification(context);
+              ToastHelper.sendEmailVerification(emailController.text);
             } else if (state is SendEmailVerificationFailure) {
               AppRouter.pop();
-              NotificationHelper.email.emailVerificationError(context);
-            }
-          },
-        ),
-        BlocListener<GetUserBloc, GetUserState>(
-          listener: (context, state) {
-            if (state is GetUserSuccess) {
-              AppRouter.pop();
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greeting(context, state.user.name!);
-            } else if (state is GetUserFailure) {
-              AppRouter.pop();
-              NotificationHelper.email.emailVerificationError(context);
+              ToastHelper.unknownError();
             }
           },
         ),

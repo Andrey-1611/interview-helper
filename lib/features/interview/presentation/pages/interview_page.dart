@@ -14,7 +14,7 @@ class InterviewPage extends StatefulWidget {
 
 class _InterviewPageState extends State<InterviewPage> {
   int _currentPage = 0;
-  late final int difficulty;
+  late final String difficulty;
   late final List<String> _questions;
   final List<String> _answers = List.filled(10, '');
 
@@ -27,7 +27,7 @@ class _InterviewPageState extends State<InterviewPage> {
     difficulty = ModalRoute
         .of(context)!
         .settings
-        .arguments as int;
+        .arguments as String;
     _questions = Question.fromDifficulty(difficulty);
   }
 
@@ -65,7 +65,7 @@ class _InterviewPageView extends StatelessWidget {
   final int currentPage;
   final List<String> answers;
   final List<String> questions;
-  final int difficulty;
+  final String difficulty;
   final ValueChanged<int> changePage;
 
   const _InterviewPageView({
@@ -106,7 +106,7 @@ class _InterviewQuestionPage extends StatelessWidget {
   final TextEditingController answerController;
   final List<String> answers;
   final PageController pageController;
-  final int difficulty;
+  final String difficulty;
   final List<String> questions;
 
   const _InterviewQuestionPage({

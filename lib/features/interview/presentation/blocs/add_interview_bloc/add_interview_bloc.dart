@@ -18,7 +18,7 @@ class AddInterviewBloc extends Bloc<AddInterviewEvent, AddInterviewState> {
         await _addInterviewUseCase.call(event.interview, event.userId);
         emit(AddInterviewSuccess());
       } catch (e) {
-        emit(AddInterviewFailure());
+        emit(AddInterviewFailure(e.toString()));
       }
     });
   }

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/data/models/my_user.dart';
-import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';
@@ -192,7 +192,7 @@ class _SignUpButton extends StatelessWidget {
               );
             } else if (state is SignUpFailure) {
               AppRouter.pop();
-              NotificationHelper.auth.signUpError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -204,10 +204,10 @@ class _SignUpButton extends StatelessWidget {
                 AppRouterNames.emailVerification,
                 arguments: passwordController.text.trim(),
               );
-              NotificationHelper.email.sendEmailVerification(context);
+              ToastHelper.sendEmailVerification(emailController.text);
             } else if (state is SendEmailVerificationFailure) {
               AppRouter.pop();
-              NotificationHelper.email.emailVerificationError(context);
+              ToastHelper.unknownError();
             }
           },
         ),

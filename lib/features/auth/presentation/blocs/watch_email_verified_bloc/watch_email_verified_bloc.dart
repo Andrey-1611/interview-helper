@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
-
 import '../../../data/models/email_verification_result.dart';
 
 part 'watch_email_verified_event.dart';

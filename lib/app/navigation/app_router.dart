@@ -5,8 +5,10 @@ import 'package:interview_master/features/auth/presentation/pages/email_verifica
 import 'package:interview_master/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/splash_page.dart';
-import 'package:interview_master/features/auth/presentation/pages/user_profile_page.dart';
+import 'package:interview_master/features/auth/presentation/pages/my_user_profile_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/question_info_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/user_info_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
 import '../../features/interview/presentation/pages/home_page.dart';
 import '../../features/interview/presentation/pages/interview_info_page.dart';
 import '../../features/interview/presentation/pages/interview_page.dart';
@@ -24,13 +26,14 @@ class AppRouter {
     AppRouterNames.emailVerification: (context) => const EmailVerificationPage(),
     AppRouterNames.changeEmail: (context) => const ChangeEmailPage(),
     AppRouterNames.changePassword: (context) => const ChangePasswordPage(),
-    AppRouterNames.userProfile: (context) => const UserProfilePage(),
+    AppRouterNames.myUserProfile: (context) => const MyUserProfilePage(),
     AppRouterNames.home: (context) => const HomePage(),
     AppRouterNames.interview: (context) => const InterviewPage(),
     AppRouterNames.interviewFinish: (context) => const InterviewPage(),
     AppRouterNames.results: (context) => const ResultsPage(),
     AppRouterNames.interviewInfo: (context) => const InterviewInfoPage(),
     AppRouterNames.questionInfo: (context) => const QuestionInfoPage(),
+    AppRouterNames.userInfo: (context) => const UserInfoPage(),
   };
 
   static void pushNamed(String route, {Object? arguments}) {
@@ -38,7 +41,10 @@ class AppRouter {
   }
 
   static void pushReplacementNamed(String route, {Object? arguments}) {
-    navigatorKey.currentState?.pushReplacementNamed(route, arguments: arguments);
+    navigatorKey.currentState?.pushReplacementNamed(
+      route,
+      arguments: arguments,
+    );
   }
 
   static void pop() {

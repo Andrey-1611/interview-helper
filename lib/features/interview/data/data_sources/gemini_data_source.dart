@@ -10,10 +10,8 @@ class GeminiDataSource {
   const GeminiDataSource(this._gemini);
 
   Future<List<Question>> checkAnswers(List<UserInput> userInputs) async {
-    final promptFromUserInput = userInputs
-        .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
-        .join('\n\n');
-    final prompt = '${MainPrompt.mainPrompt}\n\nВопросы:\n$promptFromUserInput';
+    final prompt =
+        '${MainPrompt.mainPrompt}\n\nВопросы:\n${UserInput.createPrompt(userInputs)}';
 
     final response = await _gemini.prompt(parts: [TextPart(prompt)]);
     final parsedJson = jsonDecode(response!.output!) as Map<String, dynamic>;

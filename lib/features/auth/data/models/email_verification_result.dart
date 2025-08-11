@@ -1,8 +1,8 @@
-import '../../../../core/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
 
 class EmailVerificationResult {
   final bool isEmailVerified;
-  final MyUser user;
+  final MyUser? user;
 
   EmailVerificationResult({
     required this.isEmailVerified,

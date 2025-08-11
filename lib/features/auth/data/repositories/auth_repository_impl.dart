@@ -2,7 +2,8 @@ import 'package:interview_master/features/auth/data/data_sources/firebase_auth_d
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 
-import '../../../../core/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/data/models/my_user.dart';
+
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuthDataSource _authDataSource;

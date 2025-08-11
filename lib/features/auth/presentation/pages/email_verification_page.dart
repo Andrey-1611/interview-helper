@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import 'package:interview_master/app/global_services/user/blocs/save_user_bloc/save_user_bloc.dart';
+import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../../../core/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../core/helpers/notification_helpers/notification_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 
 class EmailVerificationPage extends StatefulWidget {
@@ -29,16 +32,16 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => SendEmailVerificationBloc(DIContainer.sendEmailVerification),
+          create: (context) =>
+              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
         ),
         BlocProvider(
           create: (context) =>
               WatchEmailVerifiedBloc(DIContainer.watchEmailVerified)
                 ..add(WatchEmailVerified()),
         ),
-        BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.getUser),
-        ),
+        BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
+        BlocProvider(create: (context) => SaveUserBloc(DIContainer.saveUser)),
       ],
       child: _EmailVerificationPageView(password: password),
     );
@@ -82,7 +85,7 @@ class _EmailVerificationForm extends StatelessWidget {
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
-              NotificationHelper.email.sendEmailVerification(context);
+              ToastHelper.sendAgainEmailVerification();
             }
           },
         ),
@@ -92,21 +95,35 @@ class _EmailVerificationForm extends StatelessWidget {
               context.read<GetUserBloc>().add(GetUser());
             } else if (state is WatchEmailVerifiedFailure) {
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-              NotificationHelper.email.emailVerificationError(context);
+              ToastHelper.unknownError();
             }
           },
         ),
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
-            if (state is GetUserSuccess) {
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-              NotificationHelper.auth.greeting(
-                context,
-                state.user.name!,
+            if (state is GetUserLoading) {
+              DialogHelper.showLoadingDialog(context);
+            } else if (state is GetUserSuccess) {
+              final user = UserData(
+                name: state.user.name!,
+                id: state.user.id!,
+                interviews: [],
               );
+              context.read<SaveUserBloc>().add(SaveUser(user: user));
             } else if (state is GetUserFailure) {
-              AppRouter.pushReplacementNamed(AppRouterNames.signUp);
-              NotificationHelper.email.emailVerificationError(context);
+              AppRouter.pop();
+              ToastHelper.unknownError();
+            }
+          },
+        ),
+        BlocListener<SaveUserBloc, SaveUserState>(
+          listener: (context, state) {
+            if (state is SaveUserSuccess) {
+              AppRouter.pop();
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+            } else if (state is SaveUserFailure) {
+              AppRouter.pop();
+              ToastHelper.unknownError();
             }
           },
         ),

@@ -6,7 +6,7 @@ part 'question.g.dart';
 
 @JsonSerializable()
 class Question {
-  final double score;
+  final int score;
   final String question;
   final String userAnswer;
   final String correctAnswer;
@@ -18,18 +18,18 @@ class Question {
     required this.correctAnswer,
   });
 
-  factory Question.fromJson(Map<String, dynamic> map) =>
-      _$QuestionFromJson(map);
+  factory Question.fromJson(Map<String, dynamic> json) =>
+      _$QuestionFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionToJson(this);
 
-  static List<String> fromDifficulty(int difficulty) {
+  static List<String> fromDifficulty(String difficulty) {
     final random = Random();
     final selectedQuestions = switch (difficulty) {
-      1 => FlutterInterviewQuestions.flutterInterviewQuestionsJunior,
-      2 => FlutterInterviewQuestions.flutterInterviewQuestionsMiddle,
-      3 => FlutterInterviewQuestions.flutterInterviewQuestionsSenior,
-      int() => [],
+      'junior' => FlutterInterviewQuestions.flutterInterviewQuestionsJunior,
+      'middle' => FlutterInterviewQuestions.flutterInterviewQuestionsMiddle,
+      'senior' => FlutterInterviewQuestions.flutterInterviewQuestionsSenior,
+      _ => [],
     };
     final myQuestions = List<String>.from(selectedQuestions)..shuffle(random);
     return myQuestions.take(10).toList();
