@@ -9,6 +9,7 @@ part of 'interview.dart';
 Interview _$InterviewFromJson(Map<String, dynamic> json) => Interview(
   score: (json['score'] as num).toInt(),
   difficulty: json['difficulty'] as String,
+  isCorrect: json['isCorrect'] as bool,
   date: DateTime.parse(json['date'] as String),
   questions: (json['questions'] as List<dynamic>)
       .map((e) => Question.fromJson(e as Map<String, dynamic>))
@@ -18,6 +19,7 @@ Interview _$InterviewFromJson(Map<String, dynamic> json) => Interview(
 Map<String, dynamic> _$InterviewToJson(Interview instance) => <String, dynamic>{
   'score': instance.score,
   'difficulty': instance.difficulty,
+  'isCorrect': instance.isCorrect,
   'date': instance.date.toIso8601String(),
   'questions': instance.questions.map((e) => e.toJson()).toList(),
 };

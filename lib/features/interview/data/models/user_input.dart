@@ -13,4 +13,14 @@ class UserInput {
         .map((e) => 'Вопрос: ${_clear(e.question)}\nОтвет: ${_clear(e.answer)}')
         .join('\n\n');
   }
+
+  static List<UserInput> fromData(
+    List<String> questions,
+    List<String> answers,
+  ) {
+    return List.generate(
+      10,
+      (index) => UserInput(question: questions[index], answer: answers[index]),
+    );
+  }
 }

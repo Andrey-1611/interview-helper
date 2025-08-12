@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
+import '../../../../app/global_services/user/models/user_data.dart';
 import '../models/interview.dart';
 
 class FirestoreDataSource {
@@ -28,7 +28,6 @@ class FirestoreDataSource {
     }
   }
 
-
   Future<List<UserData>> showUsers() async {
     final data = await _usersCollection().get();
     final List<UserData> users = data.docs
@@ -40,6 +39,13 @@ class FirestoreDataSource {
   Future<void> addInterview(Interview interview, String userId) async {
     try {
       await _interviewsCollection(userId).add(interview.toJson());
+
+      final data = await _interviewsCollection(userId).get();
+
+      await _usersCollection().doc(userId).update({
+        'stars': FieldValue.increment(interview.score),
+        'average': Interview.countAverage(data),
+      });
     } catch (e) {
       log(e.toString());
       rethrow;

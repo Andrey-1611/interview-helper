@@ -4,6 +4,7 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_result_panel.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -109,6 +110,9 @@ class _ResultsList extends StatelessWidget {
                   userId: state.user.id ?? '',
                 ),
               );
+            } else if (state is GetUserFailure) {
+              AppRouter.pop();
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -126,11 +130,12 @@ class _ResultsList extends StatelessWidget {
       child: BlocBuilder<CheckResultsBloc, CheckResultsState>(
         builder: (context, state) {
           if (state is CheckResultsSuccess) {
+            final Interview interview = Interview.fromQuestions(
+              state.questions,
+              difficulty,
+            );
             return _ListResultsView(
-              averageScore: Interview.fromQuestions(
-                state.questions,
-                difficulty,
-              ).score.toInt(),
+              averageScore: interview.score,
               questions: state.questions,
             );
           }
@@ -161,19 +166,7 @@ class _ListResultsViewState extends State<_ListResultsView> {
           child: Center(
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height * 0.25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(color: Colors.blue, width: 4.0),
-                  ),
-                  child: Text(
-                    'Результат: ${widget.averageScore} %',
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
+               CustomResultPanel(score: widget.averageScore,),
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.builder(
@@ -208,6 +201,7 @@ class _QuestionCard extends StatelessWidget {
       child: CustomQuestionCard(
         text: 'Вопрос ${index + 1} - ${question.question}',
         isQuestionCard: true,
+        color: question.isCorrect ? Colors.green : Colors.red,
         score: question.score.toInt(),
       ),
     );

@@ -67,6 +67,6 @@ class _SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: const Center(child: FlutterLogo(size: 128.0)));
+    return const Scaffold(body: Center(child: FlutterLogo(size: 128.0)));
   }
 }

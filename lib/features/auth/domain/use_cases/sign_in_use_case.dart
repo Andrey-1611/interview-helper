@@ -1,4 +1,4 @@
-import '../../../../app/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/models/my_user.dart';
 import '../repositories/auth_repository.dart';
 
 class SignInUseCase {

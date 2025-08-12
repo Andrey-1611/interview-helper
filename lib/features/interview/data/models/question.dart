@@ -10,10 +10,12 @@ class Question {
   final String question;
   final String userAnswer;
   final String correctAnswer;
+  final bool isCorrect;
 
   Question({
     required this.score,
     required this.question,
+    required this.isCorrect,
     required this.userAnswer,
     required this.correctAnswer,
   });
