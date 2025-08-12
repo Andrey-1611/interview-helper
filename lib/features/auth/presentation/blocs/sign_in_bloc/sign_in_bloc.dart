@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
 
-import '../../../../../app/global_services/user/data/models/my_user.dart';
+import '../../../../../app/global_services/user/models/my_user.dart';
+
 
 
 part 'sign_in_event.dart';

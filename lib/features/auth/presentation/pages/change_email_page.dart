@@ -8,7 +8,7 @@ import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../app/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/models/my_user.dart';
 import '../blocs/delete_account_bloc/delete_account_bloc.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -241,7 +241,7 @@ class _NavigationButton extends StatelessWidget {
           arguments: password,
         );
       },
-      child: const Text('Вернуться на экран подтверджения почты'),
+      child: const Text('Вернуться на экран подтверджения почты', ),
     );
   }
 }

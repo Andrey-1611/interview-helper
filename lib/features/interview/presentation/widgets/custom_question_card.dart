@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'custom_score_indicator.dart';
+
 
 class CustomQuestionCard extends StatelessWidget {
   final String text;
   final int? score;
   final bool isQuestionCard;
+  final Color? color;
 
   const CustomQuestionCard({
     super.key,
     required this.text,
     required this.isQuestionCard,
     this.score,
+    this.color
   });
 
   @override
@@ -18,35 +23,15 @@ class CustomQuestionCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side: BorderSide(color: Colors.blue, width: 4.0),
+        side: BorderSide(color: AppPalette.primary, width: 4.0),
       ),
       child: ListTile(
         contentPadding: EdgeInsets.all(20.0),
-        leading: isQuestionCard ? _ScoreIndicator(score: score!) : null,
-        title: Text(text),
+        leading: isQuestionCard ? ScoreIndicator(score: score!, color: color!) : null,
+        title: Text(text, style: Theme.of(context).textTheme.bodyMedium),
         trailing: isQuestionCard ? Icon(Icons.chevron_right) : null,
       ),
     );
   }
 }
 
-class _ScoreIndicator extends StatelessWidget {
-  final int score;
-
-  const _ScoreIndicator({required this.score});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 80,
-      width: 80,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(value: score / 100),
-          Text('${score.toInt()} %'),
-        ],
-      ),
-    );
-  }
-}

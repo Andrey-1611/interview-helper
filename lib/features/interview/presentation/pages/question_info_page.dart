@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
 
+import '../../../../core/theme/app_colors.dart';
+
 class QuestionInfoPage extends StatefulWidget {
   const QuestionInfoPage({super.key});
 
@@ -65,10 +67,10 @@ class _ScoreContainer extends StatelessWidget {
       height: MediaQuery.sizeOf(context).height * 0.25,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0.sp),
-        border: Border.all(color: Colors.blue, width: 4.0.sp),
+        border: Border.all(color: AppPalette.primary, width: 4.0.sp),
       ),
       child: Text(
-        'Точность: ${question.score.toInt()} %',
+        'Точность: ${question.score} %',
         style: Theme.of(context).textTheme.displayLarge,
       ),
     );

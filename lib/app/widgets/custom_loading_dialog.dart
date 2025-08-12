@@ -6,13 +6,13 @@ class CustomLoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
+    return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomLoadingIndicator(),
-          Text('Подождите...')
+          const CustomLoadingIndicator(),
+          Text('Подождите...', style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

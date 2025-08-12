@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/interview.dart';
 import '../widgets/custom_button.dart';
 
@@ -86,30 +87,33 @@ class _ChooseForm extends StatelessWidget {
       children: [
         CustomButton(
           text: 'Junior',
-          textColor: selectedItem == 1 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 1 ? Colors.blue : Colors.white,
+          selectedColor: _selectColor(1),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(1),
         ),
         CustomButton(
           text: 'Middle',
-          textColor: selectedItem == 2 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 2 ? Colors.blue : Colors.white,
+          selectedColor: _selectColor(2),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(2),
         ),
         CustomButton(
           text: 'Senior',
-          textColor: selectedItem == 3 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 3 ? Colors.blue : Colors.white,
+          selectedColor: _selectColor(3),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(3),
         ),
       ],
     );
+  }
+
+  Color? _selectColor(int item) {
+    return selectedItem == item
+        ? null
+        : AppPalette.primary.withValues(alpha: 0.25);
   }
 }
 
@@ -124,14 +128,12 @@ class _InterviewButton extends StatelessWidget {
         ? SizedBox(height: MediaQuery.sizeOf(context).height * 0.06)
         : CustomButton(
             text: 'Начать',
-            selectedColor: Colors.blue,
             onPressed: () {
               AppRouter.pushReplacementNamed(
                 AppRouterNames.interview,
                 arguments: Interview.difficultly(selectedItem),
               );
             },
-            textColor: Colors.white,
             percentsHeight: 0.06,
             percentsWidth: 1,
           );

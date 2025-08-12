@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:interview_master/app/global_services/user/blocs/save_user_bloc/save_user_bloc.dart';
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/models/user_data.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
@@ -105,9 +105,10 @@ class _EmailVerificationForm extends StatelessWidget {
               DialogHelper.showLoadingDialog(context);
             } else if (state is GetUserSuccess) {
               final user = UserData(
+                stars: 0,
                 name: state.user.name!,
                 id: state.user.id!,
-                interviews: [],
+                average: 0,
               );
               context.read<SaveUserBloc>().add(SaveUser(user: user));
             } else if (state is GetUserFailure) {
@@ -138,7 +139,10 @@ class _EmailVerificationFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Подтвердите свою почту');
+    return Text(
+      'Подтвердите свою почту',
+      style: Theme.of(context).textTheme.bodyLarge,
+    );
   }
 }
 

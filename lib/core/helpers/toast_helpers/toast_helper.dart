@@ -1,7 +1,7 @@
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:delightful_toast/delight_toast.dart';
+import 'package:flutter/material.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 
 class ToastHelper {
@@ -25,21 +25,19 @@ class ToastHelper {
     DelightToastBar(
       position: DelightSnackbarPosition.top,
       builder: (context) {
-        return ToastCard(title: Text(msg));
+        return ToastCard(
+          title: Text(msg, style: Theme.of(context).textTheme.bodyMedium),
+        );
       },
     ).show(AppRouter.navigatorKey.currentContext!);
   }
 
   static void sendEmailVerification(String email) {
-    _showToast(
-      msg: 'Письмо с подтвержением отправлено на ${email.trim()}',
-    );
+    _showToast(msg: 'Письмо с подтвержением отправлено на ${email.trim()}');
   }
 
   static void sendAgainEmailVerification() {
-    _showToast(
-      msg: 'Письмо с подтвержением отправлено на вашу почту',
-    );
+    _showToast(msg: 'Письмо с подтвержением отправлено на вашу почту');
   }
 
   static void sendPasswordResetEmail(String email) {
@@ -53,7 +51,6 @@ class ToastHelper {
   static void loadingError() {
     _showToast(msg: 'Ошибка загрузки данных, попробуйте позже');
   }
-
 
   static void unknownError() {
     _showToast(msg: 'Неизвестная ошибка, попробуйте позже');

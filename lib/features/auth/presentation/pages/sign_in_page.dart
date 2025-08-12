@@ -6,7 +6,7 @@ import 'package:interview_master/features/auth/presentation/blocs/check_email_ve
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../app/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';

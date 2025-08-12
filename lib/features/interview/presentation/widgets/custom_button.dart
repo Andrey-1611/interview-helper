@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/core/theme/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final Color selectedColor;
+  final Color? selectedColor;
   final VoidCallback onPressed;
-  final Color textColor;
   final double percentsHeight;
   final double percentsWidth;
 
   const CustomButton({
     super.key,
     required this.text,
-    required this.selectedColor,
+    this.selectedColor,
     required this.onPressed,
-    required this.textColor,
     required this.percentsHeight,
     required this.percentsWidth,
   });
@@ -26,7 +24,7 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: selectedColor,
+          backgroundColor: selectedColor ?? AppPalette.primary,
           minimumSize: Size(
             MediaQuery.sizeOf(context).width * percentsWidth,
             MediaQuery.sizeOf(context).height * percentsHeight,
@@ -36,13 +34,7 @@ class CustomButton extends StatelessWidget {
             MediaQuery.sizeOf(context).height * percentsHeight,
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 13.sp,
-          ),
-        ),
+        child: Text(text),
       ),
     );
   }
