@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'app_pallete.dart';
 
 class AppTheme {
@@ -53,9 +52,9 @@ class AppTheme {
         fillColor: AppPalette.cardBackground.withValues(alpha: 0.8),
 
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0.sp),
-          borderSide: BorderSide(color: AppPalette.transparent),
-        ),
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8.0.sp)),
+
         contentPadding: EdgeInsets.all(12.sp),
 
         hintStyle: TextStyle(color: AppPalette.textSecondary),
@@ -88,7 +87,7 @@ class AppTheme {
           side: BorderSide(color: AppPalette.primary, width: 4.0.sp),
         ),
       ),
-      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(8.0)),
+      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(16.0)),
     );
   }
 }

@@ -185,7 +185,7 @@ class _SignUpButton extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is SignUpLoading) {
-              DialogHelper.showLoadingDialog(context);
+              DialogHelper.showLoadingDialog(context, 'Авторизация');
             } else if (state is SignUpSuccess) {
               context.read<SendEmailVerificationBloc>().add(
                 SendEmailVerification(),

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
-import 'package:interview_master/features/interview/presentation/widgets/custom_button.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_interview_info.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
@@ -64,29 +62,36 @@ class _ResultsPageView extends StatelessWidget {
     return Scaffold(
       body: BlocConsumer<CheckResultsBloc, CheckResultsState>(
         listener: (context, state) {
-          if (state is CheckResultsFailure) {
+          if (state is CheckResultsLoading) {
+            DialogHelper.showLoadingDialog(context, 'Проверка ответов...');
+          } else if (state is CheckResultsSuccess) {
+            AppRouter.pop();
+          } else if (state is CheckResultsFailure) {
+            AppRouter.pop();
+            AppRouter.pushReplacementNamed(AppRouterNames.home);
             ToastHelper.unknownError();
           }
         },
         builder: (context, state) {
-          if (state is CheckResultsLoading) {
-            return CustomLoadingIndicator();
-          } else if (state is CheckResultsSuccess) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  CustomInterviewInfo(
-                    interview: Interview.fromQuestions(
-                      state.questions,
-                      difficulty,
-                    ),
-                  ),
+          if (state is CheckResultsSuccess) {
+            return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                actions: [
                   _SaveResultsButton(
-                    questions: state.questions,
                     difficulty: difficulty,
+                    questions: state.questions,
                   ),
                 ],
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CustomInterviewInfo(
+                  interview: Interview.fromQuestions(
+                    state.questions,
+                    difficulty,
+                  ),
+                ),
               ),
             );
           }
@@ -98,10 +103,10 @@ class _ResultsPageView extends StatelessWidget {
 }
 
 class _SaveResultsButton extends StatelessWidget {
-  final List<Question> questions;
   final String difficulty;
+  final List<Question> questions;
 
-  const _SaveResultsButton({required this.questions, required this.difficulty});
+  const _SaveResultsButton({required this.difficulty, required this.questions});
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +114,12 @@ class _SaveResultsButton extends StatelessWidget {
       listeners: [
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
+            if (state is GetUserLoading) {
+              DialogHelper.showLoadingDialog(
+                context,
+                'Сохранение результатов...',
+              );
+            }
             if (state is GetUserSuccess) {
               context.read<AddInterviewBloc>().add(
                 AddInterview(
@@ -117,6 +128,7 @@ class _SaveResultsButton extends StatelessWidget {
                 ),
               );
             } else if (state is GetUserFailure) {
+              AppRouter.pop();
               ToastHelper.unknownError();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
             }
@@ -125,8 +137,10 @@ class _SaveResultsButton extends StatelessWidget {
         BlocListener<AddInterviewBloc, AddInterviewState>(
           listener: (context, state) {
             if (state is AddInterviewSuccess) {
+              AppRouter.pop();
               AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is AddInterviewFailure) {
+              AppRouter.pop();
               ToastHelper.unknownError();
             }
           },
@@ -142,14 +156,11 @@ class _SaveResultsButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButton(
-      text: 'Сохранить результаты',
-      selectedColor: AppPalette.primary,
+    return IconButton(
+      icon: Icon(Icons.home),
       onPressed: () {
         context.read<GetUserBloc>().add(GetUser());
       },
-      percentsHeight: 0.2,
-      percentsWidth: 1,
     );
   }
 }

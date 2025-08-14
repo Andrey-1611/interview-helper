@@ -176,7 +176,7 @@ class _SignInButton extends StatelessWidget {
         BlocListener<SignInBloc, SignInState>(
           listener: (context, state) {
             if (state is SignInLoading) {
-              DialogHelper.showLoadingDialog(context);
+              DialogHelper.showLoadingDialog(context, 'Вход в систему...');
             } else if (state is SignInSuccess) {
               context.read<CheckEmailVerifiedBloc>().add(CheckEmailVerified());
             }
