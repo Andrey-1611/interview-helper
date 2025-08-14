@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomAuthButton extends StatelessWidget {
   final String text;
@@ -18,7 +17,6 @@ class CustomAuthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
           minimumSize: Size(
             MediaQuery.sizeOf(context).width * 1,
             MediaQuery.sizeOf(context).height * 0.055,
@@ -28,10 +26,7 @@ class CustomAuthButton extends StatelessWidget {
             MediaQuery.sizeOf(context).height * 0.055,
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(color: Colors.white, fontSize: 13.sp),
-        ),
+        child: Text(text),
       ),
     );
   }

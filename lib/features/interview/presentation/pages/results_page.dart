@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
-import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_button.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_interview_info.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -60,156 +62,94 @@ class _ResultsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-            },
-            icon: Icon(Icons.home),
-          ),
-        ],
-      ),
-      body: _ResultsList(difficulty: difficulty),
-    );
-  }
-}
-
-class _ResultsList extends StatelessWidget {
-  final String difficulty;
-
-  const _ResultsList({required this.difficulty});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Question> questions = [];
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<CheckResultsBloc, CheckResultsState>(
-          listener: (context, state) {
-            if (state is CheckResultsLoading) {
-              DialogHelper.showLoadingDialog(context);
-            } else if (state is CheckResultsSuccess) {
-              questions.addAll(state.questions);
-              context.read<GetUserBloc>().add(GetUser());
-            } else if (state is CheckResultsFailure) {
-              AppRouter.pop();
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-        BlocListener<GetUserBloc, GetUserState>(
-          listener: (context, state) {
-            if (state is GetUserSuccess) {
-              context.read<AddInterviewBloc>().add(
-                AddInterview(
-                  interview: Interview.fromQuestions(questions, difficulty),
-                  userId: state.user.id ?? '',
-                ),
-              );
-            }
-          },
-        ),
-        BlocListener<AddInterviewBloc, AddInterviewState>(
-          listener: (context, state) {
-            if (state is AddInterviewSuccess) {
-              AppRouter.pop();
-            } else if (state is AddInterviewFailure) {
-              AppRouter.pop();
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-      ],
-      child: BlocBuilder<CheckResultsBloc, CheckResultsState>(
+      body: BlocConsumer<CheckResultsBloc, CheckResultsState>(
+        listener: (context, state) {
+          if (state is CheckResultsFailure) {
+            ToastHelper.unknownError();
+          }
+        },
         builder: (context, state) {
-          if (state is CheckResultsSuccess) {
-            return _ListResultsView(
-              averageScore: Interview.fromQuestions(
-                state.questions,
-                difficulty,
-              ).score.toInt(),
-              questions: state.questions,
+          if (state is CheckResultsLoading) {
+            return CustomLoadingIndicator();
+          } else if (state is CheckResultsSuccess) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  CustomInterviewInfo(
+                    interview: Interview.fromQuestions(
+                      state.questions,
+                      difficulty,
+                    ),
+                  ),
+                  _SaveResultsButton(
+                    questions: state.questions,
+                    difficulty: difficulty,
+                  ),
+                ],
+              ),
             );
           }
-          return const SizedBox.shrink();
+          return SizedBox.shrink();
         },
       ),
     );
   }
 }
 
-class _ListResultsView extends StatefulWidget {
-  final int averageScore;
+class _SaveResultsButton extends StatelessWidget {
   final List<Question> questions;
+  final String difficulty;
 
-  const _ListResultsView({required this.averageScore, required this.questions});
+  const _SaveResultsButton({required this.questions, required this.difficulty});
 
-  @override
-  State<_ListResultsView> createState() => _ListResultsViewState();
-}
-
-class _ListResultsViewState extends State<_ListResultsView> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddInterviewBloc, AddInterviewState>(
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height * 0.25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(color: Colors.blue, width: 4.0),
-                  ),
-                  child: Text(
-                    'Результат: ${widget.averageScore} %',
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<GetUserBloc, GetUserState>(
+          listener: (context, state) {
+            if (state is GetUserSuccess) {
+              context.read<AddInterviewBloc>().add(
+                AddInterview(
+                  interview: Interview.fromQuestions(questions, difficulty),
+                  userId: state.user.id!,
                 ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: widget.questions.length,
-                    itemBuilder: (context, index) {
-                      final Question question = widget.questions[index];
-                      return _QuestionCard(question: question, index: index);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+              );
+            } else if (state is GetUserFailure) {
+              ToastHelper.unknownError();
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+            }
+          },
+        ),
+        BlocListener<AddInterviewBloc, AddInterviewState>(
+          listener: (context, state) {
+            if (state is AddInterviewSuccess) {
+              AppRouter.pushReplacementNamed(AppRouterNames.home);
+            } else if (state is AddInterviewFailure) {
+              ToastHelper.unknownError();
+            }
+          },
+        ),
+      ],
+      child: _SaveResultsButtonView(),
     );
   }
 }
 
-class _QuestionCard extends StatelessWidget {
-  final Question question;
-  final int index;
-
-  const _QuestionCard({required this.question, required this.index});
+class _SaveResultsButtonView extends StatelessWidget {
+  const _SaveResultsButtonView();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppRouter.pushNamed(AppRouterNames.questionInfo, arguments: question);
+    return CustomButton(
+      text: 'Сохранить результаты',
+      selectedColor: AppPalette.primary,
+      onPressed: () {
+        context.read<GetUserBloc>().add(GetUser());
       },
-      child: CustomQuestionCard(
-        text: 'Вопрос ${index + 1} - ${question.question}',
-        isQuestionCard: true,
-        score: question.score.toInt(),
-      ),
+      percentsHeight: 0.2,
+      percentsWidth: 1,
     );
   }
 }

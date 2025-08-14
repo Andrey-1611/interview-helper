@@ -4,10 +4,9 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
 import 'package:interview_master/features/interview/presentation/blocs/show_users_bloc/show_users_bloc.dart';
-
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/user/models/user_data.dart';
 
 class UsersRatingPage extends StatefulWidget {
   const UsersRatingPage({super.key});
@@ -22,7 +21,7 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
     return BlocProvider(
       create: (context) =>
           ShowUsersBloc(DIContainer.showUsers)..add(ShowUsers()),
-      child: _UsersRatingView(),
+      child: const _UsersRatingView(),
     );
   }
 }
@@ -32,7 +31,7 @@ class _UsersRatingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Padding(padding: EdgeInsets.all(16.0), child: _UsersList()),
     );
   }
@@ -53,9 +52,9 @@ class _UsersList extends StatelessWidget {
         if (state is ShowUsersSuccess) {
           return _UsersListView(users: state.users);
         } else if (state is ShowUsersLoading) {
-          return CustomLoadingIndicator();
+          return const CustomLoadingIndicator();
         }
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
     );
   }

@@ -1,5 +1,5 @@
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+import '../../../../app/global_services/user/models/user_data.dart';
 
 class ShowUsersUseCase {
   final RemoteRepository _remoteRepository;

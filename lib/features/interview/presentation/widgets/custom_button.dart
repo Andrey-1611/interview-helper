@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
   final Color selectedColor;
   final VoidCallback onPressed;
-  final Color textColor;
   final double percentsHeight;
   final double percentsWidth;
 
@@ -14,7 +12,6 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.selectedColor,
     required this.onPressed,
-    required this.textColor,
     required this.percentsHeight,
     required this.percentsWidth,
   });
@@ -36,13 +33,7 @@ class CustomButton extends StatelessWidget {
             MediaQuery.sizeOf(context).height * percentsHeight,
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 13.sp,
-          ),
-        ),
+        child: Text(text),
       ),
     );
   }

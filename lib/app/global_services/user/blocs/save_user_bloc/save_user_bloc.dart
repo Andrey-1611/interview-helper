@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
-import 'package:interview_master/app/global_services/user/domain/use_cases/save_user_use_case.dart';
+import '../../models/user_data.dart';
+import '../../use_cases/save_user_use_case.dart';
 
 part 'save_user_event.dart';
 

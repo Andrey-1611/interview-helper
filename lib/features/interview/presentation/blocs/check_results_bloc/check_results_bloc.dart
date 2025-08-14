@@ -20,7 +20,7 @@ class CheckResultsBloc extends Bloc<CheckResultsEvent, CheckResultsState> {
             .call(event.userInputs);
         emit(CheckResultsSuccess(questions: questions));
       } catch (e) {
-        emit(CheckResultsFailure());
+        emit(CheckResultsFailure(e: e.toString()));
       }
     });
   }

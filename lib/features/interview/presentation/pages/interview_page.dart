@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../data/models/question.dart';
@@ -24,10 +25,7 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    difficulty = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as String;
+    difficulty = ModalRoute.of(context)!.settings.arguments as String;
     _questions = Question.fromDifficulty(difficulty);
   }
 
@@ -88,12 +86,12 @@ class _InterviewPageView extends StatelessWidget {
         onPageChanged: (page) => changePage(page),
         itemBuilder: (context, index) {
           return _InterviewQuestionPage(
-              currentPage: currentPage,
-              answerController: answerController,
-              answers: answers,
-              pageController: pageController,
-              difficulty: difficulty,
-              questions: questions,
+            currentPage: currentPage,
+            answerController: answerController,
+            answers: answers,
+            pageController: pageController,
+            difficulty: difficulty,
+            questions: questions,
           );
         },
       ),
@@ -132,17 +130,11 @@ class _InterviewQuestionPage extends StatelessWidget {
         children: [
           Text(
             'Вопрос ${currentPage + 1} - ',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
             questions[currentPage],
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Expanded(
             child: TextField(
@@ -157,8 +149,6 @@ class _InterviewQuestionPage extends StatelessWidget {
                 answers[currentPage] = value.trim();
               },
               decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
                 hintText: 'Введите ваш ответ...',
               ),
             ),
@@ -169,17 +159,15 @@ class _InterviewQuestionPage extends StatelessWidget {
               currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
-                textColor: Colors.white,
-                text: 'Назад',
-                selectedColor: Colors.blue,
-                percentsHeight: 0.07,
-                percentsWidth: 0.29,
-                onPressed: () => _navigateToPage(currentPage - 1),
-              ),
+                      text: 'Назад',
+                      selectedColor: AppPalette.primary,
+                      percentsHeight: 0.07,
+                      percentsWidth: 0.29,
+                      onPressed: () => _navigateToPage(currentPage - 1),
+                    ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
-                textColor: Colors.white,
-                selectedColor: Colors.blue,
+                selectedColor: AppPalette.primary,
                 percentsHeight: 0.07,
                 percentsWidth: 0.29,
                 onPressed: () {
@@ -212,14 +200,10 @@ class _InterviewQuestionPage extends StatelessWidget {
   }
 
   void _navigateToResult() {
-    final userInputs = List.generate(
-      10,
-          (index) =>
-          UserInput(question: questions[index], answer: answers[index]),
-    );
+    final userInput = UserInput.fromInput(questions, answers);
     AppRouter.pushReplacementNamed(
       AppRouterNames.results,
-      arguments: {'userInputs': userInputs, 'difficulty': difficulty},
+      arguments: {'userInputs': userInput, 'difficulty': difficulty},
     );
   }
 }

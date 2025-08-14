@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../../app/global_services/user/data/models/my_user.dart';
+import '../../../../app/global_services/user/models/my_user.dart';
 
 class FirebaseAuthDataSource {
   final FirebaseAuth _firebaseAuth;
@@ -18,6 +17,21 @@ class FirebaseAuthDataSource {
       );
       final user = _toUserProfile(credential.user!);
       return user;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<MyUser?> getUser() async {
+    try {
+      await _firebaseAuth.currentUser?.reload();
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        final userProfile = _toUserProfile(user);
+        return userProfile;
+      }
+      return null;
     } catch (e) {
       log(e.toString());
       rethrow;

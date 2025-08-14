@@ -1,5 +1,4 @@
-import 'package:interview_master/app/global_services/user/data/models/user_data.dart';
-
+import '../../../../app/global_services/user/models/user_data.dart';
 import '../../data/models/interview.dart';
 
 abstract interface class RemoteRepository {

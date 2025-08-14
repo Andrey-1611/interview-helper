@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:intl/intl.dart';
+import '../../../../app/navigation/app_router.dart';
+import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/widgets/custom_loading_indicator.dart';
+import '../../../../core/helpers/toast_helpers/toast_helper.dart';
+import '../../data/models/interview.dart';
+import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
+import 'custom_score_indicator.dart';
+
+class CustomInterviewsList extends StatelessWidget {
+  const CustomInterviewsList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<ShowInterviewsBloc, ShowInterviewsState>(
+      listener: (context, state) {
+        if (state is ShowInterviewsFailure) {
+          ToastHelper.loadingError();
+        }
+      },
+      builder: (context, state) {
+        if (state is ShowInterviewsLoading) {
+          return CustomLoadingIndicator();
+        } else if (state is ShowInterviewsSuccess) {
+          if (state.interviews.isEmpty) _EmptyHistory();
+          return _InterviewsListView(interviews: state.interviews);
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class _EmptyHistory extends StatelessWidget {
+  const _EmptyHistory();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'История пуста',
+        style: Theme.of(context).textTheme.displayLarge,
+      ),
+    );
+  }
+}
+
+class _InterviewsListView extends StatelessWidget {
+  final List<Interview> interviews;
+
+  const _InterviewsListView({required this.interviews});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: interviews.length,
+        itemBuilder: (context, index) {
+          final interview = interviews[index];
+          return _InterviewCard(interview: interview);
+        },
+      ),
+    );
+  }
+}
+
+class _InterviewCard extends StatelessWidget {
+  final Interview interview;
+
+  const _InterviewCard({required this.interview});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        AppRouter.pushNamed(AppRouterNames.interviewInfo, arguments: interview);
+      },
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 16.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(color: AppPalette.primary, width: 4.0),
+        ),
+        child: ListTile(
+          contentPadding: EdgeInsets.all(16.0),
+          leading: ScoreIndicator(score: interview.score),
+          title: Text('Сложность: ${interview.difficulty}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(DateFormat('dd/MM/yyyy HH:mm').format(interview.date)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

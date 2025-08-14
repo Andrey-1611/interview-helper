@@ -19,9 +19,7 @@ class MyUserProfilePage extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => SignOutBloc(DIContainer.signOut)),
         BlocProvider(
-          create: (context) =>
-          GetUserBloc(DIContainer.getUser)
-            ..add(GetUser()),
+          create: (context) => GetUserBloc(DIContainer.getUser)..add(GetUser()),
         ),
       ],
       child: _MyUserProfilePageView(),
@@ -108,14 +106,19 @@ class _UserInfo extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Ваше имя: ${state.user.name}'),
-                Text('Ваша почта: ${state.user.email}'),
+                Text(
+                  'Ваше имя: ${state.user.name}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  'Ваша почта: ${state.user.email}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
           );
-        } else {
-          return const SizedBox.shrink();
         }
+        return const SizedBox.shrink();
       },
     );
   }

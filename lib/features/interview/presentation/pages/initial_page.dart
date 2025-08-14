@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../data/models/interview.dart';
@@ -40,20 +41,18 @@ class _InitialPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              _ChooseText(),
-              _ChooseForm(selectedItem: selectedItem, changeItem: changeItem),
-              const Spacer(),
-              _InterviewButton(selectedItem: selectedItem),
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            _ChooseText(),
+            _ChooseForm(selectedItem: selectedItem, changeItem: changeItem),
+            const Spacer(),
+            _InterviewButton(selectedItem: selectedItem),
+          ],
         ),
       ),
     );
@@ -86,30 +85,33 @@ class _ChooseForm extends StatelessWidget {
       children: [
         CustomButton(
           text: 'Junior',
-          textColor: selectedItem == 1 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 1 ? Colors.blue : Colors.white,
+          selectedColor: color(1),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(1),
         ),
         CustomButton(
           text: 'Middle',
-          textColor: selectedItem == 2 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 2 ? Colors.blue : Colors.white,
+          selectedColor: color(2),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(2),
         ),
         CustomButton(
           text: 'Senior',
-          textColor: selectedItem == 3 ? Colors.white : Colors.black,
-          selectedColor: selectedItem == 3 ? Colors.blue : Colors.white,
+          selectedColor: color(3),
           percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(3),
         ),
       ],
     );
+  }
+
+  Color color(int item) {
+    return selectedItem == item
+        ? AppPalette.primary
+        : AppPalette.primary.withValues(alpha: 0.2);
   }
 }
 
@@ -121,7 +123,7 @@ class _InterviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return selectedItem == 0
-        ? SizedBox(height: MediaQuery.sizeOf(context).height * 0.06)
+        ? SizedBox.shrink()
         : CustomButton(
             text: 'Начать',
             selectedColor: Colors.blue,
@@ -131,7 +133,6 @@ class _InterviewButton extends StatelessWidget {
                 arguments: Interview.difficultly(selectedItem),
               );
             },
-            textColor: Colors.white,
             percentsHeight: 0.06,
             percentsWidth: 1,
           );
