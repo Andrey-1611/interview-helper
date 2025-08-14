@@ -102,7 +102,7 @@ class _EmailVerificationForm extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserLoading) {
-              DialogHelper.showLoadingDialog(context);
+              DialogHelper.showLoadingDialog(context, 'Вход в систему...');
             } else if (state is GetUserSuccess) {
               context.read<SaveUserBloc>().add(
                 SaveUser(user: UserData.fromMyUser(state.user)),

@@ -125,7 +125,7 @@ class _ChangeEmailButton extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserLoading) {
-              DialogHelper.showLoadingDialog(context);
+              DialogHelper.showLoadingDialog(context, 'Смена пароля...');
             } else if (state is GetUserSuccess) {
               user = state.user;
               context.read<DeleteAccountBloc>().add(DeleteAccount());

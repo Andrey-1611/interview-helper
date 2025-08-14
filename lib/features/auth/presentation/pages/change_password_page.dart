@@ -30,8 +30,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ChangePasswordBloc(DIContainer.changePassword),
+      create: (context) => ChangePasswordBloc(DIContainer.changePassword),
       child: _ChangePasswordPageView(
         emailController: _emailController,
         formKey: _formKey,
@@ -107,14 +106,10 @@ class _ChangePasswordButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ChangePasswordBloc, ChangePasswordState>(
       listener: (context, state) {
-        if (state is ChangePasswordLoading) {
-          DialogHelper.showLoadingDialog(context);
-        } else if (state is ChangePasswordSuccess) {
-          Navigator.pop(context);
+        if (state is ChangePasswordSuccess) {
           ToastHelper.sendPasswordResetEmail(emailController.text);
           AppRouter.pushReplacementNamed(AppRouterNames.signIn);
         } else if (state is ChangePasswordFailure) {
-          Navigator.pop(context);
           ToastHelper.unknownError();
         }
       },
@@ -142,9 +137,7 @@ class _ChangePasswordButtonView extends StatelessWidget {
       onPressed: () {
         if (formKey.currentState!.validate()) {
           context.read<ChangePasswordBloc>().add(
-            ChangePassword(
-              user: MyUser(email: emailController.text.trim()),
-            ),
+            ChangePassword(user: MyUser(email: emailController.text.trim())),
           );
         }
       },

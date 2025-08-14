@@ -45,7 +45,10 @@ class _HistoryList extends StatelessWidget {
           ToastHelper.unknownError();
         }
       },
-      child: CustomInterviewsList(),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CustomInterviewsList(),
+      ),
     );
   }
 }

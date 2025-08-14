@@ -48,11 +48,12 @@ class _UserInfoPageView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(user.name, style: Theme.of(context).textTheme.displayMedium),
-            const CustomInterviewsList(),
+            Expanded(child: const CustomInterviewsList()),
           ],
         ),
       ),
     );
   }
 }
+
 

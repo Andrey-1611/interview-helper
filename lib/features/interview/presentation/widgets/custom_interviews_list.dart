@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -79,13 +78,7 @@ class _InterviewCard extends StatelessWidget {
         AppRouter.pushNamed(AppRouterNames.interviewInfo, arguments: interview);
       },
       child: Card(
-        margin: EdgeInsets.symmetric(vertical: 16.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(color: AppPalette.primary, width: 4.0),
-        ),
         child: ListTile(
-          contentPadding: EdgeInsets.all(16.0),
           leading: ScoreIndicator(score: interview.score),
           title: Text('Сложность: ${interview.difficulty}'),
           subtitle: Column(

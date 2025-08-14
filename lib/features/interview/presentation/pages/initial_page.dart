@@ -126,7 +126,7 @@ class _InterviewButton extends StatelessWidget {
         ? SizedBox.shrink()
         : CustomButton(
             text: 'Начать',
-            selectedColor: Colors.blue,
+            selectedColor: AppPalette.primary,
             onPressed: () {
               AppRouter.pushReplacementNamed(
                 AppRouterNames.interview,
