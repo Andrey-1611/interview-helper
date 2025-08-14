@@ -52,7 +52,10 @@ class AppTheme {
         filled: true,
         fillColor: AppPalette.cardBackground.withValues(alpha: 0.8),
 
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.sp)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0.sp),
+          borderSide: BorderSide(color: AppPalette.transparent),
+        ),
         contentPadding: EdgeInsets.all(12.sp),
 
         hintStyle: TextStyle(color: AppPalette.textSecondary),
@@ -79,10 +82,10 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        margin: EdgeInsets.symmetric(vertical: 8.0.h),
+        margin: EdgeInsets.all(16.0.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0.sp),
-          side: BorderSide(color: AppPalette.primary, width: 8.0.sign),
+          side: BorderSide(color: AppPalette.primary, width: 4.0.sp),
         ),
       ),
       listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(8.0)),
