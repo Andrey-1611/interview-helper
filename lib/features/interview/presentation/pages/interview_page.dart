@@ -161,15 +161,13 @@ class _InterviewQuestionPage extends StatelessWidget {
                   : CustomButton(
                       text: 'Назад',
                       selectedColor: AppPalette.primary,
-                      percentsHeight: 0.07,
-                      percentsWidth: 0.29,
+                      percentsWidth: 0.32,
                       onPressed: () => _navigateToPage(currentPage - 1),
                     ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 selectedColor: AppPalette.primary,
-                percentsHeight: 0.07,
-                percentsWidth: 0.29,
+                percentsWidth: 0.32,
                 onPressed: () {
                   _saveCurrentAnswer();
                   if (currentPage == 9) {

@@ -86,21 +86,18 @@ class _ChooseForm extends StatelessWidget {
         CustomButton(
           text: 'Junior',
           selectedColor: color(1),
-          percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(1),
         ),
         CustomButton(
           text: 'Middle',
           selectedColor: color(2),
-          percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(2),
         ),
         CustomButton(
           text: 'Senior',
           selectedColor: color(3),
-          percentsHeight: 0.07,
           percentsWidth: 0.24,
           onPressed: () => changeItem(3),
         ),
@@ -133,7 +130,6 @@ class _InterviewButton extends StatelessWidget {
                 arguments: Interview.difficultly(selectedItem),
               );
             },
-            percentsHeight: 0.06,
             percentsWidth: 1,
           );
   }

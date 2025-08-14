@@ -4,7 +4,6 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Color selectedColor;
   final VoidCallback onPressed;
-  final double percentsHeight;
   final double percentsWidth;
 
   const CustomButton({
@@ -12,7 +11,6 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.selectedColor,
     required this.onPressed,
-    required this.percentsHeight,
     required this.percentsWidth,
   });
 
@@ -20,20 +18,14 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: selectedColor,
-          minimumSize: Size(
-            MediaQuery.sizeOf(context).width * percentsWidth,
-            MediaQuery.sizeOf(context).height * percentsHeight,
-          ),
-          fixedSize: Size(
-            MediaQuery.sizeOf(context).width * percentsWidth,
-            MediaQuery.sizeOf(context).height * percentsHeight,
-          ),
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.07,
+        width: MediaQuery.sizeOf(context).width * percentsWidth,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(backgroundColor: selectedColor),
+          child: Text(text),
         ),
-        child: Text(text),
       ),
     );
   }

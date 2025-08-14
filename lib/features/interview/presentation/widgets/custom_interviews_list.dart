@@ -80,11 +80,17 @@ class _InterviewCard extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: ScoreIndicator(score: interview.score),
-          title: Text('Сложность: ${interview.difficulty}'),
+          title: Text(
+            'Сложность:  ${interview.difficulty}',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(DateFormat('dd/MM/yyyy HH:mm').format(interview.date)),
+              Text(
+                DateFormat('dd/MM/yyyy HH:mm').format(interview.date),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),
