@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_main_result_panel.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
 
 class QuestionInfoPage extends StatefulWidget {
@@ -40,7 +39,7 @@ class _QuestionInfoPageView extends StatelessWidget {
         child: Center(
           child: ListView(
             children: [
-              _ScoreContainer(question: question),
+              CustomMainResultPanel(text: 'Точность: ${question.score} %'),
               const SizedBox(height: 20),
               _Question(question: question),
               _UserAnswer(question: question),
@@ -48,29 +47,6 @@ class _QuestionInfoPageView extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ScoreContainer extends StatelessWidget {
-  final Question question;
-
-  const _ScoreContainer({required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height * 0.25,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0.sp),
-        border: Border.all(color: AppPalette.primary, width: 4.0.sp),
-      ),
-      child: Text(
-        'Точность: ${question.score} %',
-        style: Theme.of(context).textTheme.displayLarge,
       ),
     );
   }

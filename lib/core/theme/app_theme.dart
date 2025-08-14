@@ -17,59 +17,42 @@ class AppTheme {
       textTheme: TextTheme(
         displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 22.sp,
+          fontSize: 25.sp,
           color: AppPalette.textPrimary,
         ),
         displayMedium: TextStyle(
           fontWeight: FontWeight.w800,
-          fontSize: 18.sp,
+          fontSize: 21.sp,
           color: AppPalette.textPrimary,
         ),
         displaySmall: TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 15.sp,
+          fontSize: 18.sp,
           color: AppPalette.textPrimary,
         ),
         bodyLarge: TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 13.sp,
+          fontSize: 16.sp,
           color: AppPalette.textPrimary,
         ),
         bodyMedium: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 12.sp,
+          fontSize: 15.sp,
           color: AppPalette.textSecondary,
         ),
-        bodySmall: TextStyle(fontSize: 10.sp, color: AppPalette.textSecondary),
+        bodySmall: TextStyle(fontSize: 13.sp, color: AppPalette.textSecondary),
         labelLarge: TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 12.sp,
+          fontSize: 15.sp,
           color: AppPalette.textPrimary,
         ),
-        labelSmall: TextStyle(fontSize: 9.sp, color: AppPalette.textSecondary),
+        labelSmall: TextStyle(fontSize: 12.sp, color: AppPalette.textSecondary),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppPalette.cardBackground.withValues(alpha: 0.8),
 
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.sp)),
-
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppPalette.transparent),
-        ),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppPalette.primary, width: 2),
-        ),
-
-        errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppPalette.error, width: 2),
-        ),
-
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: AppPalette.error, width: 2),
-        ),
-
         contentPadding: EdgeInsets.all(12.sp),
 
         hintStyle: TextStyle(color: AppPalette.textSecondary),
@@ -77,7 +60,9 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          foregroundColor: AppPalette.textPrimary,
           backgroundColor: AppPalette.primary,
+          textStyle: TextStyle(color: AppPalette.textPrimary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0.sp),
           ),
@@ -93,6 +78,14 @@ class AppTheme {
           ),
         ),
       ),
+      cardTheme: CardThemeData(
+        margin: EdgeInsets.symmetric(vertical: 8.0.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0.sp),
+          side: BorderSide(color: AppPalette.primary, width: 8.0.sign),
+        ),
+      ),
+      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(8.0)),
     );
   }
 }

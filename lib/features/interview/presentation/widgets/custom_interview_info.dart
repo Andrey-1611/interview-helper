@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:interview_master/features/interview/presentation/widgets/custom_main_result_panel.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../data/models/interview.dart';
@@ -16,7 +15,7 @@ class CustomInterviewInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _AverageScoreContainer(interview: interview),
+        CustomMainResultPanel(text: 'Результат: ${interview.score} %',),
         const SizedBox(height: 20),
         Expanded(
           child: ListView.builder(
@@ -27,29 +26,6 @@ class CustomInterviewInfo extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _AverageScoreContainer extends StatelessWidget {
-  final Interview interview;
-
-  const _AverageScoreContainer({required this.interview});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height * 0.25,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0.sp),
-        border: Border.all(color: Colors.blue, width: 4.0.sp),
-      ),
-      child: Text(
-        'Результат: ${interview.score.toInt()} %',
-        style: Theme.of(context).textTheme.displayLarge,
-      ),
     );
   }
 }
