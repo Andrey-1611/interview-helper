@@ -72,10 +72,12 @@ class _UsersListView extends StatelessWidget {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final UserData user = users[index];
-          return ListTile(
-            onTap: () =>
-                AppRouter.pushNamed(AppRouterNames.userInfo, arguments: user),
-            title: Text(user.name),
+          return Card(
+            child: ListTile(
+              onTap: () =>
+                  AppRouter.pushNamed(AppRouterNames.userInfo, arguments: user),
+              title: Text(user.name),
+            ),
           );
         },
       ),

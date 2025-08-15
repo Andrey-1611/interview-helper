@@ -89,7 +89,7 @@ class _InterviewCard extends StatelessWidget {
             children: [
               Text(
                 DateFormat('dd/MM/yyyy HH:mm').format(interview.date),
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),

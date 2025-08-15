@@ -30,8 +30,8 @@ class AppTheme {
           color: AppPalette.textPrimary,
         ),
         bodyLarge: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+          fontSize: 17.sp,
           color: AppPalette.textPrimary,
         ),
         bodyMedium: TextStyle(
@@ -81,13 +81,16 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        margin: EdgeInsets.all(16.0.h),
+        color: AppPalette.cardBackground,
+        margin: EdgeInsets.all(8.0.sp),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0.sp),
-          side: BorderSide(color: AppPalette.primary, width: 4.0.sp),
+          side: BorderSide.none,
         ),
       ),
-      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(16.0)),
+      listTileTheme: ListTileThemeData(
+        contentPadding: EdgeInsets.all(8.0.sp)
+      )
     );
   }
 }
