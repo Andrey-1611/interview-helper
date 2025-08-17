@@ -44,15 +44,15 @@ class _ResultsPageState extends State<ResultsPage> {
           create: (context) => AddInterviewBloc(DIContainer.addInterview),
         ),
       ],
-      child: _ResultsPageView(difficulty: _interviewInfo.difficultly),
+      child: _ResultsPageView(interviewInfo: _interviewInfo),
     );
   }
 }
 
 class _ResultsPageView extends StatelessWidget {
-  final String difficulty;
+  final InterviewInfo interviewInfo;
 
-  const _ResultsPageView({required this.difficulty});
+  const _ResultsPageView({required this.interviewInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +76,8 @@ class _ResultsPageView extends StatelessWidget {
                 automaticallyImplyLeading: false,
                 actions: [
                   _SaveResultsButton(
-                    difficulty: difficulty,
                     questions: state.questions,
+                    interviewInfo: interviewInfo,
                   ),
                 ],
               ),
@@ -86,7 +86,7 @@ class _ResultsPageView extends StatelessWidget {
                 child: CustomInterviewInfo(
                   interview: Interview.fromQuestions(
                     state.questions,
-                    difficulty,
+                    interviewInfo,
                   ),
                 ),
               ),
@@ -100,10 +100,13 @@ class _ResultsPageView extends StatelessWidget {
 }
 
 class _SaveResultsButton extends StatelessWidget {
-  final String difficulty;
+  final InterviewInfo interviewInfo;
   final List<Question> questions;
 
-  const _SaveResultsButton({required this.difficulty, required this.questions});
+  const _SaveResultsButton({
+    required this.interviewInfo,
+    required this.questions,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +123,7 @@ class _SaveResultsButton extends StatelessWidget {
             if (state is GetUserSuccess) {
               context.read<AddInterviewBloc>().add(
                 AddInterview(
-                  interview: Interview.fromQuestions(questions, difficulty),
+                  interview: Interview.fromQuestions(questions, interviewInfo),
                   userId: state.user.id!,
                 ),
               );
