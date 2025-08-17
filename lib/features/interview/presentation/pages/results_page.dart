@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_interview_info.dart';
 import '../../../../app/dependencies/di_container.dart';
@@ -9,7 +10,6 @@ import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.d
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/helpers/toast_helpers/toast_helper.dart';
 import '../../data/models/interview.dart';
-import '../../data/models/user_input.dart';
 import '../blocs/add_interview_bloc/add_interview_bloc.dart';
 import '../blocs/check_results_bloc/check_results_bloc.dart';
 
@@ -21,16 +21,13 @@ class ResultsPage extends StatefulWidget {
 }
 
 class _ResultsPageState extends State<ResultsPage> {
-  late final List<UserInput> _userInputs;
-  late final String _difficulty;
+  late final InterviewInfo _interviewInfo;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    final data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _userInputs = data['userInputs'] as List<UserInput>;
-    _difficulty = data['difficulty'] as String;
+    _interviewInfo =
+        ModalRoute.of(context)!.settings.arguments as InterviewInfo;
   }
 
   @override
@@ -40,14 +37,14 @@ class _ResultsPageState extends State<ResultsPage> {
         BlocProvider(
           create: (context) =>
               CheckResultsBloc(DIContainer.checkResults)
-                ..add(CheckResults(userInputs: _userInputs)),
+                ..add(CheckResults(userInputs: _interviewInfo.userInputs)),
         ),
         BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
         BlocProvider(
           create: (context) => AddInterviewBloc(DIContainer.addInterview),
         ),
       ],
-      child: _ResultsPageView(difficulty: _difficulty),
+      child: _ResultsPageView(difficulty: _interviewInfo.difficultly),
     );
   }
 }

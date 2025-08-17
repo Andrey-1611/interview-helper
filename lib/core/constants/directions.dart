@@ -5,8 +5,6 @@ class InitialData {
     'Swift',
     'JavaScript',
     'Python',
-    'Go',
-    'Java',
     'C++',
   ];
 

@@ -140,6 +140,7 @@ class _InterviewButton extends StatelessWidget {
                   arguments: InterviewInfo(
                     direction: direction,
                     difficultly: difficultly,
+                    userInputs: [],
                   ),
                 );
               },

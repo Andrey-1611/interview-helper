@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:interview_master/core/constants/questions.dart';
+import 'package:interview_master/core/constants/questions_i.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'question.g.dart';
