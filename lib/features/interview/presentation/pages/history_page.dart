@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_button.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_interviews_list.dart';
 import '../../../../app/dependencies/di_container.dart';
@@ -85,7 +86,12 @@ class _HistoryList extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Stack(
           children: [
-            CustomInterviewsList(),
+            CustomInterviewsList(
+              interviewInfo: InterviewInfo(
+                direction: direction,
+                difficultly: difficultly,
+              ),
+            ),
             _FilterButton(
               difficultly: difficultly,
               direction: direction,
@@ -179,7 +185,7 @@ class _DirectionDropdownButton extends StatelessWidget {
     return CustomDropdownMenu(
       data: InitialData.directions,
       change: changeDirection,
-      hintText: 'Выберите направление',
+      hintText: 'Все направления',
     );
   }
 }
@@ -198,7 +204,7 @@ class _DifficultlyDropdownButton extends StatelessWidget {
     return CustomDropdownMenu(
       data: InitialData.difficulties,
       change: changeDifficultly,
-      hintText: 'Выберите сложность',
+      hintText: 'Все Cложности',
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -10,7 +11,9 @@ import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import 'custom_score_indicator.dart';
 
 class CustomInterviewsList extends StatelessWidget {
-  const CustomInterviewsList({super.key});
+  final InterviewInfo interviewInfo;
+
+  const CustomInterviewsList({super.key, required this.interviewInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,14 @@ class CustomInterviewsList extends StatelessWidget {
         if (state is ShowInterviewsLoading) {
           return CustomLoadingIndicator();
         } else if (state is ShowInterviewsSuccess) {
-          if (state.interviews.isEmpty) _EmptyHistory();
-          return _InterviewsListView(interviews: state.interviews);
+          if (state.interviews.isEmpty) return _EmptyHistory();
+          return _InterviewsListView(
+            interviews: Interview.filterInterviews(
+              interviewInfo.direction,
+              interviewInfo.difficultly,
+              state.interviews,
+            ),
+          );
         }
         return SizedBox.shrink();
       },

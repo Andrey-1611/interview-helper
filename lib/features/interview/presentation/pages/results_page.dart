@@ -37,7 +37,7 @@ class _ResultsPageState extends State<ResultsPage> {
         BlocProvider(
           create: (context) =>
               CheckResultsBloc(DIContainer.checkResults)
-                ..add(CheckResults(userInputs: _interviewInfo.userInputs)),
+                ..add(CheckResults(userInputs: _interviewInfo.userInputs!)),
         ),
         BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
         BlocProvider(

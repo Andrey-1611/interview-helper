@@ -10,10 +10,10 @@ import 'package:interview_master/features/interview/data/models/user_input.dart'
 class InterviewInfo {
   final String direction;
   final String difficultly;
-  final List<UserInput> userInputs;
+  final List<UserInput>? userInputs;
 
   InterviewInfo({
-    required this.userInputs,
+    this.userInputs,
     required this.direction,
     required this.difficultly,
   });
