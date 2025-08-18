@@ -8,7 +8,6 @@ import 'package:interview_master/features/auth/presentation/pages/splash_page.da
 import 'package:interview_master/features/auth/presentation/pages/my_user_profile_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/question_info_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/user_info_page.dart';
-import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
 import '../../features/interview/presentation/pages/home_page.dart';
 import '../../features/interview/presentation/pages/interview_info_page.dart';
 import '../../features/interview/presentation/pages/interview_page.dart';
