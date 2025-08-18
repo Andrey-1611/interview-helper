@@ -1,5 +1,3 @@
-import 'dart:math';
-import 'package:interview_master/core/constants/questions_i.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'question.g.dart';
@@ -22,16 +20,4 @@ class Question {
       _$QuestionFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionToJson(this);
-
-  static List<String> fromDifficulty(String difficulty) {
-    final random = Random();
-    final selectedQuestions = switch (difficulty) {
-      'junior' => FlutterInterviewQuestions.flutterInterviewQuestionsJunior,
-      'middle' => FlutterInterviewQuestions.flutterInterviewQuestionsMiddle,
-      'senior' => FlutterInterviewQuestions.flutterInterviewQuestionsSenior,
-      _ => [],
-    };
-    final myQuestions = List<String>.from(selectedQuestions)..shuffle(random);
-    return myQuestions.take(10).toList();
-  }
 }
