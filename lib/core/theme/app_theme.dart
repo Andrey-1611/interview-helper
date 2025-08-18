@@ -16,7 +16,7 @@ class AppTheme {
       textTheme: TextTheme(
         displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 25.sp,
+          fontSize: 27.sp,
           color: AppPalette.textPrimary,
         ),
         displayMedium: TextStyle(
@@ -35,14 +35,14 @@ class AppTheme {
           color: AppPalette.textPrimary,
         ),
         bodyMedium: TextStyle(
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w300,
           fontSize: 15.sp,
           color: AppPalette.textSecondary,
         ),
         bodySmall: TextStyle(fontSize: 13.sp, color: AppPalette.textSecondary),
         labelLarge: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 15.sp,
+          fontWeight: FontWeight.w500,
+          fontSize: 13.sp,
           color: AppPalette.textPrimary,
         ),
         labelSmall: TextStyle(fontSize: 12.sp, color: AppPalette.textSecondary),
@@ -50,7 +50,6 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppPalette.cardBackground.withValues(alpha: 0.8),
-
         border: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(8.0.sp)),

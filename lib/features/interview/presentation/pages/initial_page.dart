@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/constants/directions.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/features/interview/data/models/interview_info.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_dropdown_menu.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../../data/models/interview.dart';
 import '../widgets/custom_button.dart';
 
 class InitialPage extends StatefulWidget {
@@ -13,30 +15,43 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<InitialPage> {
-  int _selectedItem = 0;
+  String direction = '';
+  String difficultly = '';
 
   @override
   Widget build(BuildContext context) {
     return _InitialPageView(
-      selectedItem: _selectedItem,
-      changeItem: _changeItem,
+      difficultly: difficultly,
+      direction: direction,
+      changeDirection: _changeDirection,
+      changeDifficultly: _changeDifficultly,
     );
   }
 
-  void _changeItem(int item) {
+  void _changeDirection(String value) {
     setState(() {
-      _selectedItem == item ? _selectedItem = 0 : _selectedItem = item;
+      direction = value;
+    });
+  }
+
+  void _changeDifficultly(String value) {
+    setState(() {
+      difficultly = value;
     });
   }
 }
 
 class _InitialPageView extends StatelessWidget {
-  final int selectedItem;
-  final ValueChanged<int> changeItem;
+  final String difficultly;
+  final String direction;
+  final ValueChanged<String> changeDirection;
+  final ValueChanged<String> changeDifficultly;
 
   const _InitialPageView({
-    required this.selectedItem,
-    required this.changeItem,
+    required this.difficultly,
+    required this.changeDirection,
+    required this.changeDifficultly,
+    required this.direction,
   });
 
   @override
@@ -47,11 +62,17 @@ class _InitialPageView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(),
-            _ChooseText(),
-            _ChooseForm(selectedItem: selectedItem, changeItem: changeItem),
-            const Spacer(),
-            _InterviewButton(selectedItem: selectedItem),
+            _DirectionDropdownButton(
+              changeDirection: changeDirection,
+              direction: direction,
+            ),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _DifficultlyDropdownButton(
+              difficultly: difficultly,
+              changeDifficultly: changeDifficultly,
+            ),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _InterviewButton(difficultly: difficultly, direction: direction),
           ],
         ),
       ),
@@ -59,78 +80,72 @@ class _InitialPageView extends StatelessWidget {
   }
 }
 
-class _ChooseText extends StatelessWidget {
-  const _ChooseText();
+class _DirectionDropdownButton extends StatelessWidget {
+  final ValueChanged<String> changeDirection;
+  final String direction;
+
+  const _DirectionDropdownButton({
+    required this.changeDirection,
+    required this.direction,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Выбери сложность',
-      style: Theme.of(context).textTheme.displayMedium,
+    return CustomDropdownMenu(
+      data: InitialData.directions,
+      change: changeDirection,
+      hintText: 'Выберите направление',
     );
   }
 }
 
-class _ChooseForm extends StatelessWidget {
-  final int selectedItem;
-  final ValueChanged<int> changeItem;
+class _DifficultlyDropdownButton extends StatelessWidget {
+  final String difficultly;
+  final ValueChanged<String> changeDifficultly;
 
-  const _ChooseForm({required this.selectedItem, required this.changeItem});
+  const _DifficultlyDropdownButton({
+    required this.difficultly,
+    required this.changeDifficultly,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomButton(
-          text: 'Junior',
-          selectedColor: color(1),
-          percentsWidth: 0.24,
-          onPressed: () => changeItem(1),
-        ),
-        CustomButton(
-          text: 'Middle',
-          selectedColor: color(2),
-          percentsWidth: 0.24,
-          onPressed: () => changeItem(2),
-        ),
-        CustomButton(
-          text: 'Senior',
-          selectedColor: color(3),
-          percentsWidth: 0.24,
-          onPressed: () => changeItem(3),
-        ),
-      ],
+    return CustomDropdownMenu(
+      data: InitialData.difficulties,
+      change: changeDifficultly,
+      hintText: 'Выберите сложность',
     );
-  }
-
-  Color color(int item) {
-    return selectedItem == item
-        ? AppPalette.primary
-        : AppPalette.primary.withValues(alpha: 0.2);
   }
 }
 
 class _InterviewButton extends StatelessWidget {
-  final int selectedItem;
+  final String difficultly;
+  final String direction;
 
-  const _InterviewButton({required this.selectedItem});
+  const _InterviewButton({required this.difficultly, required this.direction});
 
   @override
   Widget build(BuildContext context) {
-    return selectedItem == 0
-        ? SizedBox.shrink()
-        : CustomButton(
-            text: 'Начать',
-            selectedColor: AppPalette.primary,
-            onPressed: () {
-              AppRouter.pushReplacementNamed(
-                AppRouterNames.interview,
-                arguments: Interview.difficultly(selectedItem),
-              );
-            },
-            percentsWidth: 1,
-          );
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.07,
+      width: MediaQuery.sizeOf(context).width,
+      child: difficultly == '' || direction == ''
+          ? SizedBox()
+          : CustomButton(
+              text: 'Начать',
+              selectedColor: AppPalette.primary,
+              onPressed: () {
+                AppRouter.pushReplacementNamed(
+                  AppRouterNames.interview,
+                  arguments: InterviewInfo(
+                    direction: direction,
+                    difficultly: difficultly,
+                    userInputs: [],
+                  ),
+                );
+              },
+              percentsWidth: 1,
+            ),
+    );
   }
 }
