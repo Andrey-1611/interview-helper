@@ -16,7 +16,10 @@ class CustomInterviewInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CustomMainResultPanel(text: 'Результат: ${interview.score} %'),
+        CustomMainResultPanel(
+          type: '${interview.direction}, ${interview.difficulty}',
+          text: 'Результат: ${interview.score} %',
+        ),
         const SizedBox(height: 20),
         Expanded(
           child: ListView.builder(

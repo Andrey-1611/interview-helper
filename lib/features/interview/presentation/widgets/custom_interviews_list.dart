@@ -81,7 +81,7 @@ class _InterviewCard extends StatelessWidget {
         child: ListTile(
           leading: ScoreIndicator(score: interview.score),
           title: Text(
-            'Сложность:  ${interview.difficulty}',
+            '${interview.direction}, ${interview.difficulty}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           subtitle: Column(
