@@ -5,40 +5,44 @@ import '../../../../core/theme/app_pallete.dart';
 import 'custom_button.dart';
 import 'custom_dropdown_menu.dart';
 
-class CustomFilterDialog extends StatelessWidget {
-  final String difficulty;
-  final String direction;
-  final ValueChanged<String> changeDirection;
-  final ValueChanged<String> changeDifficultly;
+class CustomFilterDialog extends StatefulWidget {
+  final Function(String, String) runFilter;
 
-  const CustomFilterDialog({
-    super.key,
-    required this.difficulty,
-    required this.direction,
-    required this.changeDirection,
-    required this.changeDifficultly,
-  });
+  const CustomFilterDialog({super.key, required this.runFilter});
+
+  @override
+  State<CustomFilterDialog> createState() => _CustomFilterDialogState();
+}
+
+class _CustomFilterDialogState extends State<CustomFilterDialog> {
+  String difficulty = '';
+  String direction = '';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _DirectionDropdownButton(
-              changeDirection: changeDirection,
-              direction: direction,
-            ),
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-            _DifficultlyDropdownButton(
-              difficulty: difficulty,
-              changeDifficultly: changeDifficultly,
-            ),
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-            _FinishButton(),
-          ],
-        ),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _DirectionDropdownButton(
+            changeDirection: (value) => setState(() {
+              direction = value;
+            }),
+            direction: direction,
+          ),
+          _DifficultlyDropdownButton(
+            difficulty: difficulty,
+            changeDifficultly: (value) => setState(() {
+              difficulty = value;
+            }),
+          ),
+          _FinishButton(
+            runFilter: widget.runFilter,
+            direction: direction,
+            difficulty: difficulty,
+          ),
+        ],
       ),
     );
   }
@@ -83,14 +87,25 @@ class _DifficultlyDropdownButton extends StatelessWidget {
 }
 
 class _FinishButton extends StatelessWidget {
-  const _FinishButton();
+  final Function(String, String) runFilter;
+  final String direction;
+  final String difficulty;
+
+  const _FinishButton({
+    required this.runFilter,
+    required this.direction,
+    required this.difficulty,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomButton(
       text: 'Применить',
       selectedColor: AppPalette.primary,
-      onPressed: () => AppRouter.pop(),
+      onPressed: () {
+        runFilter(direction, difficulty);
+        AppRouter.pop();
+      },
       percentsWidth: 1,
     );
   }

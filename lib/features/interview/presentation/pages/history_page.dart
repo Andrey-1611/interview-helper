@@ -18,7 +18,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   String direction = '';
-  String difficultly = '';
+  String difficulty = '';
 
   final TextEditingController _filterController = TextEditingController();
 
@@ -41,47 +41,38 @@ class _HistoryPageState extends State<HistoryPage> {
       ],
       child: _HistoryList(
         direction: direction,
-        difficultly: difficultly,
-        changeDirection: _changeDirection,
-        changeDifficultly: _changeDifficultly,
+        difficultly: difficulty,
         filterController: _filterController,
+        runFilter: _runFilter,
       ),
     );
   }
 
   void _updateFilterText() {
     _filterController.text = InterviewInfo.textInFilter(
-      InterviewInfo(direction: direction, difficultly: difficultly),
+      InterviewInfo(direction: direction, difficultly: difficulty),
     );
   }
 
-  void _changeDirection(String value) {
+  void _runFilter(String direction1, String difficulty1) {
     setState(() {
-      direction = value;
-      _updateFilterText();
+      direction = direction1;
+      difficulty = difficulty1;
     });
-  }
-
-  void _changeDifficultly(String value) {
-    setState(() {
-      difficultly = value;
-      _updateFilterText();
-    });
+    _updateFilterText();
   }
 }
 
 class _HistoryList extends StatelessWidget {
   final String difficultly;
   final String direction;
-  final ValueChanged<String> changeDirection;
-  final ValueChanged<String> changeDifficultly;
+  final Function(String, String) runFilter;
   final TextEditingController filterController;
 
   const _HistoryList({
     required this.direction,
     required this.difficultly,
-    required this.changeDirection,
-    required this.changeDifficultly,
+    required this.runFilter,
     required this.filterController,
   });
 
@@ -108,10 +99,7 @@ class _HistoryList extends StatelessWidget {
               ),
             ),
             _FilterButton(
-              difficultly: difficultly,
-              direction: direction,
-              changeDirection: changeDirection,
-              changeDifficultly: changeDifficultly,
+              runFilter: runFilter,
               filterController: filterController,
             ),
           ],
@@ -122,17 +110,12 @@ class _HistoryList extends StatelessWidget {
 }
 
 class _FilterButton extends StatelessWidget {
-  final String difficultly;
-  final String direction;
-  final ValueChanged<String> changeDirection;
-  final ValueChanged<String> changeDifficultly;
+
+  final Function(String, String) runFilter;
   final TextEditingController filterController;
 
   const _FilterButton({
-    required this.difficultly,
-    required this.direction,
-    required this.changeDirection,
-    required this.changeDifficultly,
+    required this.runFilter,
     required this.filterController,
   });
 
@@ -141,23 +124,17 @@ class _FilterButton extends StatelessWidget {
     return TextField(
       readOnly: true,
       controller: filterController,
-      onTap: () => DialogHelper.showCustomDialog(
-        context,
-        CustomFilterDialog(
-          difficulty: difficultly,
-          direction: direction,
-          changeDirection: changeDirection,
-          changeDifficultly: changeDifficultly,
-        ),
-      ),
+      onTap: () {
+        DialogHelper.showCustomDialog(
+          context,
+          CustomFilterDialog(runFilter: runFilter),
+        );
+      },
       decoration: InputDecoration(
         hintText: 'Фильтр',
         prefixIcon: Icon(Icons.search),
         suffixIcon: IconButton(
-          onPressed: () {
-            changeDirection('');
-            changeDifficultly('');
-          },
+          onPressed: () => runFilter('', ''),
           icon: Icon(Icons.close),
         ),
       ),
