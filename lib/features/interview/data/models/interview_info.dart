@@ -18,7 +18,6 @@ class InterviewInfo {
     required this.difficultly,
   });
 
-
   static List<String> selectQuestions(InterviewInfo info) {
     final random = Random();
 
@@ -54,4 +53,10 @@ class InterviewInfo {
     return myQuestions.take(10).toList();
   }
 
+  static String textInFilter(InterviewInfo info) {
+    return [
+      if (info.direction.isNotEmpty) info.direction,
+      if (info.difficultly.isNotEmpty) info.difficultly,
+    ].join(', ');
+  }
 }

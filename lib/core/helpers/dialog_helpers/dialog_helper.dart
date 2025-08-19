@@ -12,7 +12,7 @@ class DialogHelper {
     );
   }
 
-  static void showFilterDialog(BuildContext context, Widget dialog) {
+  static void showCustomDialog(BuildContext context, Widget dialog) {
     showDialog(
       context: context,
       builder: (context) {
