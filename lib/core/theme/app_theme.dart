@@ -49,7 +49,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppPalette.cardBackground.withValues(alpha: 0.8),
+        fillColor: AppPalette.cardBackground,
         border: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(8.0.sp)),

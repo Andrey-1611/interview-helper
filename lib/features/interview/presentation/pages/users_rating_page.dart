@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:interview_master/app/global_services/providers/user_provider.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
@@ -60,13 +62,13 @@ class _UsersList extends StatelessWidget {
   }
 }
 
-class _UsersListView extends StatelessWidget {
+class _UsersListView extends ConsumerWidget {
   final List<UserData> users;
 
   const _UsersListView({required this.users});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: ListView.builder(
         itemCount: users.length,
@@ -74,8 +76,10 @@ class _UsersListView extends StatelessWidget {
           final UserData user = users[index];
           return Card(
             child: ListTile(
-              onTap: () =>
-                  AppRouter.pushNamed(AppRouterNames.userInfo, arguments: user),
+              onTap: () {
+                ref.read(userProvider.notifier).state = user;
+                AppRouter.pushNamed(AppRouterNames.userInfo);
+              },
               title: Text(user.name),
             ),
           );

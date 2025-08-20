@@ -35,10 +35,24 @@ class Interview {
 
     return Interview(
       score: averageScore.toInt(),
-      difficulty: info.difficultly,
+      difficulty: info.difficulty,
       direction: info.direction,
       date: DateTime.now(),
       questions: questions,
     );
+  }
+
+  static List<Interview> filterInterviews(
+    String direction,
+    String difficulty,
+    List<Interview> interviews,
+  ) {
+    if (direction.isNotEmpty) {
+      interviews = interviews.where((i) => i.direction == direction).toList();
+    }
+    if (difficulty.isNotEmpty) {
+      interviews = interviews.where((i) => i.difficulty == difficulty).toList();
+    }
+    return interviews;
   }
 }

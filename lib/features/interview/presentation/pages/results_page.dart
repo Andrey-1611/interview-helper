@@ -37,7 +37,7 @@ class _ResultsPageState extends State<ResultsPage> {
         BlocProvider(
           create: (context) =>
               CheckResultsBloc(DIContainer.checkResults)
-                ..add(CheckResults(userInputs: _interviewInfo.userInputs)),
+                ..add(CheckResults(userInputs: _interviewInfo.userInputs!)),
         ),
         BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
         BlocProvider(
@@ -66,7 +66,8 @@ class _ResultsPageView extends StatelessWidget {
           } else if (state is CheckResultsFailure) {
             AppRouter.pop();
             AppRouter.pushReplacementNamed(AppRouterNames.home);
-            ToastHelper.unknownError();
+            ToastHelper.custom(state.e);
+            //ToastHelper.unknownError();
           }
         },
         builder: (context, state) {

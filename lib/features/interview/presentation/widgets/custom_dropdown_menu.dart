@@ -14,20 +14,23 @@ class CustomDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu(
-      enableSearch: false,
-      requestFocusOnTap: false,
-      dropdownMenuEntries: data
-          .map(
-            (direction) =>
-                DropdownMenuEntry(value: direction, label: direction),
-          )
-          .toList(),
-      onSelected: (String? value) {
-        if (value != null) change(value);
-      },
-      width: MediaQuery.sizeOf(context).width,
-      hintText: hintText,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: DropdownMenu(
+        enableSearch: false,
+        requestFocusOnTap: false,
+        dropdownMenuEntries: data
+            .map(
+              (direction) =>
+                  DropdownMenuEntry(value: direction, label: direction),
+            )
+            .toList(),
+        onSelected: (String? value) {
+          if (value != null) change(value);
+        },
+        width: MediaQuery.sizeOf(context).width,
+        hintText: hintText,
+      ),
     );
   }
 }
