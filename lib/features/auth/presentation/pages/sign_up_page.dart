@@ -5,7 +5,7 @@ import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart'
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/dependencies/di_container.dart';
-import '../../../../app/global_services/user/models/my_user.dart';
+import '../../data/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';

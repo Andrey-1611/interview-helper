@@ -1,4 +1,4 @@
-import '../../../../app/global_services/user/models/user_data.dart';
+import '../../../../app/global/models/user_data.dart';
 import '../../data/models/interview.dart';
 
 abstract interface class RemoteRepository {

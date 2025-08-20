@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/app/global_services/user/models/user_data.dart';
+
+import '../../../../app/global/models/user_data.dart';
 
 class UserInfoMainPage extends StatefulWidget {
   final UserData user;

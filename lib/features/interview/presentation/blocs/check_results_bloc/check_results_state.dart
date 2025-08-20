@@ -19,11 +19,11 @@ final class CheckResultsFailure extends CheckResultsState {
 }
 
 final class CheckResultsSuccess extends CheckResultsState {
-  final List<Question> questions;
+  final Interview interview;
 
-  const CheckResultsSuccess({required this.questions});
+  const CheckResultsSuccess({required this.interview});
 
   @override
-  List<Object?> get props => [questions];
+  List<Object?> get props => [interview];
 }
 

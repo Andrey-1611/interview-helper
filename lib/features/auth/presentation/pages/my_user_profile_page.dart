@@ -4,8 +4,8 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import '../../../../app/dependencies/di_container.dart';
-import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
+import '../blocs/get_user_bloc/get_user_bloc.dart';
 import '../blocs/sign_out_bloc/sign_out_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 

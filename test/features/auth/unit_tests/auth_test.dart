@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
+import 'package:interview_master/features/auth/data/models/my_user.dart';
 import 'auth_test_data.dart';
 import 'auth_test_setup.dart';
 

@@ -5,10 +5,8 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import 'package:interview_master/features/auth/presentation/blocs/get_current_user_bloc/get_current_user_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../blocs/change_email_bloc/change_email_bloc.dart';
 
 class ChangeEmailPage extends StatefulWidget {

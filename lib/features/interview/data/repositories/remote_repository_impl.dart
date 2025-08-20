@@ -1,6 +1,6 @@
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
-import '../../../../app/global_services/user/models/user_data.dart';
+import '../../../../app/global/models/user_data.dart';
 import '../../domain/repositories/remote_repository.dart';
 
 class RemoteRepositoryImpl implements RemoteRepository {

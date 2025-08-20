@@ -1,7 +1,8 @@
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
-import 'package:interview_master/app/global_services/user/models/user_data.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+
+import '../../data/models/my_user.dart';
+import '../../../../app/global/models/user_data.dart';
 
 class WatchEmailVerifiedUseCase {
   final AuthRepository _authRepository;

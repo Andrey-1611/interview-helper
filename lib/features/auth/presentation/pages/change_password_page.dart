@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import '../../../../app/dependencies/di_container.dart';
-import '../../../../app/global_services/user/models/my_user.dart';
+import '../../data/models/my_user.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/change_password_bloc/change_password_bloc.dart';

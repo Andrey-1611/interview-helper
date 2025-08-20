@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
+import 'package:interview_master/features/auth/data/models/my_user.dart';
 import 'package:mocktail/mocktail.dart';
 
 

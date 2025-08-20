@@ -1,6 +1,7 @@
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
+
+import '../../data/models/my_user.dart';
 
 class GetCurrentUserUseCase {
   final AuthRepository _authRepository;

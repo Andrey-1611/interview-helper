@@ -10,7 +10,6 @@ import 'package:interview_master/features/interview/data/data_sources/firestore_
 import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
 import 'package:interview_master/features/interview/data/repositories/ai_repository_impl.dart';
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';
-import 'package:interview_master/features/interview/domain/use_cases/add_interview_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_resilts_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
@@ -22,7 +21,7 @@ import '../../features/auth/domain/use_cases/sign_up_use_case.dart';
 import '../../features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import '../../features/interview/domain/repositories/remote_repository.dart';
 import '../../features/interview/domain/repositories/ai_repository.dart';
-import '../global_services/user/use_cases/get_user_use_case.dart';
+import '../../features/auth/domain/use_cases/get_user_use_case.dart';
 
 class DIContainer {
   static final AuthRepository _authRepository = AuthRepositoryImpl(
@@ -61,9 +60,7 @@ class DIContainer {
 
   static final CheckResultsUseCase checkResults = CheckResultsUseCase(
     _aiRepository,
-  );
-
-  static final AddInterviewUseCase addInterview = AddInterviewUseCase(
+    _authRepository,
     _remoteRepository,
   );
 
