@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/models/my_user.dart';

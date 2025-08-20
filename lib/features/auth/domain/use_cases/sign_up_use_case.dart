@@ -8,6 +8,8 @@ class SignUpUseCase {
   SignUpUseCase(this._authRepository);
 
   Future<MyUser> call(MyUser user, String password) async {
-    return await _authRepository.signUp(user, password);
+    final myUser = await _authRepository.signUp(user, password);
+    await _authRepository.sendEmailVerification();
+    return myUser;
   }
 }

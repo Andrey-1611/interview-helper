@@ -6,8 +6,12 @@ class SignInUseCase {
 
   SignInUseCase(this._authRepository);
 
-  Future<MyUser> call(MyUser user, String password) async {
-    return await _authRepository.signIn(user, password);
+  Future<MyUser?> call(MyUser user, String password) async {
+    await _authRepository.signIn(user, password);
+    final result = await _authRepository.checkEmailVerified();
+    if (result!.isEmailVerified) return result.user;
+    await _authRepository.sendEmailVerification();
+    return null;
   }
 }
 

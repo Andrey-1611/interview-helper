@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:interview_master/app/global_services/user/models/user_data.dart';
-import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/app/dependencies/di_container.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
-import '../../../../app/dependencies/di_container.dart';
+import 'package:interview_master/features/auth/presentation/blocs/get_current_user_bloc/get_current_user_bloc.dart';
 import '../../../../app/global_services/providers/user_provider.dart';
-import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
+import '../../../../app/global_services/user/models/user_data.dart';
+import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 
 class SplashPage extends StatelessWidget {
@@ -15,16 +14,8 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.getUser)..add(GetUser()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              CheckEmailVerifiedBloc(DIContainer.checkEmailVerified),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => GetCurrentUserBloc(DIContainer.getCurrentUser),
       child: _SplashPageView(),
     );
   }
@@ -35,34 +26,19 @@ class _SplashPageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<GetUserBloc, GetUserState>(
-          listener: (context, state) {
-            if (state is GetUserSuccess) {
-              context.read<CheckEmailVerifiedBloc>().add(CheckEmailVerified());
-            } else if (state is GetUserNotAuth) {
-              AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-            } else if (state is GetUserFailure) {
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-        BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
-          listener: (context, state) {
-            if (state is CheckEmailVerifiedSuccess) {
-              ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
-                state.result!.user!,
-              );
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-            } else if (state is CheckEmailNotVerified) {
-              AppRouter.pushReplacementNamed(AppRouterNames.signIn);
-            } else if (state is CheckEmailVerifiedFailure) {
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-      ],
+    return BlocListener<GetCurrentUserBloc, GetCurrentUserState>(
+      listener: (context, state) {
+        if (state is GetCurrentUserSuccess) {
+          ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
+            state.user,
+          );
+          AppRouter.pushReplacementNamed(AppRouterNames.home);
+        } else if (state is GetCurrentUserNotAuth) {
+          AppRouter.pushReplacementNamed(AppRouterNames.signIn);
+        } else if (state is GetCurrentUserFailure) {
+          ToastHelper.unknownError();
+        }
+      },
       child: _SplashLogo(),
     );
   }

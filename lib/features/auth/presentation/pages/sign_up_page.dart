@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global_services/user/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -38,14 +37,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => SignUpBloc(DIContainer.signUp)),
-        BlocProvider(
-          create: (context) =>
-              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => SignUpBloc(DIContainer.signUp),
       child: _SignUpPageView(
         formKey: _formKey,
         nameController: _nameController,
@@ -180,38 +173,22 @@ class _SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SignUpBloc, SignUpState>(
-          listener: (context, state) {
-            if (state is SignUpLoading) {
-              DialogHelper.showLoadingDialog(context, 'Авторизация');
-            } else if (state is SignUpSuccess) {
-              context.read<SendEmailVerificationBloc>().add(
-                SendEmailVerification(),
-              );
-            } else if (state is SignUpFailure) {
-              AppRouter.pop();
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-        BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
-          listener: (context, state) {
-            if (state is SendEmailVerificationSuccess) {
-              AppRouter.pop();
-              AppRouter.pushReplacementNamed(
-                AppRouterNames.emailVerification,
-                arguments: passwordController.text.trim(),
-              );
-              ToastHelper.sendEmailVerification(emailController.text);
-            } else if (state is SendEmailVerificationFailure) {
-              AppRouter.pop();
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-      ],
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is SignUpLoading) {
+          DialogHelper.showLoadingDialog(context, 'Авторизация');
+        } else if (state is SignUpSuccess) {
+          AppRouter.pop();
+          AppRouter.pushReplacementNamed(
+            AppRouterNames.emailVerification,
+            arguments: passwordController.text.trim(),
+          );
+          ToastHelper.sendEmailVerification(emailController.text);
+        } else if (state is SignUpFailure) {
+          AppRouter.pop();
+          ToastHelper.unknownError();
+        }
+      },
       child: _CustomButtonView(
         formKey: formKey,
         nameController: nameController,

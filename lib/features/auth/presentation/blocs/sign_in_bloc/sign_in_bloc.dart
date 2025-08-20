@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../../../../app/global_services/user/models/my_user.dart';
 
-
 part 'sign_in_event.dart';
 
 part 'sign_in_state.dart';
@@ -15,11 +14,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignIn>((event, emit) async {
       emit(SignInLoading());
       try {
-        final user = await signInUseCase.call(
-          event.user,
-          event.password,
-        );
-        emit(SignInSuccess(user: user));
+        final user = await signInUseCase.call(event.user, event.password);
+        if (user != null) emit(SignInSuccess(user: user));
+        emit(SignInNoVerification());
       } catch (e) {
         emit(SignInFailure(error: e.toString()));
       }

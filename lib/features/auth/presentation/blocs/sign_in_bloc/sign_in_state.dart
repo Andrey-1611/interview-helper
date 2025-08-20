@@ -20,6 +20,8 @@ final class SignInFailure extends SignInState {
   List<Object> get props => [error];
 }
 
+final class SignInNoVerification extends SignInState {}
+
 final class SignInSuccess extends SignInState {
   final MyUser user;
 

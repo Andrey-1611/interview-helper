@@ -14,10 +14,10 @@ final class WatchEmailVerifiedLoading extends WatchEmailVerifiedState {}
 final class WatchEmailVerifiedFailure extends WatchEmailVerifiedState {}
 
 final class WatchEmailVerifiedSuccess extends WatchEmailVerifiedState {
-  final EmailVerificationResult? result;
+  final MyUser user;
 
-  const WatchEmailVerifiedSuccess({required this.result});
+  const WatchEmailVerifiedSuccess({required this.user});
 
   @override
-  List<Object> get props => [?result];
+  List<Object> get props => [user];
 }
