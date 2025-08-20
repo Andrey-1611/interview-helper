@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
-
 import '../../../domain/use_cases/change_email_use_case.dart';
 
 part 'change_email_event.dart';

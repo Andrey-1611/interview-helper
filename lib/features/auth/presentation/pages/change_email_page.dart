@@ -5,6 +5,7 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/features/auth/presentation/blocs/get_current_user_bloc/get_current_user_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
@@ -120,6 +121,7 @@ class _ChangeEmailButton extends StatelessWidget {
       child: _ChangeEmailButtonView(
         emailController: emailController,
         formKey: formKey,
+        password: password,
       ),
     );
   }
@@ -127,11 +129,13 @@ class _ChangeEmailButton extends StatelessWidget {
 
 class _ChangeEmailButtonView extends StatelessWidget {
   final TextEditingController emailController;
+  final String password;
   final GlobalKey<FormState> formKey;
 
   const _ChangeEmailButtonView({
     required this.emailController,
     required this.formKey,
+    required this.password,
   });
 
   @override
@@ -140,7 +144,9 @@ class _ChangeEmailButtonView extends StatelessWidget {
       text: 'Подтвердить',
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          context.read<GetUserBloc>().add(GetUser());
+          context.read<ChangeEmailBloc>().add(
+            ChangeEmail(email: emailController.text.trim(), password: password),
+          );
         }
       },
     );

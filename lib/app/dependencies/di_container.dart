@@ -25,7 +25,6 @@ import '../../features/auth/domain/use_cases/watch_email_verified_user_case.dart
 import '../../features/interview/domain/repositories/remote_repository.dart';
 import '../../features/interview/domain/repositories/ai_repository.dart';
 import '../global_services/user/use_cases/get_user_use_case.dart';
-import '../global_services/user/use_cases/save_user_use_case.dart';
 
 class DIContainer {
   static final AuthRepository _authRepository = AuthRepositoryImpl(
@@ -77,8 +76,6 @@ class DIContainer {
   static final ShowInterviewsUseCase showInterviews = ShowInterviewsUseCase(
     _remoteRepository,
   );
-
-  static final SaveUserUseCase saveUser = SaveUserUseCase(_remoteRepository);
 
   static final ShowUsersUseCase showUsers = ShowUsersUseCase(_remoteRepository);
 

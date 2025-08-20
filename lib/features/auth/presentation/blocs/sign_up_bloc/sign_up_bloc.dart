@@ -6,7 +6,6 @@ import '../../../../../app/global_services/user/models/my_user.dart';
 
 
 part 'sign_up_event.dart';
-
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
