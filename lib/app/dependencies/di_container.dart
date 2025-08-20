@@ -15,8 +15,6 @@ import 'package:interview_master/features/interview/domain/use_cases/check_resil
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 import '../../features/auth/domain/use_cases/change_email_use_case.dart';
-import '../../features/auth/domain/use_cases/check_email_verified_use_case.dart';
-import '../../features/auth/domain/use_cases/delete_account_use_case.dart';
 import '../../features/auth/domain/use_cases/send_email_verification_bloc.dart';
 import '../../features/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../features/auth/domain/use_cases/sign_out_use_case.dart';
@@ -44,11 +42,7 @@ class DIContainer {
   static final ChangePasswordUseCase changePassword = ChangePasswordUseCase(
     _authRepository,
   );
-  static final CheckEmailVerifiedUseCase checkEmailVerified =
-      CheckEmailVerifiedUseCase(_authRepository);
-  static final DeleteAccountUseCase deleteAccount = DeleteAccountUseCase(
-    _authRepository,
-  );
+
   static final SendEmailVerificationUseCase sendEmailVerification =
       SendEmailVerificationUseCase(_authRepository);
 
