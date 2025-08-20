@@ -14,8 +14,9 @@ class SaveUserBloc extends Bloc<SaveUserEvent, SaveUserState> {
     on<SaveUser>((event, emit) async {
       emit(SaveUserLoading());
       try {
-        await _saveUserUseCase.call(event.user);
-        emit(SaveUserSuccess());
+        final user = event.user;
+        await _saveUserUseCase.call(user);
+        emit(SaveUserSuccess(user: user));
       } catch (e) {
         emit(SaveUserFailure());
       }

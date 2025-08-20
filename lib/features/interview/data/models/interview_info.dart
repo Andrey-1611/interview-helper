@@ -9,19 +9,19 @@ import 'package:interview_master/features/interview/data/models/user_input.dart'
 
 class InterviewInfo {
   final String direction;
-  final String difficultly;
+  final String difficulty;
   final List<UserInput>? userInputs;
 
   InterviewInfo({
     this.userInputs,
     required this.direction,
-    required this.difficultly,
+    required this.difficulty,
   });
 
   static List<String> selectQuestions(InterviewInfo info) {
     final random = Random();
 
-    final questions = switch ([info.direction, info.difficultly]) {
+    final questions = switch ([info.direction, info.difficulty]) {
       ['Flutter', 'junior'] => FlutterQuestions.junior,
       ['Flutter', 'middle'] => FlutterQuestions.middle,
       ['Flutter', 'senior'] => FlutterQuestions.senior,
@@ -56,7 +56,7 @@ class InterviewInfo {
   static String textInFilter(InterviewInfo info) {
     return [
       if (info.direction.isNotEmpty) info.direction,
-      if (info.difficultly.isNotEmpty) info.difficultly,
+      if (info.difficulty.isNotEmpty) info.difficulty,
     ].join(', ');
   }
 }

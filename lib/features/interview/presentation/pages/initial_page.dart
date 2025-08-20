@@ -139,7 +139,7 @@ class _InterviewButton extends StatelessWidget {
                   AppRouterNames.interview,
                   arguments: InterviewInfo(
                     direction: direction,
-                    difficultly: difficultly,
+                    difficulty: difficultly,
                   ),
                 );
               },

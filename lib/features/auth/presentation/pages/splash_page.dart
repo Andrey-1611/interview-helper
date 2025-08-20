@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:interview_master/app/global_services/user/models/user_data.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
+import '../../../../app/global_services/providers/user_provider.dart';
 import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/navigation/app_router_names.dart';
 
@@ -27,11 +30,11 @@ class SplashPage extends StatelessWidget {
   }
 }
 
-class _SplashPageView extends StatelessWidget {
+class _SplashPageView extends ConsumerWidget {
   const _SplashPageView();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MultiBlocListener(
       listeners: [
         BlocListener<GetUserBloc, GetUserState>(
@@ -48,6 +51,9 @@ class _SplashPageView extends StatelessWidget {
         BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
           listener: (context, state) {
             if (state is CheckEmailVerifiedSuccess) {
+              ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
+                state.result!.user!,
+              );
               AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is CheckEmailNotVerified) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);

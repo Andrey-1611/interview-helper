@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:interview_master/app/global_services/providers/user_provider.dart';
 import 'package:interview_master/app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
 import 'package:interview_master/app/global_services/user/blocs/save_user_bloc/save_user_bloc.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
@@ -75,11 +77,11 @@ class _EmailVerificationPageView extends StatelessWidget {
   }
 }
 
-class _EmailVerificationForm extends StatelessWidget {
+class _EmailVerificationForm extends ConsumerWidget {
   const _EmailVerificationForm();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MultiBlocListener(
       listeners: [
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
@@ -117,6 +119,7 @@ class _EmailVerificationForm extends StatelessWidget {
           listener: (context, state) {
             if (state is SaveUserSuccess) {
               AppRouter.pop();
+              ref.read(currentUserProvider.notifier).state = state.user;
               AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is SaveUserFailure) {
               AppRouter.pop();

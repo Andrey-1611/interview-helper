@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:interview_master/app/global_services/providers/user_provider.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import 'history_page.dart';
+import 'interviews_history_page.dart';
 import 'initial_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,14 +33,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _HomePageView extends StatelessWidget {
+class _HomePageView extends ConsumerWidget {
   final int currentIndex;
   final ValueChanged<int> changeIndex;
 
   const _HomePageView({required this.currentIndex, required this.changeIndex});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -54,20 +57,13 @@ class _HomePageView extends StatelessWidget {
         currentIndex: currentIndex,
         changeIndex: changeIndex,
       ),
-      body: _body(currentIndex),
+      body: switch (currentIndex) {
+        0 => InitialPage(),
+        1 => InterviewsHistoryPage(userId: ref.watch(currentUserProvider)!.id),
+        2 => UsersRatingPage(),
+        _ => CustomLoadingIndicator(),
+      },
     );
-  }
-
-  Widget _body(int currentIndex) {
-    switch (currentIndex) {
-      case 0:
-        return InitialPage();
-      case 1:
-        return HistoryPage();
-      case 2:
-        return UsersRatingPage();
-    }
-    return SizedBox.shrink();
   }
 }
 

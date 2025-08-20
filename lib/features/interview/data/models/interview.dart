@@ -35,7 +35,7 @@ class Interview {
 
     return Interview(
       score: averageScore.toInt(),
-      difficulty: info.difficultly,
+      difficulty: info.difficulty,
       direction: info.direction,
       date: DateTime.now(),
       questions: questions,

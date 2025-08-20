@@ -66,7 +66,8 @@ class _ResultsPageView extends StatelessWidget {
           } else if (state is CheckResultsFailure) {
             AppRouter.pop();
             AppRouter.pushReplacementNamed(AppRouterNames.home);
-            ToastHelper.unknownError();
+            ToastHelper.custom(state.e);
+            //ToastHelper.unknownError();
           }
         },
         builder: (context, state) {

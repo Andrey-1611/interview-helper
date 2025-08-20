@@ -209,7 +209,7 @@ class _InterviewQuestionPage extends StatelessWidget {
 
   void _navigateToResult() {
     final argumentsData = InterviewInfo(direction: interviewInfo.direction,
-        difficultly: interviewInfo.difficultly,
+        difficulty: interviewInfo.difficulty,
         userInputs: UserInput.fromInput(questions, answers),
     );
     AppRouter.pushReplacementNamed(

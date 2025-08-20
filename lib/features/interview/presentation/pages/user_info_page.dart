@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/app/dependencies/di_container.dart';
-import 'package:interview_master/features/interview/presentation/blocs/show_interviews_bloc/show_interviews_bloc.dart';
-import 'package:interview_master/features/interview/presentation/pages/interview_info_page.dart';
-import 'package:interview_master/features/interview/presentation/widgets/custom_interviews_list.dart';
-import '../../../../app/global_services/user/models/user_data.dart';
-import '../../data/models/interview_info.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:interview_master/app/global_services/providers/user_provider.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/features/interview/presentation/pages/interviews_history_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/user_info_main_page.dart';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key});
@@ -15,51 +13,71 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
-  late final UserData user;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    user = ModalRoute.of(context)?.settings.arguments as UserData;
-  }
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShowInterviewsBloc(DIContainer.showInterviews)
-            ..add(ShowInterviews(userId: user.id)),
-      child: _UserInfoPageView(user: user),
+    return _UserInfoPageView(
+      currentIndex: _currentIndex,
+      changeIndex: _changeIndex,
+    );
+  }
+
+  void _changeIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+}
+
+class _UserInfoPageView extends ConsumerWidget {
+  final int currentIndex;
+  final ValueChanged<int> changeIndex;
+
+  const _UserInfoPageView({
+    required this.currentIndex,
+    required this.changeIndex,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    return Scaffold(
+      appBar: AppBar(),
+      bottomNavigationBar: _BottomNavigationBar(
+        currentIndex: currentIndex,
+        changeIndex: changeIndex,
+      ),
+      body: switch (currentIndex) {
+        0 => UserInfoMainPage(user: user!),
+        1 => InterviewsHistoryPage(userId: user!.id),
+        _ => CustomLoadingIndicator(),
+      },
     );
   }
 }
 
-class _UserInfoPageView extends StatelessWidget {
-  final UserData user;
+class _BottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> changeIndex;
 
-  const _UserInfoPageView({required this.user});
+  const _BottomNavigationBar({
+    required this.currentIndex,
+    required this.changeIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(user.name, style: Theme.of(context).textTheme.displayMedium),
-            Expanded(
-              child: CustomInterviewsList(
-                interviewInfo: InterviewInfo(
-                  direction: '',
-                  difficultly: '',
-                ),
-              ),
-            ),
-          ],
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: changeIndex,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bar_chart),
+          label: 'Статистика',
         ),
-      ),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
+      ],
     );
   }
 }
