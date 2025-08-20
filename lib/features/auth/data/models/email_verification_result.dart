@@ -1,4 +1,4 @@
-import '../../../../app/global_services/user/models/my_user.dart';
+import 'my_user.dart';
 
 class EmailVerificationResult {
   final bool isEmailVerified;

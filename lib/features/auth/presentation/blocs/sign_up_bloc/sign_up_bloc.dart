@@ -2,11 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_up_use_case.dart';
 
-import '../../../../../app/global_services/user/models/my_user.dart';
+import '../../../data/models/my_user.dart';
 
 
 part 'sign_up_event.dart';
-
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {

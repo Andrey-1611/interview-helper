@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:interview_master/app/global_services/providers/user_provider.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/interview/presentation/pages/interviews_history_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/user_info_main_page.dart';
+
+import '../../../../app/global/providers/user_provider.dart';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key});

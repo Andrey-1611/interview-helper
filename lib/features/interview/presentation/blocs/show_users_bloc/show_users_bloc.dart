@@ -2,10 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 
-import '../../../../../app/global_services/user/models/user_data.dart';
+import '../../../../../app/global/models/user_data.dart';
 
 part 'show_users_event.dart';
-
 part 'show_users_state.dart';
 
 class ShowUsersBloc extends Bloc<ShowUsersEvent, ShowUsersState> {

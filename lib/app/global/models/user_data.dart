@@ -1,5 +1,5 @@
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../../features/auth/data/models/my_user.dart';
 
 part 'user_data.g.dart';
 

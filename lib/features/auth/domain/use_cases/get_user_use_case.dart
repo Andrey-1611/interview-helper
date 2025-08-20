@@ -1,6 +1,5 @@
-import 'package:interview_master/app/global_services/user/models/my_user.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
+import '../../data/models/my_user.dart';
 
 class GetUserUseCase {
   final AuthRepository _authRepository;

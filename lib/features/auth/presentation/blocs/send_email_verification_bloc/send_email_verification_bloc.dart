@@ -11,7 +11,7 @@ class SendEmailVerificationBloc
   final SendEmailVerificationUseCase _sendEmailVerificationUseCase;
 
   SendEmailVerificationBloc(this._sendEmailVerificationUseCase)
-    : super(SendEmailVerificationInitial()) {
+      : super(SendEmailVerificationInitial()) {
     on<SendEmailVerification>((event, emit) async {
       emit(SendEmailVerificationLoading());
       try {

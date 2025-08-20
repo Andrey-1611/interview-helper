@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../app/global_services/user/models/user_data.dart';
+import '../../../../app/global/models/user_data.dart';
 import '../models/interview.dart';
 
 class FirestoreDataSource {

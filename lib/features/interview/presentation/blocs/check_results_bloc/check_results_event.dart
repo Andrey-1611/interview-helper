@@ -9,11 +9,10 @@ sealed class CheckResultsEvent extends Equatable {
 }
 
 final class CheckResults extends CheckResultsEvent {
-  final List<UserInput> userInputs;
+  final InterviewInfo interviewInfo;
 
-  const CheckResults({required this.userInputs});
+  const CheckResults({required this.interviewInfo});
 
   @override
-  List<Object?> get props => [userInputs];
+  List<Object?> get props => [interviewInfo];
 }
-

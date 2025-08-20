@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:interview_master/app/global_services/providers/user_provider.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
+import '../../../../app/global/providers/user_provider.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import 'interviews_history_page.dart';
 import 'initial_page.dart';

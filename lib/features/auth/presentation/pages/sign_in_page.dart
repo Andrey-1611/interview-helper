@@ -3,16 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import 'package:interview_master/features/auth/presentation/blocs/check_email_verified_bloc/check_email_verified_bloc.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/dependencies/di_container.dart';
-import '../../../../app/global_services/providers/user_provider.dart';
-import '../../../../app/global_services/user/blocs/get_user_bloc/get_user_bloc.dart';
-import '../../../../app/global_services/user/models/my_user.dart';
-import '../../../../app/global_services/user/models/user_data.dart';
+import '../../data/models/my_user.dart';
+import '../../../../app/global/models/user_data.dart';
+import '../../../../app/global/providers/user_provider.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
-import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 import '../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 
@@ -40,19 +37,8 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => SignInBloc(DIContainer.signIn)),
-        BlocProvider(
-          create: (context) =>
-              CheckEmailVerifiedBloc(DIContainer.checkEmailVerified),
-        ),
-        BlocProvider(
-          create: (context) =>
-              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
-        ),
-        BlocProvider(create: (context) => GetUserBloc(DIContainer.getUser)),
-      ],
+    return BlocProvider(
+      create: (context) => SignInBloc(DIContainer.signIn),
       child: _SignInPageView(
         formKey: _formKey,
         emailController: _emailController,
@@ -174,55 +160,28 @@ class _SignInButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SignInBloc, SignInState>(
-          listener: (context, state) {
-            if (state is SignInLoading) {
-              DialogHelper.showLoadingDialog(context, 'Вход в систему...');
-            } else if (state is SignInSuccess) {
-              context.read<CheckEmailVerifiedBloc>().add(CheckEmailVerified());
-            }
-            if (state is SignInFailure) {
-              AppRouter.pop();
-              ToastHelper.signInError();
-            }
-          },
-        ),
-        BlocListener<CheckEmailVerifiedBloc, CheckEmailVerifiedState>(
-          listener: (context, state) {
-            if (state is CheckEmailVerifiedSuccess) {
-              AppRouter.pop();
-              ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
-                state.result!.user!,
-              );
-              AppRouter.pushReplacementNamed(AppRouterNames.home);
-            } else if (state is CheckEmailNotVerified) {
-              context.read<SendEmailVerificationBloc>().add(
-                SendEmailVerification(),
-              );
-            } else if (state is CheckEmailVerifiedFailure) {
-              AppRouter.pop();
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-        BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
-          listener: (context, state) {
-            if (state is SendEmailVerificationSuccess) {
-              AppRouter.pop();
-              AppRouter.pushReplacementNamed(
-                AppRouterNames.emailVerification,
-                arguments: passwordController.text.trim(),
-              );
-              ToastHelper.sendEmailVerification(emailController.text);
-            } else if (state is SendEmailVerificationFailure) {
-              AppRouter.pop();
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-      ],
+    return BlocListener<SignInBloc, SignInState>(
+      listener: (context, state) {
+        if (state is SignInLoading) {
+          DialogHelper.showLoadingDialog(context, 'Вход в систему');
+        } else if (state is SignInSuccess) {
+          AppRouter.pop();
+          ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
+            state.user,
+          );
+          AppRouter.pushReplacementNamed(AppRouterNames.home);
+        } else if (state is SignInNoVerification) {
+          AppRouter.pop();
+          AppRouter.pushReplacementNamed(
+            AppRouterNames.emailVerification,
+            arguments: passwordController.text.trim(),
+          );
+          ToastHelper.sendEmailVerification(emailController.text);
+        } else if (state is SignInFailure) {
+          AppRouter.pop();
+          ToastHelper.signInError();
+        }
+      },
       child: _SignInButtonView(
         formKey: formKey,
         emailController: emailController,
