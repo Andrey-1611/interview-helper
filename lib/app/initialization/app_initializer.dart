@@ -12,7 +12,7 @@ class AppInitializer {
   }
 
   static Future<void> _initGemini() async {
-    Gemini.init(apiKey: API_KEY);
+    Gemini.init(apiKey: GEMINI_API_KEY);
   }
 
   static Future<void> _initFirebase() async {

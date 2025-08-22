@@ -16,8 +16,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       emit(SignInLoading());
       try {
         final user = await signInUseCase.call(event.user, event.password);
-        if (user != null) emit(SignInSuccess(user: user));
-        emit(SignInNoVerification());
+        user != null
+            ? emit(SignInSuccess(user: user))
+            : emit(SignInNoVerification());
       } catch (e) {
         emit(SignInFailure(error: e.toString()));
       }

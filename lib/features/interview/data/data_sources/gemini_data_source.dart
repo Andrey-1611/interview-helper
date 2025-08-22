@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:interview_master/core/constants/main_prompt.dart';
-import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import '../models/user_input.dart';
 
