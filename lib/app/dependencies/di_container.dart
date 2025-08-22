@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
@@ -6,6 +7,7 @@ import 'package:interview_master/features/auth/data/repositories/auth_repository
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
 import 'package:interview_master/features/auth/domain/use_cases/get_current_user_use_case.dart';
+import 'package:interview_master/features/interview/data/data_sources/chat_gpt_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
 import 'package:interview_master/features/interview/data/repositories/ai_repository_impl.dart';
