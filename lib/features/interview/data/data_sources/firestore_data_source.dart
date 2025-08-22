@@ -28,7 +28,6 @@ class FirestoreDataSource {
     }
   }
 
-
   Future<List<UserData>> showUsers() async {
     final data = await _usersCollection().get();
     final List<UserData> users = data.docs
@@ -40,6 +39,13 @@ class FirestoreDataSource {
   Future<void> addInterview(Interview interview, String userId) async {
     try {
       await _interviewsCollection(userId).add(interview.toJson());
+
+      final user = await _usersCollection().doc(userId).get();
+      final userData = UserData.fromJson(user.data() as Map<String, dynamic>);
+
+      await _usersCollection()
+          .doc(userId)
+          .update(UserData.updateData(userData, interview));
     } catch (e) {
       log(e.toString());
       rethrow;
