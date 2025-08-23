@@ -13,11 +13,6 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
   totalScore: (json['totalScore'] as num).toInt(),
   averageScore: (json['averageScore'] as num).toInt(),
   bestScore: (json['bestScore'] as num).toInt(),
-  lastInterviewDate: json['lastInterviewDate'] == null
-      ? null
-      : DateTime.parse(json['lastInterviewDate'] as String),
-  accountCreated: DateTime.parse(json['accountCreated'] as String),
-  streak: (json['streak'] as num).toInt(),
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
@@ -27,7 +22,4 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'totalScore': instance.totalScore,
   'averageScore': instance.averageScore,
   'bestScore': instance.bestScore,
-  'lastInterviewDate': instance.lastInterviewDate?.toIso8601String(),
-  'accountCreated': instance.accountCreated.toIso8601String(),
-  'streak': instance.streak,
 };

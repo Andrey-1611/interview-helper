@@ -13,9 +13,6 @@ class UserData {
   final int totalScore;
   final int averageScore;
   final int bestScore;
-  final DateTime? lastInterviewDate;
-  final DateTime accountCreated;
-  final int streak;
 
   UserData({
     required this.name,
@@ -24,9 +21,6 @@ class UserData {
     required this.totalScore,
     required this.averageScore,
     required this.bestScore,
-    this.lastInterviewDate,
-    required this.accountCreated,
-    required this.streak,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
@@ -42,9 +36,6 @@ class UserData {
       totalInterviews: 0,
       averageScore: 0,
       bestScore: 0,
-      lastInterviewDate: null,
-      accountCreated: DateTime.now(),
-      streak: 0,
     );
   }
 
@@ -57,7 +48,6 @@ class UserData {
     final averageScore = totalScore ~/ totalInterviews;
     final bestScore = max(interview.score, userData.bestScore);
     final lastInterviewDate = interview.date;
-    final streak = _chooseStreak(userData, interview);
 
     return {
       'totalScore': totalScore,
@@ -65,33 +55,16 @@ class UserData {
       'averageScore': averageScore,
       'bestScore': bestScore,
       'lastInterviewDate': lastInterviewDate,
-      'streak': streak,
     };
   }
 
-  static int _chooseStreak(UserData userData, Interview interview) {
-    int streak = 1;
-    if (userData.lastInterviewDate != null) {
-      final currentDay = DateTime(
-        interview.date.year,
-        interview.date.month,
-        interview.date.day,
-      );
-
-      final lastInterviewDay = DateTime(
-        userData.lastInterviewDate!.year,
-        userData.lastInterviewDate!.month,
-        userData.lastInterviewDate!.day,
-      );
-
-      final difference = currentDay.difference(lastInterviewDay).inDays;
-
-      if (difference == 0) {
-        streak = userData.streak;
-      } else if (difference == 1) {
-        streak = userData.streak + 1;
-      }
-    }
-    return streak;
+  static List<String> getStatsInfo(UserData data) {
+    final List<String> stats = [
+      'Собеседования:  ${data.totalInterviews}',
+      'Общий счет:  ${data.totalScore} ',
+      'Средний результат:  ${data.averageScore} % ',
+      'Лучший результат:  ${data.bestScore} %',
+    ];
+    return stats;
   }
 }

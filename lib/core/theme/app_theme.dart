@@ -72,6 +72,11 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+            color: AppPalette.textPrimary,
+          ),
           foregroundColor: AppPalette.primary,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           shape: RoundedRectangleBorder(

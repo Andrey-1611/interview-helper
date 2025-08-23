@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ScoreIndicator extends StatelessWidget {
+class CustomScoreIndicator extends StatelessWidget {
   final int score;
 
-  const ScoreIndicator({super.key, required this.score});
+  const CustomScoreIndicator({super.key, required this.score});
 
   @override
   Widget build(BuildContext context) {
