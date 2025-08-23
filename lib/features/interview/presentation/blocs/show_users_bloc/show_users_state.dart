@@ -11,7 +11,11 @@ final class ShowUsersInitial extends ShowUsersState {}
 
 final class ShowUsersLoading extends ShowUsersState {}
 
-final class ShowUsersFailure extends ShowUsersState {}
+final class ShowUsersFailure extends ShowUsersState {
+  final String e;
+
+  const ShowUsersFailure({required this.e});
+}
 
 final class ShowUsersSuccess extends ShowUsersState {
   final List<UserData> users;

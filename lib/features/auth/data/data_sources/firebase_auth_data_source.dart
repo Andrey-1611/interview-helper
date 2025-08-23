@@ -88,7 +88,7 @@ class FirebaseAuthDataSource {
       while (!user!.emailVerified) {
         await user.reload();
         user = _firebaseAuth.currentUser;
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 1));
       }
       return EmailVerificationResult(
         isEmailVerified: true,

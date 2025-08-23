@@ -49,11 +49,14 @@ class _UserInfoPageView extends ConsumerWidget {
         currentIndex: currentIndex,
         changeIndex: changeIndex,
       ),
-      body: switch (currentIndex) {
-        0 => UserInfoMainPage(user: user!),
-        1 => InterviewsHistoryPage(userId: user!.id),
-        _ => CustomLoadingIndicator(),
-      },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: switch (currentIndex) {
+          0 => UserInfoMainPage(user: user!),
+          1 => InterviewsHistoryPage(userId: user!.id),
+          _ => CustomLoadingIndicator(),
+        },
+      ),
     );
   }
 }

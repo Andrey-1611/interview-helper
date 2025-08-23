@@ -17,7 +17,7 @@ class ShowUsersBloc extends Bloc<ShowUsersEvent, ShowUsersState> {
         final users = await _showUsersUseCase.call();
         emit(ShowUsersSuccess(users: users));
       } catch (e) {
-        emit(ShowUsersFailure());
+        emit(ShowUsersFailure(e: e.toString()));
       }
     });
   }

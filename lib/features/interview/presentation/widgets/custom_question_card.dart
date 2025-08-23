@@ -17,7 +17,7 @@ class CustomQuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: isQuestionCard ? ScoreIndicator(score: score!) : null,
+        leading: isQuestionCard ? CustomScoreIndicator(score: score!) : null,
         title: Text(text),
         trailing: isQuestionCard ? Icon(Icons.chevron_right) : null,
       ),
