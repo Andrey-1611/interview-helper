@@ -5,6 +5,7 @@ import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/interview/presentation/blocs/show_users_bloc/show_users_bloc.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_score_indicator.dart';
 import '../../../../app/dependencies/di_container.dart';
@@ -81,9 +82,18 @@ class _UsersListView extends ConsumerWidget {
                 ref.read(userProvider.notifier).state = user;
                 AppRouter.pushNamed(AppRouterNames.userInfo);
               },
-              leading: CustomScoreIndicator(score: user.averageScore),
+              leading: Text(
+                '${index + 1}',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
               title: Text(user.name),
-              subtitle: Text('${user.totalScore}'),
+              subtitle: Row(
+                children: [
+                  Text('${user.totalScore}  '),
+                  Icon(Icons.star, color: AppPalette.primary),
+                ],
+              ),
+              trailing: CustomScoreIndicator(score: user.averageScore),
             ),
           );
         },

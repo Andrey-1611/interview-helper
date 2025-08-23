@@ -93,7 +93,7 @@ class AppTheme {
         ),
       ),
       listTileTheme: ListTileThemeData(
-        contentPadding: EdgeInsets.all(8.0.sp)
+        contentPadding: EdgeInsets.all(12.0.sp)
       )
     );
   }
