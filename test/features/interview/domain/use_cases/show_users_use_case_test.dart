@@ -10,14 +10,28 @@ void main() {
   late ShowUsersUseCase useCase;
   late RemoteRepository mockRepository;
 
-   setUp(() {
+  setUp(() {
     mockRepository = MockRemoteRepository();
     useCase = ShowUsersUseCase(mockRepository);
   });
 
   const name = 'testName';
   const id = 'testId';
-  final testUsers = [UserData(name: name, id: id)];
+  const totalInterviews = 0;
+  const totalScore = 0;
+  const averageScore = 0;
+  const bestScore = 0;
+
+  final testUsers = [
+    UserData(
+      name: name,
+      id: id,
+      totalInterviews: totalInterviews,
+      totalScore: totalScore,
+      averageScore: averageScore,
+      bestScore: bestScore,
+    ),
+  ];
 
   test('show interviews use case', () async {
     when(() => mockRepository.showUsers()).thenAnswer((_) async => testUsers);
