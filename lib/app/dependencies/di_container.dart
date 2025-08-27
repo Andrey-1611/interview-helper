@@ -16,7 +16,7 @@ import 'package:interview_master/features/interview/domain/use_cases/check_resil
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 import '../../features/auth/domain/use_cases/change_email_use_case.dart';
-import '../../features/auth/domain/use_cases/send_email_verification_bloc.dart';
+import '../../features/auth/domain/use_cases/send_email_verification_use_case.dart';
 import '../../features/auth/domain/use_cases/sign_in_use_case.dart';
 import '../../features/auth/domain/use_cases/sign_out_use_case.dart';
 import '../../features/auth/domain/use_cases/sign_up_use_case.dart';

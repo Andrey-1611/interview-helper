@@ -1,5 +1,4 @@
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
-
 import '../../data/models/my_user.dart';
 
 class ChangeEmailUseCase {
