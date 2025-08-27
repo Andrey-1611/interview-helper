@@ -12,7 +12,7 @@ import 'package:interview_master/features/interview/data/data_sources/firestore_
 import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
 import 'package:interview_master/features/interview/data/repositories/ai_repository_impl.dart';
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';
-import 'package:interview_master/features/interview/domain/use_cases/check_resilts_use_case.dart';
+import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 import '../../features/auth/domain/use_cases/change_email_use_case.dart';

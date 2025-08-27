@@ -1,6 +1,5 @@
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
-import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/domain/repositories/ai_repository.dart';
 import '../../data/models/interview.dart';
 import '../repositories/remote_repository.dart';
