@@ -5,6 +5,7 @@ import 'package:interview_master/features/auth/domain/use_cases/get_current_user
 import '../../../data/models/my_user.dart';
 
 part 'get_current_user_event.dart';
+
 part 'get_current_user_state.dart';
 
 class GetCurrentUserBloc
@@ -17,8 +18,9 @@ class GetCurrentUserBloc
       emit(GetCurrentUserLoading());
       try {
         final user = await _getCurrentUserUseCase.call();
-        if (user != null) emit(GetCurrentUserSuccess(user: user));
-        emit(GetCurrentUserNotAuth());
+        user != null
+            ? emit(GetCurrentUserSuccess(user: user))
+            : emit(GetCurrentUserNotAuth());
       } catch (e) {
         emit(GetCurrentUserFailure());
       }

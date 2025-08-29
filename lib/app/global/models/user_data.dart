@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:equatable/equatable.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../features/auth/data/models/my_user.dart';
@@ -6,7 +7,7 @@ import '../../../features/auth/data/models/my_user.dart';
 part 'user_data.g.dart';
 
 @JsonSerializable()
-class UserData {
+class UserData extends Equatable {
   final String name;
   final String id;
   final int totalInterviews;
@@ -14,7 +15,7 @@ class UserData {
   final int averageScore;
   final int bestScore;
 
-  UserData({
+  const UserData({
     required this.name,
     required this.id,
     required this.totalInterviews,
@@ -22,6 +23,16 @@ class UserData {
     required this.averageScore,
     required this.bestScore,
   });
+
+  @override
+  List<Object?> get props => [
+    name,
+    id,
+    totalInterviews,
+    totalScore,
+    averageScore,
+    bestScore,
+  ];
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);

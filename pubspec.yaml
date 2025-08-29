@@ -57,6 +57,9 @@ dependencies:
 
 dev_dependencies:
   mocktail: ^1.0.4
+  bloc_test: ^10.0.0
+  firebase_auth_mocks: ^0.14.2
+  fake_cloud_firestore: ^3.1.0
   build_runner: ^2.6.0
   json_serializable: ^6.10.0
   flutter_test:

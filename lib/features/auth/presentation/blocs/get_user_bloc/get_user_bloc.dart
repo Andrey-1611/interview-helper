@@ -4,7 +4,6 @@ import '../../../data/models/my_user.dart';
 import '../../../domain/use_cases/get_user_use_case.dart';
 
 part 'get_user_event.dart';
-
 part 'get_user_state.dart';
 
 class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {

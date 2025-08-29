@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/send_email_verification_use_case.dart';
 
 part 'send_email_verification_event.dart';
-
 part 'send_email_verification_state.dart';
 
 class SendEmailVerificationBloc

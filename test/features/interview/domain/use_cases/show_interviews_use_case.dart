@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
@@ -8,25 +7,16 @@ import 'package:mocktail/mocktail.dart';
 
 class MockRemoteRepository extends Mock implements RemoteRepository {}
 
-class MyUserFake extends Fake implements MyUser {}
-
 void main() {
   late ShowInterviewsUseCase useCase;
   late RemoteRepository mockRepository;
-
-  setUpAll(() {
-    registerFallbackValue(MyUserFake());
-  });
 
   setUp(() {
     mockRepository = MockRemoteRepository();
     useCase = ShowInterviewsUseCase(mockRepository);
   });
 
-  const email = 'testEmail';
-  const name = 'testName';
-  final id = 'testId';
-  final testUser = MyUser(email: email, name: name, id: id);
+  final testId = 'testId';
 
   const score = 0;
   const difficulty = 'testDifficulty';
@@ -55,10 +45,10 @@ void main() {
 
   test('show interviews use case', () async {
     when(
-      () => mockRepository.showInterviews(testUser.id!),
+      () => mockRepository.showInterviews(testId),
     ).thenAnswer((_) async => testInterviews);
 
-    final interviews = await useCase.call(testUser.id!);
+    final interviews = await useCase.call(testId);
 
     verify(
       () => mockRepository.showInterviews(any(that: isA<String>())),

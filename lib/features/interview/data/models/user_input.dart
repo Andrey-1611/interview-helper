@@ -1,3 +1,5 @@
+import '../../../../core/constants/main_prompt.dart';
+
 class UserInput {
   final String question;
   final String answer;
@@ -9,9 +11,10 @@ class UserInput {
   }
 
   static String createPrompt(List<UserInput> userInputs) {
-    return userInputs
+    final prompt =  userInputs
         .map((e) => 'Вопрос: ${_clear(e.question)}\nОтвет: ${_clear(e.answer)}')
         .join('\n\n');
+    return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
   }
 
   static List<UserInput> fromInput(

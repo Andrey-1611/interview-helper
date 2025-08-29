@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -5,20 +6,23 @@ import 'package:json_annotation/json_annotation.dart';
 part 'interview.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Interview {
+class Interview extends Equatable {
   final int score;
   final String difficulty;
   final String direction;
   final DateTime date;
   final List<Question> questions;
 
-  Interview({
+  const Interview({
     required this.score,
     required this.difficulty,
     required this.direction,
     required this.date,
     required this.questions,
   });
+
+  @override
+  List<Object?> get props => [score, difficulty, direction, date, questions];
 
   factory Interview.fromJson(Map<String, dynamic> json) =>
       _$InterviewFromJson(json);
