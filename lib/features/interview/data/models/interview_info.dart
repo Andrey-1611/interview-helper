@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:equatable/equatable.dart';
 import 'package:interview_master/core/constants/questions/c++_questions.dart';
 import 'package:interview_master/core/constants/questions/flutter_questions.dart';
 import 'package:interview_master/core/constants/questions/javascript_questions.dart';
@@ -7,16 +8,19 @@ import 'package:interview_master/core/constants/questions/python_questions.dart'
 import 'package:interview_master/core/constants/questions/swift_questions.dart';
 import 'package:interview_master/features/interview/data/models/user_input.dart';
 
-class InterviewInfo {
+class InterviewInfo extends Equatable {
   final String direction;
   final String difficulty;
   final List<UserInput>? userInputs;
 
-  InterviewInfo({
+  const InterviewInfo({
     this.userInputs,
     required this.direction,
     required this.difficulty,
   });
+
+  @override
+  List<Object?> get props => [direction, difficulty, userInputs];
 
   static List<String> selectQuestions(InterviewInfo info) {
     final random = Random();

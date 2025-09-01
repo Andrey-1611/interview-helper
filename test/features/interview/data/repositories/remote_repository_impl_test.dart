@@ -5,6 +5,7 @@ import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:uuid/uuid.dart';
 
 class MockFirestoreDataSource extends Mock implements FirestoreDataSource {}
 
@@ -58,6 +59,7 @@ void main() {
     ),
   ];
   final testInterview = Interview(
+    id: id,
     score: score,
     difficulty: difficulty,
     direction: direction,

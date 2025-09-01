@@ -19,6 +19,7 @@ void main() {
   final testId = 'testId';
 
   const score = 0;
+  const id = 'testId';
   const difficulty = 'testDifficulty';
   const direction = 'testDirection';
   const question = 'testQuestion';
@@ -35,6 +36,7 @@ void main() {
   final date = DateTime.now();
   final testInterviews = [
     Interview(
+      id: id,
       score: score,
       difficulty: difficulty,
       direction: direction,

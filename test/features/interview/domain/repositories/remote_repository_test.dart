@@ -55,6 +55,7 @@ void main() {
     ),
   ];
   final testInterview = Interview(
+    id: id,
     score: score,
     difficulty: difficulty,
     direction: direction,

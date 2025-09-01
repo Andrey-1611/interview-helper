@@ -24,6 +24,7 @@ void main() {
   );
 
   final testInterview = Interview(
+    id: 'testId',
     score: 5,
     difficulty: 'testDifficulty',
     direction: 'testDirection',

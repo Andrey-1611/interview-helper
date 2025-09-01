@@ -27,6 +27,7 @@ void main() {
   tearDown(() => mockBloc.close());
 
   const direction = 'testDirection';
+  const id = 'testId';
   const difficulty = 'testDifficulty';
   const score = 0;
   final questions = <Question>[];
@@ -37,6 +38,7 @@ void main() {
     difficulty: difficulty,
   );
   final testInterview = Interview(
+    id: id,
     score: score,
     difficulty: difficulty,
     direction: direction,

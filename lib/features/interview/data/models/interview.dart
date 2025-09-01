@@ -1,19 +1,35 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'interview.g.dart';
 
+@HiveType(typeId: 2)
 @JsonSerializable(explicitToJson: true)
 class Interview extends Equatable {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
   final int score;
+
+  @HiveField(2)
   final String difficulty;
+
+  @HiveField(3)
   final String direction;
+
+  @HiveField(4)
   final DateTime date;
+
+  @HiveField(5)
   final List<Question> questions;
 
   const Interview({
+    required this.id,
     required this.score,
     required this.difficulty,
     required this.direction,
@@ -38,6 +54,7 @@ class Interview extends Equatable {
         questions.length;
 
     return Interview(
+      id: Uuid().v1(),
       score: averageScore.toInt(),
       difficulty: info.difficulty,
       direction: info.direction,
