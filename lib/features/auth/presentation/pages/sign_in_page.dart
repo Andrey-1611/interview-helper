@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../../../../app/dependencies/di_container.dart';
 import '../../data/models/my_user.dart';
-import '../../../../app/global/models/user_data.dart';
-import '../../../../app/global/providers/user_provider.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
 import '../blocs/sign_in_bloc/sign_in_bloc.dart';
@@ -147,7 +144,7 @@ class _SignInForm extends StatelessWidget {
   }
 }
 
-class _SignInButton extends ConsumerWidget {
+class _SignInButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -159,16 +156,13 @@ class _SignInButton extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
         if (state is SignInLoading) {
           DialogHelper.showLoadingDialog(context, 'Вход в систему');
         } else if (state is SignInSuccess) {
           AppRouter.pop();
-          ref.read(currentUserProvider.notifier).state = UserData.fromMyUser(
-            state.user,
-          );
           AppRouter.pushReplacementNamed(AppRouterNames.home);
         } else if (state is SignInNoVerification) {
           AppRouter.pop();

@@ -4,10 +4,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/hive_boxes.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 
-class LocalDataSource {
+class HiveDataSource {
   final HiveInterface _hive;
 
-  LocalDataSource(this._hive);
+  HiveDataSource(this._hive);
 
   Box<Interview> get _interviewsBox =>
       _hive.box<Interview>(HiveBoxes.interviews);

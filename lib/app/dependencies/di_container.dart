@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
 import 'package:interview_master/features/auth/domain/use_cases/get_current_user_use_case.dart';
-import 'package:interview_master/features/interview/data/data_sources/chat_gpt_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
+import 'package:interview_master/features/interview/data/data_sources/hive_data_source.dart';
 import 'package:interview_master/features/interview/data/repositories/ai_repository_impl.dart';
+import 'package:interview_master/features/interview/data/repositories/local_repository_impl.dart';
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';
+import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
@@ -35,6 +37,9 @@ class DIContainer {
   static final RemoteRepository _remoteRepository = RemoteRepositoryImpl(
     FirestoreDataSource(FirebaseFirestore.instance),
   );
+  static final LocalRepository _localRepository = LocalRepositoryImpl(
+    HiveDataSource(Hive),
+  );
 
   static final ChangeEmailUseCase changeEmail = ChangeEmailUseCase(
     _authRepository,
@@ -49,9 +54,15 @@ class DIContainer {
 
   static final GetCurrentUserUseCase getCurrentUser = GetCurrentUserUseCase(
     _authRepository,
+    _remoteRepository,
+    _localRepository,
   );
 
-  static final SignInUseCase signIn = SignInUseCase(_authRepository);
+  static final SignInUseCase signIn = SignInUseCase(
+    _authRepository,
+    _remoteRepository,
+    _localRepository,
+  );
 
   static final SignOutUseCase signOut = SignOutUseCase(_authRepository);
 
@@ -64,13 +75,19 @@ class DIContainer {
     _aiRepository,
     _authRepository,
     _remoteRepository,
+    _localRepository,
   );
 
   static final ShowInterviewsUseCase showInterviews = ShowInterviewsUseCase(
     _remoteRepository,
+    _localRepository,
   );
 
   static final ShowUsersUseCase showUsers = ShowUsersUseCase(_remoteRepository);
 
   static final GetUserUseCase getUser = GetUserUseCase(_authRepository);
+}
+
+class AppDependencies {
+
 }

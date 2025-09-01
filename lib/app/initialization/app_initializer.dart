@@ -30,8 +30,8 @@ class AppInitializer {
   static Future<void> _initHive() async {
     await Hive.initFlutter();
     Hive.registerAdapter(UserDataAdapter());
-    Hive.registerAdapter(InterviewAdapter());
     Hive.registerAdapter(QuestionAdapter());
+    Hive.registerAdapter(InterviewAdapter());
     await Hive.openBox<Interview>(HiveBoxes.interviews);
   }
 }

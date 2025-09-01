@@ -1,6 +1,7 @@
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/repositories/ai_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import '../../data/models/interview.dart';
 import '../repositories/remote_repository.dart';
 
@@ -8,11 +9,13 @@ class CheckResultsUseCase {
   final AIRepository _aiRepository;
   final AuthRepository _authRepository;
   final RemoteRepository _remoteRepository;
+  final LocalRepository _localRepository;
 
   CheckResultsUseCase(
     this._aiRepository,
     this._authRepository,
     this._remoteRepository,
+    this._localRepository,
   );
 
   Future<Interview> call(InterviewInfo info) async {
@@ -20,10 +23,8 @@ class CheckResultsUseCase {
     final interview = Interview.fromQuestions(questions, info);
 
     final user = await _authRepository.getUser();
-    await _remoteRepository.addInterview(
-      Interview.fromQuestions(questions, info),
-      user!.id!,
-    );
+    await _remoteRepository.addInterview(interview, user!.id!);
+    await _localRepository.addInterview(interview);
 
     return interview;
   }

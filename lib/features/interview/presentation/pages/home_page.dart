@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
-import '../../../../app/global/providers/user_provider.dart';
 import '../../../../app/navigation/app_router_names.dart';
-import 'interviews_history_page.dart';
 import 'initial_page.dart';
+import 'interviews_history_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,14 +31,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _HomePageView extends ConsumerWidget {
+class _HomePageView extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> changeIndex;
 
   const _HomePageView({required this.currentIndex, required this.changeIndex});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -59,7 +57,7 @@ class _HomePageView extends ConsumerWidget {
       ),
       body: switch (currentIndex) {
         0 => InitialPage(),
-        1 => InterviewsHistoryPage(userId: ref.watch(currentUserProvider)!.id),
+        1 => InterviewsHistoryPage(userId: null),
         2 => UsersRatingPage(),
         _ => CustomLoadingIndicator(),
       },

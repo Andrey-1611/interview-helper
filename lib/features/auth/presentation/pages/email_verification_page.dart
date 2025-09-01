@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
 import '../../../../app/dependencies/di_container.dart';
-import '../../../../app/global/models/user_data.dart';
-import '../../../../app/global/providers/user_provider.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
@@ -72,11 +69,11 @@ class _EmailVerificationPageView extends StatelessWidget {
   }
 }
 
-class _EmailVerificationForm extends ConsumerWidget {
+class _EmailVerificationForm extends StatelessWidget {
   const _EmailVerificationForm();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
         BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
@@ -89,8 +86,6 @@ class _EmailVerificationForm extends ConsumerWidget {
         BlocListener<WatchEmailVerifiedBloc, WatchEmailVerifiedState>(
           listener: (context, state) {
             if (state is WatchEmailVerifiedSuccess) {
-              ref.read(currentUserProvider.notifier).state =
-                  UserData.fromMyUser(state.user);
               AppRouter.pushReplacementNamed(AppRouterNames.home);
             } else if (state is WatchEmailVerifiedFailure) {
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
@@ -101,7 +96,8 @@ class _EmailVerificationForm extends ConsumerWidget {
       ],
       child: _EmailVerificationFormView(),
     );
-  }}
+  }
+}
 
 class _EmailVerificationFormView extends StatelessWidget {
   const _EmailVerificationFormView();
@@ -147,4 +143,3 @@ class _NavigationButton extends StatelessWidget {
     );
   }
 }
-

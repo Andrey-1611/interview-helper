@@ -9,7 +9,7 @@ sealed class ShowInterviewsEvent extends Equatable {
 }
 
 final class ShowInterviews extends ShowInterviewsEvent {
-  final String userId;
+  final String? userId;
 
   const ShowInterviews({required this.userId});
 

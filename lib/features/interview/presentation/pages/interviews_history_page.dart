@@ -14,7 +14,7 @@ import '../widgets/custom_filter_dialog.dart';
 import '../widgets/custom_score_indicator.dart';
 
 class InterviewsHistoryPage extends StatefulWidget {
-  final String userId;
+  final String? userId;
 
   const InterviewsHistoryPage({super.key, required this.userId});
 

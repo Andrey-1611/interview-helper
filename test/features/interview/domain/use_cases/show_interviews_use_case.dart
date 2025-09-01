@@ -1,19 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
+import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRemoteRepository extends Mock implements RemoteRepository {}
 
+class MockLocalRepository extends Mock implements LocalRepository {}
+
 void main() {
   late ShowInterviewsUseCase useCase;
-  late RemoteRepository mockRepository;
+  late RemoteRepository mockRemoteRepository;
+  late MockLocalRepository mockLocalRepository;
 
   setUp(() {
-    mockRepository = MockRemoteRepository();
-    useCase = ShowInterviewsUseCase(mockRepository);
+    mockRemoteRepository = MockRemoteRepository();
+    mockLocalRepository = MockLocalRepository();
+    useCase = ShowInterviewsUseCase(mockRemoteRepository, mockLocalRepository);
   });
 
   final testId = 'testId';
@@ -45,16 +50,29 @@ void main() {
     ),
   ];
 
-  test('show interviews use case', () async {
-    when(
-      () => mockRepository.showInterviews(testId),
-    ).thenAnswer((_) async => testInterviews);
+  group('show interviews use case', () {
+    test('show remote interviews', () async {
+      when(
+        () => mockRemoteRepository.showInterviews(testId),
+      ).thenAnswer((_) async => testInterviews);
 
-    final interviews = await useCase.call(testId);
+      final interviews = await useCase.call(testId);
 
-    verify(
-      () => mockRepository.showInterviews(any(that: isA<String>())),
-    ).called(1);
-    expect(interviews, testInterviews);
+      verify(
+        () => mockRemoteRepository.showInterviews(any(that: isA<String>())),
+      ).called(1);
+      expect(interviews, testInterviews);
+    });
+
+    test('show local interviews', () async {
+      when(
+        () => mockLocalRepository.showInterviews(),
+      ).thenAnswer((_) async => testInterviews);
+
+      final interviews = await useCase.call(null);
+
+      verify(() => mockLocalRepository.showInterviews()).called(1);
+      expect(interviews, testInterviews);
+    });
   });
 }

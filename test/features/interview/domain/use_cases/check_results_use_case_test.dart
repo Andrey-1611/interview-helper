@@ -6,6 +6,7 @@ import 'package:interview_master/features/interview/data/models/interview_info.d
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/data/models/user_input.dart';
 import 'package:interview_master/features/interview/domain/repositories/ai_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 import 'package:mocktail/mocktail.dart';
@@ -15,6 +16,8 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 class MockRemoteRepository extends Mock implements RemoteRepository {}
 
 class MockAIRepository extends Mock implements AIRepository {}
+
+class MockLocalRepository extends Mock implements LocalRepository {}
 
 class MyUserFake extends Fake implements MyUser {}
 
@@ -27,6 +30,7 @@ void main() {
   late AuthRepository mockAuthRepository;
   late RemoteRepository mockRemoteRepository;
   late AIRepository mockAIRepository;
+  late LocalRepository mockLocalRepository;
 
   setUpAll(() {
     registerFallbackValue(MyUserFake());
@@ -38,10 +42,12 @@ void main() {
     mockAuthRepository = MockAuthRepository();
     mockRemoteRepository = MockRemoteRepository();
     mockAIRepository = MockAIRepository();
+    mockLocalRepository = MockLocalRepository();
     useCase = CheckResultsUseCase(
       mockAIRepository,
       mockAuthRepository,
       mockRemoteRepository,
+      mockLocalRepository,
     );
   });
 
@@ -80,6 +86,9 @@ void main() {
     when(
       () => mockRemoteRepository.addInterview(any(), testUser.id!),
     ).thenAnswer((_) async => {});
+    when(
+      () => mockLocalRepository.addInterview(any()),
+    ).thenAnswer((_) async => {});
 
     await useCase.call(testInterviewInfo);
 
@@ -105,5 +114,6 @@ void main() {
         any(that: equals(testUser.id)),
       ),
     ).called(1);
+    verify(() => mockLocalRepository.addInterview(any())).called(1);
   });
 }

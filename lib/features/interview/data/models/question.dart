@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'question.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 3)
 @JsonSerializable()
 class Question extends Equatable {
   @HiveField(0)
