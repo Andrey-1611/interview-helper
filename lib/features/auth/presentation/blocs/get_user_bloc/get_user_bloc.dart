@@ -4,6 +4,7 @@ import '../../../data/models/my_user.dart';
 import '../../../domain/use_cases/get_user_use_case.dart';
 
 part 'get_user_event.dart';
+
 part 'get_user_state.dart';
 
 class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
@@ -14,13 +15,9 @@ class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
       emit(GetUserLoading());
       try {
         final user = await _getUserUseCase.call();
-        if (user != null) {
-          emit(GetUserSuccess(user: user));
-        } else {
-          emit(GetUserNotAuth());
-        }
+        emit(GetUserSuccess(user: user));
       } catch (e) {
-        emit(GetUserFailure());
+        emit(GetUserFailure(e: e.toString()));
       }
     });
   }

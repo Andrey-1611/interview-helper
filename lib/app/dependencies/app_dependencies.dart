@@ -62,13 +62,12 @@ class AppDependencies {
     );
     _getIt.registerLazySingleton(
       () => GetCurrentUserUseCase(
-        _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
       ),
     );
     _getIt.registerLazySingleton(
-      () => GetUserUseCase(_getIt<AuthRepository>()),
+      () => GetUserUseCase(_getIt<LocalRepository>()),
     );
     _getIt.registerLazySingleton(
       () => SendEmailVerificationUseCase(_getIt<AuthRepository>()),
@@ -81,13 +80,14 @@ class AppDependencies {
       ),
     );
     _getIt.registerLazySingleton(
-      () => SignOutUseCase(_getIt<AuthRepository>()),
+      () => SignOutUseCase(_getIt<AuthRepository>(), _getIt<LocalRepository>()),
     );
     _getIt.registerLazySingleton(() => SignUpUseCase(_getIt<AuthRepository>()));
     _getIt.registerLazySingleton(
       () => WatchEmailVerifiedUseCase(
         _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
+        _getIt<LocalRepository>(),
       ),
     );
   }

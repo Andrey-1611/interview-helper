@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:interview_master/core/constants/hive_boxes.dart';
+import 'package:interview_master/core/constants/hive_data.dart';
+import 'package:interview_master/features/auth/data/models/my_user.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 
 class HiveDataSource {
@@ -10,7 +11,9 @@ class HiveDataSource {
   HiveDataSource(this._hive);
 
   Box<Interview> get _interviewsBox =>
-      _hive.box<Interview>(HiveBoxes.interviews);
+      _hive.box<Interview>(HiveData.interviews);
+
+  Box<MyUser> get _usersBox => _hive.box<MyUser>(HiveData.user);
 
   Future<void> loadInterviews(List<Interview> interviews) async {
     try {
@@ -37,6 +40,33 @@ class HiveDataSource {
   Future<List<Interview>> showInterviews() async {
     try {
       return _interviewsBox.values.toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> loadUser(MyUser user) async {
+    try {
+      await _usersBox.put(HiveData.userKey, user);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<MyUser?> getUser() async {
+    try {
+      return _usersBox.get(HiveData.userKey);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      await _usersBox.delete(HiveData.userKey);
     } catch (e) {
       log(e.toString());
       rethrow;

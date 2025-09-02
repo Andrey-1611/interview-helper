@@ -11,9 +11,11 @@ final class GetUserInitial extends GetUserState {}
 
 final class GetUserLoading extends GetUserState {}
 
-final class GetUserFailure extends GetUserState {}
+final class GetUserFailure extends GetUserState {
+  final String e;
 
-final class GetUserNotAuth extends GetUserState {}
+  const GetUserFailure({required this.e});
+}
 
 final class GetUserSuccess extends GetUserState {
   final MyUser user;

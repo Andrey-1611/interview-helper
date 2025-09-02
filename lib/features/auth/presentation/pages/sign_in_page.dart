@@ -174,8 +174,7 @@ class _SignInButton extends StatelessWidget {
           ToastHelper.sendEmailVerification(emailController.text);
         } else if (state is SignInFailure) {
           AppRouter.pop();
-          ToastHelper.custom(state.error);
-          //ToastHelper.signInError();
+          ToastHelper.signInError();
         }
       },
       child: _SignInButtonView(
