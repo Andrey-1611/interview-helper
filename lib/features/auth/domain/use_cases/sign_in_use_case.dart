@@ -18,7 +18,9 @@ class SignInUseCase {
     await _authRepository.signIn(user, password);
     final result = await _authRepository.checkEmailVerified();
     if (result!.isEmailVerified) {
-      final interviews = await _remoteRepository.showInterviews(user.id!);
+      final interviews = await _remoteRepository.showInterviews(
+        result.user!.id!,
+      );
       _localRepository.loadInterviews(interviews);
       return result.user;
     }

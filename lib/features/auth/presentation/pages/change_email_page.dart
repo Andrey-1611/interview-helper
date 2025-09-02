@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/app/dependencies/di_container.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/features/auth/domain/use_cases/change_email_use_case.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
 import '../blocs/change_email_bloc/change_email_bloc.dart';
@@ -37,7 +38,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChangeEmailBloc(DIContainer.changeEmail),
+      create: (context) => ChangeEmailBloc(GetIt.I<ChangeEmailUseCase>()),
       child: _ChangeEmailPageView(
         emailController: _emailController,
         formKey: _formKey,

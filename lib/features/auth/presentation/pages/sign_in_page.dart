@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:interview_master/features/auth/presentation/widgets/custom_text_form_field.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../data/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
@@ -35,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignInBloc(DIContainer.signIn),
+      create: (context) => SignInBloc(GetIt.I<SignInUseCase>()),
       child: _SignInPageView(
         formKey: _formKey,
         emailController: _emailController,
@@ -173,7 +174,8 @@ class _SignInButton extends StatelessWidget {
           ToastHelper.sendEmailVerification(emailController.text);
         } else if (state is SignInFailure) {
           AppRouter.pop();
-          ToastHelper.signInError();
+          ToastHelper.custom(state.error);
+          //ToastHelper.signInError();
         }
       },
       child: _SignInButtonView(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import '../../../../app/dependencies/di_container.dart';
+import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
 import '../../data/models/my_user.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -29,7 +30,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChangePasswordBloc(DIContainer.changePassword),
+      create: (context) => ChangePasswordBloc(GetIt.I<ChangePasswordUseCase>()),
       child: _ChangePasswordPageView(
         emailController: _emailController,
         formKey: _formKey,

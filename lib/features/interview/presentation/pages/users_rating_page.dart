@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 import 'package:interview_master/features/interview/presentation/blocs/show_users_bloc/show_users_bloc.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_score_indicator.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/global/models/user_data.dart';
 import '../../../../app/global/providers/user_provider.dart';
 
@@ -24,7 +25,7 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ShowUsersBloc(DIContainer.showUsers)..add(ShowUsers()),
+          ShowUsersBloc(GetIt.I<ShowUsersUseCase>())..add(ShowUsers()),
       child: const _UsersRatingView(),
     );
   }

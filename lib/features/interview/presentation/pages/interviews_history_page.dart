@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
+import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:intl/intl.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
@@ -37,7 +38,7 @@ class _InterviewsHistoryPageState extends State<InterviewsHistoryPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ShowInterviewsBloc(DIContainer.showInterviews)
+          ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
             ..add(ShowInterviews(userId: widget.userId)),
       child: _CustomInterviewsList(
         filterController: _filterController,

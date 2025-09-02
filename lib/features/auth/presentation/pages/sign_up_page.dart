@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/features/auth/domain/use_cases/sign_up_use_case.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../data/models/my_user.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -38,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignUpBloc(DIContainer.signUp),
+      create: (context) => SignUpBloc(GetIt.I<SignUpUseCase>()),
       child: _SignUpPageView(
         formKey: _formKey,
         nameController: _nameController,

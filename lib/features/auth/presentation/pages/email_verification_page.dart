@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
+import 'package:interview_master/features/auth/domain/use_cases/send_email_verification_use_case.dart';
+import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
-import '../../../../app/dependencies/di_container.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
@@ -28,12 +30,13 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              SendEmailVerificationBloc(DIContainer.sendEmailVerification),
+          create: (context) => SendEmailVerificationBloc(
+            GetIt.I<SendEmailVerificationUseCase>(),
+          ),
         ),
         BlocProvider(
           create: (context) =>
-              WatchEmailVerifiedBloc(DIContainer.watchEmailVerified)
+              WatchEmailVerifiedBloc(GetIt.I<WatchEmailVerifiedUseCase>())
                 ..add(WatchEmailVerified()),
         ),
       ],

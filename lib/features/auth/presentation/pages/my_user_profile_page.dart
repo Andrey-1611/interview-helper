@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
-import '../../../../app/dependencies/di_container.dart';
+import 'package:interview_master/features/auth/domain/use_cases/get_user_use_case.dart';
+import 'package:interview_master/features/auth/domain/use_cases/sign_out_use_case.dart';
 import '../../../../app/navigation/app_router_names.dart';
 import '../blocs/get_user_bloc/get_user_bloc.dart';
 import '../blocs/sign_out_bloc/sign_out_bloc.dart';
@@ -16,9 +18,12 @@ class MyUserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SignOutBloc(DIContainer.signOut)),
         BlocProvider(
-          create: (context) => GetUserBloc(DIContainer.getUser)..add(GetUser()),
+          create: (context) => SignOutBloc(GetIt.I<SignOutUseCase>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              GetUserBloc(GetIt.I<GetUserUseCase>())..add(GetUser()),
         ),
       ],
       child: _MyUserProfilePageView(),
