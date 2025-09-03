@@ -12,6 +12,8 @@ final class CheckResultsInitial extends CheckResultsState {}
 
 final class CheckResultsLoading extends CheckResultsState {}
 
+final class CheckResultsNetworkFailure extends CheckResultsState {}
+
 final class CheckResultsFailure extends CheckResultsState {
   final String e;
 

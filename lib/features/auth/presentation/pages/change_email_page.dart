@@ -112,6 +112,9 @@ class _ChangeEmailButton extends StatelessWidget {
             AppRouterNames.emailVerification,
             arguments: password,
           );
+        } else if (state is ChangeEmailNetworkFailure) {
+          AppRouter.pop();
+          ToastHelper.networkError();
         } else if (state is ChangeEmailFailure) {
           AppRouter.pop();
           ToastHelper.unknownError();

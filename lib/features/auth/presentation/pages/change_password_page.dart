@@ -109,6 +109,8 @@ class _ChangePasswordButton extends StatelessWidget {
         if (state is ChangePasswordSuccess) {
           ToastHelper.sendPasswordResetEmail(emailController.text);
           AppRouter.pushReplacementNamed(AppRouterNames.signIn);
+        } else if (state is ChangePasswordNetworkFailure) {
+          ToastHelper.networkError();
         } else if (state is ChangePasswordFailure) {
           ToastHelper.unknownError();
         }

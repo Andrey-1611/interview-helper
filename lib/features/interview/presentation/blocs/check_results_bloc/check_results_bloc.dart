@@ -5,6 +5,8 @@ import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 
+import '../../../../../core/errors/network_exception.dart';
+
 part 'check_results_event.dart';
 
 part 'check_results_state.dart';
@@ -20,6 +22,8 @@ class CheckResultsBloc extends Bloc<CheckResultsEvent, CheckResultsState> {
           event.interviewInfo,
         );
         emit(CheckResultsSuccess(interview: interview));
+      } on NetworkException {
+        emit(CheckResultsNetworkFailure());
       } catch (e) {
         emit(CheckResultsFailure(e: e.toString()));
       }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_network_failure.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/navigation/app_router.dart';
 import '../../../../app/navigation/app_router_names.dart';
@@ -88,6 +89,8 @@ class _CustomInterviewsList extends StatelessWidget {
       builder: (context, state) {
         if (state is ShowInterviewsLoading) {
           return CustomLoadingIndicator();
+        } else if (state is ShowInterviewsNetworkFailure) {
+          return NetworkFailure();
         } else if (state is ShowInterviewsSuccess) {
           if (state.interviews.isEmpty) return _EmptyHistory();
           return _InterviewsListView(

@@ -12,6 +12,7 @@ import 'package:interview_master/features/interview/presentation/blocs/show_user
 import 'package:interview_master/features/interview/presentation/widgets/custom_score_indicator.dart';
 import '../../../../app/global/models/user_data.dart';
 import '../../../../app/global/providers/user_provider.dart';
+import '../widgets/custom_network_failure.dart';
 
 class UsersRatingPage extends StatefulWidget {
   const UsersRatingPage({super.key});
@@ -50,7 +51,7 @@ class _UsersList extends StatelessWidget {
     return BlocConsumer<ShowUsersBloc, ShowUsersState>(
       listener: (context, state) {
         if (state is ShowUsersFailure) {
-          ToastHelper.custom(state.e);
+          ToastHelper.loadingError();
         }
       },
       builder: (context, state) {
@@ -58,6 +59,8 @@ class _UsersList extends StatelessWidget {
           return _UsersListView(users: state.users);
         } else if (state is ShowUsersLoading) {
           return const CustomLoadingIndicator();
+        } else if (state is ShowUsersNetworkFailure) {
+          return NetworkFailure();
         }
         return const SizedBox.shrink();
       },

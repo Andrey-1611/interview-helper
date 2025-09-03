@@ -11,6 +11,9 @@ final class SendEmailVerificationInitial extends SendEmailVerificationState {}
 
 final class SendEmailVerificationLoading extends SendEmailVerificationState {}
 
+final class SendEmailVerificationNetworkFailure
+    extends SendEmailVerificationState {}
+
 final class SendEmailVerificationFailure extends SendEmailVerificationState {}
 
 final class SendEmailVerificationSuccess extends SendEmailVerificationState {}

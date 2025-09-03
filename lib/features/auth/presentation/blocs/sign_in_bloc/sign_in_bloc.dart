@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interview_master/core/errors/network_exception.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
 
 import '../../../data/models/my_user.dart';
@@ -19,7 +20,10 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         user != null
             ? emit(SignInSuccess(user: user))
             : emit(SignInNoVerification());
-      } catch (e) {
+      } on NetworkException {
+        emit(SignInNetworkFailure());
+      }
+      catch (e) {
         emit(SignInFailure(error: e.toString()));
       }
     });

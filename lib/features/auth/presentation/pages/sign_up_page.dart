@@ -185,6 +185,9 @@ class _SignUpButton extends StatelessWidget {
             arguments: passwordController.text.trim(),
           );
           ToastHelper.sendEmailVerification(emailController.text);
+        } else if (state is SignUpNetworkFailure) {
+          AppRouter.pop();
+          ToastHelper.unknownError();
         } else if (state is SignUpFailure) {
           AppRouter.pop();
           ToastHelper.unknownError();

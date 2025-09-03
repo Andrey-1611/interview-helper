@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
+import '../../../../../core/errors/network_exception.dart';
 import '../../../data/models/interview.dart';
 
 part 'show_interviews_event.dart';
@@ -21,6 +22,8 @@ class ShowInterviewsBloc
           event.userId,
         );
         emit(ShowInterviewsSuccess(interviews: interviews));
+      } on NetworkException {
+        emit(ShowInterviewsNetworkFailure());
       } catch (e) {
         emit(ShowInterviewsFailure(error: e.toString()));
       }

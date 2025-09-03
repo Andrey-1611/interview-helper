@@ -83,6 +83,8 @@ class _EmailVerificationForm extends StatelessWidget {
           listener: (context, state) {
             if (state is SendEmailVerificationSuccess) {
               ToastHelper.sendAgainEmailVerification();
+            } else if (state is SendEmailVerificationNetworkFailure) {
+              ToastHelper.networkError();
             }
           },
         ),
@@ -90,6 +92,8 @@ class _EmailVerificationForm extends StatelessWidget {
           listener: (context, state) {
             if (state is WatchEmailVerifiedSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.home);
+            } else if (state is WatchEmailVerifiedNetworkFailure) {
+              ToastHelper.networkError();
             } else if (state is WatchEmailVerifiedFailure) {
               AppRouter.pushReplacementNamed(AppRouterNames.signUp);
               ToastHelper.unknownError();

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +19,7 @@ import 'package:interview_master/features/interview/domain/repositories/local_re
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
+import '../../core/utils/network_info.dart';
 import '../../features/auth/domain/use_cases/change_email_use_case.dart';
 import '../../features/auth/domain/use_cases/send_email_verification_use_case.dart';
 import '../../features/auth/domain/use_cases/sign_in_use_case.dart';
@@ -32,9 +34,14 @@ class AppDependencies {
   static final GetIt _getIt = GetIt.instance;
 
   static void setUp() async {
+    _setupUtils();
     _setupRepositories();
     _setupAuthUseCases();
     _setupInterviewUseCases();
+  }
+
+  static void _setupUtils() {
+    _getIt.registerLazySingleton(() => NetworkInfo(Connectivity()));
   }
 
   static void _setupRepositories() {
@@ -55,39 +62,54 @@ class AppDependencies {
 
   static void _setupAuthUseCases() {
     _getIt.registerLazySingleton(
-      () => ChangeEmailUseCase(_getIt<AuthRepository>()),
+      () => ChangeEmailUseCase(_getIt<AuthRepository>(), _getIt<NetworkInfo>()),
     );
     _getIt.registerLazySingleton(
-      () => ChangePasswordUseCase(_getIt<AuthRepository>()),
+      () => ChangePasswordUseCase(
+        _getIt<AuthRepository>(),
+        _getIt<NetworkInfo>(),
+      ),
     );
     _getIt.registerLazySingleton(
       () => GetCurrentUserUseCase(
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
       ),
     );
     _getIt.registerLazySingleton(
       () => GetUserUseCase(_getIt<LocalRepository>()),
     );
     _getIt.registerLazySingleton(
-      () => SendEmailVerificationUseCase(_getIt<AuthRepository>()),
+      () => SendEmailVerificationUseCase(
+        _getIt<AuthRepository>(),
+        _getIt<NetworkInfo>(),
+      ),
     );
     _getIt.registerLazySingleton(
       () => SignInUseCase(
         _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
       ),
     );
     _getIt.registerLazySingleton(
-      () => SignOutUseCase(_getIt<AuthRepository>(), _getIt<LocalRepository>()),
+      () => SignOutUseCase(
+        _getIt<AuthRepository>(),
+        _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
+      ),
     );
-    _getIt.registerLazySingleton(() => SignUpUseCase(_getIt<AuthRepository>()));
+    _getIt.registerLazySingleton(
+      () => SignUpUseCase(_getIt<AuthRepository>(), _getIt<NetworkInfo>()),
+    );
     _getIt.registerLazySingleton(
       () => WatchEmailVerifiedUseCase(
         _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
       ),
     );
   }
@@ -99,16 +121,18 @@ class AppDependencies {
         _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
       ),
     );
     _getIt.registerLazySingleton(
       () => ShowInterviewsUseCase(
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
       ),
     );
     _getIt.registerLazySingleton(
-      () => ShowUsersUseCase(_getIt<RemoteRepository>()),
+      () => ShowUsersUseCase(_getIt<RemoteRepository>(), _getIt<NetworkInfo>()),
     );
   }
 }

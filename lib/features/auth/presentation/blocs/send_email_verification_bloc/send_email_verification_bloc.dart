@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/send_email_verification_use_case.dart';
-
+import '../../../../../core/errors/network_exception.dart';
 part 'send_email_verification_event.dart';
 part 'send_email_verification_state.dart';
 
@@ -10,12 +10,14 @@ class SendEmailVerificationBloc
   final SendEmailVerificationUseCase _sendEmailVerificationUseCase;
 
   SendEmailVerificationBloc(this._sendEmailVerificationUseCase)
-      : super(SendEmailVerificationInitial()) {
+    : super(SendEmailVerificationInitial()) {
     on<SendEmailVerification>((event, emit) async {
       emit(SendEmailVerificationLoading());
       try {
         await _sendEmailVerificationUseCase.call();
         emit(SendEmailVerificationSuccess());
+      } on NetworkException {
+        emit(SendEmailVerificationNetworkFailure());
       } catch (e) {
         emit(SendEmailVerificationFailure());
       }

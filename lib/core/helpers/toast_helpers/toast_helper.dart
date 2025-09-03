@@ -31,15 +31,11 @@ class ToastHelper {
   }
 
   static void sendEmailVerification(String email) {
-    _showToast(
-      msg: 'Письмо с подтвержением отправлено на ${email.trim()}',
-    );
+    _showToast(msg: 'Письмо с подтвержением отправлено на ${email.trim()}');
   }
 
   static void sendAgainEmailVerification() {
-    _showToast(
-      msg: 'Письмо с подтвержением отправлено на вашу почту',
-    );
+    _showToast(msg: 'Письмо с подтвержением отправлено на вашу почту');
   }
 
   static void sendPasswordResetEmail(String email) {
@@ -54,9 +50,12 @@ class ToastHelper {
     _showToast(msg: 'Ошибка загрузки данных, попробуйте позже');
   }
 
-
   static void unknownError() {
     _showToast(msg: 'Неизвестная ошибка, попробуйте позже');
+  }
+
+  static void networkError() {
+    _showToast(msg: 'Нет подключения к интернету');
   }
 
   static void custom(String msg) {

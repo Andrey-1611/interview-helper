@@ -59,7 +59,7 @@ class _SignOutButton extends StatelessWidget {
         BlocListener<GetUserBloc, GetUserState>(
           listener: (context, state) {
             if (state is GetUserFailure) {
-              ToastHelper.custom(state.e);
+              ToastHelper.unknownError();
             }
           },
         ),
@@ -67,6 +67,8 @@ class _SignOutButton extends StatelessWidget {
           listener: (context, state) {
             if (state is SignOutSuccess) {
               AppRouter.pushReplacementNamed(AppRouterNames.signIn);
+            } else if (state is SignOutNetworkError) {
+              ToastHelper.networkError();
             } else if (state is SignOutFailure) {
               ToastHelper.unknownError();
             }

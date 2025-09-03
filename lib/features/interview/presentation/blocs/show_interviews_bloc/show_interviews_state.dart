@@ -12,6 +12,8 @@ final class ShowInterviewsInitial extends ShowInterviewsState {}
 
 final class ShowInterviewsLoading extends ShowInterviewsState {}
 
+final class ShowInterviewsNetworkFailure extends ShowInterviewsState {}
+
 final class ShowInterviewsFailure extends ShowInterviewsState {
   final String error;
 

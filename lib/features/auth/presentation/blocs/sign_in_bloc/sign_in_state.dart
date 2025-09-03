@@ -11,6 +11,8 @@ final class SignInInitial extends SignInState {}
 
 final class SignInLoading extends SignInState {}
 
+final class SignInNetworkFailure extends SignInState {}
+
 final class SignInFailure extends SignInState {
   final String error;
 

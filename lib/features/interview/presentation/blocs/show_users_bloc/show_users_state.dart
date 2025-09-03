@@ -11,6 +11,8 @@ final class ShowUsersInitial extends ShowUsersState {}
 
 final class ShowUsersLoading extends ShowUsersState {}
 
+final class ShowUsersNetworkFailure extends ShowUsersState {}
+
 final class ShowUsersFailure extends ShowUsersState {
   final String e;
 
