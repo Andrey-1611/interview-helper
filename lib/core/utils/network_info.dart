@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetworkInfo {
@@ -6,7 +8,13 @@ class NetworkInfo {
   NetworkInfo(this._connectivity);
 
   Future<bool> get isConnected async {
-    final result = await _connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
+    try {
+      final result = await _connectivity.checkConnectivity();
+      return result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }

@@ -23,6 +23,7 @@ class ToastHelper {
 
   static void _showToast({required String msg}) {
     DelightToastBar(
+      autoDismiss: true,
       position: DelightSnackbarPosition.top,
       builder: (context) {
         return ToastCard(title: Text(msg));
