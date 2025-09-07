@@ -16,11 +16,12 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: MediaQuery.sizeOf(context).height * 0.07,
-        width: MediaQuery.sizeOf(context).width * percentsWidth,
+        height: size.height * 0.07,
+        width:size.width * percentsWidth,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(backgroundColor: selectedColor),

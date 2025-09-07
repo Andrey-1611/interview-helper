@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
+import 'package:interview_master/features/interview/presentation/pages/user_profile_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/users_rating_page.dart';
-import '../../../../app/navigation/app_router_names.dart';
 import 'initial_page.dart';
 import 'interviews_history_page.dart';
 
@@ -44,10 +44,8 @@ class _HomePageView extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {
-              AppRouter.pushNamed(AppRouterNames.myUserProfile);
-            },
-            icon: Icon(Icons.settings),
+            onPressed: () => DialogHelper.showSignOutDialog(context),
+            icon: Icon(Icons.exit_to_app),
           ),
         ],
       ),
@@ -55,12 +53,16 @@ class _HomePageView extends StatelessWidget {
         currentIndex: currentIndex,
         changeIndex: changeIndex,
       ),
-      body: switch (currentIndex) {
-        0 => InitialPage(),
-        1 => InterviewsHistoryPage(userId: null),
-        2 => UsersRatingPage(),
-        _ => CustomLoadingIndicator(),
-      },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: switch (currentIndex) {
+          0 => InitialPage(),
+          1 => InterviewsHistoryPage(userId: null),
+          2 => UserProfilePage(user: null),
+          3 => UsersRatingPage(),
+          _ => CustomLoadingIndicator(),
+        },
+      ),
     );
   }
 }
@@ -82,6 +84,7 @@ class _BottomNavigationBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Собеседование'),
         BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Профиль'),
         BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Рейтинг'),
       ],
     );

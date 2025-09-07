@@ -4,8 +4,7 @@ import 'package:interview_master/features/auth/presentation/pages/change_passwor
 import 'package:interview_master/features/auth/presentation/pages/email_verification_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:interview_master/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:interview_master/features/auth/presentation/pages/splash_page.dart';
-import 'package:interview_master/features/auth/presentation/pages/my_user_profile_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/splash_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/question_info_page.dart';
 import 'package:interview_master/features/interview/presentation/pages/user_info_page.dart';
 import '../../features/interview/presentation/pages/home_page.dart';
@@ -25,7 +24,6 @@ class AppRouter {
     AppRouterNames.emailVerification: (context) => const EmailVerificationPage(),
     AppRouterNames.changeEmail: (context) => const ChangeEmailPage(),
     AppRouterNames.changePassword: (context) => const ChangePasswordPage(),
-    AppRouterNames.myUserProfile: (context) => const MyUserProfilePage(),
     AppRouterNames.home: (context) => const HomePage(),
     AppRouterNames.interview: (context) => const InterviewPage(),
     AppRouterNames.results: (context) => const ResultsPage(),

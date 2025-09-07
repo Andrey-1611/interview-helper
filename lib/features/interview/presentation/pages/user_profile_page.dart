@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/constants/questions/icons.dart';
+import 'package:interview_master/features/interview/domain/use_cases/get_user_use_case.dart';
+import 'package:interview_master/features/interview/presentation/blocs/get_user_bloc/get_user_bloc.dart';
 import '../../../../app/global/models/user_data.dart';
 
-class UserInfoMainPage extends StatefulWidget {
-  final UserData user;
+class UserProfilePage extends StatelessWidget {
+  final UserData? user;
 
-  const UserInfoMainPage({super.key, required this.user});
+  const UserProfilePage({super.key, this.user});
 
   @override
-  State<UserInfoMainPage> createState() => _UserInfoMainPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          GetUserBloc(GetIt.I<GetUserUseCase>())..add(GetUser(userData: user)),
+      child: BlocBuilder<GetUserBloc, GetUserState>(
+        builder: (context, state) {
+          if (state is GetUserSuccess) {
+            return _UserProfilePageView(user: state.user);
+          }
+          return CustomLoadingIndicator();
+        },
+      ),
+    );
+  }
 }
 
-class _UserInfoMainPageState extends State<UserInfoMainPage> {
+class _UserProfilePageView extends StatefulWidget {
+  final UserData user;
+
+  const _UserProfilePageView({required this.user});
+
+  @override
+  State<_UserProfilePageView> createState() => _UserProfilePageViewState();
+}
+
+class _UserProfilePageViewState extends State<_UserProfilePageView> {
   @override
   Widget build(BuildContext context) {
     final data = UserData.getStatsInfo(widget.user);

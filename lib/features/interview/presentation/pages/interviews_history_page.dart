@@ -202,6 +202,7 @@ class _InterviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () {
         AppRouter.pushNamed(AppRouterNames.interviewInfo, arguments: interview);
@@ -211,14 +212,14 @@ class _InterviewCard extends StatelessWidget {
           leading: CustomScoreIndicator(score: interview.score),
           title: Text(
             '${interview.direction}, ${interview.difficulty}',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: textTheme.bodyLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 DateFormat('dd/MM/yyyy HH:mm').format(interview.date),
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: textTheme.bodyMedium,
               ),
             ],
           ),

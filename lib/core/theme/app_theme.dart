@@ -51,8 +51,9 @@ class AppTheme {
         filled: true,
         fillColor: AppPalette.cardBackground,
         border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8.0.sp)),
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8.0.sp),
+        ),
 
         contentPadding: EdgeInsets.all(12.sp),
 
@@ -92,9 +93,14 @@ class AppTheme {
           side: BorderSide.none,
         ),
       ),
-      listTileTheme: ListTileThemeData(
-        contentPadding: EdgeInsets.all(12.0.sp)
-      )
+      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(12.0.sp)),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppPalette.cardBackground,
+        selectedItemColor: AppPalette.primary,
+        unselectedItemColor: AppPalette.textPrimary,
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+      ),
     );
   }
 }

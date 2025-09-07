@@ -38,7 +38,7 @@ class _UsersRatingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Padding(padding: EdgeInsets.all(16.0), child: _UsersList()),
+      body: _UsersList(),
     );
   }
 }
@@ -75,33 +75,31 @@ class _UsersListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final UserData user = users[index];
-          return Card(
-            child: ListTile(
-              onTap: () {
-                ref.read(userProvider.notifier).state = user;
-                AppRouter.pushNamed(AppRouterNames.userInfo);
-              },
-              leading: Text(
-                '${index + 1}',
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
-              title: Text(user.name),
-              subtitle: Row(
-                children: [
-                  Text('${user.totalScore}  '),
-                  Icon(Icons.star, color: AppPalette.primary),
-                ],
-              ),
-              trailing: CustomScoreIndicator(score: user.averageScore),
+    return ListView.builder(
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        final UserData user = users[index];
+        return Card(
+          child: ListTile(
+            onTap: () {
+              ref.read(userProvider.notifier).state = user;
+              AppRouter.pushNamed(AppRouterNames.userInfo);
+            },
+            leading: Text(
+              '${index + 1}',
+              style: Theme.of(context).textTheme.displayMedium,
             ),
-          );
-        },
-      ),
+            title: Text(user.name),
+            subtitle: Row(
+              children: [
+                Text('${user.totalScore}  '),
+                Icon(Icons.star, color: AppPalette.primary),
+              ],
+            ),
+            trailing: CustomScoreIndicator(score: user.averageScore),
+          ),
+        );
+      },
     );
   }
 }

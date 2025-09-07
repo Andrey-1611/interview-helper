@@ -1,13 +1,13 @@
+import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
-import '../../data/models/my_user.dart';
 
 class GetUserUseCase {
   final LocalRepository _localRepository;
 
   GetUserUseCase(this._localRepository);
 
-  Future<MyUser> call() async {
-    final user = await _localRepository.getUser();
-    return user!;
+  Future<UserData> call(UserData? user) async {
+    if (user != null) return user;
+    return (await _localRepository.getUser())!;
   }
 }

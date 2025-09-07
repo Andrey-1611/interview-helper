@@ -60,6 +60,8 @@ dependencies:
 
   json_annotation: ^4.9.0
 
+  yandex_mobileads: ^7.14.0
+
 dev_dependencies:
   mocktail: ^1.0.4
   bloc_test: ^10.0.0

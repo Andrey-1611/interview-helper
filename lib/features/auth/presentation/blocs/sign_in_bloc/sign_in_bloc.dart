@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/errors/network_exception.dart';
+import 'package:interview_master/core/errors/exceptions.dart';
 import 'package:interview_master/features/auth/domain/use_cases/sign_in_use_case.dart';
 
 import '../../../data/models/my_user.dart';

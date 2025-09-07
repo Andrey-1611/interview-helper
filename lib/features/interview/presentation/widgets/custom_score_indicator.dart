@@ -7,9 +7,10 @@ class CustomScoreIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.1,
-      width: MediaQuery.sizeOf(context).height * 0.1,
+      height: size.height * 0.1,
+      width: size.height * 0.1,
       child: Stack(
         alignment: Alignment.center,
         children: [

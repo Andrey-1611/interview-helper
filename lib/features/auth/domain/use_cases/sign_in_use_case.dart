@@ -1,4 +1,4 @@
-import 'package:interview_master/core/errors/network_exception.dart';
+import 'package:interview_master/core/errors/exceptions.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../interview/domain/repositories/local_repository.dart';
 import '../../../interview/domain/repositories/remote_repository.dart';
@@ -20,16 +20,15 @@ class SignInUseCase {
 
   Future<MyUser?> call(MyUser user, String password) async {
     final isConnected = await _networkInfo.isConnected;
-    if (!isConnected) {
-      throw NetworkException();
-    }
+    if (!isConnected) throw NetworkException();
     await _authRepository.signIn(user, password);
     final result = await _authRepository.checkEmailVerified();
     if (result!.isEmailVerified) {
       final user = result.user!;
+      final userData = await _remoteRepository.getUserData(user.id!);
       final interviews = await _remoteRepository.showInterviews(user.id!);
       await _localRepository.loadInterviews(interviews);
-      await _localRepository.loadUser(user);
+      await _localRepository.loadUser(userData);
       return user;
     }
     await _authRepository.sendEmailVerification();

@@ -1,4 +1,4 @@
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/features/interview/data/data_sources/hive_data_source.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
@@ -24,12 +24,12 @@ class LocalRepositoryImpl implements LocalRepository {
   }
 
   @override
-  Future<void> loadUser(MyUser user) async {
+  Future<void> loadUser(UserData user) async {
     await _hiveDataSource.loadUser(user);
   }
 
   @override
-  Future<MyUser?> getUser() async {
+  Future<UserData?> getUser() async {
     return await _hiveDataSource.getUser();
   }
 

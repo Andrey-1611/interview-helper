@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/interview/presentation/pages/interviews_history_page.dart';
-import 'package:interview_master/features/interview/presentation/pages/user_info_main_page.dart';
+import 'package:interview_master/features/interview/presentation/pages/user_profile_page.dart';
 
 import '../../../../app/global/providers/user_provider.dart';
 
@@ -52,7 +52,7 @@ class _UserInfoPageView extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: switch (currentIndex) {
-          0 => UserInfoMainPage(user: user!),
+          0 => UserProfilePage(user: user),
           1 => InterviewsHistoryPage(userId: user!.id),
           _ => CustomLoadingIndicator(),
         },
@@ -76,10 +76,7 @@ class _BottomNavigationBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: changeIndex,
       items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bar_chart),
-          label: 'Статистика',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Профиль'),
         BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
       ],
     );

@@ -8,11 +8,13 @@ class CustomMainResultPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final textTheme = Theme.of(context).textTheme;
     return Card(
       child: Container(
         alignment: Alignment.center,
-        width: MediaQuery.sizeOf(context).width,
-        height: MediaQuery.sizeOf(context).height * 0.25,
+        width: size.width,
+        height: size.height * 0.25,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -20,9 +22,9 @@ class CustomMainResultPanel extends StatelessWidget {
             if (type != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
-                child: Text(type!, style: Theme.of(context).textTheme.displayLarge),
+                child: Text(type!, style: textTheme.displayLarge),
               ),
-            Text(text, style: Theme.of(context).textTheme.displayLarge),
+            Text(text, style: textTheme.displayLarge),
           ],
         ),
       ),

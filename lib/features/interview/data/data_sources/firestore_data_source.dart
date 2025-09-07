@@ -29,13 +29,29 @@ class FirestoreDataSource {
   }
 
   Future<List<UserData>> showUsers() async {
-    final data = await _usersCollection()
-        .orderBy('totalScore', descending: true)
-        .get();
-    final List<UserData> users = data.docs
-        .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
-    return users;
+    try {
+      final data = await _usersCollection()
+          .orderBy('totalScore', descending: true)
+          .get();
+      final List<UserData> users = data.docs
+          .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      return users;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<UserData> getUserData(String userId) async {
+    try {
+      final data = await _usersCollection().doc(userId).get();
+      final user = UserData.fromJson(data.data() as Map<String, dynamic>);
+      return user;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   Future<void> addInterview(Interview interview, String userId) async {

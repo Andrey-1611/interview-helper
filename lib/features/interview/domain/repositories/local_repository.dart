@@ -1,4 +1,4 @@
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 
 abstract interface class LocalRepository {
@@ -8,9 +8,9 @@ abstract interface class LocalRepository {
 
   Future<List<Interview>> showInterviews();
 
-  Future<void> loadUser(MyUser user);
+  Future<void> loadUser(UserData user);
 
-  Future<MyUser?> getUser();
+  Future<UserData?> getUser();
 
   Future<void> deleteUser();
 }

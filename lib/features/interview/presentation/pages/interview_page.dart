@@ -26,10 +26,7 @@ class _InterviewPageState extends State<InterviewPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _interviewInfo =
-    ModalRoute
-        .of(context)!
-        .settings
-        .arguments as InterviewInfo;
+        ModalRoute.of(context)!.settings.arguments as InterviewInfo;
     _questions = InterviewInfo.selectQuestions(_interviewInfo);
   }
 
@@ -122,6 +119,7 @@ class _InterviewQuestionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.only(
         top: 32.0,
@@ -132,20 +130,8 @@ class _InterviewQuestionPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Вопрос ${currentPage + 1} - ',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
-          ),
-          Text(
-            questions[currentPage],
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
-          ),
+          Text('Вопрос ${currentPage + 1} - ', style: textTheme.bodyMedium),
+          Text(questions[currentPage], style: textTheme.bodyMedium),
           Expanded(
             child: TextField(
               autofocus: true,
@@ -169,15 +155,15 @@ class _InterviewQuestionPage extends StatelessWidget {
               currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
-                text: 'Назад',
-                selectedColor: AppPalette.primary,
-                percentsWidth: 0.32,
-                onPressed: () => _navigateToPage(currentPage - 1),
-              ),
+                      text: 'Назад',
+                      selectedColor: AppPalette.primary,
+                      percentsWidth: 0.34,
+                      onPressed: () => _navigateToPage(currentPage - 1),
+                    ),
               CustomButton(
                 text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 selectedColor: AppPalette.primary,
-                percentsWidth: 0.32,
+                percentsWidth: 0.34,
                 onPressed: () {
                   _saveCurrentAnswer();
                   if (currentPage == 9) {
@@ -208,9 +194,10 @@ class _InterviewQuestionPage extends StatelessWidget {
   }
 
   void _navigateToResult() {
-    final argumentsData = InterviewInfo(direction: interviewInfo.direction,
-        difficulty: interviewInfo.difficulty,
-        userInputs: UserInput.fromInput(questions, answers),
+    final argumentsData = InterviewInfo(
+      direction: interviewInfo.direction,
+      difficulty: interviewInfo.difficulty,
+      userInputs: UserInput.fromInput(questions, answers),
     );
     AppRouter.pushReplacementNamed(
       AppRouterNames.results,

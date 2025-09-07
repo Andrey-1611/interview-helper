@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/models/my_user.dart';
-import '../../../domain/use_cases/get_user_use_case.dart';
+import 'package:interview_master/app/global/models/user_data.dart';
+import '../../../../interview/domain/use_cases/get_user_use_case.dart';
 
 part 'get_user_event.dart';
 
@@ -14,7 +14,7 @@ class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
     on<GetUser>((event, emit) async {
       emit(GetUserLoading());
       try {
-        final user = await _getUserUseCase.call();
+        final user = await _getUserUseCase.call(event.userData);
         emit(GetUserSuccess(user: user));
       } catch (e) {
         emit(GetUserFailure(e: e.toString()));

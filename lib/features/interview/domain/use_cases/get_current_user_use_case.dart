@@ -1,8 +1,7 @@
+import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
-
-import '../../data/models/my_user.dart';
 
 class GetCurrentUserUseCase {
   final RemoteRepository _remoteRepository;
@@ -15,13 +14,13 @@ class GetCurrentUserUseCase {
     this._networkInfo,
   );
 
-  Future<MyUser?> call() async {
+  Future<UserData?> call() async {
     final user = await _localRepository.getUser();
     if (user != null) {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return user;
-      final interviews = await _remoteRepository.showInterviews(user.id!);
-      _localRepository.loadInterviews(interviews);
+      final interviews = await _remoteRepository.showInterviews(user.id);
+      await _localRepository.loadInterviews(interviews);
       return user;
     }
     return null;

@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:interview_master/core/utils/mobile_ads.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
-import 'package:interview_master/features/auth/domain/use_cases/get_current_user_use_case.dart';
+import 'package:interview_master/features/interview/domain/use_cases/get_current_user_use_case.dart';
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/hive_data_source.dart';
@@ -17,6 +18,7 @@ import 'package:interview_master/features/interview/data/repositories/local_repo
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';
 import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
+import 'package:interview_master/features/interview/domain/use_cases/start_interview_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
 import '../../core/utils/network_info.dart';
@@ -28,12 +30,12 @@ import '../../features/auth/domain/use_cases/sign_up_use_case.dart';
 import '../../features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import '../../features/interview/domain/repositories/remote_repository.dart';
 import '../../features/interview/domain/repositories/ai_repository.dart';
-import '../../features/auth/domain/use_cases/get_user_use_case.dart';
+import '../../features/interview/domain/use_cases/get_user_use_case.dart';
 
 class AppDependencies {
   static final GetIt _getIt = GetIt.instance;
 
-  static void setUp() async {
+  static void setup() async {
     _setupUtils();
     _setupRepositories();
     _setupAuthUseCases();
@@ -42,6 +44,7 @@ class AppDependencies {
 
   static void _setupUtils() {
     _getIt.registerLazySingleton(() => NetworkInfo(Connectivity()));
+    _getIt.registerLazySingleton(() => MobileAds());
   }
 
   static void _setupRepositories() {
@@ -118,7 +121,6 @@ class AppDependencies {
     _getIt.registerLazySingleton(
       () => CheckResultsUseCase(
         _getIt<AIRepository>(),
-        _getIt<AuthRepository>(),
         _getIt<RemoteRepository>(),
         _getIt<LocalRepository>(),
         _getIt<NetworkInfo>(),
@@ -133,6 +135,9 @@ class AppDependencies {
     );
     _getIt.registerLazySingleton(
       () => ShowUsersUseCase(_getIt<RemoteRepository>(), _getIt<NetworkInfo>()),
+    );
+    _getIt.registerLazySingleton(
+      () => StartInterviewUseCase(_getIt<NetworkInfo>(), _getIt<MobileAds>()),
     );
   }
 }

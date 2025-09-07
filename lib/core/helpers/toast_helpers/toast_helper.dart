@@ -47,6 +47,10 @@ class ToastHelper {
     _showToast(msg: 'Ошибка входа, проверьте введенные данные');
   }
 
+  static void adsLoadingError() {
+    _showToast(msg: 'Не удалось загрузить рекламу, попробуйте позже');
+  }
+
   static void loadingError() {
     _showToast(msg: 'Ошибка загрузки данных, попробуйте позже');
   }

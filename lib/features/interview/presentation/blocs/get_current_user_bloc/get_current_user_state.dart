@@ -16,7 +16,7 @@ final class GetCurrentUserFailure extends GetCurrentUserState {}
 final class GetCurrentUserNotAuth extends GetCurrentUserState {}
 
 final class GetCurrentUserSuccess extends GetCurrentUserState {
-  final MyUser user;
+  final UserData user;
 
   const GetCurrentUserSuccess({required this.user});
 

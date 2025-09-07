@@ -5,7 +5,7 @@ import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 
-import '../../../../../core/errors/network_exception.dart';
+import '../../../../../core/errors/exceptions.dart';
 
 part 'check_results_event.dart';
 

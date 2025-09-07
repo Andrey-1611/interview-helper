@@ -1,8 +1,7 @@
 import 'dart:developer';
-
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 
 class HiveDataSource {
@@ -13,7 +12,7 @@ class HiveDataSource {
   Box<Interview> get _interviewsBox =>
       _hive.box<Interview>(HiveData.interviews);
 
-  Box<MyUser> get _usersBox => _hive.box<MyUser>(HiveData.user);
+  Box<UserData> get _usersBox => _hive.box<UserData>(HiveData.user);
 
   Future<void> loadInterviews(List<Interview> interviews) async {
     try {
@@ -46,7 +45,7 @@ class HiveDataSource {
     }
   }
 
-  Future<void> loadUser(MyUser user) async {
+  Future<void> loadUser(UserData user) async {
     try {
       await _usersBox.put(HiveData.userKey, user);
     } catch (e) {
@@ -55,7 +54,7 @@ class HiveDataSource {
     }
   }
 
-  Future<MyUser?> getUser() async {
+  Future<UserData?> getUser() async {
     try {
       return _usersBox.get(HiveData.userKey);
     } catch (e) {

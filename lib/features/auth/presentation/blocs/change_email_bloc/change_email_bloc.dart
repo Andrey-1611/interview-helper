@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/errors/network_exception.dart';
+import '../../../../../core/errors/exceptions.dart';
 import '../../../domain/use_cases/change_email_use_case.dart';
 
 part 'change_email_event.dart';

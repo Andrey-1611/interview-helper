@@ -28,4 +28,8 @@ class RemoteRepositoryImpl implements RemoteRepository {
     return await _firestoreDataSource.showInterviews(userId);
   }
 
+  @override
+  Future<UserData> getUserData(String userId) async {
+    return await _firestoreDataSource.getUserData(userId);
+  }
 }

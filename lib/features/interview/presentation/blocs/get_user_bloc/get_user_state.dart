@@ -18,7 +18,7 @@ final class GetUserFailure extends GetUserState {
 }
 
 final class GetUserSuccess extends GetUserState {
-  final MyUser user;
+  final UserData user;
 
   const GetUserSuccess({required this.user});
 

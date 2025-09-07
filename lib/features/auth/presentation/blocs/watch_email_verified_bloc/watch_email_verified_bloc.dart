@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
-import '../../../../../core/errors/network_exception.dart';
+import '../../../../../core/errors/exceptions.dart';
 import '../../../data/models/my_user.dart';
 
 part 'watch_email_verified_event.dart';

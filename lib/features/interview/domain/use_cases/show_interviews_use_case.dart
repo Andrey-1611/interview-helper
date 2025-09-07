@@ -2,7 +2,7 @@ import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
-import '../../../../core/errors/network_exception.dart';
+import '../../../../core/errors/exceptions.dart';
 
 class ShowInterviewsUseCase {
   final RemoteRepository _remoteRepository;
@@ -16,9 +16,7 @@ class ShowInterviewsUseCase {
   Future<List<Interview>> call(String? userId) async {
     if (userId != null) {
       final isConnected = await _networkInfo.isConnected;
-      if (!isConnected) {
-        throw NetworkException();
-      }
+      if (!isConnected) throw NetworkException();
       return await _remoteRepository.showInterviews(userId);
     }
     return await _localRepository.showInterviews();
