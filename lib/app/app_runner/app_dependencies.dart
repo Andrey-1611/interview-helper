@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:interview_master/core/utils/mobile_ads.dart';
 import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
+import 'package:interview_master/features/interview/data/data_sources/chat_gpt_data_source.dart';
 import 'package:interview_master/features/interview/domain/use_cases/get_current_user_use_case.dart';
 import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
-import 'package:interview_master/features/interview/data/data_sources/gemini_data_source.dart';
 import 'package:interview_master/features/interview/data/data_sources/hive_data_source.dart';
 import 'package:interview_master/features/interview/data/repositories/ai_repository_impl.dart';
 import 'package:interview_master/features/interview/data/repositories/local_repository_impl.dart';
@@ -44,7 +43,6 @@ class AppDependencies {
 
   static void _setupUtils() {
     _getIt.registerLazySingleton(() => NetworkInfo(Connectivity()));
-    _getIt.registerLazySingleton(() => MobileAds());
   }
 
   static void _setupRepositories() {
@@ -59,7 +57,7 @@ class AppDependencies {
       () => LocalRepositoryImpl(HiveDataSource(Hive)),
     );
     _getIt.registerLazySingleton<AIRepository>(
-      () => AIRepositoryImpl(GeminiDataSource(Gemini.instance)),
+      () => AIRepositoryImpl(ChatGPTDataSource(Dio())),
     );
   }
 
@@ -137,7 +135,10 @@ class AppDependencies {
       () => ShowUsersUseCase(_getIt<RemoteRepository>(), _getIt<NetworkInfo>()),
     );
     _getIt.registerLazySingleton(
-      () => StartInterviewUseCase(_getIt<NetworkInfo>(), _getIt<MobileAds>()),
+      () => StartInterviewUseCase(
+        _getIt<LocalRepository>(),
+        _getIt<NetworkInfo>(),
+      ),
     );
   }
 }

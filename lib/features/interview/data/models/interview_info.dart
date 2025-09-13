@@ -57,10 +57,11 @@ class InterviewInfo extends Equatable {
     return myQuestions.take(10).toList();
   }
 
-  static String textInFilter(InterviewInfo info) {
+  static String textInFilter(InterviewInfo info, String sort) {
     return [
       if (info.direction.isNotEmpty) info.direction,
       if (info.difficulty.isNotEmpty) info.difficulty,
+      if (sort.isNotEmpty) sort,
     ].join(', ');
   }
 }

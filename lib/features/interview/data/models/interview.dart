@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:interview_master/core/constants/data.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -66,6 +67,7 @@ class Interview extends Equatable {
   static List<Interview> filterInterviews(
     String direction,
     String difficulty,
+    String sort,
     List<Interview> interviews,
   ) {
     if (direction.isNotEmpty) {
@@ -73,6 +75,13 @@ class Interview extends Equatable {
     }
     if (difficulty.isNotEmpty) {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
+    }
+    if (sort == Data.sorts[0]) {
+      interviews.sort((a, b) => b.date.compareTo(a.date));
+    } else if (sort == Data.sorts[1]) {
+      interviews.sort((a, b) => a.date.compareTo(b.date));
+    } else if (sort == Data.sorts[2]) {
+      interviews.sort((a, b) => b.score.compareTo(a.score));
     }
     return interviews;
   }

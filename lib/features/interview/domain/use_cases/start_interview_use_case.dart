@@ -1,19 +1,18 @@
-import 'package:interview_master/core/utils/mobile_ads.dart';
 import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
 import '../../../../core/errors/exceptions.dart';
 
 class StartInterviewUseCase {
-  final MobileAds _mobileAds;
+  final LocalRepository _localRepository;
   final NetworkInfo _networkInfo;
 
-  StartInterviewUseCase(
-    this._networkInfo,
-    this._mobileAds,
-  );
+  StartInterviewUseCase(this._localRepository, this._networkInfo);
 
   Future<bool> call() async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
-    return await _mobileAds.showAd();
+    final interviews = await _localRepository.getTotalInterviewsToady();
+    if (interviews != 3) return true;
+    return false;
   }
 }

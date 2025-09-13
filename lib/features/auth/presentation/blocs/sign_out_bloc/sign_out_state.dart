@@ -11,7 +11,7 @@ final class SignOutInitial extends SignOutState {}
 
 final class SignOutLoading extends SignOutState {}
 
-final class SignOutNetworkError extends SignOutState {}
+final class SignOutNetworkFailure extends SignOutState {}
 
 final class SignOutFailure extends SignOutState {}
 

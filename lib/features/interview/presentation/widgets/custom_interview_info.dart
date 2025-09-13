@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_main_result_panel.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import 'package:interview_master/features/interview/presentation/widgets/custom_score_indicator.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../../data/models/interview.dart';
-import 'custom_question_card.dart';
 
 class CustomInterviewInfo extends StatelessWidget {
   final Interview interview;
@@ -45,10 +45,12 @@ class _QuestionCard extends StatelessWidget {
       onTap: () {
         AppRouter.pushNamed(AppRouterNames.questionInfo, arguments: question);
       },
-      child: CustomQuestionCard(
-        text: 'Вопрос ${question.question}',
-        isQuestionCard: true,
-        score: question.score,
+      child: Card(
+        child: ListTile(
+          leading: CustomScoreIndicator(score: question.score),
+          title: Text('Вопрос ${question.question}'),
+          trailing: Icon(Icons.chevron_right),
+        ),
       ),
     );
   }

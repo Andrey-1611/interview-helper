@@ -15,6 +15,6 @@ final class StartInterviewNetworkFailure extends StartInterviewState {}
 
 final class StartInterviewFailure extends StartInterviewState {}
 
-final class StartInterviewNotLoading extends StartInterviewState {}
+final class StartInterviewNotAttempts extends StartInterviewState {}
 
 final class StartInterviewSuccess extends StartInterviewState {}

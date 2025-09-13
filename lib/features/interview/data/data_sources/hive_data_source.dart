@@ -27,9 +27,10 @@ class HiveDataSource {
     }
   }
 
-  Future<void> addInterview(Interview interview) async {
+  Future<void> addInterview(Interview interview, UserData updatedUser) async {
     try {
       await _interviewsBox.put(interview.id, interview);
+      await _usersBox.put(HiveData.userKey, updatedUser);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -38,7 +39,9 @@ class HiveDataSource {
 
   Future<List<Interview>> showInterviews() async {
     try {
-      return _interviewsBox.values.toList();
+      final interviews = _interviewsBox.values.toList();
+      interviews.sort((a, b) => b.date.compareTo(a.date));
+      return interviews;
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -66,6 +69,23 @@ class HiveDataSource {
   Future<void> deleteUser() async {
     try {
       await _usersBox.delete(HiveData.userKey);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<int> getTotalInterviewsToady() async {
+    try {
+      final interviews = _interviewsBox.values.toList();
+      final time = DateTime.now();
+      final todayInterviews = interviews.where(
+        (interview) =>
+            interview.date.year == time.year &&
+            interview.date.month == time.month &&
+            interview.date.day == time.day,
+      );
+      return todayInterviews.length;
     } catch (e) {
       log(e.toString());
       rethrow;

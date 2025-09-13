@@ -21,7 +21,8 @@ class AppRouter {
     AppRouterNames.splash: (context) => const SplashPage(),
     AppRouterNames.signIn: (context) => const SignInPage(),
     AppRouterNames.signUp: (context) => const SignUpPage(),
-    AppRouterNames.emailVerification: (context) => const EmailVerificationPage(),
+    AppRouterNames.emailVerification: (context) =>
+        const EmailVerificationPage(),
     AppRouterNames.changeEmail: (context) => const ChangeEmailPage(),
     AppRouterNames.changePassword: (context) => const ChangePasswordPage(),
     AppRouterNames.home: (context) => const HomePage(),

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/core/constants/directions.dart';
+import 'package:interview_master/core/constants/data.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import 'package:interview_master/core/utils/mobile_ads.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/start_interview_use_case.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_dropdown_menu.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../blocs/start_interview_bloc/start_interview_bloc.dart';
 import '../widgets/custom_button.dart';
 
@@ -24,12 +23,6 @@ class InitialPage extends StatefulWidget {
 class _InitialPageState extends State<InitialPage> {
   String direction = '';
   String difficultly = '';
-
-  @override
-  void initState() {
-    super.initState();
-    GetIt.I<MobileAds>().loadAd();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,25 +66,22 @@ class _InitialPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _DirectionDropdownButton(
-              changeDirection: changeDirection,
-              direction: direction,
-            ),
-            SizedBox(height: size.height * 0.03),
-            _DifficultlyDropdownButton(
-              difficultly: difficultly,
-              changeDifficultly: changeDifficultly,
-            ),
-            SizedBox(height: size.height * 0.03),
-            _InterviewButton(difficulty: difficultly, direction: direction),
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _DirectionDropdownButton(
+            changeDirection: changeDirection,
+            direction: direction,
+          ),
+          SizedBox(height: size.height * 0.03),
+          _DifficultlyDropdownButton(
+            difficultly: difficultly,
+            changeDifficultly: changeDifficultly,
+          ),
+          SizedBox(height: size.height * 0.03),
+          _InterviewButton(difficulty: difficultly, direction: direction),
+        ],
       ),
     );
   }
@@ -109,7 +99,7 @@ class _DirectionDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdownMenu(
-      data: InitialData.directions,
+      data: Data.directions,
       change: changeDirection,
       hintText: 'Выберите направление',
     );
@@ -128,7 +118,7 @@ class _DifficultlyDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdownMenu(
-      data: InitialData.difficulties,
+      data: Data.difficulties,
       change: changeDifficultly,
       hintText: 'Выберите сложность',
     );
@@ -156,12 +146,12 @@ class _InterviewButton extends StatelessWidget {
               difficulty: difficulty,
             ),
           );
-        } else if (state is StartInterviewNotLoading) {
-          AppRouter.pop();
-          ToastHelper.adsLoadingError();
         } else if (state is StartInterviewNetworkFailure) {
           AppRouter.pop();
           ToastHelper.networkError();
+        } else if (state is StartInterviewNotAttempts) {
+          AppRouter.pop();
+          ToastHelper.attemptsError();
         } else if (state is StartInterviewFailure) {
           AppRouter.pop();
           ToastHelper.unknownError();

@@ -16,12 +16,10 @@ class StartInterviewBloc
     on<StartInterview>((event, emit) async {
       emit(StartInterviewLoading());
       try {
-        final isConnect = await _isConnectedUseCase.call();
-        isConnect
+        final result = await _isConnectedUseCase.call();
+        result
             ? emit(StartInterviewSuccess())
-            : emit(StartInterviewNotLoading());
-      } on AdsLoadingException {
-        emit(StartInterviewNotLoading());
+            : emit(StartInterviewNotAttempts());
       } on NetworkException {
         emit(StartInterviewNetworkFailure());
       } catch (e) {

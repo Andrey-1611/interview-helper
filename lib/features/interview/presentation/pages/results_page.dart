@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/app/navigation/app_router.dart';
 import 'package:interview_master/core/helpers/dialog_helpers/dialog_helper.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/check_results_use_case.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_interview_info.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../../../../core/helpers/toast_helpers/toast_helper.dart';
 import '../blocs/check_results_bloc/check_results_bloc.dart';
 

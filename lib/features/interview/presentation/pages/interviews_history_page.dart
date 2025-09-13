@@ -3,16 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/domain/use_cases/show_interviews_use_case.dart';
+import 'package:interview_master/features/interview/presentation/blocs/filter_bloc/filter_cubit.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_network_failure.dart';
 import 'package:intl/intl.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
+import '../../../../core/constants/data.dart';
 import '../../../../core/helpers/dialog_helpers/dialog_helper.dart';
 import '../../../../core/helpers/toast_helpers/toast_helper.dart';
+import '../../../../core/theme/app_pallete.dart';
 import '../../data/models/interview.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
-import '../widgets/custom_filter_dialog.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_dropdown_menu.dart';
 import '../widgets/custom_score_indicator.dart';
 
 class InterviewsHistoryPage extends StatefulWidget {
@@ -25,8 +29,6 @@ class InterviewsHistoryPage extends StatefulWidget {
 }
 
 class _InterviewsHistoryPageState extends State<InterviewsHistoryPage> {
-  String direction = '';
-  String difficulty = '';
   final TextEditingController _filterController = TextEditingController();
 
   @override
@@ -37,46 +39,24 @@ class _InterviewsHistoryPageState extends State<InterviewsHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
-            ..add(ShowInterviews(userId: widget.userId)),
-      child: _CustomInterviewsList(
-        filterController: _filterController,
-        runFilter: _runFilter,
-        interviewInfo: InterviewInfo(
-          direction: direction,
-          difficulty: difficulty,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
+                ..add(ShowInterviews(userId: widget.userId)),
         ),
-      ),
+        BlocProvider(create: (context) => FilterCubit()),
+      ],
+      child: _CustomInterviewsList(filterController: _filterController),
     );
-  }
-
-  void _updateFilterText() {
-    _filterController.text = InterviewInfo.textInFilter(
-      InterviewInfo(direction: direction, difficulty: difficulty),
-    );
-  }
-
-  void _runFilter(String direction1, String difficulty1) {
-    setState(() {
-      direction = direction1;
-      difficulty = difficulty1;
-    });
-    _updateFilterText();
   }
 }
 
 class _CustomInterviewsList extends StatelessWidget {
-  final InterviewInfo interviewInfo;
-  final Function(String, String) runFilter;
   final TextEditingController filterController;
 
-  const _CustomInterviewsList({
-    required this.interviewInfo,
-    required this.runFilter,
-    required this.filterController,
-  });
+  const _CustomInterviewsList({required this.filterController});
 
   @override
   Widget build(BuildContext context) {
@@ -86,21 +66,25 @@ class _CustomInterviewsList extends StatelessWidget {
           ToastHelper.loadingError();
         }
       },
-      builder: (context, state) {
-        if (state is ShowInterviewsLoading) {
+      builder: (context, interviewsState) {
+        if (interviewsState is ShowInterviewsLoading) {
           return CustomLoadingIndicator();
-        } else if (state is ShowInterviewsNetworkFailure) {
+        } else if (interviewsState is ShowInterviewsNetworkFailure) {
           return NetworkFailure();
-        } else if (state is ShowInterviewsSuccess) {
-          if (state.interviews.isEmpty) return _EmptyHistory();
-          return _InterviewsListView(
-            interviews: Interview.filterInterviews(
-              interviewInfo.direction,
-              interviewInfo.difficulty,
-              state.interviews,
-            ),
-            runFilter: runFilter,
-            filterController: filterController,
+        } else if (interviewsState is ShowInterviewsSuccess) {
+          if (interviewsState.interviews.isEmpty) return _EmptyHistory();
+          return BlocBuilder<FilterCubit, FilterState>(
+            builder: (context, filterState) {
+              return _InterviewsListView(
+                interviews: Interview.filterInterviews(
+                  filterState.direction,
+                  filterState.difficulty,
+                  filterState.sort,
+                  interviewsState.interviews,
+                ),
+                filterController: filterController,
+              );
+            },
           );
         }
         return SizedBox.shrink();
@@ -125,48 +109,36 @@ class _EmptyHistory extends StatelessWidget {
 
 class _InterviewsListView extends StatelessWidget {
   final List<Interview> interviews;
-  final Function(String, String) runFilter;
   final TextEditingController filterController;
 
   const _InterviewsListView({
     required this.interviews,
-    required this.runFilter,
     required this.filterController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          _FilterButton(
-            runFilter: runFilter,
-            filterController: filterController,
+    return Column(
+      children: [
+        _FilterButton(filterController: filterController),
+        Expanded(
+          child: ListView.builder(
+            itemCount: interviews.length,
+            itemBuilder: (context, index) {
+              final interview = interviews[index];
+              return _InterviewCard(interview: interview);
+            },
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: interviews.length,
-              itemBuilder: (context, index) {
-                final interview = interviews[index];
-                return _InterviewCard(interview: interview);
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class _FilterButton extends StatelessWidget {
-  final Function(String, String) runFilter;
   final TextEditingController filterController;
 
-  const _FilterButton({
-    required this.runFilter,
-    required this.filterController,
-  });
+  const _FilterButton({required this.filterController});
 
   @override
   Widget build(BuildContext context) {
@@ -177,16 +149,23 @@ class _FilterButton extends StatelessWidget {
         focusNode: FocusNode(canRequestFocus: false),
         controller: filterController,
         onTap: () {
+          final filterCubit = context.read<FilterCubit>();
           DialogHelper.showCustomDialog(
-            context,
-            CustomFilterDialog(runFilter: runFilter),
+            dialog: _FilterDialog(
+              filterCubit: filterCubit,
+              filterController: filterController,
+            ),
+            context: context,
           );
         },
         decoration: InputDecoration(
           hintText: 'Фильтр',
           prefixIcon: Icon(Icons.search),
           suffixIcon: IconButton(
-            onPressed: () => runFilter('', ''),
+            onPressed: () {
+              context.read<FilterCubit>().resetFilter();
+              filterController.text = '';
+            },
             icon: Icon(Icons.close),
           ),
         ),
@@ -226,5 +205,67 @@ class _InterviewCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _FilterDialog extends StatelessWidget {
+  final FilterCubit filterCubit;
+  final TextEditingController filterController;
+
+  const _FilterDialog({
+    required this.filterCubit,
+    required this.filterController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String direction = filterCubit.state.direction;
+    String difficulty = filterCubit.state.difficulty;
+    String sort = filterCubit.state.sort;
+    return AlertDialog(
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomDropdownMenu(
+            initialValue: direction,
+            data: Data.directions,
+            change: (value) => direction = value,
+            hintText: 'Направления',
+          ),
+          CustomDropdownMenu(
+            initialValue: difficulty,
+            data: Data.difficulties,
+            change: (value) => difficulty = value,
+            hintText: 'Сложности',
+          ),
+          CustomDropdownMenu(
+            initialValue: sort,
+            data: Data.sorts,
+            change: (value) => sort = value,
+            hintText: 'Сортировка',
+          ),
+          CustomButton(
+            text: 'Применить',
+            selectedColor: AppPalette.primary,
+            onPressed: () => _filter(direction, difficulty, sort),
+            percentsWidth: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _filter(String direction, String difficulty, String sort) {
+    filterCubit.runFilter(
+      direction: direction,
+      difficulty: difficulty,
+      sort: sort,
+    );
+    filterController.text = InterviewInfo.textInFilter(
+      InterviewInfo(direction: direction, difficulty: difficulty),
+      sort,
+    );
+    AppRouter.pop();
   }
 }

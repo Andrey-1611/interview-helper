@@ -8,7 +8,7 @@ abstract interface class RemoteRepository {
 
   Future<UserData> getUserData(String userId);
 
-  Future<void> addInterview(Interview interview, String userId);
+  Future<void> addInterview(Interview interview, UserData updatedUser);
 
   Future<List<Interview>> showInterviews(String userId);
 }

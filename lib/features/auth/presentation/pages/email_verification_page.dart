@@ -5,8 +5,8 @@ import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/auth/domain/use_cases/send_email_verification_use_case.dart';
 import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
 
 class EmailVerificationPage extends StatefulWidget {

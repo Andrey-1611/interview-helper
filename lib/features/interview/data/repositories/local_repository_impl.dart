@@ -9,8 +9,8 @@ class LocalRepositoryImpl implements LocalRepository {
   LocalRepositoryImpl(this._hiveDataSource);
 
   @override
-  Future<void> addInterview(Interview interview) async {
-    await _hiveDataSource.addInterview(interview);
+  Future<void> addInterview(Interview interview, UserData updatedUser) async {
+    await _hiveDataSource.addInterview(interview, updatedUser);
   }
 
   @override
@@ -35,6 +35,11 @@ class LocalRepositoryImpl implements LocalRepository {
 
   @override
   Future<void> deleteUser() async {
-   await _hiveDataSource.deleteUser();
+    await _hiveDataSource.deleteUser();
+  }
+
+  @override
+  Future<int> getTotalInterviewsToady() async {
+    return await _hiveDataSource.getTotalInterviewsToady();
   }
 }

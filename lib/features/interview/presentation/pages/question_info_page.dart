@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/presentation/widgets/custom_main_result_panel.dart';
-import 'package:interview_master/features/interview/presentation/widgets/custom_question_card.dart';
 
 class QuestionInfoPage extends StatefulWidget {
   const QuestionInfoPage({super.key});
@@ -40,10 +39,16 @@ class _QuestionInfoPageView extends StatelessWidget {
           child: ListView(
             children: [
               CustomMainResultPanel(text: 'Точность: ${question.score} %'),
-              const SizedBox(height: 20),
-              _Question(question: question),
-              _UserAnswer(question: question),
-              _CorrectAnswer(question: question),
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+              _InfoCard(titleText: 'Вопрос:', subtitleText: question.question),
+              _InfoCard(
+                titleText: 'Ваш ответ:',
+                subtitleText: question.userAnswer,
+              ),
+              _InfoCard(
+                titleText: 'Правильный ответ:',
+                subtitleText: question.correctAnswer,
+              ),
             ],
           ),
         ),
@@ -52,44 +57,20 @@ class _QuestionInfoPageView extends StatelessWidget {
   }
 }
 
-class _Question extends StatelessWidget {
-  final Question question;
+class _InfoCard extends StatelessWidget {
+  final String titleText;
+  final String subtitleText;
 
-  const _Question({required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomQuestionCard(
-      text: 'Вопрос: ${question.question}',
-      isQuestionCard: false,
-    );
-  }
-}
-
-class _UserAnswer extends StatelessWidget {
-  final Question question;
-
-  const _UserAnswer({required this.question});
+  const _InfoCard({required this.titleText, required this.subtitleText});
 
   @override
   Widget build(BuildContext context) {
-    return CustomQuestionCard(
-      text: 'Ваш ответ: ${question.userAnswer}',
-      isQuestionCard: false,
-    );
-  }
-}
-
-class _CorrectAnswer extends StatelessWidget {
-  final Question question;
-
-  const _CorrectAnswer({required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomQuestionCard(
-      text: 'Правильный ответ: ${question.correctAnswer}',
-      isQuestionCard: false,
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      child: ListTile(
+        title: Text(titleText, style: textTheme.displayMedium),
+        subtitle: Text(subtitleText, style: textTheme.bodyLarge),
+      ),
     );
   }
 }

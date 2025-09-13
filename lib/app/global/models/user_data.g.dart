@@ -29,7 +29,7 @@ class UserDataAdapter extends TypeAdapter<UserData> {
   @override
   void write(BinaryWriter writer, UserData obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)

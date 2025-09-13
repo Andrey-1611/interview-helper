@@ -6,7 +6,6 @@ class AppTheme {
   static getTheme() {
     return ThemeData(
       colorScheme: ColorScheme.dark(
-        brightness: Brightness.dark,
         primary: AppPalette.primary,
         secondary: AppPalette.primary,
         surface: AppPalette.background,
@@ -14,6 +13,11 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppPalette.background,
       textTheme: TextTheme(
+        titleLarge: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 60.sp,
+          color: AppPalette.primary,
+        ),
         displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 27.sp,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:interview_master/app/router/app_router.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import '../core/theme/app_theme.dart';
-import 'navigation/app_router.dart';
-import 'navigation/app_router_names.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

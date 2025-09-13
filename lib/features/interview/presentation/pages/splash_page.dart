@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/features/interview/domain/use_cases/get_current_user_use_case.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../blocs/get_current_user_bloc/get_current_user_bloc.dart';
 
 class SplashPage extends StatelessWidget {
@@ -47,6 +47,9 @@ class _SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: const Center(child: FlutterLogo(size: 128.0)));
+    final textTheme = Theme.of(context).textTheme;
+    return Scaffold(
+      body: Center(child: Text('SkillAI', style: textTheme.titleLarge)),
+    );
   }
 }

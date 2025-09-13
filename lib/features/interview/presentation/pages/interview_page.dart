@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
-import '../../../../app/navigation/app_router.dart';
-import '../../../../app/navigation/app_router_names.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../../data/models/user_input.dart';
 import '../widgets/custom_button.dart';
 
@@ -138,7 +138,7 @@ class _InterviewQuestionPage extends StatelessWidget {
               maxLines: null,
               minLines: null,
               expands: true,
-              maxLength: 500,
+              maxLength: 300,
               textAlignVertical: TextAlignVertical.top,
               controller: answerController,
               onChanged: (value) {

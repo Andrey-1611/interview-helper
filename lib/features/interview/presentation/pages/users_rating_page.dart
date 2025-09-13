@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/app/navigation/app_router.dart';
-import 'package:interview_master/app/navigation/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/helpers/toast_helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
@@ -12,6 +10,8 @@ import 'package:interview_master/features/interview/presentation/blocs/show_user
 import 'package:interview_master/features/interview/presentation/widgets/custom_score_indicator.dart';
 import '../../../../app/global/models/user_data.dart';
 import '../../../../app/global/providers/user_provider.dart';
+import '../../../../app/router/app_router.dart';
+import '../../../../app/router/app_router_names.dart';
 import '../widgets/custom_network_failure.dart';
 
 class UsersRatingPage extends StatefulWidget {
@@ -37,9 +37,7 @@ class _UsersRatingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: _UsersList(),
-    );
+    return const Scaffold(body: _UsersList());
   }
 }
 

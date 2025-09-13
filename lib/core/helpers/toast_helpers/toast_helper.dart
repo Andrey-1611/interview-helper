@@ -2,7 +2,7 @@ import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:delightful_toast/delight_toast.dart';
-import 'package:interview_master/app/navigation/app_router.dart';
+import '../../../app/router/app_router.dart';
 
 class ToastHelper {
   /*
@@ -61,6 +61,10 @@ class ToastHelper {
 
   static void networkError() {
     _showToast(msg: 'Нет подключения к интернету');
+  }
+
+  static void attemptsError() {
+    _showToast(msg: 'Попытки закончились, возвращайтесь завтра');
   }
 
   static void custom(String msg) {

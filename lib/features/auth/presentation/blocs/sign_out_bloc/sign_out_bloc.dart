@@ -18,7 +18,7 @@ class SignOutBloc extends Bloc<SignOutEvent, SignOutState> {
         await _signOutUseCase.call();
         emit(SignOutSuccess());
       } on NetworkException {
-        emit(SignOutFailure());
+        emit(SignOutNetworkFailure());
       } catch (e) {
         emit(SignOutFailure());
       }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/widgets/custom_loading_dialog.dart';
-import 'package:interview_master/features/interview/presentation/widgets/custom_sign_out_dialog.dart';
 
 class DialogHelper {
   static void showLoadingDialog(BuildContext context, String text) {
@@ -11,11 +10,10 @@ class DialogHelper {
     );
   }
 
-  static void showSignOutDialog(BuildContext context) {
-    showDialog(context: context, builder: (context) => CustomSignOutDialog());
-  }
-
-  static void showCustomDialog(BuildContext context, Widget dialog) {
+  static void showCustomDialog({
+    required Widget dialog,
+    required BuildContext context,
+  }) {
     showDialog(context: context, builder: (context) => dialog);
   }
 }

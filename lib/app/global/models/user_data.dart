@@ -63,23 +63,20 @@ class UserData extends Equatable {
     );
   }
 
-  static Map<String, dynamic> updateData(
-    UserData userData,
-    Interview interview,
-  ) {
+  factory UserData.updateData(UserData userData, Interview interview) {
     final totalInterviews = userData.totalInterviews + 1;
     final totalScore = userData.totalScore + interview.score;
     final averageScore = totalScore ~/ totalInterviews;
     final bestScore = max(interview.score, userData.bestScore);
-    final lastInterviewDate = interview.date;
 
-    return {
-      'totalScore': totalScore,
-      'totalInterviews': totalInterviews,
-      'averageScore': averageScore,
-      'bestScore': bestScore,
-      'lastInterviewDate': lastInterviewDate,
-    };
+    return UserData(
+      name: userData.name,
+      id: userData.id,
+      totalInterviews: totalInterviews,
+      totalScore: totalScore,
+      averageScore: averageScore,
+      bestScore: bestScore,
+    );
   }
 
   static List<String> getStatsInfo(UserData data) {

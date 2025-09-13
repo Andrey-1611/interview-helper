@@ -19,8 +19,8 @@ class RemoteRepositoryImpl implements RemoteRepository {
   }
 
   @override
-  Future<void> addInterview(Interview interview, String userId) async {
-    await _firestoreDataSource.addInterview(interview, userId);
+  Future<void> addInterview(Interview interview, UserData updatedUser) async {
+    await _firestoreDataSource.addInterview(interview, updatedUser);
   }
 
   @override
