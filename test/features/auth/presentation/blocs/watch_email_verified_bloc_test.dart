@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/data/models/my_user.dart';
 import 'package:interview_master/features/auth/domain/use_cases/watch_email_verified_user_case.dart';
 import 'package:interview_master/features/auth/presentation/blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
 import 'package:mocktail/mocktail.dart';

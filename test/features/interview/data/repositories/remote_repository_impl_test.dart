@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/app/global/models/user_data.dart';
-import 'package:interview_master/features/interview/data/data_sources/firestore_data_source.dart';
+import 'package:interview_master/data/data_sources/firestore_data_source.dart';
 import 'package:interview_master/features/interview/data/models/interview.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/data/repositories/remote_repository_impl.dart';

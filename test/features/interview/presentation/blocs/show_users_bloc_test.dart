@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/app/global/models/user_data.dart';
-import 'package:interview_master/features/interview/domain/use_cases/show_users_use_case.dart';
+import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
 import 'package:interview_master/features/interview/presentation/blocs/show_users_bloc/show_users_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 

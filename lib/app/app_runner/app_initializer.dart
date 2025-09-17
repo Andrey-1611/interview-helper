@@ -2,11 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:interview_master/app/global/models/user_data.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
-import 'package:interview_master/features/interview/data/models/interview.dart';
 import '../../core/secrets/api_key.dart';
-import '../../features/interview/data/models/question.dart';
+import '../../data/models/interview.dart';
+import '../../data/models/question.dart';
+import '../../data/models/user_data.dart';
 import '../../firebase_options.dart';
 
 class AppInitializer {

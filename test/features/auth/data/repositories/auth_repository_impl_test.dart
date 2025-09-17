@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/features/auth/data/data_sources/firebase_auth_data_source.dart';
+import 'package:interview_master/data/data_sources/firebase_auth_data_source.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/data/models/my_user.dart';
 import 'package:interview_master/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_pallete.dart';
 
 class AppTheme {
-  static getTheme() {
+  static ThemeData getTheme() {
     return ThemeData(
       colorScheme: ColorScheme.dark(
         primary: AppPalette.primary,
@@ -25,7 +25,7 @@ class AppTheme {
         ),
         displayMedium: TextStyle(
           fontWeight: FontWeight.w800,
-          fontSize: 21.sp,
+          fontSize: 22.sp,
           color: AppPalette.textPrimary,
         ),
         displaySmall: TextStyle(
@@ -39,8 +39,8 @@ class AppTheme {
           color: AppPalette.textPrimary,
         ),
         bodyMedium: TextStyle(
-          fontWeight: FontWeight.w300,
-          fontSize: 15.sp,
+          fontWeight: FontWeight.w400,
+          fontSize: 16.sp,
           color: AppPalette.textSecondary,
         ),
         bodySmall: TextStyle(fontSize: 13.sp, color: AppPalette.textSecondary),

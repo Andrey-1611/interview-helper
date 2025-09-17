@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/data/models/my_user.dart';
 import 'package:interview_master/features/auth/domain/use_cases/change_password_use_case.dart';
 import 'package:interview_master/features/auth/presentation/blocs/change_password_bloc/change_password_bloc.dart';
 import 'package:mocktail/mocktail.dart';

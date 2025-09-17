@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
-import 'package:interview_master/features/auth/data/models/my_user.dart';
+import 'package:interview_master/data/models/my_user.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
