@@ -3,10 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_pallete.dart';
 
 class AppTheme {
-  static getTheme() {
+  static ThemeData getTheme() {
     return ThemeData(
       colorScheme: ColorScheme.dark(
-        brightness: Brightness.dark,
         primary: AppPalette.primary,
         secondary: AppPalette.primary,
         surface: AppPalette.background,
@@ -14,6 +13,11 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppPalette.background,
       textTheme: TextTheme(
+        titleLarge: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 60.sp,
+          color: AppPalette.primary,
+        ),
         displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 27.sp,
@@ -21,7 +25,7 @@ class AppTheme {
         ),
         displayMedium: TextStyle(
           fontWeight: FontWeight.w800,
-          fontSize: 21.sp,
+          fontSize: 22.sp,
           color: AppPalette.textPrimary,
         ),
         displaySmall: TextStyle(
@@ -35,8 +39,8 @@ class AppTheme {
           color: AppPalette.textPrimary,
         ),
         bodyMedium: TextStyle(
-          fontWeight: FontWeight.w300,
-          fontSize: 15.sp,
+          fontWeight: FontWeight.w400,
+          fontSize: 16.sp,
           color: AppPalette.textSecondary,
         ),
         bodySmall: TextStyle(fontSize: 13.sp, color: AppPalette.textSecondary),
@@ -51,8 +55,9 @@ class AppTheme {
         filled: true,
         fillColor: AppPalette.cardBackground,
         border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8.0.sp)),
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8.0.sp),
+        ),
 
         contentPadding: EdgeInsets.all(12.sp),
 
@@ -92,9 +97,14 @@ class AppTheme {
           side: BorderSide.none,
         ),
       ),
-      listTileTheme: ListTileThemeData(
-        contentPadding: EdgeInsets.all(12.0.sp)
-      )
+      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(12.0.sp)),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppPalette.cardBackground,
+        selectedItemColor: AppPalette.primary,
+        unselectedItemColor: AppPalette.textPrimary,
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+      ),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'app/app.dart';
-import 'app/initialization/app_initializer.dart';
+import 'app/app_runner/app_runner.dart';
 
 void main() async {
-  await AppInitializer.init();
+  await AppRunner.run();
   runApp(const App());
 }
