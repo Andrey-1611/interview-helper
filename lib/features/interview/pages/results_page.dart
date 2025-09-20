@@ -6,7 +6,7 @@ import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../core/helpers/toast_helper.dart';
-import '../../../data/models/interview_info.dart';
+import '../../../data/models/interview/interview_info.dart';
 import '../blocs/check_results_bloc/check_results_bloc.dart';
 import '../../../app/widgets/custom_interview_info.dart';
 

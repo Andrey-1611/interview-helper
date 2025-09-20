@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-import '../models/my_user.dart';
+import '../models/user/my_user.dart';
 import '../repositories/auth_repository.dart';
 
 @LazySingleton(as: AuthRepository)

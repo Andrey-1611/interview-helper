@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../data/models/interview.dart';
-import '../../../../data/models/interview_info.dart';
+import '../../../../data/models/interview/interview_data.dart';
+import '../../../../data/models/interview/interview_info.dart';
 
 part 'check_results_event.dart';
 
@@ -17,7 +17,7 @@ class CheckResultsBloc extends Bloc<CheckResultsEvent, CheckResultsState> {
     on<CheckResults>((event, emit) async {
       emit(CheckResultsLoading());
       try {
-        final Interview interview = await _checkResultsUseCase.call(
+        final InterviewData interview = await _checkResultsUseCase.call(
           event.interviewInfo,
         );
         emit(CheckResultsSuccess(interview: interview));

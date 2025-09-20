@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../../data/models/my_user.dart';
+import '../../../data/models/user/my_user.dart';
 import '../../../../core/helpers/dialog_helper.dart';
 import '../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../use_cases/sign_in_use_case.dart';

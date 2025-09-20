@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../core/errors/exceptions.dart';
-import '../../../data/models/interview.dart';
-import '../../../data/models/interview_info.dart';
-import '../../../data/models/user_data.dart';
+import '../../../data/models/interview/interview_data.dart';
+import '../../../data/models/interview/interview_info.dart';
+import '../../../data/models/user/user_data.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -22,12 +22,12 @@ class CheckResultsUseCase {
     this._networkInfo,
   );
 
-  Future<Interview> call(InterviewInfo info) async {
+  Future<InterviewData> call(InterviewInfo info) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
 
-    final questions = await _aiRepository.checkAnswers(info.userInputs!);
-    final interview = Interview.fromQuestions(questions, info);
+    final questions = await _aiRepository.checkAnswers(info.userInputs);
+    final interview = InterviewData.fromQuestions(questions, info);
 
     final user = (await _localRepository.getUser())!;
     final updatedUser = UserData.updateData(user, interview);

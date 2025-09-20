@@ -21,7 +21,7 @@ final class CheckResultsFailure extends CheckResultsState {
 }
 
 final class CheckResultsSuccess extends CheckResultsState {
-  final Interview interview;
+  final InterviewData interview;
 
   const CheckResultsSuccess({required this.interview});
 

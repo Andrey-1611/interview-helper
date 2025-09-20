@@ -8,7 +8,7 @@ import 'package:interview_master/core/helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/interview/use_cases/start_interview_use_case.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/interview_info.dart';
+import '../../../data/models/interview/interview_info.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../blocs/start_interview_bloc/start_interview_bloc.dart';
 import '../../../app/widgets/custom_button.dart';
@@ -22,36 +22,36 @@ class InitialPage extends StatefulWidget {
 
 class _InitialPageState extends State<InitialPage> {
   String direction = '';
-  String difficultly = '';
+  String difficulty = '';
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => StartInterviewBloc(GetIt.I<StartInterviewUseCase>()),
       child: _InitialPageView(
-        difficultly: difficultly,
+        difficultly: difficulty,
         direction: direction,
         changeDirection: _changeDirection,
-        changeDifficultly: _changeDifficultly,
+        changeDifficulty: _changeDifficultly,
       ),
     );
   }
 
   void _changeDirection(String value) => setState(() => direction = value);
 
-  void _changeDifficultly(String value) => setState(() => difficultly = value);
+  void _changeDifficultly(String value) => setState(() => difficulty = value);
 }
 
 class _InitialPageView extends StatelessWidget {
   final String difficultly;
   final String direction;
   final ValueChanged<String> changeDirection;
-  final ValueChanged<String> changeDifficultly;
+  final ValueChanged<String> changeDifficulty;
 
   const _InitialPageView({
     required this.difficultly,
     required this.changeDirection,
-    required this.changeDifficultly,
+    required this.changeDifficulty,
     required this.direction,
   });
 
@@ -69,7 +69,7 @@ class _InitialPageView extends StatelessWidget {
           SizedBox(height: size.height * 0.03),
           _DifficultlyDropdownButton(
             difficultly: difficultly,
-            changeDifficultly: changeDifficultly,
+            changeDifficultly: changeDifficulty,
           ),
           SizedBox(height: size.height * 0.03),
           _InterviewButton(difficulty: difficultly, direction: direction),
@@ -91,7 +91,7 @@ class _DirectionDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdownMenu(
-      data: Data.directions,
+      data: InitialData.directions,
       change: changeDirection,
       hintText: 'Выберите направление',
     );
@@ -110,7 +110,7 @@ class _DifficultlyDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdownMenu(
-      data: Data.difficulties,
+      data: InitialData.difficulties,
       change: changeDifficultly,
       hintText: 'Выберите сложность',
     );

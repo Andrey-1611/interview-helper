@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../core/errors/exceptions.dart';
-import '../../../data/models/interview.dart';
+import '../../../data/models/interview/interview_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 
@@ -15,7 +15,7 @@ class ShowInterviewsUseCase {
       this._localRepository,
       this._networkInfo,);
 
-  Future<List<Interview>> call(String? userId) async {
+  Future<List<InterviewData>> call(String? userId) async {
     if (userId != null) {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) throw NetworkException();

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/interview_info.dart';
-import '../../../data/models/user_input.dart';
+import '../../../data/models/interview/interview_info.dart';
+import '../../../data/models/interview/user_input.dart';
 import '../../../app/widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {

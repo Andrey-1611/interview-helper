@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../data/models/user_data.dart';
+import '../../../../data/models/user/user_data.dart';
 import '../../use_cases/get_user_use_case.dart';
 
 part 'get_user_event.dart';

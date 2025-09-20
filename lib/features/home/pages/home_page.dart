@@ -64,7 +64,7 @@ class _SignOutDialog extends StatelessWidget {
       child: BlocListener<SignOutBloc, SignOutState>(
         listener: (context, state) {
           if (state is SignOutSuccess) {
-            context.pushReplacementNamed(AppRouterNames.signIn);
+            context.pushReplacement(AppRouterNames.signIn);
           } else if (state is SignOutNetworkFailure) {
             ToastHelper.networkError();
           } else if (state is SignOutFailure) {

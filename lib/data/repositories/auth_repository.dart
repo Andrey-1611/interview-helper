@@ -1,4 +1,4 @@
-import '../../../../data/models/my_user.dart';
+import '../models/user/my_user.dart';
 
 abstract interface class AuthRepository {
   Future<MyUser> signIn(MyUser user, String password);

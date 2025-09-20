@@ -6,7 +6,7 @@ import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../../data/models/my_user.dart';
+import '../../../data/models/user/my_user.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../use_cases/sign_up_use_case.dart';
 import '../widgets/custom_auth_button.dart';

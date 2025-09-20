@@ -20,6 +20,6 @@ class SignOutUseCase {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
     await _authRepository.signOut();
-    await _localRepository.deleteUser();
+    await _localRepository.deleteData();
   }
 }

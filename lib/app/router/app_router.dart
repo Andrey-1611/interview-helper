@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/models/interview.dart';
-import '../../data/models/interview_info.dart';
-import '../../data/models/question.dart';
-import '../../data/models/user_data.dart';
+import '../../data/models/interview/interview_data.dart';
+import '../../data/models/interview/interview_info.dart';
+import '../../data/models/interview/question.dart';
+import '../../data/models/user/user_data.dart';
 import '../../features/auth/pages/change_email_page.dart';
 import '../../features/auth/pages/change_password_page.dart';
 import '../../features/auth/pages/email_verification_page.dart';
@@ -72,7 +72,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouterNames.interviewInfo,
       builder: (context, state) {
-        final interview = state.extra as Interview;
+        final interview = state.extra as InterviewData;
         return InterviewInfoPage(interview: interview);
       },
     ),

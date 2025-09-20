@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../../data/models/my_user.dart';
+import '../../../../data/models/user/my_user.dart';
 import '../../use_cases/change_password_use_case.dart';
 
 part 'change_password_event.dart';

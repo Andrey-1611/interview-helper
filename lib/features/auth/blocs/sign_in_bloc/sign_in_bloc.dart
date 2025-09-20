@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/errors/exceptions.dart';
-import '../../../../../data/models/my_user.dart';
+import '../../../../data/models/user/my_user.dart';
 import '../../use_cases/sign_in_use_case.dart';
 
 part 'sign_in_event.dart';

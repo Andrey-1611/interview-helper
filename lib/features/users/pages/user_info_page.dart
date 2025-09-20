@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/features/users/pages/user_profile_page.dart';
-import '../../../../data/models/user_data.dart';
+import '../../../data/models/user/user_data.dart';
 import '../../history/pages/interviews_history_page.dart';
 
 class UserInfoPage extends StatefulWidget {

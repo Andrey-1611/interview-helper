@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../../data/models/interview.dart';
+import '../../../../data/models/interview/interview_data.dart';
 
 part 'show_interviews_event.dart';
 
@@ -18,7 +18,7 @@ class ShowInterviewsBloc
     on<ShowInterviews>((event, emit) async {
       emit(ShowInterviewsLoading());
       try {
-        final List<Interview> interviews = await _showInterviewsUseCase.call(
+        final List<InterviewData> interviews = await _showInterviewsUseCase.call(
           event.userId,
         );
         emit(ShowInterviewsSuccess(interviews: interviews));

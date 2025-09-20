@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/question.dart';
+import '../../../data/models/interview/question.dart';
 import '../../../app/widgets/custom_main_result_panel.dart';
 
 class QuestionInfoPage extends StatelessWidget {

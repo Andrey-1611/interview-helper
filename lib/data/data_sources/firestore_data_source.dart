@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-import '../models/interview.dart';
-import '../models/user_data.dart';
+import '../models/interview/interview_data.dart';
+import '../models/user/user_data.dart';
 import '../repositories/remote_repository.dart';
 
 @LazySingleton(as: RemoteRepository)
@@ -35,12 +35,11 @@ class FirestoreDataSource implements RemoteRepository {
   @override
   Future<List<UserData>> showUsers() async {
     try {
-      final data = await _usersCollection()
-          .orderBy('totalScore', descending: true)
-          .get();
+      final data = await _usersCollection().get();
       final List<UserData> users = data.docs
           .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
+      users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
       return users;
     } catch (e) {
       log(e.toString());
@@ -61,7 +60,10 @@ class FirestoreDataSource implements RemoteRepository {
   }
 
   @override
-  Future<void> addInterview(Interview interview, UserData updatedUser) async {
+  Future<void> addInterview(
+    InterviewData interview,
+    UserData updatedUser,
+  ) async {
     try {
       await _interviewsCollection(updatedUser.id).add(interview.toJson());
       await _usersCollection().doc(updatedUser.id).update(updatedUser.toJson());
@@ -72,13 +74,15 @@ class FirestoreDataSource implements RemoteRepository {
   }
 
   @override
-  Future<List<Interview>> showInterviews(String userId) async {
+  Future<List<InterviewData>> showInterviews(String userId) async {
     try {
       final data = await _interviewsCollection(
         userId,
       ).orderBy('date', descending: true).get();
-      final List<Interview> interviews = data.docs
-          .map((doc) => Interview.fromJson(doc.data() as Map<String, dynamic>))
+      final List<InterviewData> interviews = data.docs
+          .map(
+            (doc) => InterviewData.fromJson(doc.data() as Map<String, dynamic>),
+          )
           .toList();
       return interviews;
     } catch (e) {

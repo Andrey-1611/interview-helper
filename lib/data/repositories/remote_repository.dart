@@ -1,5 +1,5 @@
-import '../../data/models/interview.dart';
-import '../../data/models/user_data.dart';
+import '../models/interview/interview_data.dart';
+import '../models/user/user_data.dart';
 
 abstract interface class RemoteRepository {
   Future<void> saveUser(UserData user);
@@ -8,7 +8,7 @@ abstract interface class RemoteRepository {
 
   Future<UserData> getUserData(String userId);
 
-  Future<void> addInterview(Interview interview, UserData updatedUser);
+  Future<void> addInterview(InterviewData interview, UserData updatedUser);
 
-  Future<List<Interview>> showInterviews(String userId);
+  Future<List<InterviewData>> showInterviews(String userId);
 }

@@ -1,18 +1,18 @@
-import '../../data/models/interview.dart';
-import '../../data/models/user_data.dart';
+import '../models/interview/interview_data.dart';
+import '../models/user/user_data.dart';
 
 abstract interface class LocalRepository {
-  Future<void> loadInterviews(List<Interview> interviews);
+  Future<void> loadInterviews(List<InterviewData> interviews);
 
-  Future<void> addInterview(Interview interview, UserData updatedUser);
+  Future<void> addInterview(InterviewData interview, UserData updatedUser);
 
-  Future<List<Interview>> showInterviews();
+  Future<List<InterviewData>> showInterviews();
 
   Future<void> loadUser(UserData user);
 
   Future<UserData?> getUser();
 
-  Future<void> deleteUser();
+  Future<void> deleteData();
 
   Future<int> getTotalInterviewsToady();
 }

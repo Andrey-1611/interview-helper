@@ -1,0 +1,44 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:interview_master/data/data_sources/firestore_data_source.dart';
+import 'package:interview_master/data/models/interview/interview_data.dart';
+import '../../tests_data.dart';
+
+void main() {
+  late FakeFirebaseFirestore fakeFirestore;
+  late FirestoreDataSource dataSource;
+
+  setUp(() {
+    fakeFirestore = FakeFirebaseFirestore();
+    dataSource = FirestoreDataSource(fakeFirestore);
+  });
+
+  group('firestore data source', () {
+    test('save user and show users', () async {
+      await dataSource.saveUser(TestsData.userData);
+      final users = await dataSource.showUsers();
+
+      expect(users, [TestsData.userData]);
+    });
+
+    test('save user and get user', () async {
+      await dataSource.saveUser(TestsData.userData);
+      final user = await dataSource.getUserData(TestsData.id);
+
+      expect(user, TestsData.userData);
+    });
+
+    test('add interview and show interviews', () async {
+      await dataSource.saveUser(TestsData.userData);
+      await dataSource.addInterview(
+        TestsData.interviewData,
+        TestsData.userData,
+      );
+
+      final interviews = await dataSource.showInterviews(TestsData.userData.id);
+
+      expect(interviews, isA<List<InterviewData>>());
+      expect(interviews.isNotEmpty, true);
+    });
+  });
+}

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../data/models/interview.dart';
-import '../../data/models/question.dart';
+import '../../data/models/interview/interview_data.dart';
+import '../../data/models/interview/question.dart';
 import 'custom_main_result_panel.dart';
 import 'custom_score_indicator.dart';
 
 class CustomInterviewInfo extends StatelessWidget {
-  final Interview interview;
+  final InterviewData interview;
 
   const CustomInterviewInfo({super.key, required this.interview});
 

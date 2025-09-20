@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/secrets/api_key.dart';
 import '../../core/constants/main_prompt.dart';
-import '../models/question.dart';
-import '../models/user_input.dart';
+import '../models/interview/question.dart';
+import '../models/interview/user_input.dart';
 import '../repositories/ai_repository.dart';
 
 @LazySingleton(as: AIRepository)

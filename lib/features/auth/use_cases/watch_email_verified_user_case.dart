@@ -1,8 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../../data/models/my_user.dart';
-import '../../../data/models/user_data.dart';
+import '../../../data/models/user/my_user.dart';
+import '../../../data/models/user/user_data.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';

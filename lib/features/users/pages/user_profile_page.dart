@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/constants/questions/icons.dart';
 import 'package:interview_master/features/users/use_cases/get_user_use_case.dart';
-import '../../../../data/models/user_data.dart';
+import '../../../data/models/user/user_data.dart';
 import '../blocs/get_user_bloc/get_user_bloc.dart';
 
 class UserProfilePage extends StatelessWidget {

@@ -21,7 +21,7 @@ final class ShowInterviewsFailure extends ShowInterviewsState {
 }
 
 final class ShowInterviewsSuccess extends ShowInterviewsState {
-  final List<Interview> interviews;
+  final List<InterviewData> interviews;
 
   const ShowInterviewsSuccess({required this.interviews});
 

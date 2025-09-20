@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../app/widgets/custom_interview_info.dart';
-import '../../../../data/models/interview.dart';
+import '../../../data/models/interview/interview_data.dart';
 
 class InterviewInfoPage extends StatelessWidget {
-  final Interview interview;
+  final InterviewData interview;
 
   const InterviewInfoPage({super.key, required this.interview});
 

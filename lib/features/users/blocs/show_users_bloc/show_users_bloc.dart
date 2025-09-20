@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../data/models/user_data.dart';
+import '../../../../data/models/user/user_data.dart';
 
 part 'show_users_event.dart';
 

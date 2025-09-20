@@ -14,7 +14,7 @@ class StartInterviewUseCase {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
     final interviews = await _localRepository.getTotalInterviewsToady();
-    if (interviews != 3) return true;
+    if (interviews != 5) return true;
     return false;
   }
 }
