@@ -1,25 +1,19 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/data/repositories/auth_repository.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../data/models/user/my_user.dart';
-import '../../../data/repositories/auth_repository.dart';
 
 @injectable
 class ChangeEmailUseCase {
   final AuthRepository _authRepository;
   final NetworkInfo _networkInfo;
 
-  ChangeEmailUseCase(this._authRepository, this._networkInfo);
+  ChangeEmailUseCase(this._networkInfo, this._authRepository);
 
   Future<void> call(String email, String password) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
-    final user = await _authRepository.getUser();
-    await _authRepository.deleteAccount();
-    await _authRepository.signUp(
-      MyUser(email: email, name: user!.name),
-      password,
-    );
+    await _authRepository.changeEmail(email, password);
     await _authRepository.sendEmailVerification();
   }
 }

@@ -43,11 +43,11 @@ void main() {
   final testUser = MyUser(email: email, name: name, id: id);
   final emailVerifiedResult = EmailVerificationResult(
     isEmailVerified: true,
-    user: testUser,
+    userBox: testUser,
   );
   final emailNotVerifiedResult = EmailVerificationResult(
     isEmailVerified: false,
-    user: testUser,
+    userBox: testUser,
   );
 
   final interviews = <Interview>[];

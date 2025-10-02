@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../data/models/user/my_user.dart';
 import '../../../data/repositories/auth_repository.dart';
 
 @injectable
@@ -11,9 +10,9 @@ class ChangePasswordUseCase {
 
   ChangePasswordUseCase(this._authRepository, this._networkInfo);
 
-  Future<void> call(MyUser user) async {
+  Future<void> call(String email) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
-    await _authRepository.changePassword(user);
+    await _authRepository.changePassword(email);
   }
 }

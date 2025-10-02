@@ -4,9 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
-import 'package:uuid/uuid.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/user/my_user.dart';
 import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../use_cases/sign_up_use_case.dart';
 import '../widgets/custom_auth_button.dart';
@@ -224,11 +222,8 @@ class _CustomButtonView extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           context.read<SignUpBloc>().add(
             SignUp(
-              myUser: MyUser(
-                id: Uuid().v1(),
-                email: emailController.text.trim(),
-                name: nameController.text.trim(),
-              ),
+              name: nameController.text.trim(),
+              email: emailController.text.trim(),
               password: passwordController.text.trim(),
             ),
           );

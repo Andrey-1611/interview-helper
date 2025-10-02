@@ -16,7 +16,7 @@ final class SignUpNetworkFailure extends SignUpState {}
 final class SignUpFailure extends SignUpState {}
 
 final class SignUpSuccess extends SignUpState {
-  final MyUser user;
+  final UserData user;
 
   const SignUpSuccess({required this.user});
 

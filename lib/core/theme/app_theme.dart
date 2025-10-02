@@ -18,6 +18,11 @@ class AppTheme {
           fontSize: 60.sp,
           color: AppPalette.primary,
         ),
+        titleMedium: TextStyle(
+          fontWeight: FontWeight.w800,
+          fontSize: 45.sp,
+          color: AppPalette.primary,
+        ),
         displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 27.sp,
@@ -49,6 +54,7 @@ class AppTheme {
           fontSize: 13.sp,
           color: AppPalette.textPrimary,
         ),
+        labelMedium: TextStyle(fontSize: 18.sp, color: AppPalette.error),
         labelSmall: TextStyle(fontSize: 12.sp, color: AppPalette.textSecondary),
       ),
       inputDecorationTheme: InputDecorationTheme(

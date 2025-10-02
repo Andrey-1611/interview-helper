@@ -102,7 +102,7 @@ class _EmailVerificationFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Подтвердите свою почту',
-      style: Theme.of(context).textTheme.bodyMedium,
+      style: Theme.of(context).textTheme.displayMedium,
     );
   }
 }

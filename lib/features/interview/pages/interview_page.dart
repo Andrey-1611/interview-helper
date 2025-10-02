@@ -189,10 +189,6 @@ class _InterviewQuestionPage extends StatelessWidget {
 
   void _navigateToPage(int page) {
     _saveCurrentAnswer();
-    pageController.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 1),
-      curve: Curves.easeInOut,
-    );
+    pageController.jumpToPage(page);
   }
 }

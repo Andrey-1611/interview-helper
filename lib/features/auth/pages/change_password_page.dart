@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/user/my_user.dart';
 import '../blocs/change_password_bloc/change_password_bloc.dart';
 import '../use_cases/change_password_use_case.dart';
 import '../widgets/custom_auth_button.dart';
@@ -139,7 +138,7 @@ class _ChangePasswordButtonView extends StatelessWidget {
       onPressed: () {
         if (formKey.currentState!.validate()) {
           context.read<ChangePasswordBloc>().add(
-            ChangePassword(user: MyUser(email: emailController.text.trim())),
+            ChangePassword(email: emailController.text.trim()),
           );
         }
       },

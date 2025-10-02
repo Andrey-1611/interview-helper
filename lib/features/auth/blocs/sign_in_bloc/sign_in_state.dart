@@ -13,22 +13,8 @@ final class SignInLoading extends SignInState {}
 
 final class SignInNetworkFailure extends SignInState {}
 
-final class SignInFailure extends SignInState {
-  final String error;
-
-  const SignInFailure({required this.error});
-
-  @override
-  List<Object> get props => [error];
-}
+final class SignInFailure extends SignInState {}
 
 final class SignInNoVerification extends SignInState {}
 
-final class SignInSuccess extends SignInState {
-  final MyUser user;
-
-  const SignInSuccess({required this.user});
-
-  @override
-  List<Object> get props => [user];
-}
+final class SignInSuccess extends SignInState {}

@@ -43,10 +43,10 @@ void main() {
         ).thenAnswer((_) async => testUser);
       },
       build: () => mockBloc,
-      act: (bloc) => bloc.add(SignIn(user: testUser, password: password)),
+      act: (bloc) => bloc.add(SignIn(userBox: testUser, password: password)),
       expect: () => <SignInState>[
         SignInLoading(),
-        SignInSuccess(user: testUser),
+        SignInSuccess(userBox: testUser),
       ],
       verify: (_) {
         verify(() => useCase.call(any(), password)).called(1);

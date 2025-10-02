@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/errors/exceptions.dart';
 import 'package:interview_master/core/utils/network_info.dart';
-import '../../../data/models/user/my_user.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -20,19 +19,18 @@ class SignInUseCase {
     this._networkInfo,
   );
 
-  Future<MyUser?> call(MyUser user, String password) async {
+  Future<void> call(String email, String password) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
-    final newUser = await _authRepository.signIn(user, password);
+    final userId = await _authRepository.signIn(email, password);
     final emailVerified = await _authRepository.checkEmailVerified();
-    if (emailVerified) {
-      final userData = await _remoteRepository.getUserData(newUser.id!);
-      final interviews = await _remoteRepository.showInterviews(newUser.id!);
-      await _localRepository.loadInterviews(interviews);
-      await _localRepository.loadUser(userData);
-      return newUser;
+    if (!emailVerified) {
+      await _authRepository.sendEmailVerification();
+      throw EmailVerifiedException();
     }
-    await _authRepository.sendEmailVerification();
-    return null;
+    final user = await _remoteRepository.getUserData(userId);
+    final interviews = await _remoteRepository.showInterviews(userId);
+    await _localRepository.loadInterviews(interviews);
+    await _localRepository.loadUser(user);
   }
 }

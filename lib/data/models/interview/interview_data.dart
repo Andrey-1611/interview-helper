@@ -65,15 +65,15 @@ class InterviewData extends Equatable {
   }
 
   static List<InterviewData> filterInterviews(
-    String direction,
-    String difficulty,
-    String sort,
-    List<InterviewData> interviews,
-  ) {
-    if (direction.isNotEmpty) {
+      String? direction,
+      String? difficulty,
+      String? sort,
+      List<InterviewData> interviews,
+      ) {
+    if (direction != null) {
       interviews = interviews.where((i) => i.direction == direction).toList();
     }
-    if (difficulty.isNotEmpty) {
+    if (difficulty != null) {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
     }
 

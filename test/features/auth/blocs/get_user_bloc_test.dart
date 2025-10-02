@@ -38,7 +38,7 @@ void main() {
         act: (bloc) => bloc.add(GetUser()),
         expect: () => <GetUserState>[
           GetUserLoading(),
-          GetUserSuccess(user: testUser),
+          GetUserSuccess(userBox: testUser),
         ],
         verify: (_) {
           verify(() => useCase.call()).called(1);

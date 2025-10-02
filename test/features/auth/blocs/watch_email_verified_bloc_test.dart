@@ -38,7 +38,7 @@ void main() {
       act: (bloc) => bloc.add(WatchEmailVerified()),
       expect: () => <WatchEmailVerifiedState>[
         WatchEmailVerifiedLoading(),
-        WatchEmailVerifiedSuccess(user: testUser),
+        WatchEmailVerifiedSuccess(userBox: testUser),
       ],
       verify: (_) {
         verify(() => useCase.call()).called(1);

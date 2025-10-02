@@ -40,7 +40,7 @@ void main() {
         when(() => useCase.call(any())).thenAnswer((_) async => {});
       },
       build: () => mockBloc,
-      act: (bloc) => bloc.add(ChangePassword(user: testUser)),
+      act: (bloc) => bloc.add(ChangePassword(userBox: testUser)),
       expect: () => <ChangePasswordState>[
         ChangePasswordLoading(),
         ChangePasswordSuccess(),

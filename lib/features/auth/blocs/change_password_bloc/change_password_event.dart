@@ -8,10 +8,10 @@ sealed class ChangePasswordEvent extends Equatable {
 }
 
 final class ChangePassword extends ChangePasswordEvent {
-  final MyUser user;
+  final String email;
 
-  const ChangePassword({required this.user});
+  const ChangePassword({required this.email});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [email];
 }

@@ -96,6 +96,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i137.RemoteRepository>(),
           gh<_i668.NetworkInfo>(),
         ));
+    gh.factory<_i333.ChangeEmailUseCase>(() => _i333.ChangeEmailUseCase(
+          gh<_i668.NetworkInfo>(),
+          gh<_i481.AuthRepository>(),
+        ));
     gh.factory<_i327.SignOutUseCase>(() => _i327.SignOutUseCase(
           gh<_i481.AuthRepository>(),
           gh<_i29.LocalRepository>(),
@@ -109,10 +113,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i941.GetCurrentUserUseCase>(() => _i941.GetCurrentUserUseCase(
           gh<_i137.RemoteRepository>(),
           gh<_i29.LocalRepository>(),
-          gh<_i668.NetworkInfo>(),
-        ));
-    gh.factory<_i333.ChangeEmailUseCase>(() => _i333.ChangeEmailUseCase(
-          gh<_i481.AuthRepository>(),
           gh<_i668.NetworkInfo>(),
         ));
     gh.factory<_i408.ChangePasswordUseCase>(() => _i408.ChangePasswordUseCase(

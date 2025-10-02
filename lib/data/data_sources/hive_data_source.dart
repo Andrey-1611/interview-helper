@@ -13,9 +13,9 @@ class HiveDataSource implements LocalRepository {
   HiveDataSource(this._hive);
 
   Box<InterviewData> get _interviewsBox =>
-      _hive.box<InterviewData>(HiveData.interviews);
+      _hive.box<InterviewData>(HiveData.interviewsBox);
 
-  Box<UserData> get _usersBox => _hive.box<UserData>(HiveData.user);
+  Box<UserData> get _usersBox => _hive.box<UserData>(HiveData.userBox);
 
   @override
   Future<void> loadInterviews(List<InterviewData> interviews) async {

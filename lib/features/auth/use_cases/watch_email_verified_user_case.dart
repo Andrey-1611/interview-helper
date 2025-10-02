@@ -1,8 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../data/models/user/my_user.dart';
-import '../../../data/models/user/user_data.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -21,14 +19,12 @@ class WatchEmailVerifiedUseCase {
     this._networkInfo,
   );
 
-  Future<MyUser> call() async {
+  Future<void> call() async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
     await _authRepository.watchEmailVerified();
     final user = await _authRepository.getUser();
-    await _remoteRepository.saveUser(UserData.fromMyUser(user!));
-    final userData = await _remoteRepository.getUserData(user.id!);
-    await _localRepository.loadUser(userData);
-    return user;
+    await _remoteRepository.saveUser(user);
+    await _localRepository.loadUser(user);
   }
 }

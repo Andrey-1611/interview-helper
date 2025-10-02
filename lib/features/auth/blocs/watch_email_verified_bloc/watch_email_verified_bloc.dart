@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../../data/models/user/my_user.dart';
 import '../../use_cases/watch_email_verified_user_case.dart';
 
 part 'watch_email_verified_event.dart';
@@ -17,8 +16,8 @@ class WatchEmailVerifiedBloc
     on<WatchEmailVerified>((event, emit) async {
       emit(WatchEmailVerifiedLoading());
       try {
-        final user = await _watchEmailVerifiedUseCase.call();
-        emit(WatchEmailVerifiedSuccess(user: user));
+        await _watchEmailVerifiedUseCase.call();
+        emit(WatchEmailVerifiedSuccess());
       } on NetworkException {
         emit(WatchEmailVerifiedNetworkFailure());
       } catch (e) {

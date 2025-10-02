@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/data/models/user/user_data.dart';
 import '../../../../../core/errors/exceptions.dart';
-import '../../../data/models/user/my_user.dart';
 import '../../../data/repositories/auth_repository.dart';
 
 @injectable
@@ -11,11 +11,11 @@ class SignUpUseCase {
 
   SignUpUseCase(this._authRepository, this._networkInfo);
 
-  Future<MyUser> call(MyUser user, String password) async {
+  Future<UserData> call(String name, String email, String password) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
-    final myUser = await _authRepository.signUp(user, password);
+    final user = await _authRepository.signUp(name, email, password);
     await _authRepository.sendEmailVerification();
-    return myUser;
+    return user;
   }
 }

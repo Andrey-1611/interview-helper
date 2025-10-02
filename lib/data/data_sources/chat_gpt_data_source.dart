@@ -12,8 +12,10 @@ import '../repositories/ai_repository.dart';
 class ChatGPTDataSource implements AIRepository {
   final Dio _dio;
 
+  static const _baseUrl = 'https://api.gen-api.ru/api/v1';
+
   ChatGPTDataSource(this._dio) {
-    _dio.options.baseUrl = CHAT_GPT_BASE_URL;
+    _dio.options.baseUrl = _baseUrl;
     _dio.options.headers = {
       'Authorization': 'Bearer $CHAT_GPT_API_KEY',
       'Content-Type': 'application/json',

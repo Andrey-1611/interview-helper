@@ -5,7 +5,6 @@ import 'package:interview_master/data/models/interview/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../core/constants/data.dart';
 import '../interview/interview_data.dart';
-import 'my_user.dart';
 
 part 'user_data.g.dart';
 
@@ -13,17 +12,21 @@ part 'user_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class UserData extends Equatable {
   @HiveField(0)
-  final String name;
-
-  @HiveField(1)
   final String id;
 
+  @HiveField(1)
+  final String name;
+
   @HiveField(2)
+  final String email;
+
+  @HiveField(3)
   final List<Interview> interviews;
 
   const UserData({
-    required this.name,
     required this.id,
+    required this.name,
+    required this.email,
     required this.interviews,
   });
 
@@ -47,14 +50,11 @@ class UserData extends Equatable {
 
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
 
-  factory UserData.fromMyUser(MyUser user) {
-    return UserData(name: user.name!, id: user.id!, interviews: []);
-  }
-
   factory UserData.updateData(UserData userData, InterviewData interview) {
     return UserData(
-      name: userData.name,
       id: userData.id,
+      name: userData.name,
+      email: userData.email,
       interviews: List.from(userData.interviews)
         ..add(Interview.fromInterviewData(interview)),
     );
@@ -71,15 +71,16 @@ class UserData extends Equatable {
   }
 
   static List<UserData> filterUsers(
-    String direction,
-    String sort,
-    List<UserData> users,
-  ) {
+      String? direction,
+      String? sort,
+      List<UserData> users,
+      ) {
     users = users.map((user) {
       return UserData(
-        name: user.name,
         id: user.id,
-        interviews: direction.isNotEmpty
+        name: user.name,
+        email: user.email,
+        interviews: direction != null
             ? user.interviews.where((i) => i.direction == direction).toList()
             : user.interviews,
       );
@@ -94,5 +95,25 @@ class UserData extends Equatable {
     }
 
     return users;
+  }
+
+  static UserData filterUser(
+      String? direction,
+      String? difficulty,
+      UserData user,
+      ) {
+    List<Interview> interviews = user.interviews;
+    if (direction != null) {
+      interviews = interviews.where((i) => i.direction == direction).toList();
+    }
+    if (difficulty != null) {
+      interviews = interviews.where((i) => i.difficulty == difficulty).toList();
+    }
+    return UserData(
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      interviews: interviews,
+    );
   }
 }

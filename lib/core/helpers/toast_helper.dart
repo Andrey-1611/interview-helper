@@ -10,16 +10,6 @@ class ToastHelper {
     );
   }
 
-  /*static void _showToast({required String msg}) {
-    DelightToastBar(
-      autoDismiss: true,
-      position: DelightSnackbarPosition.top,
-      builder: (context) {
-        return ToastCard(title: Text(msg));
-      },
-    ).show(AppRouter.navigatorKey.currentContext!);
-  }
-*/
   static void sendEmailVerification(String email) {
     _showToast(msg: 'Письмо с подтвержением отправлено на ${email.trim()}');
   }
@@ -36,10 +26,6 @@ class ToastHelper {
     _showToast(msg: 'Ошибка входа, проверьте введенные данные');
   }
 
-  static void adsLoadingError() {
-    _showToast(msg: 'Не удалось загрузить рекламу, попробуйте позже');
-  }
-
   static void loadingError() {
     _showToast(msg: 'Ошибка загрузки данных, попробуйте позже');
   }
@@ -54,9 +40,5 @@ class ToastHelper {
 
   static void attemptsError() {
     _showToast(msg: 'Попытки закончились, возвращайтесь завтра');
-  }
-
-  static void custom(String msg) {
-    _showToast(msg: msg);
   }
 }

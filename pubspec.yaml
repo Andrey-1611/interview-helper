@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  flutter_gemini: ^3.0.0
   dio: ^5.9.0
   get_it: ^8.2.0
   injectable: ^2.5.1

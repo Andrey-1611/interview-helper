@@ -6,10 +6,10 @@ class AppRouterNames {
   static const changeEmail = '/change_email';
   static const changePassword = '/change_password';
   static const initial = '/initial';
-  static const currentInterviewsHistory = '/current_interviews_history';
-  static const usersRating = '/usersRating';
-  static const currentUserProfile = '/current_user_profile';
-  static const userInfo = '/user_info';
+  static const currentUser = '/current_user';
+  static const usersRating = '/users_rating';
+  static const profile = '/profile';
+  static const user = '/user_info';
   static const interview = '/interview';
   static const results = '/results';
   static const interviewInfo = '/interview_info';

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/features/users/pages/profile_page.dart';
 import '../../data/models/interview/interview_data.dart';
 import '../../data/models/interview/interview_info.dart';
 import '../../data/models/interview/question.dart';
@@ -10,15 +11,13 @@ import '../../features/auth/pages/email_verification_page.dart';
 import '../../features/auth/pages/sign_in_page.dart';
 import '../../features/auth/pages/sign_up_page.dart';
 import '../../features/history/pages/interview_info_page.dart';
-import '../../features/history/pages/interviews_history_page.dart';
 import '../../features/history/pages/question_info_page.dart';
 import '../../features/home/pages/home_page.dart';
 import '../../features/interview/pages/initial_page.dart';
 import '../../features/interview/pages/interview_page.dart';
 import '../../features/interview/pages/results_page.dart';
 import '../../features/home/pages/splash_page.dart';
-import '../../features/users/pages/user_info_page.dart';
-import '../../features/users/pages/user_profile_page.dart';
+import '../../features/users/pages/user_page.dart';
 import '../../features/users/pages/users_rating_page.dart';
 import 'app_router_names.dart';
 
@@ -84,10 +83,10 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRouterNames.userInfo,
+      path: AppRouterNames.user,
       builder: (context, state) {
-        final user = state.extra as UserData;
-        return UserInfoPage(user: user);
+        final user = state.extra as UserData?;
+        return UserPage(user: user);
       },
     ),
     StatefulShellRoute(
@@ -112,16 +111,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.currentInterviewsHistory,
-              builder: (context, state) => const InterviewsHistoryPage(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: <RouteBase>[
-            GoRoute(
-              path: AppRouterNames.currentUserProfile,
-              builder: (context, state) => const UserProfilePage(),
+              path: AppRouterNames.currentUser,
+              builder: (context, state) => const UserPage(user: null),
             ),
           ],
         ),
@@ -130,6 +121,14 @@ final appRouter = GoRouter(
             GoRoute(
               path: AppRouterNames.usersRating,
               builder: (context, state) => const UsersRatingPage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            GoRoute(
+              path: AppRouterNames.profile,
+              builder: (context, state) => const ProfilePage(),
             ),
           ],
         ),

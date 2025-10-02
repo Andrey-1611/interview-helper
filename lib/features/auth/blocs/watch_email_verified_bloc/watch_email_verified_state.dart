@@ -15,11 +15,4 @@ final class WatchEmailVerifiedNetworkFailure extends WatchEmailVerifiedState {}
 
 final class WatchEmailVerifiedFailure extends WatchEmailVerifiedState {}
 
-final class WatchEmailVerifiedSuccess extends WatchEmailVerifiedState {
-  final MyUser user;
-
-  const WatchEmailVerifiedSuccess({required this.user});
-
-  @override
-  List<Object> get props => [user];
-}
+final class WatchEmailVerifiedSuccess extends WatchEmailVerifiedState {}

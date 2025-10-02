@@ -46,7 +46,7 @@ void main() {
       act: (bloc) => bloc.add(SignUp(myUser: testUser, password: password)),
       expect: () => <SignUpState>[
         SignUpLoading(),
-        SignUpSuccess(user: testUser),
+        SignUpSuccess(userBox: testUser),
       ],
       verify: (_) {
         verify(() => useCase.call(any(), password)).called(1);

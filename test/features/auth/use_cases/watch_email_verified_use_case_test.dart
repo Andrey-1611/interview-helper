@@ -37,7 +37,7 @@ void main() {
   final testUser = MyUser(email: email, name: name, id: id);
   final emailVerifiedResult = EmailVerificationResult(
     isEmailVerified: true,
-    user: testUser,
+    userBox: testUser,
   );
 
   test('watch email verified use case', () async {

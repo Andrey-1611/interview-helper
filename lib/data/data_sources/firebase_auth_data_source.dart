@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-import '../models/user/my_user.dart';
+import 'package:interview_master/data/models/user/user_data.dart';
 import '../repositories/auth_repository.dart';
 
 @LazySingleton(as: AuthRepository)
@@ -12,14 +12,15 @@ class FirebaseAuthDataSource implements AuthRepository {
   FirebaseAuthDataSource(this._firebaseAuth);
 
   @override
-  Future<MyUser> signIn(MyUser myUser, String password) async {
+  Future<String> signIn(String email, String password) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: myUser.email,
+        email: email,
         password: password,
       );
-      final user = _toUserProfile(credential.user!);
-      return user;
+      await credential.user?.reload();
+      final newUser = _firebaseAuth.currentUser;
+      return newUser!.uid;
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -27,15 +28,10 @@ class FirebaseAuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<MyUser?> getUser() async {
+  Future<UserData> getUser() async {
     try {
-      await _firebaseAuth.currentUser?.reload();
-      final user = _firebaseAuth.currentUser;
-      if (user != null) {
-        final userProfile = _toUserProfile(user);
-        return userProfile;
-      }
-      return null;
+      final user = _firebaseAuth.currentUser!;
+      return _fromUser(user);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -43,17 +39,17 @@ class FirebaseAuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<MyUser> signUp(MyUser myUser, String password) async {
+  Future<UserData> signUp(String name, String email, String password) async {
     try {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: myUser.email,
+        email: email,
         password: password,
       );
-      await credential.user?.updateDisplayName(myUser.name);
-      await credential.user?.reload();
-      final updatedUser = _firebaseAuth.currentUser;
-      final user = _toUserProfile(updatedUser!);
-      return user;
+      final user = credential.user;
+      await user?.updateDisplayName(name);
+      credential.user?.reload();
+      final newUser = _firebaseAuth.currentUser;
+      return _fromUser(newUser!);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -100,9 +96,9 @@ class FirebaseAuthDataSource implements AuthRepository {
   }
 
   @override
-  Future<void> changePassword(MyUser myUser) async {
+  Future<void> changePassword(String email) async {
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: myUser.email);
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -129,11 +125,28 @@ class FirebaseAuthDataSource implements AuthRepository {
     }
   }
 
-  MyUser _toUserProfile(User user) {
-    return MyUser(
+  UserData _fromUser(User user) {
+    return UserData(
       id: user.uid,
-      name: user.displayName ?? '',
-      email: user.email ?? '',
+      name: user.displayName!,
+      email: user.email!,
+      interviews: [],
     );
+  }
+
+  @override
+  Future<void> changeEmail(String email, String password) async {
+    try {
+      final user = (_firebaseAuth.currentUser)!;
+      await user.delete();
+      _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await user.updateDisplayName(user.displayName);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }

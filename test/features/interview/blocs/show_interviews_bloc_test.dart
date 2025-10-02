@@ -49,7 +49,7 @@ void main() {
       act: (bloc) => bloc.add(ShowInterviews(userId: id)),
       expect: () => <ShowInterviewsState>[
         ShowInterviewsLoading(),
-        ShowInterviewsSuccess(interviews: testInterviews),
+        ShowInterviewsSuccess(interviewsBox: testInterviews),
       ],
       verify: (_) {
         verify(() => useCase.call(id)).called(1);

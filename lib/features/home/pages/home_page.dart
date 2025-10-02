@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import '../../../app/router/app_router_names.dart';
-import '../use_cases/sign_out_use_case.dart';
-import '../../../app/widgets/custom_button.dart';
-import '../bloc/sign_out_bloc/sign_out_bloc.dart';
 
 class HomePage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -17,83 +9,56 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> labels = [
+      'Собеседование',
+      'Аналитика',
+      'Рейтинг',
+      'Профиль',
+    ];
+    final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () => DialogHelper.showCustomDialog(
-              dialog: _SignOutDialog(),
-              context: context,
-            ),
-            icon: Icon(Icons.exit_to_app),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: navigationShell,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(index),
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Собеседование',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'История'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Профиль',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Рейтинг'),
-        ],
-      ),
-    );
-  }
-}
-
-class _SignOutDialog extends StatelessWidget {
-  const _SignOutDialog();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignOutBloc(GetIt.I<SignOutUseCase>()),
-      child: BlocListener<SignOutBloc, SignOutState>(
-        listener: (context, state) {
-          if (state is SignOutSuccess) {
-            context.pushReplacement(AppRouterNames.signIn);
-          } else if (state is SignOutNetworkFailure) {
-            ToastHelper.networkError();
-          } else if (state is SignOutFailure) {
-            ToastHelper.unknownError();
-          }
-        },
-        child: _SignOutDialogView(),
-      ),
-    );
-  }
-}
-
-class _SignOutDialogView extends StatelessWidget {
-  const _SignOutDialogView();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        'Выйти из аккаунта',
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      actions: [
-        CustomButton(
-          text: 'Подтвердить',
-          selectedColor: AppPalette.primary,
-          onPressed: () => context.read<SignOutBloc>().add(SignOut()),
+        centerTitle: true,
+        backgroundColor: AppPalette.cardBackground,
+        title: Text(
+          labels[navigationShell.currentIndex],
+          style: theme.textTheme.displayLarge,
         ),
-      ],
+      ),
+      body: navigationShell,
+      bottomNavigationBar: SizedBox(
+        height: size.height * 0.08,
+        child: BottomNavigationBar(
+          backgroundColor: AppPalette.cardBackground,
+          type: BottomNavigationBarType.shifting,
+          currentIndex: navigationShell.currentIndex,
+          onTap: (index) => navigationShell.goBranch(index),
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: labels[0],
+              backgroundColor: AppPalette.cardBackground,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart),
+              label: labels[1],
+              backgroundColor: AppPalette.cardBackground,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: labels[2],
+              backgroundColor: AppPalette.cardBackground,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: labels[3],
+              backgroundColor: AppPalette.cardBackground,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

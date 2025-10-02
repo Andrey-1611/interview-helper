@@ -58,22 +58,27 @@ class _InitialPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _DirectionDropdownButton(
-            changeDirection: changeDirection,
-            direction: direction,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _DirectionDropdownButton(
+                changeDirection: changeDirection,
+                direction: direction,
+              ),
+              SizedBox(height: size.height * 0.03),
+              _DifficultlyDropdownButton(
+                difficultly: difficultly,
+                changeDifficultly: changeDifficulty,
+              ),
+              SizedBox(height: size.height * 0.03),
+              _InterviewButton(difficulty: difficultly, direction: direction),
+            ],
           ),
-          SizedBox(height: size.height * 0.03),
-          _DifficultlyDropdownButton(
-            difficultly: difficultly,
-            changeDifficultly: changeDifficulty,
-          ),
-          SizedBox(height: size.height * 0.03),
-          _InterviewButton(difficulty: difficultly, direction: direction),
-        ],
+        ),
       ),
     );
   }
