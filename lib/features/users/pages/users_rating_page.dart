@@ -56,25 +56,19 @@ class _UsersRatingView extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppPalette.background,
         title: Text('Рейтинг'),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, size.height * 0.097),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomFilterButton(
-                  resetFilter: filter.resetUsers,
-                  filterController: filterController,
-                  filterDialog: _FilterDialog(
-                    filterCubit: filter,
-                    filterController: filterController,
-                  ),
-                ),
+          preferredSize: Size(double.infinity, size.height * 0.077),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CustomFilterButton(
+              resetFilter: filter.resetUsers,
+              filterController: filterController,
+              filterDialog: _FilterDialog(
+                filterCubit: filter,
+                filterController: filterController,
               ),
-              Divider(),
-            ],
+            ),
           ),
         ),
       ),

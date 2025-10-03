@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../core/helpers/dialog_helper.dart';
 
 class CustomFilterButton extends StatelessWidget {
@@ -25,6 +26,7 @@ class CustomFilterButton extends StatelessWidget {
           DialogHelper.showCustomDialog(dialog: filterDialog, context: context);
         },
         decoration: InputDecoration(
+          fillColor: AppPalette.background,
           hintText: 'Фильтр',
           prefixIcon: Icon(Icons.search),
           suffixIcon: IconButton(

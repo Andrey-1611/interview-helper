@@ -52,7 +52,6 @@ class _UserPageView extends StatelessWidget {
     final filter = context.read<FilterUserCubit>();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppPalette.background,
         title: Text('Аналитика', style: theme.textTheme.displayLarge),
         bottom: PreferredSize(
           preferredSize: Size(
