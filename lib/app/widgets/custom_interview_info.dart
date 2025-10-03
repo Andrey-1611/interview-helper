@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../../../app/router/app_router_names.dart';
+import 'package:interview_master/app/widgets/custom_question_card.dart';
 import '../../data/models/interview/interview_data.dart';
-import '../../data/models/interview/question.dart';
 import 'custom_main_result_panel.dart';
-import 'custom_score_indicator.dart';
 
 class CustomInterviewInfo extends StatelessWidget {
   final InterviewData interview;
@@ -25,31 +22,11 @@ class CustomInterviewInfo extends StatelessWidget {
           child: ListView.builder(
             itemCount: interview.questions.length,
             itemBuilder: (context, index) {
-              return _QuestionCard(question: interview.questions[index]);
+              return CustomQuestionCard(question: interview.questions[index]);
             },
           ),
         ),
       ],
-    );
-  }
-}
-
-class _QuestionCard extends StatelessWidget {
-  final Question question;
-
-  const _QuestionCard({required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push(AppRouterNames.questionInfo, extra: question),
-      child: Card(
-        child: ListTile(
-          leading: CustomScoreIndicator(score: question.score),
-          title: Text('Вопрос ${question.question}'),
-          trailing: Icon(Icons.chevron_right),
-        ),
-      ),
     );
   }
 }

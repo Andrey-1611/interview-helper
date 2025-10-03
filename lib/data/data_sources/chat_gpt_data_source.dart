@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/secrets/api_key.dart';
+import 'package:interview_master/data/models/interview/interview_info.dart';
 import '../../core/constants/main_prompt.dart';
 import '../models/interview/question.dart';
-import '../models/interview/user_input.dart';
 import '../repositories/ai_repository.dart';
 
 @LazySingleton(as: AIRepository)
@@ -23,10 +23,10 @@ class ChatGPTDataSource implements AIRepository {
   }
 
   @override
-  Future<List<Question>> checkAnswers(List<UserInput> userInputs) async {
+  Future<List<Question>> checkAnswers(InterviewInfo interviewInfo) async {
     try {
       final prompt =
-          '${MainPrompt.mainPrompt}\n\nВопросы:\n${UserInput.createPrompt(userInputs)}';
+          '${MainPrompt.mainPrompt}\n\nВопросы:\n${InterviewInfo.createPrompt(interviewInfo)}';
 
       final response = await _dio.post(
         '/networks/gpt-4-1',

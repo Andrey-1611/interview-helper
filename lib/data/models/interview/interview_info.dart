@@ -8,6 +8,7 @@ import 'package:interview_master/core/constants/questions/kotlin_questions.dart'
 import 'package:interview_master/core/constants/questions/python_questions.dart';
 import 'package:interview_master/core/constants/questions/swift_questions.dart';
 import 'package:interview_master/data/models/interview/user_input.dart';
+import '../../../core/constants/main_prompt.dart';
 
 class InterviewInfo extends Equatable {
   final String direction;
@@ -66,5 +67,16 @@ class InterviewInfo extends Equatable {
       if (difficulty.isNotEmpty) difficulty,
       if (sort.isNotEmpty) sort,
     ].join(', ');
+  }
+
+  static String createPrompt(InterviewInfo interviewInfo) {
+    final prompt = interviewInfo.userInputs
+        .map((e) => 'Вопрос: ${_clear(e.question)}\nОтвет: ${_clear(e.answer)}')
+        .join('\n\n');
+    return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
+  }
+
+  static String _clear(String text) {
+    return text.replaceAll("'", '').replaceAll('"', '');
   }
 }

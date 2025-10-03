@@ -1,6 +1,6 @@
+import 'package:interview_master/data/models/interview/interview_info.dart';
 import '../models/interview/question.dart';
-import '../models/interview/user_input.dart';
 
 abstract interface class AIRepository {
-  Future<List<Question>> checkAnswers(List<UserInput> userInputs);
+  Future<List<Question>> checkAnswers(InterviewInfo interviewInfo);
 }
