@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
-import '../../../../app/router/app_router_names.dart';
+import 'package:interview_master/features/users/widgets/custom_user_info.dart';
 import '../../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -86,6 +88,7 @@ class _UsersListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final filter = context.read<FilterUsersCubit>();
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -106,15 +109,24 @@ class _UsersListView extends StatelessWidget {
                 final UserData user = users[index];
                 return Card(
                   child: ListTile(
-                    onTap: () => context.push(AppRouterNames.user, extra: user),
+                    onTap: () => DialogHelper.showCustomSheet(
+                      dialog: _UserSheet(user: user),
+                      context: context,
+                    ),
                     leading: Text(
                       '${index + 1}',
-                      style: Theme.of(context).textTheme.displayMedium,
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
-                    title: Text(user.name),
+                    title: Text(
+                      user.name,
+                      style: theme.textTheme.displayMedium,
+                    ),
                     subtitle: Row(
                       children: [
-                        Text('${user.totalScore}  '),
+                        Text(
+                          '${user.totalScore} ',
+                          style: theme.textTheme.displaySmall,
+                        ),
                         Icon(Icons.star, color: AppPalette.primary),
                       ],
                     ),
@@ -125,6 +137,40 @@ class _UsersListView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _UserSheet extends StatelessWidget {
+  final UserData user;
+
+  const _UserSheet({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+    return BottomSheet(
+      onClosing: () {},
+      builder: (context) => SizedBox(
+        height: size.height * 0.65,
+        child: Column(
+          children: [
+            Text(user.name, style: theme.textTheme.displayLarge),
+            Expanded(child: CustomUserInfo(data: UserData.getStatsInfo(user))),
+            SizedBox(
+              width: size.width * 0.8,
+              child: TextButton(
+                onPressed: () {
+                  context.pop();
+                  context.push(AppRouterNames.user, extra: user);
+                },
+                child: Text('Подобная иноформация'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
