@@ -40,7 +40,45 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
         ),
         BlocProvider(create: (context) => FilterUsersCubit()),
       ],
-      child: Scaffold(body: _UsersList(filterController: _filterController)),
+      child: _UsersRatingView(filterController: _filterController),
+    );
+  }
+}
+
+class _UsersRatingView extends StatelessWidget {
+  final TextEditingController filterController;
+
+  const _UsersRatingView({required this.filterController});
+
+  @override
+  Widget build(BuildContext context) {
+    final filter = context.read<FilterUsersCubit>();
+    final size = MediaQuery.sizeOf(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppPalette.background,
+        title: Text('Рейтинг'),
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, size.height * 0.097),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: CustomFilterButton(
+                  resetFilter: filter.resetUsers,
+                  filterController: filterController,
+                  filterDialog: _FilterDialog(
+                    filterCubit: filter,
+                    filterController: filterController,
+                  ),
+                ),
+              ),
+              Divider(),
+            ],
+          ),
+        ),
+      ),
+      body: _UsersList(filterController: filterController),
     );
   }
 }
@@ -89,54 +127,41 @@ class _UsersListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final filter = context.read<FilterUsersCubit>();
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          CustomFilterButton(
-            resetFilter: filter.resetUsers,
-            filterController: filterController,
-            filterDialog: _FilterDialog(
-              filterCubit: filter,
-              filterController: filterController,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final UserData user = users[index];
-                return Card(
-                  child: ListTile(
-                    onTap: () => DialogHelper.showCustomSheet(
-                      dialog: _UserSheet(user: user),
-                      context: context,
+      child: Expanded(
+        child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final UserData user = users[index];
+            return Card(
+              child: ListTile(
+                onTap: () => DialogHelper.showCustomSheet(
+                  dialog: _UserSheet(user: user),
+                  context: context,
+                ),
+                leading: Text(
+                  '${index + 1}',
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+                title: Text(
+                  user.name,
+                  style: theme.textTheme.displayMedium,
+                ),
+                subtitle: Row(
+                  children: [
+                    Text(
+                      '${user.totalScore} ',
+                      style: theme.textTheme.displaySmall,
                     ),
-                    leading: Text(
-                      '${index + 1}',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    title: Text(
-                      user.name,
-                      style: theme.textTheme.displayMedium,
-                    ),
-                    subtitle: Row(
-                      children: [
-                        Text(
-                          '${user.totalScore} ',
-                          style: theme.textTheme.displaySmall,
-                        ),
-                        Icon(Icons.star, color: AppPalette.primary),
-                      ],
-                    ),
-                    trailing: CustomScoreIndicator(score: user.averageScore),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+                    Icon(Icons.star, color: AppPalette.primary),
+                  ],
+                ),
+                trailing: CustomScoreIndicator(score: user.averageScore),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

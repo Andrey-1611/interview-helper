@@ -111,6 +111,15 @@ class AppTheme {
         showSelectedLabels: true,
         showUnselectedLabels: false,
       ),
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        backgroundColor: AppPalette.cardBackground,
+        titleTextStyle:  TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 27.sp,
+          color: AppPalette.textPrimary,
+        )//TextStyle(),
+      ),
     );
   }
 }

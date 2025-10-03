@@ -13,31 +13,23 @@ import '../../../data/models/interview/interview_data.dart';
 import '../../users/widgets/custom_network_failure.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 
-class InterviewsHistoryPage extends StatefulWidget {
+class InterviewsHistoryPage extends StatelessWidget {
   final String? userId;
+  final TextEditingController filterController;
 
-  const InterviewsHistoryPage({super.key, this.userId});
-
-  @override
-  State<InterviewsHistoryPage> createState() => _InterviewsHistoryPageState();
-}
-
-class _InterviewsHistoryPageState extends State<InterviewsHistoryPage> {
-  final TextEditingController _filterController = TextEditingController();
-
-  @override
-  void dispose() {
-    _filterController.dispose();
-    super.dispose();
-  }
+  const InterviewsHistoryPage({
+    super.key,
+    this.userId,
+    required this.filterController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
-            ..add(ShowInterviews(userId: widget.userId)),
-      child: _InterviewsList(filterController: _filterController),
+            ..add(ShowInterviews(userId: userId)),
+      child: _InterviewsList(filterController: filterController),
     );
   }
 }
@@ -67,6 +59,9 @@ class _InterviewsList extends StatelessWidget {
             filterState.sort,
             state.interviews,
           );
+          if (filteredInterviews.isEmpty) {
+            return _EmptyFilterHistory(filterController: filterController);
+          }
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView.builder(
@@ -89,9 +84,49 @@ class _EmptyHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'История пуста',
-        style: Theme.of(context).textTheme.displayLarge,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'История пуста',
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          TextButton(
+            onPressed: () {
+              StatefulNavigationShell.of(context).goBranch(0);
+              context.push(AppRouterNames.initial);
+            },
+            child: Text('Пройти собеседование'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyFilterHistory extends StatelessWidget {
+  final TextEditingController filterController;
+
+  const _EmptyFilterHistory({required this.filterController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'История пуста',
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<FilterUserCubit>().resetUser();
+              filterController.clear();
+            },
+            child: Text('Сбросить фильтр'),
+          ),
+        ],
       ),
     );
   }

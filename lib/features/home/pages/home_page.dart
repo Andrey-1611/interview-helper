@@ -9,24 +9,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> labels = [
-      'Собеседование',
-      'Аналитика',
-      'Рейтинг',
-      'Профиль',
-    ];
-    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: AppPalette.cardBackground,
-        title: Text(
-          labels[navigationShell.currentIndex],
-          style: theme.textTheme.displayLarge,
-        ),
-      ),
       body: navigationShell,
       bottomNavigationBar: SizedBox(
         height: size.height * 0.08,
@@ -38,22 +22,22 @@ class HomePage extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.chat),
-              label: labels[0],
+              label: _labels[0],
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart),
-              label: labels[1],
+              label: _labels[1],
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.star),
-              label: labels[2],
+              label: _labels[2],
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: labels[3],
+              label: _labels[3],
               backgroundColor: AppPalette.cardBackground,
             ),
           ],
@@ -61,4 +45,11 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  List<String> get _labels => [
+    'Собеседование',
+    'Аналитика',
+    'Рейтинг',
+    'Профиль',
+  ];
 }
