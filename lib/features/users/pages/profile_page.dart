@@ -39,7 +39,9 @@ class _ProfilePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Профиль'),
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

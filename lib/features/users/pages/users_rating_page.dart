@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/helpers/toast_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
-import '../../../../app/router/app_router_names.dart';
+import 'package:interview_master/features/users/widgets/custom_user_info.dart';
 import '../../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -38,7 +40,39 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
         ),
         BlocProvider(create: (context) => FilterUsersCubit()),
       ],
-      child: Scaffold(body: _UsersList(filterController: _filterController)),
+      child: _UsersRatingView(filterController: _filterController),
+    );
+  }
+}
+
+class _UsersRatingView extends StatelessWidget {
+  final TextEditingController filterController;
+
+  const _UsersRatingView({required this.filterController});
+
+  @override
+  Widget build(BuildContext context) {
+    final filter = context.read<FilterUsersCubit>();
+    final size = MediaQuery.sizeOf(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Рейтинг'),
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, size.height * 0.077),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CustomFilterButton(
+              resetFilter: filter.resetUsers,
+              filterController: filterController,
+              filterDialog: _FilterDialog(
+                filterCubit: filter,
+                filterController: filterController,
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: _UsersList(filterController: filterController),
     );
   }
 }
@@ -86,45 +120,76 @@ class _UsersListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filter = context.read<FilterUsersCubit>();
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          CustomFilterButton(
-            resetFilter: filter.resetUsers,
-            filterController: filterController,
-            filterDialog: _FilterDialog(
-              filterCubit: filter,
-              filterController: filterController,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final UserData user = users[index];
-                return Card(
-                  child: ListTile(
-                    onTap: () => context.push(AppRouterNames.user, extra: user),
-                    leading: Text(
-                      '${index + 1}',
-                      style: Theme.of(context).textTheme.displayMedium,
+      child: Expanded(
+        child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final UserData user = users[index];
+            return Card(
+              child: ListTile(
+                onTap: () => DialogHelper.showCustomSheet(
+                  dialog: _UserSheet(user: user),
+                  context: context,
+                ),
+                leading: Text(
+                  '${index + 1}',
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+                title: Text(
+                  user.name,
+                  style: theme.textTheme.displayMedium,
+                ),
+                subtitle: Row(
+                  children: [
+                    Text(
+                      '${user.totalScore} ',
+                      style: theme.textTheme.displaySmall,
                     ),
-                    title: Text(user.name),
-                    subtitle: Row(
-                      children: [
-                        Text('${user.totalScore}  '),
-                        Icon(Icons.star, color: AppPalette.primary),
-                      ],
-                    ),
-                    trailing: CustomScoreIndicator(score: user.averageScore),
-                  ),
-                );
-              },
+                    Icon(Icons.star, color: AppPalette.primary),
+                  ],
+                ),
+                trailing: CustomScoreIndicator(score: user.averageScore),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _UserSheet extends StatelessWidget {
+  final UserData user;
+
+  const _UserSheet({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+    return BottomSheet(
+      onClosing: () {},
+      builder: (context) => SizedBox(
+        height: size.height * 0.65,
+        child: Column(
+          children: [
+            Text(user.name, style: theme.textTheme.displayLarge),
+            Expanded(child: CustomUserInfo(data: UserData.getStatsInfo(user))),
+            SizedBox(
+              width: size.width * 0.8,
+              child: TextButton(
+                onPressed: () {
+                  context.pop();
+                  context.push(AppRouterNames.user, extra: user);
+                },
+                child: Text('Подобная иноформация'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

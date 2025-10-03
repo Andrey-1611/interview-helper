@@ -24,4 +24,18 @@ class DialogHelper {
   }) {
     showDialog(context: context, builder: (context) => dialog);
   }
+
+  static void showCustomSheet({
+    required Widget dialog,
+    required BuildContext context,
+  }) {
+    showModalBottomSheet(
+      isDismissible: true,
+      enableDrag: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => dialog,
+    );
+  }
 }

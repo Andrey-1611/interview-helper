@@ -59,6 +59,7 @@ class _InitialPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
+      appBar: AppBar(title: Text('Собеседование')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(

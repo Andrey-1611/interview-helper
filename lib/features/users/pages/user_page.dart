@@ -52,14 +52,11 @@ class _UserPageView extends StatelessWidget {
     final filter = context.read<FilterUserCubit>();
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: user != null
-            ? Text('Аналитика', style: theme.textTheme.displayLarge)
-            : null,
+        title: Text('Аналитика', style: theme.textTheme.displayLarge),
         bottom: PreferredSize(
           preferredSize: Size(
             double.infinity,
-            size.height * (user != null ? 0.14 : 0.085),
+            size.height * 0.14,
           ),
           child: Column(
             children: [
@@ -88,7 +85,7 @@ class _UserPageView extends StatelessWidget {
       body: TabBarView(
         children: [
           _KeepAlivePage(child: UserInfoPage()),
-          _KeepAlivePage(child: InterviewsHistoryPage(userId: user?.id)),
+          _KeepAlivePage(child: InterviewsHistoryPage(userId: user?.id, filterController: filterController)),
           _KeepAlivePage(child: Scaffold()),
         ],
       ),
