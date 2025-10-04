@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
 import '../../data/models/interview/interview.dart';
@@ -13,6 +14,7 @@ class AppInitializer {
     WidgetsFlutterBinding.ensureInitialized();
     await _initFirebase();
     await _initHive();
+    await _loadApi();
   }
 
   static Future<void> _initFirebase() async {
@@ -29,5 +31,9 @@ class AppInitializer {
     Hive.registerAdapter(InterviewDataAdapter());
     await Hive.openBox<InterviewData>(HiveData.interviewsBox);
     await Hive.openBox<UserData>(HiveData.userBox);
+  }
+
+  static Future<void> _loadApi() async {
+    await dotenv.load(fileName: '.env');
   }
 }

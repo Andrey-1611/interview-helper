@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
-import 'package:interview_master/core/secrets/api_key.dart';
 import 'package:interview_master/data/models/interview/interview_info.dart';
 import '../../core/constants/main_prompt.dart';
 import '../models/interview/question.dart';
@@ -13,11 +13,12 @@ class ChatGPTDataSource implements AIRepository {
   final Dio _dio;
 
   static const _baseUrl = 'https://api.gen-api.ru/api/v1';
+  static final _apiKey = dotenv.env['API_KEY'];
 
   ChatGPTDataSource(this._dio) {
     _dio.options.baseUrl = _baseUrl;
     _dio.options.headers = {
-      'Authorization': 'Bearer $CHAT_GPT_API_KEY',
+      'Authorization': 'Bearer $_apiKey',
       'Content-Type': 'application/json',
     };
   }

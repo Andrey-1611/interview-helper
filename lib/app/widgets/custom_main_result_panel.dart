@@ -14,14 +14,14 @@ class CustomMainResultPanel extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         width: size.width,
-        height: size.height * 0.25,
+        height: size.height * 0.2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (type != null)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(type!, style: textTheme.displayLarge),
               ),
             Text(text, style: textTheme.displayLarge),
