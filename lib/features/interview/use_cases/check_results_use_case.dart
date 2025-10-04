@@ -22,12 +22,12 @@ class CheckResultsUseCase {
     this._networkInfo,
   );
 
-  Future<InterviewData> call(InterviewInfo info) async {
+  Future<InterviewData> call(InterviewInfo interviewInfo) async {
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) throw NetworkException();
 
-    final questions = await _aiRepository.checkAnswers(info.userInputs);
-    final interview = InterviewData.fromQuestions(questions, info);
+    final questions = await _aiRepository.checkAnswers(interviewInfo);
+    final interview = InterviewData.fromQuestions(questions, interviewInfo);
 
     final user = (await _localRepository.getUser())!;
     final updatedUser = UserData.updateData(user, interview);

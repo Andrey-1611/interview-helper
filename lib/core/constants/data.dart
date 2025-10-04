@@ -21,10 +21,16 @@ class InitialData {
 
   static const List<String> difficulties = [junior, middle, senior];
 
+  static const firstNew = 'сначала новые';
+  static const firstOld = 'сначала старые';
+  static const firstBest = 'сначала лучшие';
+  static const firstWorst = 'сначала худшие';
+
   static const List<String> interviewsSorts = [
-    'сначала новые',
-    'сначала старые',
-    'сначала лучшие',
+    firstNew,
+    firstOld,
+    firstBest,
+    firstWorst,
   ];
 
   static const List<String> usersSorts = [

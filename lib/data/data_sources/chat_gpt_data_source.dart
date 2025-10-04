@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
-import 'package:interview_master/core/secrets/api_key.dart';
+import 'package:interview_master/data/models/interview/interview_info.dart';
 import '../../core/constants/main_prompt.dart';
 import '../models/interview/question.dart';
-import '../models/interview/user_input.dart';
 import '../repositories/ai_repository.dart';
 
 @LazySingleton(as: AIRepository)
@@ -13,20 +13,21 @@ class ChatGPTDataSource implements AIRepository {
   final Dio _dio;
 
   static const _baseUrl = 'https://api.gen-api.ru/api/v1';
+  static final _apiKey = dotenv.env['API_KEY'];
 
   ChatGPTDataSource(this._dio) {
     _dio.options.baseUrl = _baseUrl;
     _dio.options.headers = {
-      'Authorization': 'Bearer $CHAT_GPT_API_KEY',
+      'Authorization': 'Bearer $_apiKey',
       'Content-Type': 'application/json',
     };
   }
 
   @override
-  Future<List<Question>> checkAnswers(List<UserInput> userInputs) async {
+  Future<List<Question>> checkAnswers(InterviewInfo interviewInfo) async {
     try {
       final prompt =
-          '${MainPrompt.mainPrompt}\n\nВопросы:\n${UserInput.createPrompt(userInputs)}';
+          '${MainPrompt.mainPrompt}\n\nВопросы:\n${InterviewInfo.createPrompt(interviewInfo)}';
 
       final response = await _dio.post(
         '/networks/gpt-4-1',

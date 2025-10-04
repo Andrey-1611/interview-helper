@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/features/history/pages/questions_history_page.dart';
 import 'package:interview_master/features/users/pages/user_info_page.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -54,10 +55,7 @@ class _UserPageView extends StatelessWidget {
       appBar: AppBar(
         title: Text('Аналитика', style: theme.textTheme.displayLarge),
         bottom: PreferredSize(
-          preferredSize: Size(
-            double.infinity,
-            size.height * 0.14,
-          ),
+          preferredSize: Size(double.infinity, size.height * 0.14),
           child: Column(
             children: [
               Padding(
@@ -85,8 +83,15 @@ class _UserPageView extends StatelessWidget {
       body: TabBarView(
         children: [
           _KeepAlivePage(child: UserInfoPage()),
-          _KeepAlivePage(child: InterviewsHistoryPage(userId: user?.id, filterController: filterController)),
-          _KeepAlivePage(child: Scaffold()),
+          _KeepAlivePage(
+            child: InterviewsHistoryPage(
+              userId: user?.id,
+              filterController: filterController,
+            ),
+          ),
+          _KeepAlivePage(
+            child: QuestionsHistoryPage(filterController: filterController),
+          ),
         ],
       ),
     );

@@ -65,11 +65,11 @@ class InterviewData extends Equatable {
   }
 
   static List<InterviewData> filterInterviews(
-      String? direction,
-      String? difficulty,
-      String? sort,
-      List<InterviewData> interviews,
-      ) {
+    String? direction,
+    String? difficulty,
+    String? sort,
+    List<InterviewData> interviews,
+  ) {
     if (direction != null) {
       interviews = interviews.where((i) => i.direction == direction).toList();
     }
@@ -77,12 +77,16 @@ class InterviewData extends Equatable {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
     }
 
-    if (sort == InitialData.interviewsSorts[0]) {
+    if (sort == InitialData.firstNew) {
       interviews.sort((a, b) => b.date.compareTo(a.date));
-    } else if (sort == InitialData.interviewsSorts[1]) {
+    } else if (sort == InitialData.firstOld) {
       interviews.sort((a, b) => a.date.compareTo(b.date));
-    } else if (sort == InitialData.interviewsSorts[2]) {
+    }
+
+    if (sort == InitialData.firstBest) {
       interviews.sort((a, b) => b.score.compareTo(a.score));
+    } else if (sort == InitialData.firstWorst) {
+      interviews.sort((a, b) => a.score.compareTo(b.score));
     }
 
     return interviews;

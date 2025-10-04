@@ -113,12 +113,13 @@ class AppTheme {
       ),
       appBarTheme: AppBarTheme(
         centerTitle: true,
+        surfaceTintColor: AppPalette.transparent,
         backgroundColor: AppPalette.cardBackground,
-        titleTextStyle:  TextStyle(
+        titleTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 27.sp,
           color: AppPalette.textPrimary,
-        )//TextStyle(),
+        ), //TextStyle(),
       ),
     );
   }
