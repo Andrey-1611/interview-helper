@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
-import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
@@ -14,30 +12,9 @@ import '../../users/widgets/custom_network_failure.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 
 class InterviewsHistoryPage extends StatelessWidget {
-  final String? userId;
   final TextEditingController filterController;
 
-  const InterviewsHistoryPage({
-    super.key,
-    this.userId,
-    required this.filterController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
-            ..add(ShowInterviews(userId: userId)),
-      child: _InterviewsList(filterController: filterController),
-    );
-  }
-}
-
-class _InterviewsList extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const _InterviewsList({required this.filterController});
+  const InterviewsHistoryPage({super.key, required this.filterController});
 
   @override
   Widget build(BuildContext context) {

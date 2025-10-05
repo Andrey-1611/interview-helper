@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_question_card.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/data/models/interview/question.dart';
-import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../../core/helpers/toast_helper.dart';
@@ -13,30 +11,9 @@ import '../../users/widgets/custom_network_failure.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 
 class QuestionsHistoryPage extends StatelessWidget {
-  final String? userId;
   final TextEditingController filterController;
 
-  const QuestionsHistoryPage({
-    super.key,
-    this.userId,
-    required this.filterController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
-            ..add(ShowInterviews(userId: userId)),
-      child: _QuestionsList(filterController: filterController),
-    );
-  }
-}
-
-class _QuestionsList extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const _QuestionsList({required this.filterController});
+  const QuestionsHistoryPage({super.key, required this.filterController});
 
   @override
   Widget build(BuildContext context) {

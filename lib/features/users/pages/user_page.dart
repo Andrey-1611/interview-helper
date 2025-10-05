@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/features/history/pages/questions_history_page.dart';
 import 'package:interview_master/features/users/pages/user_info_page.dart';
@@ -11,7 +12,9 @@ import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
+import '../../history/blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../history/pages/interviews_history_page.dart';
+import '../../history/use_cases/show_interviews_use_case.dart';
 
 class UserPage extends StatefulWidget {
   final UserData? user;
@@ -27,8 +30,15 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FilterUserCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => FilterUserCubit()),
+        BlocProvider(
+          create: (context) =>
+              ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
+                ..add(ShowInterviews(userId: widget.user?.id)),
+        ),
+      ],
       child: DefaultTabController(
         length: 3,
         child: _UserPageView(
@@ -84,10 +94,7 @@ class _UserPageView extends StatelessWidget {
         children: [
           _KeepAlivePage(child: UserInfoPage()),
           _KeepAlivePage(
-            child: InterviewsHistoryPage(
-              userId: user?.id,
-              filterController: filterController,
-            ),
+            child: InterviewsHistoryPage(filterController: filterController),
           ),
           _KeepAlivePage(
             child: QuestionsHistoryPage(filterController: filterController),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/features/home/bloc/sign_out_bloc/sign_out_bloc.dart';
 import 'package:interview_master/features/home/use_cases/sign_out_use_case.dart';
@@ -38,20 +39,20 @@ class _ProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Профиль'),
-      ),
+      appBar: AppBar(title: Text('Профиль')),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-            _UserData(),
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-            _SignOutButton(),
-          ],
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: size.height * 0.35, child: _UserData()),
+              _SignOutButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -63,6 +64,7 @@ class _UserData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return BlocBuilder<GetUserBloc, GetUserState>(
       builder: (context, state) {
         if (state is GetUserLoading) {
@@ -71,7 +73,7 @@ class _UserData extends StatelessWidget {
           return Column(
             children: [
               CustomInfoCard(titleText: 'Имя', subtitleText: state.user.name),
-              SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
+              SizedBox(height: size.height * 0.02),
               CustomInfoCard(
                 titleText: 'Почта',
                 subtitleText: state.user.email,
@@ -101,7 +103,10 @@ class _SignOutButton extends StatelessWidget {
         }
       },
       child: TextButton(
-        onPressed: () => context.read<SignOutBloc>().add(SignOut()),
+        onPressed: () => DialogHelper.showCustomDialog(
+          dialog: _SignOutDialog(bloc: context.read<SignOutBloc>()),
+          context: context,
+        ),
         style: ButtonStyle(
           foregroundColor: WidgetStateProperty.all(AppPalette.transparent),
           overlayColor: WidgetStateProperty.all(AppPalette.transparent),
@@ -111,6 +116,33 @@ class _SignOutButton extends StatelessWidget {
           style: Theme.of(context).textTheme.labelMedium,
         ),
       ),
+    );
+  }
+}
+
+class _SignOutDialog extends StatelessWidget {
+  final SignOutBloc bloc;
+
+  const _SignOutDialog({required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      content: Text(
+        'Вы уверены, что хотите выйти из аккунта?',
+        style: theme.textTheme.bodyLarge,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            context.pop();
+            bloc.add(SignOut());
+          },
+          child: Text('Да'),
+        ),
+        TextButton(onPressed: () => context.pop(), child: Text('Нет')),
+      ],
     );
   }
 }
