@@ -15,6 +15,8 @@ import '../../../data/models/user/user_data.dart';
 import '../../history/blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../history/pages/interviews_history_page.dart';
 import '../../history/use_cases/show_interviews_use_case.dart';
+import '../blocs/get_user_bloc/get_user_bloc.dart';
+import '../use_cases/get_user_use_case.dart';
 
 class UserPage extends StatefulWidget {
   final UserData? user;
@@ -37,6 +39,11 @@ class _UserPageState extends State<UserPage> {
           create: (context) =>
               ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
                 ..add(ShowInterviews(userId: widget.user?.id)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              GetUserBloc(GetIt.I<GetUserUseCase>())
+                ..add(GetUser(userData: widget.user)),
         ),
       ],
       child: DefaultTabController(
