@@ -94,7 +94,8 @@ class _UsersList extends StatelessWidget {
         if (usersState is ShowUsersSuccess) {
           final state = context.watch<FilterUsersCubit>().state;
           return _UsersListView(
-            users: UserData.filterUsers(
+            users: usersState.users,
+            filteredUsers: UserData.filterUsers(
               state.direction,
               state.sort,
               usersState.users,
@@ -114,48 +115,63 @@ class _UsersList extends StatelessWidget {
 
 class _UsersListView extends StatelessWidget {
   final List<UserData> users;
+  final List<UserData> filteredUsers;
   final TextEditingController filterController;
 
-  const _UsersListView({required this.users, required this.filterController});
+  const _UsersListView({
+    required this.filteredUsers,
+    required this.filterController,
+    required this.users,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Expanded(
-        child: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            final UserData user = users[index];
-            return Card(
-              child: ListTile(
-                onTap: () => DialogHelper.showCustomSheet(
-                  dialog: _UserSheet(user: user),
-                  context: context,
-                ),
-                leading: Text(
-                  '${index + 1}',
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                title: Text(
-                  user.name,
-                  style: theme.textTheme.displayMedium,
-                ),
-                subtitle: Row(
-                  children: [
-                    Text(
-                      '${user.totalScore} ',
-                      style: theme.textTheme.displaySmall,
-                    ),
-                    Icon(Icons.star, color: AppPalette.primary),
-                  ],
-                ),
-                trailing: CustomScoreIndicator(score: user.averageScore),
+      child: ListView.builder(
+        itemCount: filteredUsers.length,
+        itemBuilder: (context, index) {
+          final filteredUser = filteredUsers[index];
+          return Card(
+            child: ListTile(
+              onTap: () => DialogHelper.showCustomSheet(
+                dialog: _UserSheet(user: filteredUser),
+                context: context,
               ),
-            );
-          },
-        ),
+              leading: Text(
+                '${index + 1}',
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              title: Text(
+                filteredUser.name,
+                style: theme.textTheme.displayMedium,
+              ),
+              subtitle: Row(
+                children: [
+                  Text(
+                    '${filteredUser.totalScore} ',
+                    style: theme.textTheme.displaySmall,
+                  ),
+                  Icon(Icons.star, color: AppPalette.primary),
+                ],
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomScoreIndicator(score: filteredUser.averageScore),
+                  IconButton(
+                    onPressed: () => context.push(
+                      AppRouterNames.analysis,
+                      extra: users[index],
+                    ),
+                    icon: Icon(Icons.compare_arrows_outlined),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -177,7 +193,7 @@ class _UserSheet extends StatelessWidget {
         child: Column(
           children: [
             Text(user.name, style: theme.textTheme.displayLarge),
-            Expanded(child: CustomUserInfo(data: UserData.getStatsInfo(user))),
+            Expanded(child: CustomUserInfo(data: user)),
             SizedBox(
               width: size.width * 0.8,
               child: TextButton(

@@ -59,17 +59,6 @@ class UserData extends Equatable {
         ..add(Interview.fromInterviewData(interview)),
     );
   }
-
-  static List<String> getStatsInfo(UserData data) {
-    final List<String> stats = [
-      'Собеседования:  ${data.totalInterviews}',
-      'Очки опыта:  ${data.totalScore} ',
-      'Средний результат:  ${data.averageScore} % ',
-      'Лучший результат:  ${data.bestScore} %',
-    ];
-    return stats;
-  }
-
   static List<UserData> filterUsers(
       String? direction,
       String? sort,

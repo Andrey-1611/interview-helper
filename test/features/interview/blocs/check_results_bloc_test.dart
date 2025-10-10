@@ -60,7 +60,7 @@ void main() {
       act: (bloc) => bloc.add(CheckResults(interviewInfo: testInterviewInfo)),
       expect: () => <CheckResultsState>[
         CheckResultsLoading(),
-        CheckResultsSuccess(interview: testInterview),
+        CheckResultsSuccess(id: testInterview),
       ],
       verify: (_) {
         verify(() => useCase.call(any())).called(1);

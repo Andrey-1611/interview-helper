@@ -104,4 +104,18 @@ class HiveDataSource implements LocalRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> changeIsFavourite(String id) async {
+    try {
+      final interview = (_interviewsBox.get(id))!;
+      final newInterview = interview.copyWith(
+        isFavourite: !interview.isFavourite,
+      );
+      _interviewsBox.put(id, newInterview);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

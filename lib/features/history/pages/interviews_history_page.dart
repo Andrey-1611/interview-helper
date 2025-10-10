@@ -1,56 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
+import 'package:interview_master/features/history/blocs/change_is_favourite_bloc/change_is_favourite_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../../app/widgets/custom_score_indicator.dart';
 import '../../../../core/helpers/toast_helper.dart';
+import '../../../core/theme/app_pallete.dart';
 import '../../../data/models/interview/interview_data.dart';
 import '../../users/widgets/custom_network_failure.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 
 class InterviewsHistoryPage extends StatelessWidget {
   final TextEditingController filterController;
+  final bool isCurrentUser;
 
-  const InterviewsHistoryPage({super.key, required this.filterController});
+  const InterviewsHistoryPage({
+    super.key,
+    required this.filterController,
+    required this.isCurrentUser,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShowInterviewsBloc, ShowInterviewsState>(
-      listener: (context, state) {
-        if (state is ShowInterviewsFailure) {
-          ToastHelper.loadingError();
-        }
-      },
-      builder: (context, state) {
-        if (state is ShowInterviewsNetworkFailure) {
-          return NetworkFailure();
-        } else if (state is ShowInterviewsSuccess) {
-          if (state.interviews.isEmpty) return _EmptyHistory();
-          final filterState = context.watch<FilterUserCubit>().state;
-          final filteredInterviews = InterviewData.filterInterviews(
-            filterState.direction,
-            filterState.difficulty,
-            filterState.sort,
-            state.interviews,
-          );
-          if (filteredInterviews.isEmpty) {
-            return _EmptyFilterHistory(filterController: filterController);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ShowInterviewsBloc, ShowInterviewsState>(
+          listener: (context, state) {
+            if (state is ShowInterviewsFailure) {
+              ToastHelper.loadingError();
+            }
+          },
+        ),
+        BlocListener<ChangeIsFavouriteBloc, ChangeIsFavouriteState>(
+          listener: (context, state) {
+            if (state is ChangeIsFavouriteFailure) {
+              ToastHelper.loadingError();
+            } else if (state is ChangeIsFavouriteNetworkFailure) {
+              ToastHelper.networkError();
+            } else if (state is ChangeIsFavouriteSuccess) {
+              context.read<ShowInterviewsBloc>().add(
+                ShowInterviews(userId: null),
+              );
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<ShowInterviewsBloc, ShowInterviewsState>(
+        builder: (context, state) {
+          if (state is ShowInterviewsNetworkFailure) {
+            return NetworkFailure();
+          } else if (state is ShowInterviewsSuccess) {
+            if (state.interviews.isEmpty) return _EmptyHistory();
+            final filterState = context.watch<FilterUserCubit>().state;
+            final isFavourite = context.watch<FilterFavouriteCubit>().state;
+            final filteredInterviews = InterviewData.filterInterviews(
+              filterState.direction,
+              filterState.difficulty,
+              filterState.sort,
+              isFavourite,
+              state.interviews,
+            );
+            if (filteredInterviews.isEmpty) {
+              return _EmptyFilterHistory(filterController: filterController);
+            }
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: filteredInterviews.length,
+                itemBuilder: (context, index) {
+                  return _InterviewCard(
+                    interview: filteredInterviews[index],
+                    isCurrentUser: isCurrentUser,
+                  );
+                },
+              ),
+            );
           }
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-              itemCount: filteredInterviews.length,
-              itemBuilder: (context, index) {
-                return _InterviewCard(interview: filteredInterviews[index]);
-              },
-            ),
-          );
-        }
-        return CustomLoadingIndicator();
-      },
+          return CustomLoadingIndicator();
+        },
+      ),
     );
   }
 }
@@ -97,22 +129,27 @@ class _EmptyFilterHistory extends StatelessWidget {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           TextButton(
-            onPressed: () {
-              context.read<FilterUserCubit>().resetUser();
-              filterController.clear();
-            },
+            onPressed: () => _resetFilter(context),
             child: Text('Сбросить фильтр'),
           ),
         ],
       ),
     );
   }
+
+  void _resetFilter(BuildContext context) {
+    final favourite = context.read<FilterFavouriteCubit>();
+    context.read<FilterUserCubit>().resetUser();
+    filterController.clear();
+    if (favourite.state == true) favourite.changeFavourite();
+  }
 }
 
 class _InterviewCard extends StatelessWidget {
   final InterviewData interview;
+  final bool isCurrentUser;
 
-  const _InterviewCard({required this.interview});
+  const _InterviewCard({required this.interview, required this.isCurrentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +172,24 @@ class _InterviewCard extends StatelessWidget {
               ),
             ],
           ),
+          trailing: isCurrentUser
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: IconButton(
+                    onPressed: () {
+                      context.read<ChangeIsFavouriteBloc>().add(
+                        ChangeIsFavourite(id: interview.id),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.favorite,
+                      color: interview.isFavourite
+                          ? AppPalette.error
+                          : AppPalette.textSecondary,
+                    ),
+                  ),
+                )
+              : SizedBox(),
         ),
       ),
     );

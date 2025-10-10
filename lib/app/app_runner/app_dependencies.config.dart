@@ -34,6 +34,8 @@ import '../../features/auth/use_cases/sign_in_use_case.dart' as _i887;
 import '../../features/auth/use_cases/sign_up_use_case.dart' as _i49;
 import '../../features/auth/use_cases/watch_email_verified_user_case.dart'
     as _i226;
+import '../../features/history/use_cases/change_is_favourite_use_case.dart'
+    as _i386;
 import '../../features/history/use_cases/show_interviews_use_case.dart'
     as _i855;
 import '../../features/home/use_cases/get_current_user_use_case.dart' as _i941;
@@ -90,6 +92,14 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i29.LocalRepository>(),
               gh<_i668.NetworkInfo>(),
             ));
+    gh.factory<_i327.SignOutUseCase>(() => _i327.SignOutUseCase(
+          gh<_i481.AuthRepository>(),
+          gh<_i137.RemoteRepository>(),
+          gh<_i29.LocalRepository>(),
+          gh<_i668.NetworkInfo>(),
+        ));
+    gh.factory<_i386.ChangeIsFavouriteUseCase>(
+        () => _i386.ChangeIsFavouriteUseCase(gh<_i29.LocalRepository>()));
     gh.factory<_i547.GetUserUseCase>(
         () => _i547.GetUserUseCase(gh<_i29.LocalRepository>()));
     gh.factory<_i293.ShowUsersUseCase>(() => _i293.ShowUsersUseCase(
@@ -99,11 +109,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i333.ChangeEmailUseCase>(() => _i333.ChangeEmailUseCase(
           gh<_i668.NetworkInfo>(),
           gh<_i481.AuthRepository>(),
-        ));
-    gh.factory<_i327.SignOutUseCase>(() => _i327.SignOutUseCase(
-          gh<_i481.AuthRepository>(),
-          gh<_i29.LocalRepository>(),
-          gh<_i668.NetworkInfo>(),
         ));
     gh.factory<_i855.ShowInterviewsUseCase>(() => _i855.ShowInterviewsUseCase(
           gh<_i137.RemoteRepository>(),

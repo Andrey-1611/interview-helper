@@ -65,7 +65,9 @@ class FirestoreDataSource implements RemoteRepository {
     UserData updatedUser,
   ) async {
     try {
-      await _interviewsCollection(updatedUser.id).add(interview.toJson());
+      await _interviewsCollection(
+        updatedUser.id,
+      ).doc(interview.id).set(interview.toJson());
       await _usersCollection().doc(updatedUser.id).update(updatedUser.toJson());
     } catch (e) {
       log(e.toString());
@@ -85,6 +87,23 @@ class FirestoreDataSource implements RemoteRepository {
           )
           .toList();
       return interviews;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateInterviews(
+    String userId,
+    List<InterviewData> interviews,
+  ) async {
+    try {
+      for (final interview in interviews) {
+        await _interviewsCollection(
+          userId,
+        ).doc(interview.id).update({'isFavourite': interview.isFavourite});
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

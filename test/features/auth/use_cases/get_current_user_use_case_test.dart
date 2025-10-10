@@ -72,14 +72,14 @@ void main() {
         () => mockRemoteRepository.showInterviews(id),
       ).thenAnswer((_) async => interviews);
       when(
-        () => mockLocalRepository.loadInterviews(interviews),
+        () => mockLocalRepository.updateInterviews(interviews),
       ).thenAnswer((_) async => {});
 
       await useCase.call();
 
       verify(() => mockAuthRepository.getUser()).called(1);
       verify(() => mockRemoteRepository.showInterviews(id)).called(1);
-      verify(() => mockLocalRepository.loadInterviews(interviews)).called(1);
+      verify(() => mockLocalRepository.updateInterviews(interviews)).called(1);
       verify(() => mockAuthRepository.checkEmailVerified()).called(1);
     });
 
