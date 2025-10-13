@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/helpers/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../data/models/interview/interview_info.dart';
@@ -39,6 +40,13 @@ class _InterviewPageState extends State<InterviewPage> {
         title: Text(
           '${widget.interviewInfo.direction}, ${widget.interviewInfo.difficulty}',
           style: theme.textTheme.displayMedium,
+        ),
+        leading: IconButton(
+          onPressed: () => DialogHelper.showCustomDialog(
+            dialog: _GoOutDialog(),
+            context: context,
+          ),
+          icon: Icon(Icons.arrow_back),
         ),
       ),
       body: PageView.builder(
@@ -83,8 +91,8 @@ class _InterviewQuestionPage extends StatelessWidget {
       child: Column(
         children: [
           Text('Вопрос ${page + 1}'),
-          Text(questions[page], style: theme.textTheme.bodyLarge,),
-          SizedBox(height: size.height * 0.02,),
+          Text(questions[page], style: theme.textTheme.bodyLarge),
+          SizedBox(height: size.height * 0.02),
           Expanded(
             child: TextField(
               autofocus: true,
@@ -145,5 +153,28 @@ class _InterviewQuestionPage extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class _GoOutDialog extends StatelessWidget {
+  const _GoOutDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      title: Text(
+        'Вы уверены, что хотите выйти из аккаунта?',
+        style: theme.textTheme.displaySmall,
+      ),
+      content: const Text('Текущий прогресс будет сброшен'),
+      actions: [
+        TextButton(
+          onPressed: () => context.pushReplacement(AppRouterNames.initial),
+          child: Text('Да'),
+        ),
+        TextButton(onPressed: () => context.pop(), child: Text('Нет')),
+      ],
+    );
   }
 }
