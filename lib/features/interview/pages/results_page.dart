@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/helpers/dialog_helper.dart';
+import 'package:interview_master/features/history/blocs/change_is_favourite_bloc/change_is_favourite_bloc.dart';
+import 'package:interview_master/features/history/use_cases/change_is_favourite_interview_use_case.dart';
+import 'package:interview_master/features/history/use_cases/change_is_favourite_question_use_case.dart';
 import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../core/helpers/toast_helper.dart';
@@ -23,6 +26,12 @@ class ResultsPage extends StatelessWidget {
           create: (context) =>
               CheckResultsBloc(GetIt.I<CheckResultsUseCase>())
                 ..add(CheckResults(interviewInfo: interviewInfo)),
+        ),
+        BlocProvider(
+          create: (context) => ChangeIsFavouriteBloc(
+            GetIt.I<ChangeIsFavouriteInterviewUseCase>(),
+            GetIt.I<ChangeIsFavouriteQuestionUseCase>(),
+          ),
         ),
       ],
       child: _ResultsPageView(interviewInfo: interviewInfo),

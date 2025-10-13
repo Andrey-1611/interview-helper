@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app/widgets/custom_info_card.dart';
 import '../../../data/models/interview/question.dart';
-import '../../../app/widgets/custom_main_result_panel.dart';
 
 class QuestionInfoPage extends StatelessWidget {
   final Question question;
@@ -17,7 +16,7 @@ class QuestionInfoPage extends StatelessWidget {
         child: Center(
           child: ListView(
             children: [
-              CustomMainResultPanel(text: 'Точность: ${question.score} %'),
+              _MainResultPanel(result: 'Точность: ${question.score} %'),
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
               CustomInfoCard(
                 titleText: 'Вопрос:',
@@ -34,6 +33,26 @@ class QuestionInfoPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MainResultPanel extends StatelessWidget {
+  final String result;
+
+  const _MainResultPanel({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      child: Container(
+        alignment: Alignment.center,
+        width: size.width,
+        height: size.height * 0.2,
+        child: Center(child: Text(result, style: textTheme.displayLarge)),
       ),
     );
   }

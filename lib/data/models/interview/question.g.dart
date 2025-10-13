@@ -17,25 +17,31 @@ class QuestionAdapter extends TypeAdapter<Question> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Question(
-      score: fields[0] as int,
-      question: fields[1] as String,
-      userAnswer: fields[2] as String,
-      correctAnswer: fields[3] as String,
+      id: fields[0] as String,
+      score: fields[1] as int,
+      question: fields[2] as String,
+      userAnswer: fields[3] as String,
+      correctAnswer: fields[4] as String,
+      isFavourite: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Question obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.score)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.question)
+      ..write(obj.score)
       ..writeByte(2)
-      ..write(obj.userAnswer)
+      ..write(obj.question)
       ..writeByte(3)
-      ..write(obj.correctAnswer);
+      ..write(obj.userAnswer)
+      ..writeByte(4)
+      ..write(obj.correctAnswer)
+      ..writeByte(5)
+      ..write(obj.isFavourite);
   }
 
   @override
@@ -54,15 +60,19 @@ class QuestionAdapter extends TypeAdapter<Question> {
 // **************************************************************************
 
 Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
+      id: json['id'] as String,
       score: (json['score'] as num).toInt(),
       question: json['question'] as String,
       userAnswer: json['userAnswer'] as String,
       correctAnswer: json['correctAnswer'] as String,
+      isFavourite: json['isFavourite'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$QuestionToJson(Question instance) => <String, dynamic>{
+      'id': instance.id,
       'score': instance.score,
       'question': instance.question,
       'userAnswer': instance.userAnswer,
       'correctAnswer': instance.correctAnswer,
+      'isFavourite': instance.isFavourite,
     };

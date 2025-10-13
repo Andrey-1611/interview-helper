@@ -18,6 +18,7 @@ import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../../core/utils/network_info.dart' as _i668;
+import '../../core/utils/stopwatch_info.dart' as _i742;
 import '../../data/data_sources/chat_gpt_data_source.dart' as _i241;
 import '../../data/data_sources/firebase_auth_data_source.dart' as _i891;
 import '../../data/data_sources/firestore_data_source.dart' as _i1001;
@@ -34,6 +35,10 @@ import '../../features/auth/use_cases/sign_in_use_case.dart' as _i887;
 import '../../features/auth/use_cases/sign_up_use_case.dart' as _i49;
 import '../../features/auth/use_cases/watch_email_verified_user_case.dart'
     as _i226;
+import '../../features/history/use_cases/change_is_favourite_interview_use_case.dart'
+    as _i825;
+import '../../features/history/use_cases/change_is_favourite_question_use_case.dart'
+    as _i522;
 import '../../features/history/use_cases/show_interviews_use_case.dart'
     as _i855;
 import '../../features/home/use_cases/get_current_user_use_case.dart' as _i941;
@@ -63,20 +68,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => modules.firebaseFirestore);
     gh.lazySingleton<_i744.HiveInterface>(() => modules.hive);
     gh.lazySingleton<_i895.Connectivity>(() => modules.connectivity);
+    gh.lazySingleton<Stopwatch>(() => modules.stopWatch);
     gh.lazySingleton<_i504.AIRepository>(
         () => _i241.ChatGPTDataSource(gh<_i361.Dio>()));
     gh.lazySingleton<_i29.LocalRepository>(
         () => _i858.HiveDataSource(gh<_i986.HiveInterface>()));
+    gh.lazySingleton<_i742.StopwatchInfo>(
+        () => _i742.StopwatchInfo(gh<Stopwatch>()));
     gh.lazySingleton<_i137.RemoteRepository>(
         () => _i1001.FirestoreDataSource(gh<_i974.FirebaseFirestore>()));
     gh.lazySingleton<_i668.NetworkInfo>(
         () => _i668.NetworkInfo(gh<_i895.Connectivity>()));
     gh.lazySingleton<_i481.AuthRepository>(
         () => _i891.FirebaseAuthDataSource(gh<_i59.FirebaseAuth>()));
-    gh.factory<_i782.StartInterviewUseCase>(() => _i782.StartInterviewUseCase(
-          gh<_i29.LocalRepository>(),
-          gh<_i668.NetworkInfo>(),
-        ));
     gh.factory<_i887.SignInUseCase>(() => _i887.SignInUseCase(
           gh<_i481.AuthRepository>(),
           gh<_i137.RemoteRepository>(),
@@ -90,20 +94,37 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i29.LocalRepository>(),
               gh<_i668.NetworkInfo>(),
             ));
+    gh.factory<_i327.SignOutUseCase>(() => _i327.SignOutUseCase(
+          gh<_i481.AuthRepository>(),
+          gh<_i137.RemoteRepository>(),
+          gh<_i29.LocalRepository>(),
+          gh<_i668.NetworkInfo>(),
+        ));
+    gh.factory<_i782.StartInterviewUseCase>(() => _i782.StartInterviewUseCase(
+          gh<_i29.LocalRepository>(),
+          gh<_i668.NetworkInfo>(),
+          gh<_i742.StopwatchInfo>(),
+        ));
     gh.factory<_i547.GetUserUseCase>(
         () => _i547.GetUserUseCase(gh<_i29.LocalRepository>()));
+    gh.factory<_i825.ChangeIsFavouriteInterviewUseCase>(() =>
+        _i825.ChangeIsFavouriteInterviewUseCase(gh<_i29.LocalRepository>()));
+    gh.factory<_i522.ChangeIsFavouriteQuestionUseCase>(() =>
+        _i522.ChangeIsFavouriteQuestionUseCase(gh<_i29.LocalRepository>()));
     gh.factory<_i293.ShowUsersUseCase>(() => _i293.ShowUsersUseCase(
           gh<_i137.RemoteRepository>(),
           gh<_i668.NetworkInfo>(),
         ));
+    gh.factory<_i911.CheckResultsUseCase>(() => _i911.CheckResultsUseCase(
+          gh<_i504.AIRepository>(),
+          gh<_i137.RemoteRepository>(),
+          gh<_i29.LocalRepository>(),
+          gh<_i668.NetworkInfo>(),
+          gh<_i742.StopwatchInfo>(),
+        ));
     gh.factory<_i333.ChangeEmailUseCase>(() => _i333.ChangeEmailUseCase(
           gh<_i668.NetworkInfo>(),
           gh<_i481.AuthRepository>(),
-        ));
-    gh.factory<_i327.SignOutUseCase>(() => _i327.SignOutUseCase(
-          gh<_i481.AuthRepository>(),
-          gh<_i29.LocalRepository>(),
-          gh<_i668.NetworkInfo>(),
         ));
     gh.factory<_i855.ShowInterviewsUseCase>(() => _i855.ShowInterviewsUseCase(
           gh<_i137.RemoteRepository>(),
@@ -126,12 +147,6 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.factory<_i49.SignUpUseCase>(() => _i49.SignUpUseCase(
           gh<_i481.AuthRepository>(),
-          gh<_i668.NetworkInfo>(),
-        ));
-    gh.factory<_i911.CheckResultsUseCase>(() => _i911.CheckResultsUseCase(
-          gh<_i504.AIRepository>(),
-          gh<_i137.RemoteRepository>(),
-          gh<_i29.LocalRepository>(),
           gh<_i668.NetworkInfo>(),
         ));
     return this;

@@ -50,7 +50,7 @@ void main() {
       act: (bloc) => bloc.add(ShowUsers()),
       expect: () => <ShowUsersState>[
         ShowUsersLoading(),
-        ShowUsersSuccess(users: testUsers),
+        ShowUsersSuccess(filteredUsers: testUsers),
       ],
       verify: (_) {
         verify(() => useCase.call()).called(1);

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/app/widgets/custom_question_card.dart';
+import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/data/models/interview/question.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../../core/helpers/toast_helper.dart';
+import '../../../app/widgets/custom_question_card.dart';
 import '../../users/widgets/custom_network_failure.dart';
 import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
 
 class QuestionsHistoryPage extends StatelessWidget {
   final TextEditingController filterController;
+  final bool isCurrentUser;
 
-  const QuestionsHistoryPage({super.key, required this.filterController});
+  const QuestionsHistoryPage({
+    super.key,
+    required this.filterController,
+    required this.isCurrentUser,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +35,12 @@ class QuestionsHistoryPage extends StatelessWidget {
         } else if (state is ShowInterviewsSuccess) {
           if (state.interviews.isEmpty) return _EmptyHistory();
           final filterState = context.watch<FilterUserCubit>().state;
+          final isFavourite = context.watch<FilterFavouriteCubit>().state;
           final questions = Question.filterQuestions(
             filterState.direction,
             filterState.difficulty,
             filterState.sort,
+            isFavourite,
             state.interviews,
           );
           if (questions.isEmpty) {
@@ -43,7 +51,10 @@ class QuestionsHistoryPage extends StatelessWidget {
             child: ListView.builder(
               itemCount: questions.length,
               itemBuilder: (context, index) {
-                return CustomQuestionCard(question: questions[index]);
+                return CustomQuestionCard(
+                  question: questions[index],
+                  isCurrentUser: isCurrentUser,
+                );
               },
             ),
           );
@@ -96,14 +107,18 @@ class _EmptyFilterHistory extends StatelessWidget {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           TextButton(
-            onPressed: () {
-              context.read<FilterUserCubit>().resetUser();
-              filterController.clear();
-            },
+            onPressed: () => _reset(context),
             child: Text('Сбросить фильтр'),
           ),
         ],
       ),
     );
+  }
+
+  void _reset(BuildContext context) {
+    final favourite = context.read<FilterFavouriteCubit>();
+    context.read<FilterUserCubit>().resetUser();
+    filterController.clear();
+    if (favourite.state == true) favourite.changeFavourite();
   }
 }

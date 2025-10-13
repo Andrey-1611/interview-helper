@@ -21,8 +21,8 @@ class GetCurrentUserUseCase {
     if (user != null) {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return user;
-      final interviews = await _remoteRepository.showInterviews(user.id);
-      await _localRepository.loadInterviews(interviews);
+      final interviews = await _localRepository.showInterviews();
+      await _remoteRepository.updateInterviews(user.id, interviews);
       return user;
     }
     return null;

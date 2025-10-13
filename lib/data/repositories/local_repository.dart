@@ -15,4 +15,8 @@ abstract interface class LocalRepository {
   Future<void> deleteData();
 
   Future<int> getTotalInterviewsToady();
+
+  Future<void> changeIsFavouriteInterview(String id);
+
+  Future<void> changeIsFavouriteQuestion(String id);
 }

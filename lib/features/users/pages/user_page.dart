@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
+import 'package:interview_master/features/history/blocs/change_is_favourite_bloc/change_is_favourite_bloc.dart';
 import 'package:interview_master/features/history/pages/questions_history_page.dart';
+import 'package:interview_master/features/history/use_cases/change_is_favourite_interview_use_case.dart';
 import 'package:interview_master/features/users/pages/user_info_page.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -14,6 +17,7 @@ import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
 import '../../history/blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../history/pages/interviews_history_page.dart';
+import '../../history/use_cases/change_is_favourite_question_use_case.dart';
 import '../../history/use_cases/show_interviews_use_case.dart';
 import '../blocs/get_user_bloc/get_user_bloc.dart';
 import '../use_cases/get_user_use_case.dart';
@@ -35,6 +39,7 @@ class _UserPageState extends State<UserPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => FilterUserCubit()),
+        BlocProvider(create: (context) => FilterFavouriteCubit()),
         BlocProvider(
           create: (context) =>
               ShowInterviewsBloc(GetIt.I<ShowInterviewsUseCase>())
@@ -44,6 +49,12 @@ class _UserPageState extends State<UserPage> {
           create: (context) =>
               GetUserBloc(GetIt.I<GetUserUseCase>())
                 ..add(GetUser(userData: widget.user)),
+        ),
+        BlocProvider(
+          create: (context) => ChangeIsFavouriteBloc(
+            GetIt.I<ChangeIsFavouriteInterviewUseCase>(),
+            GetIt.I<ChangeIsFavouriteQuestionUseCase>(),
+          ),
         ),
       ],
       child: DefaultTabController(
@@ -73,12 +84,59 @@ class _UserPageView extends StatelessWidget {
         title: Text('Аналитика', style: theme.textTheme.displayLarge),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, size.height * 0.14),
-          child: Column(
+          child: _UserAppBar(
+            filter: filter,
+            filterController: filterController,
+            isCurrentUser: isCurrentUser,
+          ),
+        ),
+      ),
+      body: TabBarView(
+        children: [
+          _KeepAlivePage(child: UserInfoPage(isCurrentUser: isCurrentUser)),
+          _KeepAlivePage(
+            child: InterviewsHistoryPage(
+              filterController: filterController,
+              isCurrentUser: isCurrentUser,
+            ),
+          ),
+          _KeepAlivePage(
+            child: QuestionsHistoryPage(
+              filterController: filterController,
+              isCurrentUser: isCurrentUser,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool get isCurrentUser => user == null;
+}
+
+class _UserAppBar extends StatelessWidget {
+  final FilterUserCubit filter;
+  final TextEditingController filterController;
+  final bool isCurrentUser;
+
+  const _UserAppBar({
+    required this.filter,
+    required this.filterController,
+    required this.isCurrentUser,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final filterFavourite = context.watch<FilterFavouriteCubit>();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+              Expanded(
                 child: CustomFilterButton(
-                  resetFilter: filter.resetUser,
+                  resetFilter: () => filter.resetUser(),
                   filterController: filterController,
                   filterDialog: _FilterDialog(
                     filterCubit: filter,
@@ -86,28 +144,31 @@ class _UserPageView extends StatelessWidget {
                   ),
                 ),
               ),
-              TabBar(
-                tabs: [
-                  Tab(text: 'Статистика'),
-                  Tab(text: 'История'),
-                  Tab(text: 'Библиотека'),
-                ],
-              ),
+              isCurrentUser
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: IconButton(
+                        onPressed: () => filterFavourite.changeFavourite(),
+                        icon: Icon(
+                          Icons.favorite,
+                          color: filterFavourite.state
+                              ? AppPalette.error
+                              : AppPalette.textSecondary,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
-      ),
-      body: TabBarView(
-        children: [
-          _KeepAlivePage(child: UserInfoPage()),
-          _KeepAlivePage(
-            child: InterviewsHistoryPage(filterController: filterController),
-          ),
-          _KeepAlivePage(
-            child: QuestionsHistoryPage(filterController: filterController),
-          ),
-        ],
-      ),
+        TabBar(
+          tabs: [
+            Tab(text: 'Статистика'),
+            Tab(text: 'История'),
+            Tab(text: 'Библиотека'),
+          ],
+        ),
+      ],
     );
   }
 }

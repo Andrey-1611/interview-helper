@@ -29,6 +29,12 @@ class InterviewData extends Equatable {
   @HiveField(5)
   final List<Question> questions;
 
+  @HiveField(6)
+  final bool isFavourite;
+
+  @HiveField(7)
+  final int durationMs;
+
   const InterviewData({
     required this.id,
     required this.score,
@@ -36,19 +42,31 @@ class InterviewData extends Equatable {
     required this.direction,
     required this.date,
     required this.questions,
+    this.isFavourite = false,
+    required this.durationMs,
   });
 
   @override
-  List<Object?> get props => [score, difficulty, direction, date, questions];
+  List<Object?> get props => [
+    score,
+    difficulty,
+    direction,
+    date,
+    questions,
+    isFavourite,
+  ];
 
   factory InterviewData.fromJson(Map<String, dynamic> json) =>
       _$InterviewDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$InterviewDataToJson(this);
 
+  Duration get duration => Duration(milliseconds: durationMs);
+
   factory InterviewData.fromQuestions(
     List<Question> questions,
     InterviewInfo info,
+    int duration,
   ) {
     final averageScore =
         questions.map((q) => q.score).reduce((a, b) => a + b) /
@@ -61,6 +79,29 @@ class InterviewData extends Equatable {
       direction: info.direction,
       date: DateTime.now(),
       questions: questions,
+      durationMs: duration,
+    );
+  }
+
+  InterviewData copyWith({
+    String? id,
+    int? score,
+    String? difficulty,
+    String? direction,
+    DateTime? date,
+    List<Question>? questions,
+    bool? isFavourite,
+    int? durationMs,
+  }) {
+    return InterviewData(
+      id: id ?? this.id,
+      score: score ?? this.score,
+      difficulty: difficulty ?? this.difficulty,
+      direction: direction ?? this.direction,
+      date: date ?? this.date,
+      questions: questions ?? this.questions,
+      isFavourite: isFavourite ?? this.isFavourite,
+      durationMs: durationMs ?? this.durationMs,
     );
   }
 
@@ -68,6 +109,7 @@ class InterviewData extends Equatable {
     String? direction,
     String? difficulty,
     String? sort,
+    bool isFavourite,
     List<InterviewData> interviews,
   ) {
     if (direction != null) {
@@ -75,6 +117,9 @@ class InterviewData extends Equatable {
     }
     if (difficulty != null) {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
+    }
+    if (isFavourite) {
+      interviews = interviews.where((i) => i.isFavourite == true).toList();
     }
 
     if (sort == InitialData.firstNew) {

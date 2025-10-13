@@ -45,6 +45,23 @@ class UserData extends Equatable {
   int get bestScore =>
       interviews.isNotEmpty ? interviews.map((i) => i.score).reduce(max) : 0;
 
+  Duration get totalDuration => interviews.isNotEmpty
+      ? interviews.map((i) => i.duration).reduce((a, b) => a + b)
+      : Duration.zero;
+
+  Duration get averageDuration => interviews.isNotEmpty
+      ? (Duration(milliseconds: totalDuration.inMilliseconds) ~/
+            totalInterviews)
+      : Duration.zero;
+
+  Duration get maxDuration => interviews.isNotEmpty
+      ? interviews.map((i) => i.duration).reduce((a, b) => a > b ? a : b)
+      : Duration.zero;
+
+  Duration get minDuration => interviews.isNotEmpty
+      ? interviews.map((i) => i.duration).reduce((a, b) => a > b ? b : a)
+      : Duration.zero;
+
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
 
@@ -60,21 +77,11 @@ class UserData extends Equatable {
     );
   }
 
-  static List<String> getStatsInfo(UserData data) {
-    final List<String> stats = [
-      'Собеседования:  ${data.totalInterviews}',
-      'Очки опыта:  ${data.totalScore} ',
-      'Средний результат:  ${data.averageScore} % ',
-      'Лучший результат:  ${data.bestScore} %',
-    ];
-    return stats;
-  }
-
   static List<UserData> filterUsers(
-      String? direction,
-      String? sort,
-      List<UserData> users,
-      ) {
+    String? direction,
+    String? sort,
+    List<UserData> users,
+  ) {
     users = users.map((user) {
       return UserData(
         id: user.id,
@@ -98,10 +105,10 @@ class UserData extends Equatable {
   }
 
   static UserData filterUser(
-      String? direction,
-      String? difficulty,
-      UserData user,
-      ) {
+    String? direction,
+    String? difficulty,
+    UserData user,
+  ) {
     List<Interview> interviews = user.interviews;
     if (direction != null) {
       interviews = interviews.where((i) => i.direction == direction).toList();
