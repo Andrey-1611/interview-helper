@@ -189,7 +189,7 @@ class _UserSheet extends StatelessWidget {
     return BottomSheet(
       onClosing: () {},
       builder: (context) => SizedBox(
-        height: size.height * 0.65,
+        height: size.height * 0.5,
         child: Column(
           children: [
             Text(user.name, style: theme.textTheme.displayLarge),

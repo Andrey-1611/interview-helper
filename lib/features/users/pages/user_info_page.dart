@@ -15,19 +15,17 @@ class UserInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
     return BlocBuilder<GetUserBloc, GetUserState>(
       builder: (context, state) {
         if (state is GetUserSuccess) {
           final filterState = context.watch<FilterUserCubit>().state;
           return Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: size.height * 0.6,
+                Expanded(
                   child: CustomUserInfo(
                     data: UserData.filterUser(
                       filterState.direction,
@@ -37,15 +35,18 @@ class UserInfoPage extends StatelessWidget {
                   ),
                 ),
                 !isCurrentUser
-                    ? TextButton(
-                        onPressed: () => context.push(
-                          AppRouterNames.analysis,
-                          extra: state.user,
-                        ),
-                        child: Text(
-                          'Анализ',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontSize: 20,
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: TextButton(
+                          onPressed: () => context.push(
+                            AppRouterNames.analysis,
+                            extra: state.user,
+                          ),
+                          child: Text(
+                            'Анализ',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       )

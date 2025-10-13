@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
+import 'package:interview_master/data/models/interview/question.dart';
 import '../models/interview/interview_data.dart';
 import '../models/user/user_data.dart';
 import '../repositories/local_repository.dart';
@@ -106,13 +107,36 @@ class HiveDataSource implements LocalRepository {
   }
 
   @override
-  Future<void> changeIsFavourite(String id) async {
+  Future<void> changeIsFavouriteInterview(String id) async {
     try {
       final interview = (_interviewsBox.get(id))!;
       final newInterview = interview.copyWith(
         isFavourite: !interview.isFavourite,
       );
       _interviewsBox.put(id, newInterview);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> changeIsFavouriteQuestion(String id) async {
+    try {
+      for (final interview in _interviewsBox.values) {
+        final index = interview.questions.indexWhere((q) => q.id == id);
+        if (index != -1) {
+          final questions = List<Question>.from(interview.questions);
+          questions[index] = questions[index].copyWith(
+            isFavourite: !questions[index].isFavourite,
+          );
+          await _interviewsBox.put(
+            interview.id,
+            interview.copyWith(questions: questions),
+          );
+          return;
+        }
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

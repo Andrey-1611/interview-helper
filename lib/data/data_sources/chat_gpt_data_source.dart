@@ -43,11 +43,10 @@ class ChatGPTDataSource implements AIRepository {
       final content =
           response.data['response'][0]['message']['content'] as String;
       final parsedJson = jsonDecode(content) as Map<String, dynamic>;
-      final evaluations = parsedJson['evaluations'] as List;
+      final evaluations =
+          parsedJson['evaluations'] as List<dynamic>;
 
-      return evaluations
-          .map((e) => Question.fromJson(e as Map<String, dynamic>))
-          .toList();
+      return evaluations.map((e) => Question.fromAI(e)).toList();
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/users/pages/profile_page.dart';
-import '../../data/models/interview/interview_data.dart';
 import '../../data/models/interview/interview_info.dart';
 import '../../data/models/interview/question.dart';
 import '../../data/models/user/user_data.dart';
@@ -72,8 +71,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouterNames.interviewInfo,
       builder: (context, state) {
-        final interview = state.extra as InterviewData;
-        return InterviewInfoPage(interview: interview);
+        final data = state.extra as Map<String, dynamic>;
+        return InterviewInfoPage(
+          interview: data['interview'],
+          isCurrentUser: data['isCurrentUser'],
+        );
       },
     ),
     GoRoute(

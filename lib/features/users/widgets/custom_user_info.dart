@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/utils/time_formatter.dart';
 import 'package:interview_master/data/models/user/user_data.dart';
 
 class CustomUserInfo extends StatelessWidget {
@@ -21,12 +22,30 @@ class CustomUserInfo extends StatelessWidget {
             title: 'Очки опыта:  ${data.totalScore} ',
           ),
           _InfoCard(
-            iconData: Icons.trending_up,
+            iconData: Icons.analytics,
             title: 'Средний результат:  ${data.averageScore} % ',
           ),
           _InfoCard(
             iconData: Icons.emoji_events,
             title: 'Лучший результат:  ${data.bestScore} %',
+          ),
+          _InfoCard(
+            iconData: Icons.timer,
+            title: 'Общее время:  ${TimeFormatter.time(data.totalDuration)}',
+          ),
+          _InfoCard(
+            iconData: Icons.av_timer,
+            title: 'Среднее время:  ${TimeFormatter.time(data.averageDuration)} ',
+          ),
+          _InfoCard(
+            iconData: Icons.arrow_upward,
+            title:
+                'Максимальное время:  ${TimeFormatter.time(data.maxDuration)}',
+          ),
+          _InfoCard(
+            iconData: Icons.arrow_downward,
+            title:
+                'Минимальное время:  ${TimeFormatter.time(data.minDuration)}',
           ),
         ],
       ),

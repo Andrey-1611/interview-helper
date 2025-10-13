@@ -21,13 +21,14 @@ class InterviewAdapter extends TypeAdapter<Interview> {
       direction: fields[1] as String,
       difficulty: fields[2] as String,
       score: fields[3] as int,
+      durationMs: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Interview obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class InterviewAdapter extends TypeAdapter<Interview> {
       ..writeByte(2)
       ..write(obj.difficulty)
       ..writeByte(3)
-      ..write(obj.score);
+      ..write(obj.score)
+      ..writeByte(4)
+      ..write(obj.durationMs);
   }
 
   @override
@@ -58,6 +61,7 @@ Interview _$InterviewFromJson(Map<String, dynamic> json) => Interview(
       direction: json['direction'] as String,
       difficulty: json['difficulty'] as String,
       score: (json['score'] as num).toInt(),
+      durationMs: (json['durationMs'] as num).toInt(),
     );
 
 Map<String, dynamic> _$InterviewToJson(Interview instance) => <String, dynamic>{
@@ -65,4 +69,5 @@ Map<String, dynamic> _$InterviewToJson(Interview instance) => <String, dynamic>{
       'direction': instance.direction,
       'difficulty': instance.difficulty,
       'score': instance.score,
+      'durationMs': instance.durationMs,
     };

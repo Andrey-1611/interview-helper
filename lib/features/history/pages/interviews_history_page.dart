@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -54,7 +55,9 @@ class InterviewsHistoryPage extends StatelessWidget {
           if (state is ShowInterviewsNetworkFailure) {
             return NetworkFailure();
           } else if (state is ShowInterviewsSuccess) {
-            if (state.interviews.isEmpty) return _EmptyHistory();
+            if (state.interviews.isEmpty) {
+              return _EmptyHistory(isCurrentUser: isCurrentUser);
+            }
             final filterState = context.watch<FilterUserCubit>().state;
             final isFavourite = context.watch<FilterFavouriteCubit>().state;
             final filteredInterviews = InterviewData.filterInterviews(
@@ -88,7 +91,9 @@ class InterviewsHistoryPage extends StatelessWidget {
 }
 
 class _EmptyHistory extends StatelessWidget {
-  const _EmptyHistory();
+  final bool isCurrentUser;
+
+  const _EmptyHistory({required this.isCurrentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +105,15 @@ class _EmptyHistory extends StatelessWidget {
             'История пуста',
             style: Theme.of(context).textTheme.displayLarge,
           ),
-          TextButton(
-            onPressed: () {
-              StatefulNavigationShell.of(context).goBranch(0);
-              context.push(AppRouterNames.initial);
-            },
-            child: Text('Пройти собеседование'),
-          ),
+          isCurrentUser
+              ? TextButton(
+                  onPressed: () {
+                    StatefulNavigationShell.of(context).goBranch(0);
+                    context.push(AppRouterNames.initial);
+                  },
+                  child: Text('Пройти собеседование'),
+                )
+              : SizedBox(),
         ],
       ),
     );
@@ -155,7 +162,12 @@ class _InterviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      onTap: () => context.push(AppRouterNames.interviewInfo, extra: interview),
+      onTap: () {
+        context.push(
+          AppRouterNames.interviewInfo,
+          extra: {'interview': interview, 'isCurrentUser': isCurrentUser},
+        );
+      },
       child: Card(
         child: ListTile(
           leading: CustomScoreIndicator(score: interview.score),
@@ -178,7 +190,7 @@ class _InterviewCard extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       context.read<ChangeIsFavouriteBloc>().add(
-                        ChangeIsFavourite(id: interview.id),
+                        ChangeIsFavouriteInterview(id: interview.id),
                       );
                     },
                     icon: Icon(

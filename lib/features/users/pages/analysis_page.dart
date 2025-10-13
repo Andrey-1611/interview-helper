@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/time_formatter.dart';
 
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -132,6 +133,22 @@ class _AnalysisPageView extends StatelessWidget {
                               '${filteredSelectedUser.bestScore}',
                           icon: Icons.emoji_events,
                         ),
+                        _CompareTimeCard(
+                          title: 'Общее время',
+                          currentUserDuration:
+                              filteredCurrentUser.totalDuration,
+                          selectedUserDuration:
+                              filteredSelectedUser.totalDuration,
+                          icon: Icons.timer,
+                        ),
+                        _CompareTimeCard(
+                          title: 'Среднее время',
+                          currentUserDuration:
+                              filteredCurrentUser.averageDuration,
+                          selectedUserDuration:
+                              filteredSelectedUser.averageDuration,
+                          icon: Icons.av_timer,
+                        ),
                       ],
                     ),
                   ),
@@ -252,6 +269,71 @@ class _CompareCard extends StatelessWidget {
     return int.parse(value1) >= int.parse(value2)
         ? theme.textTheme.displayMedium?.copyWith(color: AppPalette.primary)
         : theme.textTheme.displayMedium;
+  }
+}
+
+class _CompareTimeCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Duration currentUserDuration;
+  final Duration selectedUserDuration;
+
+  const _CompareTimeCard({
+    required this.currentUserDuration,
+    required this.selectedUserDuration,
+    required this.title,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon),
+                Text(title, style: Theme.of(context).textTheme.bodyLarge),
+              ],
+            ),
+            SizedBox(height: size.height * 0.01),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  TimeFormatter.time(currentUserDuration),
+                  style: style(
+                    theme,
+                    currentUserDuration,
+                    selectedUserDuration,
+                  ),
+                ),
+                const Text('vs'),
+                Text(
+                  TimeFormatter.time(selectedUserDuration),
+                  style: style(
+                    theme,
+                    selectedUserDuration,
+                    currentUserDuration,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextStyle? style(ThemeData theme, Duration value1, Duration value2) {
+    return value1 >= value2
+        ? theme.textTheme.bodySmall?.copyWith(color: AppPalette.primary)
+        : theme.textTheme.bodySmall;
   }
 }
 

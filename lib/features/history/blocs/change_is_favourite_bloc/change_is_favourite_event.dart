@@ -7,10 +7,19 @@ sealed class ChangeIsFavouriteEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class ChangeIsFavourite extends ChangeIsFavouriteEvent {
+final class ChangeIsFavouriteInterview extends ChangeIsFavouriteEvent {
   final String id;
 
-  const ChangeIsFavourite({required this.id});
+  const ChangeIsFavouriteInterview({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
+final class ChangeIsFavouriteQuestion extends ChangeIsFavouriteEvent {
+  final String id;
+
+  const ChangeIsFavouriteQuestion({required this.id});
 
   @override
   List<Object?> get props => [id];

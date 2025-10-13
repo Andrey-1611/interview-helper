@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
 import 'package:interview_master/features/history/blocs/change_is_favourite_bloc/change_is_favourite_bloc.dart';
 import 'package:interview_master/features/history/pages/questions_history_page.dart';
-import 'package:interview_master/features/history/use_cases/change_is_favourite_use_case.dart';
+import 'package:interview_master/features/history/use_cases/change_is_favourite_interview_use_case.dart';
 import 'package:interview_master/features/users/pages/user_info_page.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -17,6 +17,7 @@ import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
 import '../../history/blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import '../../history/pages/interviews_history_page.dart';
+import '../../history/use_cases/change_is_favourite_question_use_case.dart';
 import '../../history/use_cases/show_interviews_use_case.dart';
 import '../blocs/get_user_bloc/get_user_bloc.dart';
 import '../use_cases/get_user_use_case.dart';
@@ -50,8 +51,10 @@ class _UserPageState extends State<UserPage> {
                 ..add(GetUser(userData: widget.user)),
         ),
         BlocProvider(
-          create: (context) =>
-              ChangeIsFavouriteBloc(GetIt.I<ChangeIsFavouriteUseCase>()),
+          create: (context) => ChangeIsFavouriteBloc(
+            GetIt.I<ChangeIsFavouriteInterviewUseCase>(),
+            GetIt.I<ChangeIsFavouriteQuestionUseCase>(),
+          ),
         ),
       ],
       child: DefaultTabController(
@@ -98,7 +101,10 @@ class _UserPageView extends StatelessWidget {
             ),
           ),
           _KeepAlivePage(
-            child: QuestionsHistoryPage(filterController: filterController),
+            child: QuestionsHistoryPage(
+              filterController: filterController,
+              isCurrentUser: isCurrentUser,
+            ),
           ),
         ],
       ),

@@ -20,20 +20,26 @@ class Interview extends Equatable {
   @HiveField(3)
   final int score;
 
+  @HiveField(4)
+  final int durationMs;
+
   const Interview({
     required this.id,
     required this.direction,
     required this.difficulty,
     required this.score,
+    required this.durationMs,
   });
 
   @override
-  List<Object?> get props => [id, direction, difficulty, score];
+  List<Object?> get props => [id, direction, difficulty, score, duration];
 
   factory Interview.fromJson(Map<String, dynamic> json) =>
       _$InterviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$InterviewToJson(this);
+
+  Duration get duration => Duration(milliseconds: durationMs);
 
   factory Interview.fromInterviewData(InterviewData interview) {
     return Interview(
@@ -41,6 +47,7 @@ class Interview extends Equatable {
       direction: interview.direction,
       difficulty: interview.difficulty,
       score: interview.score,
+      durationMs: interview.durationMs,
     );
   }
 }

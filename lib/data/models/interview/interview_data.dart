@@ -32,6 +32,9 @@ class InterviewData extends Equatable {
   @HiveField(6)
   final bool isFavourite;
 
+  @HiveField(7)
+  final int durationMs;
+
   const InterviewData({
     required this.id,
     required this.score,
@@ -39,7 +42,8 @@ class InterviewData extends Equatable {
     required this.direction,
     required this.date,
     required this.questions,
-    required this.isFavourite,
+    this.isFavourite = false,
+    required this.durationMs,
   });
 
   @override
@@ -57,9 +61,12 @@ class InterviewData extends Equatable {
 
   Map<String, dynamic> toJson() => _$InterviewDataToJson(this);
 
+  Duration get duration => Duration(milliseconds: durationMs);
+
   factory InterviewData.fromQuestions(
     List<Question> questions,
     InterviewInfo info,
+    int duration,
   ) {
     final averageScore =
         questions.map((q) => q.score).reduce((a, b) => a + b) /
@@ -72,7 +79,7 @@ class InterviewData extends Equatable {
       direction: info.direction,
       date: DateTime.now(),
       questions: questions,
-      isFavourite: false,
+      durationMs: duration,
     );
   }
 
@@ -84,6 +91,7 @@ class InterviewData extends Equatable {
     DateTime? date,
     List<Question>? questions,
     bool? isFavourite,
+    int? durationMs,
   }) {
     return InterviewData(
       id: id ?? this.id,
@@ -93,6 +101,7 @@ class InterviewData extends Equatable {
       date: date ?? this.date,
       questions: questions ?? this.questions,
       isFavourite: isFavourite ?? this.isFavourite,
+      durationMs: durationMs ?? this.durationMs,
     );
   }
 
