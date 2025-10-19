@@ -3,14 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/constants/data.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import 'package:interview_master/features/interview/use_cases/start_interview_use_case.dart';
+import 'package:interview_master/data/repositories/ai_repository.dart';
+import 'package:interview_master/data/repositories/local_repository.dart';
+import 'package:interview_master/data/repositories/remote_repository.dart';
+import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
-import '../blocs/start_interview_bloc/start_interview_bloc.dart';
 import '../../../app/widgets/custom_button.dart';
 
 class InitialPage extends StatefulWidget {
@@ -27,7 +29,13 @@ class _InitialPageState extends State<InitialPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StartInterviewBloc(GetIt.I<StartInterviewUseCase>()),
+      create: (context) => InterviewBloc(
+        GetIt.I<AIRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+        GetIt.I<StopwatchInfo>(),
+      ),
       child: _InitialPageView(
         difficultly: difficulty,
         direction: direction,
@@ -66,14 +74,16 @@ class _InitialPageView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _DirectionDropdownButton(
-                changeDirection: changeDirection,
-                direction: direction,
+              CustomDropdownMenu(
+                data: InitialData.directions,
+                change: changeDirection,
+                hintText: 'Выберите направление',
               ),
               SizedBox(height: size.height * 0.03),
-              _DifficultlyDropdownButton(
-                difficultly: difficultly,
-                changeDifficultly: changeDifficulty,
+              CustomDropdownMenu(
+                data: InitialData.difficulties,
+                change: changeDifficulty,
+                hintText: 'Выберите сложность',
               ),
               SizedBox(height: size.height * 0.03),
               _InterviewButton(difficulty: difficultly, direction: direction),
@@ -81,44 +91,6 @@ class _InitialPageView extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _DirectionDropdownButton extends StatelessWidget {
-  final ValueChanged<String> changeDirection;
-  final String direction;
-
-  const _DirectionDropdownButton({
-    required this.changeDirection,
-    required this.direction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomDropdownMenu(
-      data: InitialData.directions,
-      change: changeDirection,
-      hintText: 'Выберите направление',
-    );
-  }
-}
-
-class _DifficultlyDropdownButton extends StatelessWidget {
-  final String difficultly;
-  final ValueChanged<String> changeDifficultly;
-
-  const _DifficultlyDropdownButton({
-    required this.difficultly,
-    required this.changeDifficultly,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomDropdownMenu(
-      data: InitialData.difficulties,
-      change: changeDifficultly,
-      hintText: 'Выберите сложность',
     );
   }
 }
@@ -131,12 +103,10 @@ class _InterviewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<StartInterviewBloc, StartInterviewState>(
+    final size = MediaQuery.sizeOf(context);
+    return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
-        if (state is StartInterviewLoading) {
-          DialogHelper.showLoadingDialog(context, 'Загрузка рекламы');
-        } else if (state is StartInterviewSuccess) {
-          context.pop();
+        if (state is InterviewStartSuccess) {
           context.pushReplacement(
             AppRouterNames.interview,
             extra: InterviewInfo(
@@ -145,45 +115,20 @@ class _InterviewButton extends StatelessWidget {
               userInputs: [],
             ),
           );
-        } else if (state is StartInterviewNetworkFailure) {
-          context.pop();
-          ToastHelper.networkError();
-        } else if (state is StartInterviewNotAttempts) {
-          context.pop();
-          ToastHelper.attemptsError();
-        } else if (state is StartInterviewFailure) {
-          context.pop();
-          ToastHelper.unknownError();
         }
       },
-      child: _InterviewButtonView(difficulty: difficulty, direction: direction),
-    );
-  }
-}
-
-class _InterviewButtonView extends StatelessWidget {
-  final String difficulty;
-  final String direction;
-
-  const _InterviewButtonView({
-    required this.difficulty,
-    required this.direction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    return SizedBox(
-      height: size.height * 0.07,
-      width: size.width,
-      child: difficulty == '' || direction == ''
-          ? SizedBox()
-          : CustomButton(
-              text: 'Начать',
-              selectedColor: AppPalette.primary,
-              onPressed: () =>
-                  context.read<StartInterviewBloc>().add(StartInterview()),
-            ),
+      child: SizedBox(
+        height: size.height * 0.08,
+        width: size.width,
+        child: difficulty == '' || direction == ''
+            ? SizedBox()
+            : CustomButton(
+                text: 'Начать',
+                selectedColor: AppPalette.primary,
+                onPressed: () =>
+                    context.read<InterviewBloc>().add(StartInterview()),
+              ),
+      ),
     );
   }
 }

@@ -25,31 +25,25 @@ class ChatGPTDataSource implements AIRepository {
 
   @override
   Future<List<Question>> checkAnswers(InterviewInfo interviewInfo) async {
-    try {
-      final prompt =
-          '${MainPrompt.mainPrompt}\n\nВопросы:\n${InterviewInfo.createPrompt(interviewInfo)}';
+    final prompt =
+        '${MainPrompt.mainPrompt}\n\nВопросы:\n${InterviewInfo.createPrompt(interviewInfo)}';
 
-      final response = await _dio.post(
-        '/networks/gpt-4-1',
-        data: {
-          'model': 'gpt-4.1-nano',
-          'messages': [
-            {'role': 'user', 'content': prompt},
-          ],
-          'is_sync': true,
-          'temperature': 0.2,
-        },
-      );
-      final content =
-          response.data['response'][0]['message']['content'] as String;
-      final parsedJson = jsonDecode(content) as Map<String, dynamic>;
-      final evaluations =
-          parsedJson['evaluations'] as List<dynamic>;
+    final response = await _dio.post(
+      '/networks/gpt-4-1',
+      data: {
+        'model': 'gpt-4.1-nano',
+        'messages': [
+          {'role': 'user', 'content': prompt},
+        ],
+        'is_sync': true,
+        'temperature': 0.2,
+      },
+    );
+    final content =
+        response.data['response'][0]['message']['content'] as String;
+    final parsedJson = jsonDecode(content) as Map<String, dynamic>;
+    final evaluations = parsedJson['evaluations'] as List<dynamic>;
 
-      return evaluations.map((e) => Question.fromAI(e)).toList();
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    return evaluations.map((e) => Question.fromAI(e)).toList();
   }
 }

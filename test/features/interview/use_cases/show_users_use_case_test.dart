@@ -25,7 +25,7 @@ void main() {
   final testUsers = [
     UserData(
       name: name,
-      id: id,
+      user: id,
       totalInterviews: totalInterviews,
       totalScore: totalScore,
       averageScore: averageScore,
@@ -34,11 +34,11 @@ void main() {
   ];
 
   test('show interviews use case', () async {
-    when(() => mockRepository.showUsers()).thenAnswer((_) async => testUsers);
+    when(() => mockRepository.getUsers()).thenAnswer((_) async => testUsers);
 
     final users = await useCase.call();
 
-    verify(() => mockRepository.showUsers()).called(1);
+    verify(() => mockRepository.getUsers()).called(1);
     expect(users, testUsers);
   });
 }

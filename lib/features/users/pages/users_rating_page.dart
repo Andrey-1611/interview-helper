@@ -5,20 +5,22 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
+import 'package:interview_master/data/repositories/local_repository.dart';
+import 'package:interview_master/data/repositories/remote_repository.dart';
+import 'package:interview_master/features/users/blocs/users_bloc/users_bloc.dart';
 import 'package:interview_master/features/users/widgets/custom_user_info.dart';
 import '../../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../core/constants/data.dart';
-import '../../../core/utils/filter_users_cubit/filter_users_cubit.dart';
+import '../../../core/utils/network_info.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../blocs/filter_users_cubit/filter_users_cubit.dart';
 import '../widgets/custom_network_failure.dart';
-import '../blocs/show_users_bloc/show_users_bloc.dart';
 
 class UsersRatingPage extends StatefulWidget {
   const UsersRatingPage({super.key});
@@ -35,8 +37,12 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              ShowUsersBloc(GetIt.I<ShowUsersUseCase>())..add(ShowUsers()),
+          create: (context) => UsersBloc(
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<AuthRepository>(),
+            GetIt.I<NetworkInfo>(),
+          )..add(GetUsers()),
         ),
         BlocProvider(create: (context) => FilterUsersCubit()),
       ],
@@ -56,7 +62,7 @@ class _UsersRatingView extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Рейтинг'),
+        title: const Text('Рейтинг'),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, size.height * 0.077),
           child: Padding(
@@ -84,94 +90,99 @@ class _UsersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShowUsersBloc, ShowUsersState>(
-      listener: (context, usersState) {
-        if (usersState is ShowUsersFailure) {
-          ToastHelper.loadingError();
-        }
-      },
+    return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, usersState) {
-        if (usersState is ShowUsersSuccess) {
-          final state = context.watch<FilterUsersCubit>().state;
-          return _UsersListView(
-            users: usersState.users,
-            filteredUsers: UserData.filterUsers(
-              state.direction,
-              state.sort,
-              usersState.users,
-            ),
-            filterController: filterController,
+        if (usersState is UsersSuccess) {
+          final filterState = context.watch<FilterUsersCubit>().state;
+          final filteredUsers = UserData.filterUsers(
+            filterState.direction,
+            filterState.sort,
+            usersState.users,
           );
-        } else if (usersState is ShowUsersLoading) {
-          return const CustomLoadingIndicator();
-        } else if (usersState is ShowUsersNetworkFailure) {
-          return NetworkFailure();
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              itemCount: usersState.users.length,
+              itemBuilder: (context, index) {
+                return _UserCard(
+                  user: usersState.users[index],
+                  filteredUser: filteredUsers[index],
+                  isCurrentUser:
+                      usersState.users[index].id == usersState.currentUser.id,
+                  index: index,
+                );
+              },
+            ),
+          );
+        } else if (usersState is UsersNetworkFailure) {
+          return const CustomNetworkFailure();
         }
-        return const SizedBox.shrink();
+        return const CustomLoadingIndicator();
       },
     );
   }
 }
 
-class _UsersListView extends StatelessWidget {
-  final List<UserData> users;
-  final List<UserData> filteredUsers;
-  final TextEditingController filterController;
+class _UserCard extends StatelessWidget {
+  final UserData user;
+  final UserData filteredUser;
+  final bool isCurrentUser;
+  final int index;
 
-  const _UsersListView({
-    required this.filteredUsers,
-    required this.filterController,
-    required this.users,
+  const _UserCard({
+    required this.user,
+    required this.filteredUser,
+    required this.isCurrentUser,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView.builder(
-        itemCount: filteredUsers.length,
-        itemBuilder: (context, index) {
-          final filteredUser = filteredUsers[index];
-          return Card(
-            child: ListTile(
-              onTap: () => DialogHelper.showCustomSheet(
-                dialog: _UserSheet(user: filteredUser),
+    return Card(
+      shape: RoundedRectangleBorder(
+        side: isCurrentUser
+            ? BorderSide(color: AppPalette.primary, width: 2.0)
+            : BorderSide.none,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: ListTile(
+        onTap: () => !isCurrentUser
+            ? DialogHelper.showCustomSheet(
+                dialog: _UserSheet(user: user),
                 context: context,
-              ),
-              leading: Text(
-                '${index + 1}',
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-              title: Text(
-                filteredUser.name,
-                style: theme.textTheme.displayMedium,
-              ),
-              subtitle: Row(
-                children: [
-                  Text(
-                    '${filteredUser.totalScore} ',
-                    style: theme.textTheme.displaySmall,
-                  ),
-                  Icon(Icons.star, color: AppPalette.primary),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomScoreIndicator(score: filteredUser.averageScore),
-                  IconButton(
-                    onPressed: () => context.push(
-                      AppRouterNames.analysis,
-                      extra: users[index],
-                    ),
-                    icon: Icon(Icons.compare_arrows_outlined),
-                  ),
-                ],
-              ),
+              )
+            : null,
+        leading: Text(
+          '${index + 1}',
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        title: Text(
+          isCurrentUser ? 'Вы' : user.name,
+          style: theme.textTheme.displayMedium,
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              '${filteredUser.totalScore} ',
+              style: theme.textTheme.displaySmall,
             ),
-          );
-        },
+            Icon(Icons.star, color: AppPalette.primary),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomScoreIndicator(score: filteredUser.averageScore),
+            !isCurrentUser
+                ? IconButton(
+                    onPressed: () =>
+                        context.push(AppRouterNames.analysis, extra: user),
+                    icon: Icon(Icons.compare_arrows_outlined),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
       ),
     );
   }

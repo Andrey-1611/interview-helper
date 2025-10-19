@@ -38,7 +38,7 @@ void main() {
     difficulty: difficulty,
   );
   final testInterview = Interview(
-    id: id,
+    user: id,
     score: score,
     difficulty: difficulty,
     direction: direction,
@@ -60,7 +60,7 @@ void main() {
       act: (bloc) => bloc.add(CheckResults(interviewInfo: testInterviewInfo)),
       expect: () => <CheckResultsState>[
         CheckResultsLoading(),
-        CheckResultsSuccess(id: testInterview),
+        CheckResultsSuccess(user: testInterview),
       ],
       verify: (_) {
         verify(() => useCase.call(any())).called(1);

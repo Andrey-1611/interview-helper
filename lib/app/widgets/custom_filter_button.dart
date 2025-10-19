@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import '../../core/helpers/dialog_helper.dart';
+import '../../core/utils/dialog_helper.dart';
 
 class CustomFilterButton extends StatelessWidget {
   final TextEditingController filterController;

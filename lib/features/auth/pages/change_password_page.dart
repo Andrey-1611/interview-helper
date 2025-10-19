@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../blocs/change_password_bloc/change_password_bloc.dart';
-import '../use_cases/change_password_use_case.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -29,7 +32,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChangePasswordBloc(GetIt.I<ChangePasswordUseCase>()),
+      create: (context) => AuthBloc(
+        GetIt.I<AuthRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+      ),
       child: _ChangePasswordPageView(
         emailController: _emailController,
         formKey: _formKey,
@@ -60,34 +68,27 @@ class _ChangePasswordPageView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
-                _EmailForm(emailController: emailController),
+                CustomTextFormField(
+                  controller: emailController,
+                  hintText: 'Почта',
+                  prefixIcon: Icon(Icons.email),
+                  keyboardType: TextInputType.emailAddress,
+                ),
                 _ChangePasswordButton(
                   emailController: emailController,
                   formKey: formKey,
                 ),
                 const Spacer(),
-                const _NavigationButton(),
+                TextButton(
+                  onPressed: () =>
+                      context.pushReplacement(AppRouterNames.signIn),
+                  child: const Text('Вернуться на экран входа'),
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _EmailForm extends StatelessWidget {
-  final TextEditingController emailController;
-
-  const _EmailForm({required this.emailController});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomTextFormField(
-      controller: emailController,
-      hintText: 'Почта',
-      prefixIcon: Icon(Icons.email),
-      keyboardType: TextInputType.emailAddress,
     );
   }
 }
@@ -103,59 +104,27 @@ class _ChangePasswordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ChangePasswordBloc, ChangePasswordState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is ChangePasswordSuccess) {
+        if (state is AuthSuccess) {
           ToastHelper.sendPasswordResetEmail(emailController.text);
           context.pushReplacement(AppRouterNames.signIn);
-        } else if (state is ChangePasswordNetworkFailure) {
+        } else if (state is AuthNetworkFailure) {
           ToastHelper.networkError();
-        } else if (state is ChangePasswordFailure) {
+        } else if (state is AuthFailure) {
           ToastHelper.unknownError();
         }
       },
-      child: _ChangePasswordButtonView(
-        emailController: emailController,
-        formKey: formKey,
+      child: CustomAuthButton(
+        text: 'Подтвердить',
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            context.read<AuthBloc>().add(
+              ChangePassword(email: emailController.text.trim()),
+            );
+          }
+        },
       ),
-    );
-  }
-}
-
-class _ChangePasswordButtonView extends StatelessWidget {
-  final TextEditingController emailController;
-  final GlobalKey<FormState> formKey;
-
-  const _ChangePasswordButtonView({
-    required this.emailController,
-    required this.formKey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomAuthButton(
-      text: 'Подтвердить',
-      onPressed: () {
-        if (formKey.currentState!.validate()) {
-          context.read<ChangePasswordBloc>().add(
-            ChangePassword(email: emailController.text.trim()),
-          );
-        }
-      },
-    );
-  }
-}
-
-class _NavigationButton extends StatelessWidget {
-  const _NavigationButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.pushReplacement(AppRouterNames.signIn);
-      },
-      child: const Text('Вернуться на экран входа'),
     );
   }
 }

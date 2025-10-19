@@ -5,16 +5,18 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
-
+import 'package:interview_master/data/repositories/auth_repository.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../core/constants/data.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
+import '../../../core/utils/network_info.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
-import '../blocs/get_user_bloc/get_user_bloc.dart';
-import '../use_cases/get_user_use_case.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../blocs/users_bloc/users_bloc.dart';
 
 class AnalysisPage extends StatefulWidget {
   final UserData selectedUser;
@@ -33,9 +35,12 @@ class _AnalysisPageState extends State<AnalysisPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              GetUserBloc(GetIt.I<GetUserUseCase>())
-                ..add(GetUser(userData: null)),
+          create: (context) => UsersBloc(
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<AuthRepository>(),
+            GetIt.I<NetworkInfo>(),
+          )..add(GetUser()),
         ),
         BlocProvider(create: (context) => FilterUserCubit()),
       ],
@@ -78,9 +83,9 @@ class _AnalysisPageView extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<GetUserBloc, GetUserState>(
+      body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
-          if (state is GetUserSuccess) {
+          if (state is UserSuccess) {
             final filteredCurrentUser = UserData.filterUser(
               filter.state.direction,
               filter.state.difficulty,

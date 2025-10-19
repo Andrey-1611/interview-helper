@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../blocs/send_email_verification_bloc/send_email_verification_bloc.dart';
-import '../blocs/watch_email_verified_bloc/watch_email_verified_bloc.dart';
-import '../use_cases/send_email_verification_use_case.dart';
-import '../use_cases/watch_email_verified_user_case.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
 
 class EmailVerificationPage extends StatelessWidget {
   final String password;
@@ -16,19 +17,13 @@ class EmailVerificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => SendEmailVerificationBloc(
-            GetIt.I<SendEmailVerificationUseCase>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) =>
-              WatchEmailVerifiedBloc(GetIt.I<WatchEmailVerifiedUseCase>())
-                ..add(WatchEmailVerified()),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => AuthBloc(
+        GetIt.I<AuthRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+      )..add(WatchEmailVerified()),
       child: _EmailVerificationPageView(password: password),
     );
   }
@@ -50,9 +45,19 @@ class _EmailVerificationPageView extends StatelessWidget {
             children: [
               const Spacer(),
               const _EmailVerificationForm(),
-              const _SendEmailVerificationButton(),
+              TextButton(
+                onPressed: () =>
+                    context.read<AuthBloc>().add(SendEmailVerification()),
+                child: const Text('Отпраавить письмо повторно'),
+              ),
               const Spacer(),
-              _NavigationButton(password: password),
+              TextButton(
+                onPressed: () => context.pushReplacement(
+                  AppRouterNames.changeEmail,
+                  extra: password,
+                ),
+                child: const Text('Не приходит письмо?  Изменить почту'),
+              ),
             ],
           ),
         ),
@@ -66,73 +71,21 @@ class _EmailVerificationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SendEmailVerificationBloc, SendEmailVerificationState>(
-          listener: (context, state) {
-            if (state is SendEmailVerificationSuccess) {
-              ToastHelper.sendAgainEmailVerification();
-            } else if (state is SendEmailVerificationNetworkFailure) {
-              ToastHelper.networkError();
-            }
-          },
-        ),
-        BlocListener<WatchEmailVerifiedBloc, WatchEmailVerifiedState>(
-          listener: (context, state) {
-            if (state is WatchEmailVerifiedSuccess) {
-              context.pushReplacement(AppRouterNames.initial);
-            } else if (state is WatchEmailVerifiedNetworkFailure) {
-              ToastHelper.networkError();
-            } else if (state is WatchEmailVerifiedFailure) {
-              context.pushReplacement(AppRouterNames.signUp);
-              ToastHelper.unknownError();
-            }
-          },
-        ),
-      ],
-      child: _EmailVerificationFormView(),
-    );
-  }
-}
-
-class _EmailVerificationFormView extends StatelessWidget {
-  const _EmailVerificationFormView();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Подтвердите свою почту',
-      style: Theme.of(context).textTheme.displayMedium,
-    );
-  }
-}
-
-class _SendEmailVerificationButton extends StatelessWidget {
-  const _SendEmailVerificationButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.read<SendEmailVerificationBloc>().add(SendEmailVerification());
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          context.pushReplacement(AppRouterNames.initial);
+        } else if (state is AuthNetworkFailure) {
+          ToastHelper.networkError();
+        } else if (state is AuthFailure) {
+          context.pushReplacement(AppRouterNames.signUp);
+          ToastHelper.unknownError();
+        }
       },
-      child: const Text('Отпраавить письмо повторно'),
-    );
-  }
-}
-
-class _NavigationButton extends StatelessWidget {
-  final String password;
-
-  const _NavigationButton({required this.password});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.pushReplacement(AppRouterNames.changeEmail, extra: password);
-      },
-      child: const Text('Не приходит письмо?  Изменить почту'),
+      child: Text(
+        'Подтвердите свою почту',
+        style: Theme.of(context).textTheme.displayMedium,
+      ),
     );
   }
 }

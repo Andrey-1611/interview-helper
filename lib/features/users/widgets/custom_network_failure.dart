@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NetworkFailure extends StatelessWidget {
-  const NetworkFailure({super.key});
+class CustomNetworkFailure extends StatelessWidget {
+  const CustomNetworkFailure({super.key});
 
   @override
   Widget build(BuildContext context) {

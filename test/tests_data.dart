@@ -18,7 +18,7 @@ class TestsData {
   static const emailVerified = true;
   static const emailNotVerified = false;
 
-  static final user = MyUser(email: email, name: name, id: id);
+  static final user = MyUser(email: email, name: name, user: id);
   static final userData = UserData(name: name, id: id, interviews: []);
 
   static final interviewData = InterviewData(

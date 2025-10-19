@@ -34,12 +34,12 @@ void main() {
 
     test('show users', () async {
       when(
-        () => mockRepository.showUsers(),
+        () => mockRepository.getUsers(),
       ).thenAnswer((_) async => [TestsData.userData]);
 
-      final users = await mockRepository.showUsers();
+      final users = await mockRepository.getUsers();
 
-      verify(() => mockRepository.showUsers()).called(1);
+      verify(() => mockRepository.getUsers()).called(1);
       expect(users, [TestsData.userData]);
     });
 
@@ -60,12 +60,12 @@ void main() {
 
     test('show interviews', () async {
       when(
-        () => mockRepository.showInterviews(TestsData.userData.id),
+        () => mockRepository.getInterviews(TestsData.userData.id),
       ).thenAnswer((_) async => [TestsData.interviewData]);
 
-      final interviews = await mockRepository.showInterviews(TestsData.userData.id);
+      final interviews = await mockRepository.getInterviews(TestsData.userData.id);
 
-      verify(() => mockRepository.showInterviews(TestsData.userData.id)).called(1);
+      verify(() => mockRepository.getInterviews(TestsData.userData.id)).called(1);
       expect(interviews, [TestsData.interviewData]);
     });
   });

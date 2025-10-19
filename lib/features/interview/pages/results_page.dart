@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/features/history/blocs/change_is_favourite_bloc/change_is_favourite_bloc.dart';
-import 'package:interview_master/features/history/use_cases/change_is_favourite_interview_use_case.dart';
-import 'package:interview_master/features/history/use_cases/change_is_favourite_question_use_case.dart';
-import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';
+import 'package:interview_master/core/utils/dialog_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../../core/helpers/toast_helper.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../core/utils/stopwatch_info.dart';
+import '../../../core/utils/toast_helper.dart';
 import '../../../data/models/interview/interview_info.dart';
-import '../blocs/check_results_bloc/check_results_bloc.dart';
+import '../../../data/repositories/ai_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../../../app/widgets/custom_interview_info.dart';
+import '../blocs/interview_bloc/interview_bloc.dart';
 
 class ResultsPage extends StatelessWidget {
   final InterviewInfo interviewInfo;
@@ -20,20 +21,14 @@ class ResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) =>
-              CheckResultsBloc(GetIt.I<CheckResultsUseCase>())
-                ..add(CheckResults(interviewInfo: interviewInfo)),
-        ),
-        BlocProvider(
-          create: (context) => ChangeIsFavouriteBloc(
-            GetIt.I<ChangeIsFavouriteInterviewUseCase>(),
-            GetIt.I<ChangeIsFavouriteQuestionUseCase>(),
-          ),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => InterviewBloc(
+        GetIt.I<AIRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+        GetIt.I<StopwatchInfo>(),
+      )..add(FinishInterview(interviewInfo: interviewInfo)),
       child: _ResultsPageView(interviewInfo: interviewInfo),
     );
   }
@@ -61,20 +56,20 @@ class _InterviewInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CheckResultsBloc, CheckResultsState>(
+    return BlocConsumer<InterviewBloc, InterviewState>(
       listener: (context, state) {
-        if (state is CheckResultsLoading) {
+        if (state is InterviewLoading) {
           DialogHelper.showLoadingDialog(context, 'Проверка ответов...');
-        } else if (state is CheckResultsSuccess) {
+        } else if (state is InterviewFinishSuccess) {
           context.pop();
-        } else if (state is CheckResultsFailure) {
+        } else if (state is InterviewFailure) {
           context.pop();
           context.pushReplacement(AppRouterNames.initial);
           ToastHelper.unknownError();
         }
       },
       builder: (context, state) {
-        if (state is CheckResultsSuccess) {
+        if (state is InterviewFinishSuccess) {
           return CustomInterviewInfo(interview: state.interview);
         }
         return SizedBox.shrink();

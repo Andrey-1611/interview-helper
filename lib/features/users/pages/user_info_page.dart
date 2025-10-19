@@ -6,7 +6,7 @@ import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/features/users/widgets/custom_user_info.dart';
 import '../../../data/models/user/user_data.dart';
-import '../blocs/get_user_bloc/get_user_bloc.dart';
+import '../blocs/users_bloc/users_bloc.dart';
 
 class UserInfoPage extends StatelessWidget {
   final bool isCurrentUser;
@@ -16,9 +16,9 @@ class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<GetUserBloc, GetUserState>(
+    return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
-        if (state is GetUserSuccess) {
+        if (state is UserSuccess) {
           final filterState = context.watch<FilterUserCubit>().state;
           return Padding(
             padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),

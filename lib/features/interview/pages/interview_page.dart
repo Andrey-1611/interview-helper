@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../data/models/interview/interview_info.dart';

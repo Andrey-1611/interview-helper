@@ -71,12 +71,8 @@ class InterviewInfo extends Equatable {
 
   static String createPrompt(InterviewInfo interviewInfo) {
     final prompt = interviewInfo.userInputs
-        .map((e) => 'Вопрос: ${_clear(e.question)}\nОтвет: ${_clear(e.answer)}')
+        .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
         .join('\n\n');
     return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
-  }
-
-  static String _clear(String text) {
-    return text.replaceAll("'", '').replaceAll('"', '');
   }
 }

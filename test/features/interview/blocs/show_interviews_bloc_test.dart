@@ -26,7 +26,7 @@ void main() {
   const questions = <Question>[];
   final date = DateTime.now();
   final interview = Interview(
-    id: id,
+    user: id,
     score: score,
     difficulty: difficulty,
     direction: direction,

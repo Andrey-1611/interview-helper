@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:injectable/injectable.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'app_dependencies.config.dart';
 
 @InjectableInit(
@@ -33,4 +34,7 @@ abstract class Modules {
 
   @lazySingleton
   Stopwatch get stopWatch => Stopwatch();
+
+  @singleton
+  Talker get talker => TalkerFlutter.init();
 }
