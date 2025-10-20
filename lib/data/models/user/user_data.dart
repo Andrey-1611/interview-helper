@@ -93,11 +93,11 @@ class UserData extends Equatable {
       );
     }).toList();
 
-    if (sort == InitialData.usersSorts[0]) {
+    if (sort == InitialData.firstTotalScore) {
       users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
-    } else if (sort == InitialData.usersSorts[1]) {
+    } else if (sort == InitialData.firstTotalInterviews) {
       users.sort((a, b) => b.totalInterviews.compareTo(a.totalInterviews));
-    } else if (sort == InitialData.usersSorts[2]) {
+    } else if (sort == InitialData.firstAverageScore) {
       users.sort((a, b) => b.averageScore.compareTo(a.averageScore));
     }
 

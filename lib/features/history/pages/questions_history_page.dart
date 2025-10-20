@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
+import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/data/models/interview/question.dart';
-import '../../../../app/router/app_router_names.dart';
+import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
-import '../../../../core/helpers/toast_helper.dart';
 import '../../../app/widgets/custom_question_card.dart';
 import '../../users/widgets/custom_network_failure.dart';
-import '../blocs/show_interviews_bloc/show_interviews_bloc.dart';
+import '../widgets/custom_empty_filter_history.dart';
+import '../widgets/custom_empty_history.dart';
 
 class QuestionsHistoryPage extends StatelessWidget {
   final TextEditingController filterController;
@@ -23,17 +22,14 @@ class QuestionsHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShowInterviewsBloc, ShowInterviewsState>(
-      listener: (context, state) {
-        if (state is ShowInterviewsFailure) {
-          ToastHelper.loadingError();
-        }
-      },
+    return BlocBuilder<HistoryBloc, HistoryState>(
       builder: (context, state) {
-        if (state is ShowInterviewsNetworkFailure) {
-          return NetworkFailure();
-        } else if (state is ShowInterviewsSuccess) {
-          if (state.interviews.isEmpty) return _EmptyHistory();
+        if (state is HistoryNetworkFailure) {
+          return CustomNetworkFailure();
+        } else if (state is HistorySuccess) {
+          if (state.interviews.isEmpty) {
+            return CustomEmptyHistory(isCurrentUser: isCurrentUser);
+          }
           final filterState = context.watch<FilterUserCubit>().state;
           final isFavourite = context.watch<FilterFavouriteCubit>().state;
           final questions = Question.filterQuestions(
@@ -44,7 +40,7 @@ class QuestionsHistoryPage extends StatelessWidget {
             state.interviews,
           );
           if (questions.isEmpty) {
-            return _EmptyFilterHistory(filterController: filterController);
+            return CustomEmptyFilterHistory(filterController: filterController);
           }
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -62,63 +58,5 @@ class QuestionsHistoryPage extends StatelessWidget {
         return CustomLoadingIndicator();
       },
     );
-  }
-}
-
-class _EmptyHistory extends StatelessWidget {
-  const _EmptyHistory();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'История пуста',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          TextButton(
-            onPressed: () {
-              StatefulNavigationShell.of(context).goBranch(0);
-              context.push(AppRouterNames.initial);
-            },
-            child: Text('Пройти собеседование'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyFilterHistory extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const _EmptyFilterHistory({required this.filterController});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'История пуста',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          TextButton(
-            onPressed: () => _reset(context),
-            child: Text('Сбросить фильтр'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _reset(BuildContext context) {
-    final favourite = context.read<FilterFavouriteCubit>();
-    context.read<FilterUserCubit>().resetUser();
-    filterController.clear();
-    if (favourite.state == true) favourite.changeFavourite();
   }
 }

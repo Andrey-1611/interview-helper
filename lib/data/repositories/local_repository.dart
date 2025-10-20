@@ -6,7 +6,7 @@ abstract interface class LocalRepository {
 
   Future<void> addInterview(InterviewData interview, UserData updatedUser);
 
-  Future<List<InterviewData>> showInterviews();
+  Future<List<InterviewData>> getInterviews();
 
   Future<void> loadUser(UserData user);
 

@@ -16,7 +16,7 @@ void main() {
   group('firestore data source', () {
     test('save user and show users', () async {
       await dataSource.saveUser(TestsData.userData);
-      final users = await dataSource.showUsers();
+      final users = await dataSource.getUsers();
 
       expect(users, [TestsData.userData]);
     });
@@ -35,7 +35,7 @@ void main() {
         TestsData.userData,
       );
 
-      final interviews = await dataSource.showInterviews(TestsData.userData.id);
+      final interviews = await dataSource.getInterviews(TestsData.userData.id);
 
       expect(interviews, isA<List<InterviewData>>());
       expect(interviews.isNotEmpty, true);

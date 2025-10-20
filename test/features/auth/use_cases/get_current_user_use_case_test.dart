@@ -40,7 +40,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, id: id);
+  final testUser = MyUser(email: email, name: name, user: id);
   final emailVerifiedResult = EmailVerificationResult(
     isEmailVerified: true,
     userBox: testUser,
@@ -69,7 +69,7 @@ void main() {
         () => mockAuthRepository.checkEmailVerified(),
       ).thenAnswer((_) async => emailVerifiedResult);
       when(
-        () => mockRemoteRepository.showInterviews(id),
+        () => mockRemoteRepository.getInterviews(id),
       ).thenAnswer((_) async => interviews);
       when(
         () => mockLocalRepository.updateInterviews(interviews),
@@ -78,7 +78,7 @@ void main() {
       await useCase.call();
 
       verify(() => mockAuthRepository.getUser()).called(1);
-      verify(() => mockRemoteRepository.showInterviews(id)).called(1);
+      verify(() => mockRemoteRepository.getInterviews(id)).called(1);
       verify(() => mockLocalRepository.updateInterviews(interviews)).called(1);
       verify(() => mockAuthRepository.checkEmailVerified()).called(1);
     });

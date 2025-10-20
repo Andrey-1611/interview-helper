@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/dialog_helper.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../blocs/sign_up_bloc/sign_up_bloc.dart';
-import '../use_cases/sign_up_use_case.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -37,7 +40,12 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignUpBloc(GetIt.I<SignUpUseCase>()),
+      create: (context) => AuthBloc(
+        GetIt.I<AuthRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+      ),
       child: _SignUpPageView(
         formKey: _formKey,
         nameController: _nameController,
@@ -90,7 +98,10 @@ class _SignUpPageView extends StatelessWidget {
               isObscureChange: isObscureChange,
             ),
             const Spacer(),
-            const _SignInNavigationButton(),
+            TextButton(
+              onPressed: () => context.pushReplacement(AppRouterNames.signIn),
+              child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
+            ),
           ],
         ),
       ),
@@ -172,77 +183,39 @@ class _SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpBloc, SignUpState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is SignUpLoading) {
+        if (state is AuthLoading) {
           DialogHelper.showLoadingDialog(context, 'Авторизация');
-        } else if (state is SignUpSuccess) {
+        } else if (state is AuthSuccess) {
           context.pop();
           context.pushReplacement(
             AppRouterNames.emailVerification,
             extra: passwordController.text.trim(),
           );
           ToastHelper.sendEmailVerification(emailController.text);
-        } else if (state is SignUpNetworkFailure) {
+        } else if (state is AuthNetworkFailure) {
           context.pop();
           ToastHelper.unknownError();
-        } else if (state is SignUpFailure) {
+        } else if (state is AuthFailure) {
           context.pop();
           ToastHelper.unknownError();
         }
       },
-      child: _CustomButtonView(
-        formKey: formKey,
-        nameController: nameController,
-        emailController: emailController,
-        passwordController: passwordController,
+      child: CustomAuthButton(
+        text: 'Зарегистрироваться',
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            context.read<AuthBloc>().add(
+              SignUp(
+                name: nameController.text.trim(),
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              ),
+            );
+          }
+        },
       ),
-    );
-  }
-}
-
-class _CustomButtonView extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-
-  const _CustomButtonView({
-    required this.formKey,
-    required this.nameController,
-    required this.emailController,
-    required this.passwordController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomAuthButton(
-      text: 'Зарегистрироваться',
-      onPressed: () {
-        if (formKey.currentState!.validate()) {
-          context.read<SignUpBloc>().add(
-            SignUp(
-              name: nameController.text.trim(),
-              email: emailController.text.trim(),
-              password: passwordController.text.trim(),
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
-class _SignInNavigationButton extends StatelessWidget {
-  const _SignInNavigationButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.pushReplacement(AppRouterNames.signIn);
-      },
-      child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
     );
   }
 }

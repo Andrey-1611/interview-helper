@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
-import 'package:interview_master/features/home/use_cases/get_current_user_use_case.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../bloc/get_current_user_bloc/get_current_user_bloc.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../../users/blocs/users_bloc/users_bloc.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -13,9 +16,12 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          GetCurrentUserBloc(GetIt.I<GetCurrentUserUseCase>())
-            ..add(GetCurrentUser()),
+      create: (context) => UsersBloc(
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<AuthRepository>(),
+        GetIt.I<NetworkInfo>(),
+      )..add(GetCurrentUser()),
       child: _SplashPageView(),
     );
   }
@@ -26,29 +32,20 @@ class _SplashPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<GetCurrentUserBloc, GetCurrentUserState>(
+    final theme = Theme.of(context);
+    return BlocListener<UsersBloc, UsersState>(
       listener: (context, state) {
-        if (state is GetCurrentUserSuccess) {
+        if (state is UserSuccess) {
           context.pushReplacement(AppRouterNames.initial);
-        } else if (state is GetCurrentUserNotAuth) {
+        } else if (state is UserNotFound) {
           context.pushReplacement(AppRouterNames.signIn);
-        } else if (state is GetCurrentUserFailure) {
+        } else if (state is UsersFailure) {
           ToastHelper.unknownError();
         }
       },
-      child: _SplashLogo(),
-    );
-  }
-}
-
-class _SplashLogo extends StatelessWidget {
-  const _SplashLogo();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      body: Center(child: Text('SkillAI', style: textTheme.titleLarge)),
+      child: Scaffold(
+        body: Center(child: Text('SkillAI', style: theme.textTheme.titleLarge)),
+      ),
     );
   }
 }

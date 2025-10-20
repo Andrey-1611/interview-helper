@@ -9,6 +9,14 @@ import 'package:interview_master/core/constants/questions/python_questions.dart'
 import 'package:interview_master/core/constants/questions/swift_questions.dart';
 import 'package:interview_master/data/models/interview/user_input.dart';
 import '../../../core/constants/main_prompt.dart';
+import '../../../core/constants/questions/devops_questions.dart';
+import '../../../core/constants/questions/git_questions.dart';
+import '../../../core/constants/questions/go_questions.dart';
+import '../../../core/constants/questions/java_questions.dart';
+import '../../../core/constants/questions/php_questions.dart';
+import '../../../core/constants/questions/rust_questions.dart';
+import '../../../core/constants/questions/sql_questions.dart';
+import '../../../core/constants/questions/typescript_questions.dart';
 
 class InterviewInfo extends Equatable {
   final String direction;
@@ -54,9 +62,43 @@ class InterviewInfo extends Equatable {
       [InitialData.cPlusPlus, InitialData.middle] => CPlusPlusQuestions.middle,
       [InitialData.cPlusPlus, InitialData.senior] => CPlusPlusQuestions.senior,
 
+      [InitialData.java, InitialData.junior] => JavaQuestions.junior,
+      [InitialData.java, InitialData.middle] => JavaQuestions.middle,
+      [InitialData.java, InitialData.senior] => JavaQuestions.senior,
+
+      [InitialData.go, InitialData.junior] => GoQuestions.junior,
+      [InitialData.go, InitialData.middle] => GoQuestions.middle,
+      [InitialData.go, InitialData.senior] => GoQuestions.senior,
+
+      [InitialData.git, InitialData.junior] => GitQuestions.junior,
+      [InitialData.git, InitialData.middle] => GitQuestions.middle,
+      [InitialData.git, InitialData.senior] => GitQuestions.senior,
+
+      [InitialData.sql, InitialData.junior] => SQLQuestions.junior,
+      [InitialData.sql, InitialData.middle] => SQLQuestions.middle,
+      [InitialData.sql, InitialData.senior] => SQLQuestions.senior,
+
+      [InitialData.typescript, InitialData.junior] =>
+        TypescriptQuestions.junior,
+      [InitialData.typescript, InitialData.middle] =>
+        TypescriptQuestions.middle,
+      [InitialData.typescript, InitialData.senior] =>
+        TypescriptQuestions.senior,
+
+      [InitialData.rust, InitialData.junior] => RustQuestions.junior,
+      [InitialData.rust, InitialData.middle] => RustQuestions.middle,
+      [InitialData.rust, InitialData.senior] => RustQuestions.senior,
+
+      [InitialData.devops, InitialData.junior] => DevopsQuestions.junior,
+      [InitialData.devops, InitialData.middle] => DevopsQuestions.middle,
+      [InitialData.devops, InitialData.senior] => DevopsQuestions.senior,
+
+      [InitialData.php, InitialData.junior] => PhpQuestions.junior,
+      [InitialData.php, InitialData.middle] => PhpQuestions.middle,
+      [InitialData.php, InitialData.senior] => PhpQuestions.senior,
+
       _ => [],
     };
-
     final myQuestions = List<String>.from(questions)..shuffle(random);
     return myQuestions.take(10).toList();
   }
@@ -71,12 +113,18 @@ class InterviewInfo extends Equatable {
 
   static String createPrompt(InterviewInfo interviewInfo) {
     final prompt = interviewInfo.userInputs
-        .map((e) => 'Вопрос: ${_clear(e.question)}\nОтвет: ${_clear(e.answer)}')
+        .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
         .join('\n\n');
     return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
   }
-
-  static String _clear(String text) {
-    return text.replaceAll("'", '').replaceAll('"', '');
-  }
 }
+
+/*
+static const java = 'Java';
+static const go = 'Go';
+static const git = 'Git';
+static const sql = 'Sql';
+static const typescript = 'Typescript';
+static const rust = 'Rust';
+static const devops = 'Devops';
+static const php = 'Php';*/

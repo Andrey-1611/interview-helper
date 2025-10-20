@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
@@ -20,15 +19,8 @@ class HiveDataSource implements LocalRepository {
 
   @override
   Future<void> loadInterviews(List<InterviewData> interviews) async {
-    try {
-      final data = {
-        for (final interview in interviews) interview.id: interview,
-      };
-      await _interviewsBox.putAll(data);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    final data = {for (final interview in interviews) interview.id: interview};
+    await _interviewsBox.putAll(data);
   }
 
   @override
@@ -36,110 +28,70 @@ class HiveDataSource implements LocalRepository {
     InterviewData interview,
     UserData updatedUser,
   ) async {
-    try {
-      await _interviewsBox.put(interview.id, interview);
-      await _usersBox.put(HiveData.userKey, updatedUser);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    await _interviewsBox.put(interview.id, interview);
+    await _usersBox.put(HiveData.userKey, updatedUser);
   }
 
   @override
-  Future<List<InterviewData>> showInterviews() async {
-    try {
-      final interviews = _interviewsBox.values.toList();
-      interviews.sort((a, b) => b.date.compareTo(a.date));
-      return interviews;
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<List<InterviewData>> getInterviews() async {
+    final interviews = _interviewsBox.values.toList();
+    interviews.sort((a, b) => b.date.compareTo(a.date));
+    return interviews;
   }
 
   @override
   Future<void> loadUser(UserData user) async {
-    try {
-      await _usersBox.put(HiveData.userKey, user);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    await _usersBox.put(HiveData.userKey, user);
   }
 
   @override
   Future<UserData?> getUser() async {
-    try {
-      return _usersBox.get(HiveData.userKey);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    return _usersBox.get(HiveData.userKey);
   }
 
   @override
   Future<void> deleteData() async {
-    try {
-      await _usersBox.clear();
-      await _interviewsBox.clear();
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    await _usersBox.clear();
+    await _interviewsBox.clear();
   }
 
   @override
   Future<int> getTotalInterviewsToady() async {
-    try {
-      final interviews = _interviewsBox.values.toList();
-      final time = DateTime.now();
-      final todayInterviews = interviews.where(
-        (interview) =>
-            interview.date.year == time.year &&
-            interview.date.month == time.month &&
-            interview.date.day == time.day,
-      );
-      return todayInterviews.length;
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    final interviews = _interviewsBox.values.toList();
+    final time = DateTime.now();
+    final todayInterviews = interviews.where(
+      (interview) =>
+          interview.date.year == time.year &&
+          interview.date.month == time.month &&
+          interview.date.day == time.day,
+    );
+    return todayInterviews.length;
   }
 
   @override
   Future<void> changeIsFavouriteInterview(String id) async {
-    try {
-      final interview = (_interviewsBox.get(id))!;
-      final newInterview = interview.copyWith(
-        isFavourite: !interview.isFavourite,
-      );
-      _interviewsBox.put(id, newInterview);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    final interview = (_interviewsBox.get(id))!;
+    final newInterview = interview.copyWith(
+      isFavourite: !interview.isFavourite,
+    );
+    _interviewsBox.put(id, newInterview);
   }
 
   @override
   Future<void> changeIsFavouriteQuestion(String id) async {
-    try {
-      for (final interview in _interviewsBox.values) {
-        final index = interview.questions.indexWhere((q) => q.id == id);
-        if (index != -1) {
-          final questions = List<Question>.from(interview.questions);
-          questions[index] = questions[index].copyWith(
-            isFavourite: !questions[index].isFavourite,
-          );
-          await _interviewsBox.put(
-            interview.id,
-            interview.copyWith(questions: questions),
-          );
-          return;
-        }
+    for (final interview in _interviewsBox.values) {
+      final index = interview.questions.indexWhere((q) => q.id == id);
+      if (index != -1) {
+        final questions = List<Question>.from(interview.questions);
+        questions[index] = questions[index].copyWith(
+          isFavourite: !questions[index].isFavourite,
+        );
+        await _interviewsBox.put(
+          interview.id,
+          interview.copyWith(questions: questions),
+        );
+        return;
       }
-    } catch (e) {
-      log(e.toString());
-      rethrow;
     }
   }
 }

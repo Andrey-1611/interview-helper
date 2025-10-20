@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/helpers/dialog_helper.dart';
-import 'package:interview_master/core/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/dialog_helper.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../blocs/change_email_bloc/change_email_bloc.dart';
-import '../use_cases/change_email_use_case.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -32,7 +35,12 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChangeEmailBloc(GetIt.I<ChangeEmailUseCase>()),
+      create: (context) => AuthBloc(
+        GetIt.I<AuthRepository>(),
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+      ),
       child: _ChangeEmailPageView(
         emailController: _emailController,
         formKey: _formKey,
@@ -66,14 +74,27 @@ class _ChangeEmailPageView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
-                _EmailForm(emailController: emailController),
+                CustomTextFormField(
+                  controller: emailController,
+                  hintText: 'Почта',
+                  prefixIcon: Icon(Icons.email),
+                  keyboardType: TextInputType.emailAddress,
+                ),
                 _ChangeEmailButton(
                   emailController: emailController,
                   formKey: formKey,
                   password: password,
                 ),
                 const Spacer(),
-                _NavigationButton(password: password),
+                TextButton(
+                  onPressed: () {
+                    context.pushReplacement(
+                      AppRouterNames.emailVerification,
+                      extra: password,
+                    );
+                  },
+                  child: const Text('Вернуться на экран подтверджения почты'),
+                ),
               ],
             ),
           ),
@@ -96,90 +117,37 @@ class _ChangeEmailButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ChangeEmailBloc, ChangeEmailState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is ChangeEmailLoading) {
+        if (state is AuthLoading) {
           DialogHelper.showLoadingDialog(context, 'Смена почты...');
-        } else if (state is ChangeEmailSuccess) {
+        } else if (state is AuthSuccess) {
           context.pop();
           context.pushReplacement(
             AppRouterNames.emailVerification,
             extra: password,
           );
-        } else if (state is ChangeEmailNetworkFailure) {
+        } else if (state is AuthNetworkFailure) {
           context.pop();
           ToastHelper.networkError();
-        } else if (state is ChangeEmailFailure) {
+        } else if (state is AuthFailure) {
           context.pop();
           ToastHelper.unknownError();
         }
       },
-      child: _ChangeEmailButtonView(
-        emailController: emailController,
-        formKey: formKey,
-        password: password,
+      child: CustomAuthButton(
+        text: 'Подтвердить',
+        onPressed: () {
+          if (formKey.currentState!.validate()) {
+            context.read<AuthBloc>().add(
+              ChangeEmail(
+                email: emailController.text.trim(),
+                password: password,
+              ),
+            );
+          }
+        },
       ),
-    );
-  }
-}
-
-class _ChangeEmailButtonView extends StatelessWidget {
-  final TextEditingController emailController;
-  final String password;
-  final GlobalKey<FormState> formKey;
-
-  const _ChangeEmailButtonView({
-    required this.emailController,
-    required this.formKey,
-    required this.password,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomAuthButton(
-      text: 'Подтвердить',
-      onPressed: () {
-        if (formKey.currentState!.validate()) {
-          context.read<ChangeEmailBloc>().add(
-            ChangeEmail(email: emailController.text.trim(), password: password),
-          );
-        }
-      },
-    );
-  }
-}
-
-class _EmailForm extends StatelessWidget {
-  final TextEditingController emailController;
-
-  const _EmailForm({required this.emailController});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomTextFormField(
-      controller: emailController,
-      hintText: 'Почта',
-      prefixIcon: Icon(Icons.email),
-      keyboardType: TextInputType.emailAddress,
-    );
-  }
-}
-
-class _NavigationButton extends StatelessWidget {
-  final String password;
-
-  const _NavigationButton({required this.password});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.pushReplacement(
-          AppRouterNames.emailVerification,
-          extra: password,
-        );
-      },
-      child: const Text('Вернуться на экран подтверджения почты'),
     );
   }
 }

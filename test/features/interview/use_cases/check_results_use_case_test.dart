@@ -54,7 +54,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, id: id);
+  final testUser = MyUser(email: email, name: name, user: id);
 
   const direction = 'testDirection';
   const difficulty = 'testDifficulty';
@@ -84,7 +84,7 @@ void main() {
     ).thenAnswer((_) async => questions);
     when(() => mockAuthRepository.getUser()).thenAnswer((_) async => testUser);
     when(
-      () => mockRemoteRepository.addInterview(any(), testUser.id!),
+      () => mockRemoteRepository.addInterview(any(), testUser.user!),
     ).thenAnswer((_) async => {});
     when(
       () => mockLocalRepository.addInterview(any()),
@@ -111,7 +111,7 @@ void main() {
               .having((e) => e.difficulty, 'difficulty', difficulty)
               .having((e) => e.questions, 'questions', questions),
         ),
-        any(that: equals(testUser.id)),
+        any(that: equals(testUser.user)),
       ),
     ).called(1);
     verify(() => mockLocalRepository.addInterview(any())).called(1);

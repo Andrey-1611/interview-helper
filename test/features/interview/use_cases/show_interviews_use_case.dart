@@ -41,7 +41,7 @@ void main() {
   final date = DateTime.now();
   final testInterviews = [
     Interview(
-      id: id,
+      user: id,
       score: score,
       difficulty: difficulty,
       direction: direction,
@@ -53,25 +53,25 @@ void main() {
   group('show interviews use case', () {
     test('show remote interviews', () async {
       when(
-        () => mockRemoteRepository.showInterviews(testId),
+        () => mockRemoteRepository.getInterviews(testId),
       ).thenAnswer((_) async => testInterviews);
 
       final interviews = await useCase.call(testId);
 
       verify(
-        () => mockRemoteRepository.showInterviews(any(that: isA<String>())),
+        () => mockRemoteRepository.getInterviews(any(that: isA<String>())),
       ).called(1);
       expect(interviews, testInterviews);
     });
 
     test('show local interviews', () async {
       when(
-        () => mockLocalRepository.showInterviews(),
+        () => mockLocalRepository.getInterviews(),
       ).thenAnswer((_) async => testInterviews);
 
       final interviews = await useCase.call(null);
 
-      verify(() => mockLocalRepository.showInterviews()).called(1);
+      verify(() => mockLocalRepository.getInterviews()).called(1);
       expect(interviews, testInterviews);
     });
   });

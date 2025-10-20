@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/users/pages/profile_page.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../data/models/interview/interview_info.dart';
 import '../../data/models/interview/question.dart';
 import '../../data/models/user/user_data.dart';
@@ -22,6 +24,7 @@ import '../../features/users/pages/users_rating_page.dart';
 import 'app_router_names.dart';
 
 final appRouter = GoRouter(
+  observers: [TalkerRouteObserver(GetIt.I<Talker>())],
   initialLocation: AppRouterNames.splash,
   routes: [
     GoRoute(
