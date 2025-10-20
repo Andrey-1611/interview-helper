@@ -6,6 +6,7 @@ import 'package:interview_master/core/constants/data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/data/repositories/ai_repository.dart';
 import 'package:interview_master/data/repositories/local_repository.dart';
 import 'package:interview_master/data/repositories/remote_repository.dart';
@@ -106,7 +107,13 @@ class _InterviewButton extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
-        if (state is InterviewStartSuccess) {
+        if (state is InterviewAttemptsFailure) {
+          ToastHelper.attemptsError();
+        } else if (state is InterviewNetworkFailure) {
+          ToastHelper.networkError();
+        } else if (state is InterviewFailure) {
+          ToastHelper.unknownError();
+        } else if (state is InterviewStartSuccess) {
           context.pushReplacement(
             AppRouterNames.interview,
             extra: InterviewInfo(

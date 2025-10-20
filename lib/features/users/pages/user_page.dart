@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
+import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import 'package:interview_master/features/history/pages/questions_history_page.dart';
 import 'package:interview_master/features/users/pages/user_info_page.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
@@ -80,6 +81,14 @@ class _UserPageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Аналитика', style: theme.textTheme.displayLarge),
+        actions: [
+          if (!isCurrentUser)
+            IconButton(
+              onPressed: () =>
+                  context.push(AppRouterNames.analysis, extra: user!),
+              icon: Icon(Icons.compare_arrows),
+            ),
+        ],
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, size.height * 0.14),
           child: _UserAppBar(

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/utils/filter_favourite_cubit.dart';
+import '../../../core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 
 class CustomEmptyFilterHistory extends StatelessWidget {

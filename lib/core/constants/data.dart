@@ -5,6 +5,14 @@ class InitialData {
   static const javascript = 'JavaScript';
   static const python = 'Python';
   static const cPlusPlus = 'C++';
+  static const java = 'Java';
+  static const go = 'Go';
+  static const git = 'Git';
+  static const sql = 'Sql';
+  static const typescript = 'Typescript';
+  static const rust = 'Rust';
+  static const devops = 'Devops';
+  static const php = 'Php';
 
   static const junior = 'junior';
   static const middle = 'middle';
@@ -17,6 +25,14 @@ class InitialData {
     javascript,
     python,
     cPlusPlus,
+    java,
+    go,
+    git,
+    sql,
+    typescript,
+    rust,
+    devops,
+    php,
   ];
 
   static const List<String> difficulties = [junior, middle, senior];
@@ -33,9 +49,13 @@ class InitialData {
     firstWorst,
   ];
 
+  static const firstTotalScore = 'больше всего очков опыта';
+  static const firstTotalInterviews = 'больше всего собеседований';
+  static const firstAverageScore = 'лучший средний результат';
+
   static const List<String> usersSorts = [
-    'больше всего очков опыта',
-    'больше всего собеседований',
-    'лучший средний результат',
+    firstTotalScore,
+    firstTotalInterviews,
+    firstAverageScore,
   ];
 }

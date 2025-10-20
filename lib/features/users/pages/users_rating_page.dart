@@ -147,6 +147,7 @@ class _UserCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: ListTile(
+        enabled: !isCurrentUser,
         onTap: () => !isCurrentUser
             ? DialogHelper.showCustomSheet(
                 dialog: _UserSheet(user: user),

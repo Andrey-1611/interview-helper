@@ -59,7 +59,6 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
     try {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(InterviewNetworkFailure());
-
       final duration = _stopwatchInfo.stop();
       final questions = await _aiRepository.checkAnswers(event.interviewInfo);
       final interview = InterviewData.fromQuestions(
@@ -67,7 +66,6 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
         event.interviewInfo,
         duration,
       );
-
       final user = (await _localRepository.getUser())!;
       final updatedUser = UserData.updateData(user, interview);
       await _remoteRepository.addInterview(interview, updatedUser);

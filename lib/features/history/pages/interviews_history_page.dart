@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/filter_favourite_cubit.dart';
+import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import 'package:intl/intl.dart';

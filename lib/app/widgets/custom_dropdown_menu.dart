@@ -16,23 +16,26 @@ class CustomDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: DropdownMenu(
-        initialSelection: initialValue,
-        enableSearch: false,
-        requestFocusOnTap: false,
-        dropdownMenuEntries: data
+      child: DropdownButtonFormField(
+        isExpanded: true,
+        style: theme.textTheme.displaySmall,
+        value: initialValue,
+        items: data
             .map(
-              (direction) =>
-                  DropdownMenuEntry(value: direction, label: direction),
+              (String value) =>
+                  DropdownMenuItem<String>(value: value, child: Text(value)),
             )
             .toList(),
-        onSelected: (String? value) {
+        onChanged: (String? value) {
           if (value != null) change(value);
         },
-        width: MediaQuery.sizeOf(context).width,
-        hintText: hintText,
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        menuMaxHeight: size.height * 0.5,
+        hint: Text(hintText),
       ),
     );
   }
