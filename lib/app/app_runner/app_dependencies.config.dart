@@ -16,6 +16,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
 import '../../core/utils/network_info.dart' as _i668;
@@ -43,6 +44,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     final modules = _$Modules();
     gh.singleton<_i207.Talker>(() => modules.talker);
+    gh.singletonAsync<_i655.PackageInfo>(() => modules.packageInfo);
     gh.lazySingleton<_i59.FirebaseAuth>(() => modules.firebaseAuth);
     gh.lazySingleton<_i361.Dio>(() => modules.dio);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => modules.firebaseFirestore);

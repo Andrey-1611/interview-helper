@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_info_card.dart';
 import '../../../core/utils/network_info.dart';
@@ -37,6 +38,7 @@ class _ProfilePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final appInfo = GetIt.I<PackageInfo>();
     return Scaffold(
       appBar: AppBar(title: const Text('Профиль')),
       body: BlocConsumer<UsersBloc, UsersState>(
@@ -62,6 +64,7 @@ class _ProfilePageView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Spacer(),
                   CustomInfoCard(
                     titleText: 'Имя',
                     subtitleText: state.user.name,
@@ -87,6 +90,10 @@ class _ProfilePageView extends StatelessWidget {
                       'Выйти из аккаунта',
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
                   ),
                 ],
               ),
