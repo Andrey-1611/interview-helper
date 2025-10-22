@@ -144,6 +144,7 @@ class _InterviewQuestionPage extends StatelessWidget {
       answerController.text = answers[page + 1];
       pageController.jumpToPage(page + 1);
     } else {
+      answers[page] = answerController.text.trim();
       context.pushReplacement(
         AppRouterNames.results,
         extra: InterviewInfo(

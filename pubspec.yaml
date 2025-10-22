@@ -53,3 +53,8 @@ flutter:
   assets:
     - assets/
     - .env
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/play_store_512.png"
