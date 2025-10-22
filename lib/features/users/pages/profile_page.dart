@@ -21,12 +21,14 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UsersBloc(
+      create: (context) =>
+      UsersBloc(
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
         GetIt.I<AuthRepository>(),
         GetIt.I<NetworkInfo>(),
-      )..add(GetUser()),
+      )
+        ..add(GetUser()),
       child: _ProfilePageView(),
     );
   }
@@ -75,12 +77,13 @@ class _ProfilePageView extends StatelessWidget {
                     subtitleText: state.user.email,
                   ),
                   TextButton(
-                    onPressed: () => DialogHelper.showCustomDialog(
-                      dialog: _SignOutDialog(
-                        userBloc: context.read<UsersBloc>(),
-                      ),
-                      context: context,
-                    ),
+                    onPressed: () =>
+                        DialogHelper.showCustomDialog(
+                          dialog: _SignOutDialog(
+                            userBloc: context.read<UsersBloc>(),
+                          ),
+                          context: context,
+                        ),
                     style: ButtonStyle(
                       overlayColor: WidgetStateProperty.all(
                         AppPalette.transparent,
@@ -88,12 +91,16 @@ class _ProfilePageView extends StatelessWidget {
                     ),
                     child: Text(
                       'Выйти из аккаунта',
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .labelMedium,
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
+                    '${appInfo.appName}, ${appInfo.version}+${appInfo
+                        .buildNumber}',
                   ),
                 ],
               ),
