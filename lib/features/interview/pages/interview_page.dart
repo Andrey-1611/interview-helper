@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/interview/user_input.dart';
@@ -35,6 +36,7 @@ class _InterviewPageState extends State<InterviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -49,21 +51,48 @@ class _InterviewPageState extends State<InterviewPage> {
           icon: Icon(Icons.arrow_back),
         ),
       ),
-      body: PageView.builder(
-        itemCount: 10,
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return _InterviewQuestionPage(
-            answerController: _answerController,
-            pageController: _pageController,
-            answers: _answers,
-            interviewInfo: widget.interviewInfo,
-            questions: _questions,
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: 10,
+              onDotClicked: _jumpToPage,
+              effect: WormEffect(
+                radius: size.height * 0.025,
+                dotHeight: size.height * 0.025,
+                dotWidth: size.height * 0.025,
+              ),
+            ),
+          ),
+          Expanded(
+            child: PageView.builder(
+              itemCount: 10,
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _InterviewQuestionPage(
+                  answerController: _answerController,
+                  pageController: _pageController,
+                  answers: _answers,
+                  interviewInfo: widget.interviewInfo,
+                  questions: _questions,
+                  currentPage: index,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _jumpToPage(int page) {
+    _answers[_pageController.page?.round() ?? 0] = _answerController.text
+        .trim();
+    _answerController.text = _answers[page];
+    _pageController.jumpToPage(page);
   }
 }
 
@@ -73,6 +102,7 @@ class _InterviewQuestionPage extends StatelessWidget {
   final List<String> answers;
   final InterviewInfo interviewInfo;
   final List<String> questions;
+  final int currentPage;
 
   const _InterviewQuestionPage({
     required this.answerController,
@@ -80,6 +110,7 @@ class _InterviewQuestionPage extends StatelessWidget {
     required this.answers,
     required this.interviewInfo,
     required this.questions,
+    required this.currentPage,
   });
 
   @override
@@ -90,8 +121,8 @@ class _InterviewQuestionPage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Text('Вопрос ${page + 1}'),
-          Text(questions[page], style: theme.textTheme.bodyLarge),
+          Text('Вопрос ${currentPage + 1}'),
+          Text(questions[currentPage], style: theme.textTheme.bodyLarge),
           SizedBox(height: size.height * 0.02),
           Expanded(
             child: TextField(
@@ -109,7 +140,7 @@ class _InterviewQuestionPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              page == 0
+              currentPage == 0
                   ? const SizedBox.shrink()
                   : CustomButton(
                       text: 'Назад',
@@ -118,7 +149,7 @@ class _InterviewQuestionPage extends StatelessWidget {
                       onPressed: () => _pop(),
                     ),
               CustomButton(
-                text: page == 9 ? 'Завершить' : 'Дальше',
+                text: currentPage == 9 ? 'Завершить' : 'Дальше',
                 selectedColor: AppPalette.primary,
                 percentsWidth: 0.34,
                 onPressed: () => _push(context),
@@ -130,21 +161,19 @@ class _InterviewQuestionPage extends StatelessWidget {
     );
   }
 
-  int get page => pageController.page?.round() ?? 0;
-
   void _pop() {
-    answers[page] = answerController.text.trim();
-    answerController.text = answers[page - 1];
-    pageController.jumpToPage(page - 1);
+    answers[currentPage] = answerController.text.trim();
+    answerController.text = answers[currentPage - 1];
+    pageController.jumpToPage(currentPage - 1);
   }
 
   void _push(BuildContext context) {
-    if (page != 9) {
-      answers[page] = answerController.text.trim();
-      answerController.text = answers[page + 1];
-      pageController.jumpToPage(page + 1);
+    if (currentPage != 9) {
+      answers[currentPage] = answerController.text.trim();
+      answerController.text = answers[currentPage + 1];
+      pageController.jumpToPage(currentPage + 1);
     } else {
-      answers[page] = answerController.text.trim();
+      answers[currentPage] = answerController.text.trim();
       context.pushReplacement(
         AppRouterNames.results,
         extra: InterviewInfo(
