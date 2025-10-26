@@ -52,39 +52,47 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAknBQbsrr52dhk_apoz0NDsPeTgehaQbg',
-    appId: '1:111038140593:android:eea98795e60f58b7231290',
+    appId: '1:111038140593:android:69a010e6d504c87b231290',
     messagingSenderId: '111038140593',
     projectId: 'fir-cf9f3',
     storageBucket: 'fir-cf9f3.firebasestorage.app',
+    androidClientId:
+        '111038140593-lbfu27ct9fm2civ8lqle98jusl051j8l.apps.googleusercontent.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCXtVdvautjHlxH5HJ85RYJQBoROAypeRo',
-    appId: '1:111038140593:ios:1cc242af42047a48231290',
+    appId: '1:111038140593:ios:f2ae7f8e16c3c9b8231290',
     messagingSenderId: '111038140593',
     projectId: 'fir-cf9f3',
     storageBucket: 'fir-cf9f3.firebasestorage.app',
-    iosClientId: '111038140593-j43gvj4aeameiqgolen3pbpuiesncb3c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.interviewHelper',
+    androidClientId:
+        '111038140593-7jvdrvp38e2qn4iu4capc0epts7r6fkn.apps.googleusercontent.com',
+    iosClientId:
+        '111038140593-r8bdqtt760ce6mi96cfm0qrpbu6r1si0.apps.googleusercontent.com',
+    iosBundleId: 'com.example.interviewMaster',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCXtVdvautjHlxH5HJ85RYJQBoROAypeRo',
-    appId: '1:111038140593:ios:1cc242af42047a48231290',
+    appId: '1:111038140593:ios:f2ae7f8e16c3c9b8231290',
     messagingSenderId: '111038140593',
     projectId: 'fir-cf9f3',
     storageBucket: 'fir-cf9f3.firebasestorage.app',
-    iosClientId: '111038140593-j43gvj4aeameiqgolen3pbpuiesncb3c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.interviewHelper',
+    androidClientId:
+        '111038140593-7jvdrvp38e2qn4iu4capc0epts7r6fkn.apps.googleusercontent.com',
+    iosClientId:
+        '111038140593-r8bdqtt760ce6mi96cfm0qrpbu6r1si0.apps.googleusercontent.com',
+    iosBundleId: 'com.example.interviewMaster',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBy1119mtaearwfkWdfbjunhl-d66OTxd0',
-    appId: '1:111038140593:web:f276701967e5040c231290',
+    appId: '1:111038140593:web:eb5b5a26caa2573d231290',
     messagingSenderId: '111038140593',
     projectId: 'fir-cf9f3',
     authDomain: 'fir-cf9f3.firebaseapp.com',
     storageBucket: 'fir-cf9f3.firebasestorage.app',
-    measurementId: 'G-KF23W65GGS',
+    measurementId: 'G-CWRHT8RMZG',
   );
 }

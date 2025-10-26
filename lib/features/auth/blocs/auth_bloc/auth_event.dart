@@ -17,6 +17,8 @@ final class SignIn extends AuthEvent {
   List<Object?> get props => [email, password];
 }
 
+final class SignInWithGoogle extends AuthEvent {}
+
 final class SignUp extends AuthEvent {
   final String name;
   final String email;

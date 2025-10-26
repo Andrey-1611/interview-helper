@@ -24,6 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._networkInfo,
   ) : super(AuthInitial()) {
     on<SignIn>(_signIn);
+    on<SignInWithGoogle>(_signInWithGoogle);
     on<SignUp>(_signUp);
     on<ChangeEmail>(_changeEmail);
     on<ChangePassword>(_changePassword);
@@ -46,6 +47,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final interviews = await _remoteRepository.getInterviews(userId);
       await _localRepository.loadInterviews(interviews);
       await _localRepository.loadUser(user);
+      return emit(AuthSuccess());
+    } catch (e, st) {
+      emit(AuthFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _signInWithGoogle(
+    SignInWithGoogle event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) return emit(AuthNetworkFailure());
+      final googleUser = await _authRepository.signInWithGoogle();
+      if (googleUser.name.isEmpty) {
+        final user = await _remoteRepository.getUserData(googleUser.id);
+        final interviews = await _remoteRepository.getInterviews(googleUser.id);
+        await _localRepository.loadInterviews(interviews);
+        await _localRepository.loadUser(user);
+      } else {
+        await _remoteRepository.saveUser(googleUser);
+        await _localRepository.loadUser(googleUser);
+      }
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
