@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/features/auth/widgets/custom_google_button.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
@@ -46,13 +47,33 @@ class _SignUpPageState extends State<SignUpPage> {
         GetIt.I<LocalRepository>(),
         GetIt.I<NetworkInfo>(),
       ),
-      child: _SignUpPageView(
-        formKey: _formKey,
-        nameController: _nameController,
-        emailController: _emailController,
-        passwordController: _passwordController,
-        isObscure: _isObscure,
-        isObscureChange: isObscureChange,
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthLoading) {
+            DialogHelper.showLoadingDialog(context, 'Авторизация');
+          } else if (state is AuthSuccess) {
+            context.pop();
+            context.pushReplacement(
+              AppRouterNames.emailVerification,
+              extra: _passwordController.text.trim(),
+            );
+            ToastHelper.sendEmailVerification(_emailController.text);
+          } else if (state is AuthNetworkFailure) {
+            context.pop();
+            ToastHelper.unknownError();
+          } else if (state is AuthFailure) {
+            context.pop();
+            ToastHelper.unknownError();
+          }
+        },
+        child: _SignUpPageView(
+          formKey: _formKey,
+          nameController: _nameController,
+          emailController: _emailController,
+          passwordController: _passwordController,
+          isObscure: _isObscure,
+          isObscureChange: isObscureChange,
+        ),
       ),
     );
   }
@@ -97,6 +118,7 @@ class _SignUpPageView extends StatelessWidget {
               isObscure: isObscure,
               isObscureChange: isObscureChange,
             ),
+            CustomGoogleButton(),
             const Spacer(),
             TextButton(
               onPressed: () => context.pushReplacement(AppRouterNames.signIn),
@@ -156,65 +178,21 @@ class _SignUpForm extends StatelessWidget {
               icon: const Icon(Icons.remove_red_eye_outlined),
             ),
           ),
-          _SignUpButton(
-            formKey: formKey,
-            nameController: nameController,
-            emailController: emailController,
-            passwordController: passwordController,
+          CustomAuthButton(
+            text: 'Зарегистрироваться',
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                context.read<AuthBloc>().add(
+                  SignUp(
+                    name: nameController.text.trim(),
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
+                  ),
+                );
+              }
+            },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SignUpButton extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-
-  const _SignUpButton({
-    required this.formKey,
-    required this.nameController,
-    required this.emailController,
-    required this.passwordController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLoading) {
-          DialogHelper.showLoadingDialog(context, 'Авторизация');
-        } else if (state is AuthSuccess) {
-          context.pop();
-          context.pushReplacement(
-            AppRouterNames.emailVerification,
-            extra: passwordController.text.trim(),
-          );
-          ToastHelper.sendEmailVerification(emailController.text);
-        } else if (state is AuthNetworkFailure) {
-          context.pop();
-          ToastHelper.unknownError();
-        } else if (state is AuthFailure) {
-          context.pop();
-          ToastHelper.unknownError();
-        }
-      },
-      child: CustomAuthButton(
-        text: 'Зарегистрироваться',
-        onPressed: () {
-          if (formKey.currentState!.validate()) {
-            context.read<AuthBloc>().add(
-              SignUp(
-                name: nameController.text.trim(),
-                email: emailController.text.trim(),
-                password: passwordController.text.trim(),
-              ),
-            );
-          }
-        },
       ),
     );
   }

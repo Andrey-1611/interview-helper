@@ -13,6 +13,7 @@ import 'package:connectivity_plus/connectivity_plus.dart' as _i895;
 import 'package:dio/dio.dart' as _i361;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
@@ -46,6 +47,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i207.Talker>(() => modules.talker);
     gh.singletonAsync<_i655.PackageInfo>(() => modules.packageInfo);
     gh.lazySingleton<_i59.FirebaseAuth>(() => modules.firebaseAuth);
+    gh.lazySingleton<_i116.GoogleSignIn>(() => modules.googleSignIn);
     gh.lazySingleton<_i361.Dio>(() => modules.dio);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => modules.firebaseFirestore);
     gh.lazySingleton<_i744.HiveInterface>(() => modules.hive);
@@ -61,8 +63,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1001.FirestoreDataSource(gh<_i974.FirebaseFirestore>()));
     gh.lazySingleton<_i668.NetworkInfo>(
         () => _i668.NetworkInfo(gh<_i895.Connectivity>()));
-    gh.lazySingleton<_i481.AuthRepository>(
-        () => _i891.FirebaseAuthDataSource(gh<_i59.FirebaseAuth>()));
+    gh.lazySingleton<_i481.AuthRepository>(() => _i891.FirebaseAuthDataSource(
+          gh<_i59.FirebaseAuth>(),
+          gh<_i116.GoogleSignIn>(),
+        ));
     return this;
   }
 }
