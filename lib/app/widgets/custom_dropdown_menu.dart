@@ -4,11 +4,11 @@ class CustomDropdownMenu extends StatelessWidget {
   final List<String> data;
   final ValueChanged<String> change;
   final String hintText;
-  final String? initialValue;
+  final String? value;
 
   const CustomDropdownMenu({
     super.key,
-    this.initialValue,
+    this.value,
     required this.data,
     required this.change,
     required this.hintText,
@@ -23,7 +23,7 @@ class CustomDropdownMenu extends StatelessWidget {
       child: DropdownButtonFormField(
         isExpanded: true,
         style: theme.textTheme.displaySmall,
-        value: initialValue,
+        value: value,
         items: data
             .map(
               (String value) =>

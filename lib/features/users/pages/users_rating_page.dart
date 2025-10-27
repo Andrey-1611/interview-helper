@@ -18,7 +18,6 @@ import '../../../core/constants/data.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/interview/interview_info.dart';
 import '../../../data/models/user/user_data.dart';
-import '../../../data/repositories/auth_repository.dart';
 import '../blocs/filter_users_cubit/filter_users_cubit.dart';
 import '../widgets/custom_network_failure.dart';
 
@@ -40,7 +39,6 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<AuthRepository>(),
             GetIt.I<NetworkInfo>(),
           )..add(GetUsers()),
         ),
@@ -242,13 +240,13 @@ class _FilterDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomDropdownMenu(
-            initialValue: direction,
+            value: direction,
             data: InitialData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
-            initialValue: sort,
+            value: sort,
             data: InitialData.usersSorts,
             change: (value) => sort = value,
             hintText: 'Сортировка',

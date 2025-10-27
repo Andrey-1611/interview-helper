@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/data/models/user/user_data.dart';
-import 'package:interview_master/data/repositories/auth_repository.dart';
 import 'package:interview_master/data/repositories/local_repository.dart';
 import 'package:interview_master/data/repositories/remote_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -15,19 +14,13 @@ part 'users_state.dart';
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
-  final AuthRepository _authRepository;
   final NetworkInfo _networkInfo;
 
-  UsersBloc(
-    this._remoteRepository,
-    this._localRepository,
-    this._authRepository,
-    this._networkInfo,
-  ) : super(UsersInitial()) {
+  UsersBloc(this._remoteRepository, this._localRepository, this._networkInfo)
+    : super(UsersInitial()) {
     on<GetUser>(_getUser);
     on<GetUsers>(_getUsers);
     on<GetCurrentUser>(_getCurrentUser);
-    on<SignOut>(_signOut);
   }
 
   Future<void> _getUser(GetUser event, Emitter<UsersState> emit) async {
@@ -69,23 +62,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       final interviews = await _localRepository.getInterviews();
       await _remoteRepository.updateInterviews(user.id, interviews);
       return emit(UserSuccess(user: user));
-    } catch (e, st) {
-      emit(UsersFailure());
-      GetIt.I<Talker>().handle(e, st);
-    }
-  }
-
-  Future<void> _signOut(SignOut event, Emitter<UsersState> emit) async {
-    emit(UserSignOutLoading());
-    try {
-      final isConnected = await _networkInfo.isConnected;
-      if (!isConnected) return emit(UsersNetworkFailure());
-      final user = await _localRepository.getUser();
-      final interviews = await _localRepository.getInterviews();
-      await _remoteRepository.updateInterviews(user!.id, interviews);
-      await _authRepository.signOut();
-      await _localRepository.deleteData();
-      return emit(UserNotFound());
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);
