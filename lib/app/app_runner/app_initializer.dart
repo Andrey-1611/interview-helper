@@ -13,7 +13,7 @@ import '../../data/models/interview/interview.dart';
 import '../../data/models/interview/interview_data.dart';
 import '../../data/models/interview/question.dart';
 import '../../data/models/user/user_data.dart';
-import '../../firebase_options.dart';
+import 'firebase_options.dart';
 
 class AppInitializer {
   static Future<void> init() async {

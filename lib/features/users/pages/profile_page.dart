@@ -4,13 +4,14 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/url_launch.dart';
+import 'package:interview_master/data/repositories/auth_repository.dart';
+import 'package:interview_master/features/users/blocs/settings_bloc/settings_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_info_card.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/toast_helper.dart';
-import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../blocs/users_bloc/users_bloc.dart';
@@ -20,15 +21,25 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-      UsersBloc(
-        GetIt.I<RemoteRepository>(),
-        GetIt.I<LocalRepository>(),
-        GetIt.I<AuthRepository>(),
-        GetIt.I<NetworkInfo>(),
-      )
-        ..add(GetUser()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => UsersBloc(
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<NetworkInfo>(),
+          )..add(GetUser()),
+        ),
+        BlocProvider(
+          create: (context) => SettingsBloc(
+            GetIt.I<AuthRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<UrlLaunch>(),
+            GetIt.I<NetworkInfo>(),
+          ),
+        ),
+      ],
       child: _ProfilePageView(),
     );
   }
@@ -43,80 +54,86 @@ class _ProfilePageView extends StatelessWidget {
     final appInfo = GetIt.I<PackageInfo>();
     return Scaffold(
       appBar: AppBar(title: const Text('Профиль')),
-      body: BlocConsumer<UsersBloc, UsersState>(
+      body: BlocListener<SettingsBloc, SettingsState>(
         listener: (context, state) {
-          if (state is UserSignOutLoading) {
+          if (state is SettingsLoading) {
             DialogHelper.showLoadingDialog(context, 'Выход из аккаунта...');
-          } else if (state is UserNotFound) {
+          } else if (state is SignOutSuccess) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
-          } else if (state is UsersNetworkFailure) {
+          } else if (state is SettingsNetworkFailure) {
             context.pop();
             ToastHelper.networkError();
-          } else if (state is UsersFailure) {
+          } else if (state is SettingsFailure) {
             context.pop();
             ToastHelper.unknownError();
           }
         },
-        builder: (context, state) {
-          if (state is UserSuccess) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  CustomInfoCard(
-                    titleText: 'Имя',
-                    subtitleText: state.user.name,
-                  ),
-                  SizedBox(height: size.height * 0.02),
-                  CustomInfoCard(
-                    titleText: 'Почта',
-                    subtitleText: state.user.email,
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        DialogHelper.showCustomDialog(
+        child: BlocBuilder<UsersBloc, UsersState>(
+          builder: (context, state) {
+            if (state is UserSuccess) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    CustomInfoCard(
+                      titleText: 'Имя',
+                      subtitleText: state.user.name,
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    CustomInfoCard(
+                      titleText: 'Почта',
+                      subtitleText: state.user.email,
+                    ),
+                    SizedBox(height: size.height * 0.03),
+                    SizedBox(
+                      width: size.width * 0.8,
+                      child: ElevatedButton.icon(
+                        onPressed: () => DialogHelper.showCustomDialog(
                           dialog: _SignOutDialog(
-                            userBloc: context.read<UsersBloc>(),
+                            settingsBloc: context.read<SettingsBloc>(),
                           ),
                           context: context,
                         ),
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.all(
-                        AppPalette.transparent,
+                        icon: const Icon(Icons.logout),
+                        iconAlignment: IconAlignment.end,
+                        label: Text('Выйти из аккаунта'),
                       ),
                     ),
-                    child: Text(
-                      'Выйти из аккаунта',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .labelMedium,
+                    SizedBox(
+                      width: size.width * 0.8,
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.read<SettingsBloc>().add(
+                          OpenAppInRuStore(),
+                        ),
+                        icon: const Icon(Icons.favorite),
+                        iconAlignment: IconAlignment.end,
+                        label: Text('Оценить приложение'),
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${appInfo.appName}, ${appInfo.version}+${appInfo
-                        .buildNumber}',
-                  ),
-                ],
-              ),
-            );
-          }
-          return const CustomLoadingIndicator();
-        },
+                    const Spacer(),
+                    Text(
+                      '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const CustomLoadingIndicator();
+          },
+        ),
       ),
     );
   }
 }
 
 class _SignOutDialog extends StatelessWidget {
-  final UsersBloc userBloc;
+  final SettingsBloc settingsBloc;
 
-  const _SignOutDialog({required this.userBloc});
+  const _SignOutDialog({required this.settingsBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +147,7 @@ class _SignOutDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             context.pop();
-            userBloc.add(SignOut());
+            settingsBloc.add(SignOut());
           },
           child: const Text('Да'),
         ),

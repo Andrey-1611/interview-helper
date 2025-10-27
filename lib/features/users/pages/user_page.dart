@@ -42,7 +42,6 @@ class _UserPageState extends State<UserPage> {
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<AuthRepository>(),
             GetIt.I<NetworkInfo>(),
           )..add(GetUser(widget.user)),
         ),
@@ -200,19 +199,19 @@ class _FilterDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomDropdownMenu(
-            initialValue: direction,
+            value: direction,
             data: InitialData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
-            initialValue: difficulty,
+            value: difficulty,
             data: InitialData.difficulties,
             change: (value) => difficulty = value,
             hintText: 'Все сложности',
           ),
           CustomDropdownMenu(
-            initialValue: sort,
+            value: sort,
             data: InitialData.interviewsSorts,
             change: (value) => sort = value,
             hintText: 'Сортировка',

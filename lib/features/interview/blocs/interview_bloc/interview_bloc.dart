@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:interview_master/data/models/interview/interview.dart';
 import 'package:interview_master/data/models/interview/interview_data.dart';
 import 'package:interview_master/data/models/interview/interview_info.dart';
 import 'package:talker_flutter/talker_flutter.dart';

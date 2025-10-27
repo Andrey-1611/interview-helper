@@ -41,4 +41,8 @@ class ToastHelper {
   static void attemptsError() {
     _showToast(msg: 'Попытки закончились, возвращайтесь завтра');
   }
+
+  static void interviewFormError() {
+    _showToast(msg: 'Выберите направление и сложность');
+  }
 }

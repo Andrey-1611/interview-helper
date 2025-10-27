@@ -22,6 +22,7 @@ import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
 import '../../core/utils/network_info.dart' as _i668;
 import '../../core/utils/stopwatch_info.dart' as _i742;
+import '../../core/utils/url_launch.dart' as _i1057;
 import '../../data/data_sources/chat_gpt_data_source.dart' as _i241;
 import '../../data/data_sources/firebase_auth_data_source.dart' as _i891;
 import '../../data/data_sources/firestore_data_source.dart' as _i1001;
@@ -53,6 +54,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i744.HiveInterface>(() => modules.hive);
     gh.lazySingleton<_i895.Connectivity>(() => modules.connectivity);
     gh.lazySingleton<Stopwatch>(() => modules.stopWatch);
+    gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
     gh.lazySingleton<_i504.AIRepository>(
         () => _i241.ChatGPTDataSource(gh<_i361.Dio>()));
     gh.lazySingleton<_i29.LocalRepository>(
