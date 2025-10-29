@@ -3,15 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/repositories/ai/models/interview_info.dart';
-import '../../../data/repositories/ai/models/user_input.dart';
+import '../../../core/utils/network_info.dart';
+import '../../../core/utils/stopwatch_info.dart';
+import '../../../data/repositories/ai/ai.dart';
 import '../../../app/widgets/custom_button.dart';
+import '../../../data/repositories/local/local_repository.dart';
+import '../../../data/repositories/remote/remote_repository.dart';
+import '../blocs/interview_bloc/interview_bloc.dart';
 
 class InterviewPage extends StatefulWidget {
   final InterviewInfo interviewInfo;
@@ -23,10 +29,6 @@ class InterviewPage extends StatefulWidget {
 }
 
 class _InterviewPageState extends State<InterviewPage> {
-  late final List<String> _questions = InterviewInfo.selectQuestions(
-    widget.interviewInfo,
-  );
-
   final List<String> _answers = List.filled(10, '');
   final TextEditingController _answerController = TextEditingController();
   final PageController _pageController = PageController();
@@ -40,16 +42,46 @@ class _InterviewPageState extends State<InterviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          SpeechCubit(GetIt.I<SpeechToText>(), GetIt.I<FlutterTts>())
-            ..speak(_questions[0]),
-      child: _InterviewPageView(
-        answerController: _answerController,
-        pageController: _pageController,
-        answers: _answers,
-        interviewInfo: widget.interviewInfo,
-        questions: _questions,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => InterviewBloc(
+            GetIt.I<AIRepository>(),
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<NetworkInfo>(),
+            GetIt.I<StopwatchInfo>(),
+          )..add(GetQuestions(interviewInfo: widget.interviewInfo)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              SpeechCubit(GetIt.I<SpeechToText>(), GetIt.I<FlutterTts>()),
+        ),
+      ],
+      child: BlocConsumer<InterviewBloc, InterviewState>(
+        listener: (context, state) {
+          if (state is InterviewQuestionsSuccess) {
+            context.read<SpeechCubit>().speak(state.questions.first);
+          } else if (state is InterviewNetworkFailure) {
+            ToastHelper.networkError();
+            context.pop();
+          } else if (state is InterviewFailure) {
+            ToastHelper.unknownError();
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          if (state is InterviewQuestionsSuccess) {
+            return _InterviewPageView(
+              answerController: _answerController,
+              pageController: _pageController,
+              answers: _answers,
+              interviewInfo: widget.interviewInfo,
+              questions: state.questions,
+            );
+          }
+          return CustomLoadingIndicator();
+        },
       ),
     );
   }
@@ -256,7 +288,10 @@ class _GoOutDialog extends StatelessWidget {
       content: const Text('Текущий прогресс будет сброшен'),
       actions: [
         TextButton(
-          onPressed: () => context.pushReplacement(AppRouterNames.initial),
+          onPressed: () {
+            context.pop();
+            context.pop();
+          },
           child: Text('Да'),
         ),
         TextButton(onPressed: () => context.pop(), child: Text('Нет')),

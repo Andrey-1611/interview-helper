@@ -19,6 +19,15 @@ final class InterviewAttemptsFailure extends InterviewState {}
 
 final class InterviewStartSuccess extends InterviewState {}
 
+final class InterviewQuestionsSuccess extends InterviewState {
+  final List<String> questions;
+
+  const InterviewQuestionsSuccess({required this.questions});
+
+  @override
+  List<Object> get props => [questions];
+}
+
 final class InterviewFinishSuccess extends InterviewState {
   final InterviewData interview;
 

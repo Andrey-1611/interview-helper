@@ -29,6 +29,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
     this._stopwatchInfo,
   ) : super(InterviewInitial()) {
     on<StartInterview>(_startInterview);
+    on<GetQuestions>(_getQuestions);
     on<FinishInterview>(_finishInterview);
   }
 
@@ -42,8 +43,35 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
       if (!isConnected) return emit(InterviewNetworkFailure());
       final interviews = await _localRepository.getTotalInterviewsToady();
       if (interviews == 10) return emit(InterviewAttemptsFailure());
-      _stopwatchInfo.start();
       emit(InterviewStartSuccess());
+    } catch (e, st) {
+      emit(InterviewFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _getQuestions(
+    GetQuestions event,
+    Emitter<InterviewState> emit,
+  ) async {
+    emit(InterviewLoading());
+    try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) return emit(InterviewNetworkFailure());
+      _stopwatchInfo.start();
+      if (event.interviewInfo.id != null) {
+        final interviews = await _localRepository.getInterviews();
+        final interview = interviews.firstWhere(
+          (interview) => interview.id == event.interviewInfo.id,
+        );
+        final questions = interview.questions
+            .map((question) => question.question)
+            .toList();
+        return emit(InterviewQuestionsSuccess(questions: questions));
+      } else {
+        final questions = InterviewInfo.selectQuestions(event.interviewInfo);
+        return emit(InterviewQuestionsSuccess(questions: questions));
+      }
     } catch (e, st) {
       emit(InterviewFailure());
       GetIt.I<Talker>().handle(e, st);

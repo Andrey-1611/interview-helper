@@ -56,7 +56,10 @@ class _InitialPageView extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final form = context.watch<InterviewFormCubit>();
     return Scaffold(
-      appBar: AppBar(title: Text('Собеседование')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Собеседование'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(

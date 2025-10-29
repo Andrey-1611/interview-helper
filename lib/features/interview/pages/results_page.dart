@@ -41,7 +41,9 @@ class _ResultsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [_HomeButton()]),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+          actions: [_HomeButton()]),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: _InterviewInfo(),

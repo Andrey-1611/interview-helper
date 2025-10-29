@@ -22,11 +22,13 @@ class InterviewInfo extends Equatable {
   final String direction;
   final String difficulty;
   final List<UserInput> userInputs;
+  final String? id;
 
   const InterviewInfo({
     required this.userInputs,
     required this.direction,
     required this.difficulty,
+    this.id,
   });
 
   @override

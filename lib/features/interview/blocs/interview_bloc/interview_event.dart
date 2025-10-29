@@ -9,6 +9,15 @@ sealed class InterviewEvent extends Equatable {
 
 final class StartInterview extends InterviewEvent {}
 
+final class GetQuestions extends InterviewEvent {
+  final InterviewInfo interviewInfo;
+
+  const GetQuestions({required this.interviewInfo});
+
+  @override
+  List<Object?> get props => [interviewInfo];
+}
+
 final class FinishInterview extends InterviewEvent {
   final InterviewInfo interviewInfo;
 
