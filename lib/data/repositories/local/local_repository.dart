@@ -1,5 +1,5 @@
-import '../models/interview/interview_data.dart';
-import '../models/user/user_data.dart';
+import '../../models/interview_data.dart';
+import '../../models/user_data.dart';
 
 abstract interface class LocalRepository {
   Future<void> loadInterviews(List<InterviewData> interviews);

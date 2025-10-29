@@ -5,15 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/url_launch.dart';
-import 'package:interview_master/data/repositories/auth_repository.dart';
 import 'package:interview_master/features/users/blocs/settings_bloc/settings_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_info_card.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/toast_helper.dart';
-import '../../../data/repositories/local_repository.dart';
-import '../../../data/repositories/remote_repository.dart';
+import '../../../../data/repositories/auth/auth.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
 class ProfilePage extends StatelessWidget {

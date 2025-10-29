@@ -1,5 +1,5 @@
-import '../models/interview/interview_data.dart';
-import '../models/user/user_data.dart';
+import '../../models/interview_data.dart';
+import '../../models/user_data.dart';
 
 abstract interface class RemoteRepository {
   Future<void> saveUser(UserData user);

@@ -37,6 +37,8 @@ dependencies:
   flutter_signin_button: ^2.1.1
   smooth_page_indicator: ^1.2.1
   url_launcher: ^6.3.2
+  speech_to_text: ^7.3.0
+  flutter_tts: ^4.2.3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

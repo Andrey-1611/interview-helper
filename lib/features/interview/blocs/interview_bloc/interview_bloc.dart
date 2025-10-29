@@ -1,16 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/data/models/interview/interview.dart';
-import 'package:interview_master/data/models/interview/interview_data.dart';
-import 'package:interview_master/data/models/interview/interview_info.dart';
+import 'package:interview_master/data/models/interview_data.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../core/utils/network_info.dart';
 import '../../../../core/utils/stopwatch_info.dart';
-import '../../../../data/models/user/user_data.dart';
-import '../../../../data/repositories/ai_repository.dart';
-import '../../../../data/repositories/local_repository.dart';
-import '../../../../data/repositories/remote_repository.dart';
+import '../../../../data/models/user_data.dart';
+import '../../../../data/repositories/ai/ai.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
 
 part 'interview_event.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import '../../core/theme/app_pallete.dart';
-import '../../data/models/interview/question.dart';
+import '../../data/models/question.dart';
 import '../router/app_router_names.dart';
 import 'custom_score_indicator.dart';
 

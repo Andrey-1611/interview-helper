@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/app/global/models/user_data.dart';
-import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/remote.dart';
 import 'package:interview_master/features/users/use_cases/show_users_use_case.dart';
 import 'package:mocktail/mocktail.dart';
 

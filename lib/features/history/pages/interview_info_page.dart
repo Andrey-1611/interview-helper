@@ -4,9 +4,9 @@ import 'package:get_it/get_it.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import '../../../../app/widgets/custom_interview_info.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../data/models/interview/interview_data.dart';
-import '../../../data/repositories/local_repository.dart';
-import '../../../data/repositories/remote_repository.dart';
+import '../../../data/models/interview_data.dart';
+import '../../../data/repositories/local/local.dart';
+import '../../../data/repositories/remote/remote.dart';
 
 class InterviewInfoPage extends StatelessWidget {
   final InterviewData interview;

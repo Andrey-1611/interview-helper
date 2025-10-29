@@ -9,7 +9,7 @@ import '../../../../app/router/app_router_names.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../core/theme/app_pallete.dart';
-import '../../../data/models/interview/interview_data.dart';
+import '../../../data/models/interview_data.dart';
 import '../../users/widgets/custom_network_failure.dart';
 import '../widgets/custom_empty_filter_history.dart';
 import '../widgets/custom_empty_history.dart';

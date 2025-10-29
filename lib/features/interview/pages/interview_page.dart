@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/interview/interview_info.dart';
-import '../../../data/models/interview/user_input.dart';
+import '../../../data/repositories/ai/models/interview_info.dart';
+import '../../../data/repositories/ai/models/user_input.dart';
 import '../../../app/widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
@@ -35,12 +40,45 @@ class _InterviewPageState extends State<InterviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          SpeechCubit(GetIt.I<SpeechToText>(), GetIt.I<FlutterTts>())
+            ..speak(_questions[0]),
+      child: _InterviewPageView(
+        answerController: _answerController,
+        pageController: _pageController,
+        answers: _answers,
+        interviewInfo: widget.interviewInfo,
+        questions: _questions,
+      ),
+    );
+  }
+}
+
+class _InterviewPageView extends StatelessWidget {
+  final TextEditingController answerController;
+  final PageController pageController;
+  final List<String> answers;
+  final InterviewInfo interviewInfo;
+  final List<String> questions;
+
+  const _InterviewPageView({
+    required this.answerController,
+    required this.pageController,
+    required this.answers,
+    required this.interviewInfo,
+    required this.questions,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
+    _updateController(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.interviewInfo.direction}, ${widget.interviewInfo.difficulty}',
+          '${interviewInfo.direction}, ${interviewInfo.difficulty}',
           style: theme.textTheme.displayMedium,
         ),
         leading: IconButton(
@@ -56,9 +94,9 @@ class _InterviewPageState extends State<InterviewPage> {
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: SmoothPageIndicator(
-              controller: _pageController,
+              controller: pageController,
               count: 10,
-              onDotClicked: _jumpToPage,
+              onDotClicked: (page) => _jumpToPage(context, page),
               effect: WormEffect(
                 radius: size.height * 0.025,
                 dotHeight: size.height * 0.025,
@@ -69,15 +107,15 @@ class _InterviewPageState extends State<InterviewPage> {
           Expanded(
             child: PageView.builder(
               itemCount: 10,
-              controller: _pageController,
+              controller: pageController,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _InterviewQuestionPage(
-                  answerController: _answerController,
-                  pageController: _pageController,
-                  answers: _answers,
-                  interviewInfo: widget.interviewInfo,
-                  questions: _questions,
+                  answerController: answerController,
+                  pageController: pageController,
+                  answers: answers,
+                  interviewInfo: interviewInfo,
+                  questions: questions,
                   currentPage: index,
                 );
               },
@@ -88,11 +126,19 @@ class _InterviewPageState extends State<InterviewPage> {
     );
   }
 
-  void _jumpToPage(int page) {
-    _answers[_pageController.page?.round() ?? 0] = _answerController.text
-        .trim();
-    _answerController.text = _answers[page];
-    _pageController.jumpToPage(page);
+  void _updateController(BuildContext context) {
+    final speech = context.watch<SpeechCubit>();
+    if (speech.state.text.isNotEmpty) {
+      answerController.text += ' ${speech.state.text}';
+      speech.clearText();
+    }
+  }
+
+  void _jumpToPage(BuildContext context, int page) {
+    context.read<SpeechCubit>().speak(questions[page]);
+    answers[pageController.page?.round() ?? 0] = answerController.text.trim();
+    answerController.text = answers[page];
+    pageController.jumpToPage(page);
   }
 }
 
@@ -118,7 +164,7 @@ class _InterviewQuestionPage extends StatelessWidget {
     final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
       child: Column(
         children: [
           Text('Вопрос ${currentPage + 1}'),
@@ -140,19 +186,27 @@ class _InterviewQuestionPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              currentPage == 0
-                  ? const SizedBox.shrink()
-                  : CustomButton(
-                      text: 'Назад',
-                      selectedColor: AppPalette.primary,
-                      percentsWidth: 0.34,
-                      onPressed: () => _pop(),
-                    ),
-              CustomButton(
-                text: currentPage == 9 ? 'Завершить' : 'Дальше',
-                selectedColor: AppPalette.primary,
-                percentsWidth: 0.34,
-                onPressed: () => _push(context),
+              Expanded(
+                child: currentPage == 0
+                    ? const SizedBox.shrink()
+                    : CustomButton(
+                        text: 'Назад',
+                        selectedColor: AppPalette.primary,
+                        percentsWidth: 0.34,
+                        onPressed: () => _pop(context),
+                      ),
+              ),
+              FloatingActionButton(
+                onPressed: () => context.read<SpeechCubit>().toggleListening(),
+                child: Icon(Icons.mic, color: AppPalette.textPrimary),
+              ),
+              Expanded(
+                child: CustomButton(
+                  text: currentPage == 9 ? 'Завершить' : 'Дальше',
+                  selectedColor: AppPalette.primary,
+                  percentsWidth: 0.34,
+                  onPressed: () => _push(context),
+                ),
               ),
             ],
           ),
@@ -161,10 +215,11 @@ class _InterviewQuestionPage extends StatelessWidget {
     );
   }
 
-  void _pop() {
+  void _pop(BuildContext context) {
     answers[currentPage] = answerController.text.trim();
     answerController.text = answers[currentPage - 1];
     pageController.jumpToPage(currentPage - 1);
+    context.read<SpeechCubit>().speak(questions[currentPage - 1]);
   }
 
   void _push(BuildContext context) {
@@ -172,6 +227,7 @@ class _InterviewQuestionPage extends StatelessWidget {
       answers[currentPage] = answerController.text.trim();
       answerController.text = answers[currentPage + 1];
       pageController.jumpToPage(currentPage + 1);
+      context.read<SpeechCubit>().speak(questions[currentPage + 1]);
     } else {
       answers[currentPage] = answerController.text.trim();
       context.pushReplacement(

@@ -14,11 +14,10 @@ import '../../../core/constants/data.dart';
 import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../data/models/interview/interview_info.dart';
-import '../../../data/models/user/user_data.dart';
-import '../../../data/repositories/auth_repository.dart';
-import '../../../data/repositories/local_repository.dart';
-import '../../../data/repositories/remote_repository.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
+import '../../../data/models/user_data.dart';
+import '../../../data/repositories/ai/ai.dart';
 import '../../history/pages/interviews_history_page.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 

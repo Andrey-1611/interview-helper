@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:interview_master/data/models/interview/interview_data.dart';
+import 'package:interview_master/data/models/interview_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'interview.g.dart';

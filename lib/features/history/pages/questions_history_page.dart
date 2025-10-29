@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
-import 'package:interview_master/data/models/interview/question.dart';
+import 'package:interview_master/data/models/question.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_question_card.dart';

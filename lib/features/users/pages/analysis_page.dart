@@ -5,17 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
-import 'package:interview_master/data/repositories/auth_repository.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../core/constants/data.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../data/models/interview/interview_info.dart';
-import '../../../data/models/user/user_data.dart';
-import '../../../data/repositories/local_repository.dart';
-import '../../../data/repositories/remote_repository.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
+import '../../../data/models/user_data.dart';
+import '../../../data/repositories/ai/ai.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
 class AnalysisPage extends StatefulWidget {

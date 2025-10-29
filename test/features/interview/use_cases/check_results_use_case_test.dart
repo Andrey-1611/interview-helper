@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/data/models/user/my_user.dart';
-import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
+import 'package:interview_master/features/auth/domain/repositories/auth.dart';
 import 'package:interview_master/features/interview/data/models/interview_data.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/data/models/user_input.dart';
-import 'package:interview_master/features/interview/domain/repositories/ai_repository.dart';
-import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
-import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/ai.dart';
+import 'package:interview_master/features/interview/domain/repositories/local.dart';
+import 'package:interview_master/features/interview/domain/repositories/remote.dart';
 import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';
 import 'package:mocktail/mocktail.dart';
 

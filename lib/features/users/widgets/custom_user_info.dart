@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
-import 'package:interview_master/data/models/user/user_data.dart';
+import 'package:interview_master/data/models/user_data.dart';
 
 class CustomUserInfo extends StatelessWidget {
   final UserData data;

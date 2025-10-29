@@ -1,12 +1,12 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/url_launch.dart';
-import 'package:interview_master/data/repositories/auth_repository.dart';
-import 'package:interview_master/data/repositories/local_repository.dart';
-import 'package:interview_master/data/repositories/remote_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../../../data/repositories/auth/auth.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
 
 part 'settings_event.dart';
 

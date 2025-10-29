@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/data/models/interview/interview_data.dart';
-import 'package:interview_master/data/models/user/user_data.dart';
-import 'package:interview_master/data/repositories/remote_repository.dart';
+import 'package:interview_master/data/models/interview_data.dart';
+import 'package:interview_master/data/models/user_data.dart';
+import 'package:interview_master/data/repositories/remote_repository/remote_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../tests_data.dart';
 

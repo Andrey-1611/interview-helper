@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/widgets/custom_question_card.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
-import '../../data/models/interview/interview_data.dart';
+import '../../data/models/interview_data.dart';
 
 class CustomInterviewInfo extends StatelessWidget {
   final InterviewData interview;

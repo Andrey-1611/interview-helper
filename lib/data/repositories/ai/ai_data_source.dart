@@ -3,19 +3,19 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
-import 'package:interview_master/data/models/interview/interview_info.dart';
-import '../../core/constants/main_prompt.dart';
-import '../models/interview/question.dart';
-import '../repositories/ai_repository.dart';
+import 'package:interview_master/data/repositories/ai/models/interview_info.dart';
+import '../../../core/constants/main_prompt.dart';
+import '../../models/question.dart';
+import 'ai_repository.dart';
 
 @LazySingleton(as: AIRepository)
-class ChatGPTDataSource implements AIRepository {
+class AIDataSource implements AIRepository {
   final Dio _dio;
 
   static const _baseUrl = 'https://api.gen-api.ru/api/v1';
   static final _apiKey = dotenv.env['API_KEY'];
 
-  ChatGPTDataSource(this._dio) {
+  AIDataSource(this._dio) {
     _dio.options.baseUrl = _baseUrl;
     _dio.options.headers = {
       'Authorization': 'Bearer $_apiKey',

@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'app_dependencies.config.dart';
 
@@ -39,6 +41,12 @@ abstract class Modules {
 
   @lazySingleton
   Stopwatch get stopWatch => Stopwatch();
+
+  @lazySingleton
+  SpeechToText get speechToText => SpeechToText();
+
+  @lazySingleton
+  FlutterTts get flutterTts => FlutterTts();
 
   @singleton
   Talker get talker => TalkerFlutter.init();

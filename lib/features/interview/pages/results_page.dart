@@ -7,10 +7,9 @@ import '../../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/stopwatch_info.dart';
 import '../../../core/utils/toast_helper.dart';
-import '../../../data/models/interview/interview_info.dart';
-import '../../../data/repositories/ai_repository.dart';
-import '../../../data/repositories/local_repository.dart';
-import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/ai/ai.dart';
+import '../../../data/repositories/local/local.dart';
+import '../../../data/repositories/remote/remote.dart';
 import '../../../app/widgets/custom_interview_info.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 

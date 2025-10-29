@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/data.dart';
-import 'package:interview_master/data/models/interview/question.dart';
+import 'package:interview_master/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
-import 'interview_info.dart';
+import '../repositories/ai/ai.dart';
 
 part 'interview_data.g.dart';
 
