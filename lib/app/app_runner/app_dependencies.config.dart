@@ -12,12 +12,14 @@ import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:connectivity_plus/connectivity_plus.dart' as _i895;
 import 'package:dio/dio.dart' as _i361;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
+import 'package:flutter_tts/flutter_tts.dart' as _i50;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
+import 'package:speech_to_text/speech_to_text.dart' as _i941;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
 import '../../core/utils/network_info.dart' as _i668;
@@ -54,6 +56,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i744.HiveInterface>(() => modules.hive);
     gh.lazySingleton<_i895.Connectivity>(() => modules.connectivity);
     gh.lazySingleton<Stopwatch>(() => modules.stopWatch);
+    gh.lazySingleton<_i941.SpeechToText>(() => modules.speechToText);
+    gh.lazySingleton<_i50.FlutterTts>(() => modules.flutterTts);
     gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
     gh.lazySingleton<_i504.AIRepository>(
         () => _i241.ChatGPTDataSource(gh<_i361.Dio>()));

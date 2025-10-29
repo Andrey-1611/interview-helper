@@ -7,15 +7,10 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'app/app.dart';
 
 void main() {
-  runZonedGuarded(
-    () async {
-      await AppInitializer.init();
-      setupDependencies();
-      await AppInitializer.initTalker();
-      runApp(const App());
-    },
-    (e, st) {
-      GetIt.I<Talker>().handle(e, st);
-    },
-  );
+  runZonedGuarded(() async {
+    await AppInitializer.init();
+    setupDependencies();
+    await AppInitializer.initTalker();
+    runApp(const App());
+  }, (e, st) => GetIt.I<Talker>().handle(e, st));
 }
