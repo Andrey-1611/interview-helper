@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/features/users/widgets/custom_user_info.dart';
-import '../../../data/models/user/user_data.dart';
+import '../../../data/models/user_data.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
 class UserInfoPage extends StatelessWidget {

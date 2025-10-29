@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:interview_master/data/models/interview/interview.dart';
+import 'package:interview_master/data/models/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../../../core/constants/data.dart';
-import '../interview/interview_data.dart';
+import '../../core/constants/data.dart';
+import 'interview_data.dart';
 
 part 'user_data.g.dart';
 

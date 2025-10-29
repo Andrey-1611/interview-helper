@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/features/interview/data/models/interview_data.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
-import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
-import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/local.dart';
+import 'package:interview_master/features/interview/domain/repositories/remote.dart';
 import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
 import 'package:mocktail/mocktail.dart';
 

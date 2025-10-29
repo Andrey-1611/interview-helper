@@ -7,16 +7,16 @@ import 'package:interview_master/core/constants/questions/javascript_questions.d
 import 'package:interview_master/core/constants/questions/kotlin_questions.dart';
 import 'package:interview_master/core/constants/questions/python_questions.dart';
 import 'package:interview_master/core/constants/questions/swift_questions.dart';
-import 'package:interview_master/data/models/interview/user_input.dart';
-import '../../../core/constants/main_prompt.dart';
-import '../../../core/constants/questions/devops_questions.dart';
-import '../../../core/constants/questions/git_questions.dart';
-import '../../../core/constants/questions/go_questions.dart';
-import '../../../core/constants/questions/java_questions.dart';
-import '../../../core/constants/questions/php_questions.dart';
-import '../../../core/constants/questions/rust_questions.dart';
-import '../../../core/constants/questions/sql_questions.dart';
-import '../../../core/constants/questions/typescript_questions.dart';
+import 'package:interview_master/data/repositories/ai/models/user_input.dart';
+import '../../../../core/constants/main_prompt.dart';
+import '../../../../core/constants/questions/devops_questions.dart';
+import '../../../../core/constants/questions/git_questions.dart';
+import '../../../../core/constants/questions/go_questions.dart';
+import '../../../../core/constants/questions/java_questions.dart';
+import '../../../../core/constants/questions/php_questions.dart';
+import '../../../../core/constants/questions/rust_questions.dart';
+import '../../../../core/constants/questions/sql_questions.dart';
+import '../../../../core/constants/questions/typescript_questions.dart';
 
 class InterviewInfo extends Equatable {
   final String direction;
@@ -118,13 +118,3 @@ class InterviewInfo extends Equatable {
     return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
   }
 }
-
-/*
-static const java = 'Java';
-static const go = 'Go';
-static const git = 'Git';
-static const sql = 'Sql';
-static const typescript = 'Typescript';
-static const rust = 'Rust';
-static const devops = 'Devops';
-static const php = 'Php';*/

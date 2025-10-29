@@ -1,4 +1,4 @@
-import 'package:interview_master/data/models/user/user_data.dart';
+import 'package:interview_master/data/models/user_data.dart';
 
 abstract interface class AuthRepository {
   Future<String> signIn(String email, String password);

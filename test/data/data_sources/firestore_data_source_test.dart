@@ -1,7 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/data/data_sources/firestore_data_source.dart';
-import 'package:interview_master/data/models/interview/interview_data.dart';
+import 'package:interview_master/data/repositories/remote_repository/remote_data_source.dart';
+import 'package:interview_master/data/models/interview_data.dart';
 import '../../tests_data.dart';
 
 void main() {

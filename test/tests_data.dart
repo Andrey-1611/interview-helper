@@ -1,8 +1,8 @@
-import 'package:interview_master/data/models/interview/interview_data.dart';
-import 'package:interview_master/data/models/interview/question.dart';
-import 'package:interview_master/data/models/interview/user_input.dart';
+import 'package:interview_master/data/models/interview_data.dart';
+import 'package:interview_master/data/models/question.dart';
+import 'package:interview_master/data/repositories/ai_repository/models/user_input.dart';
 import 'package:interview_master/data/models/user/my_user.dart';
-import 'package:interview_master/data/models/user/user_data.dart';
+import 'package:interview_master/data/models/user_data.dart';
 
 class TestsData {
   static const id = 'testId';

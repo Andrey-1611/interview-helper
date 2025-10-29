@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/features/auth/data/models/email_verification_result.dart';
 import 'package:interview_master/data/models/user/my_user.dart';
-import 'package:interview_master/features/auth/domain/repositories/auth_repository.dart';
+import 'package:interview_master/features/auth/domain/repositories/auth.dart';
 import 'package:interview_master/features/home/use_cases/get_current_user_use_case.dart';
 import 'package:interview_master/features/interview/data/models/interview_data.dart';
-import 'package:interview_master/features/interview/domain/repositories/local_repository.dart';
-import 'package:interview_master/features/interview/domain/repositories/remote_repository.dart';
+import 'package:interview_master/features/interview/domain/repositories/local.dart';
+import 'package:interview_master/features/interview/domain/repositories/remote.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}

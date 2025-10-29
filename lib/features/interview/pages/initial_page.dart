@@ -8,16 +8,15 @@ import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import 'package:interview_master/data/repositories/ai_repository.dart';
-import 'package:interview_master/data/repositories/local_repository.dart';
-import 'package:interview_master/data/repositories/remote_repository.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
 import 'package:interview_master/features/users/blocs/users_bloc/users_bloc.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/interview/interview_info.dart';
+import '../../../data/repositories/ai/ai.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
+import '../../../data/repositories/local/local.dart';
+import '../../../data/repositories/remote/remote.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});

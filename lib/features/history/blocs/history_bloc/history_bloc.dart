@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/data/models/interview/interview_data.dart';
+import 'package:interview_master/data/models/interview_data.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../core/utils/network_info.dart';
-import '../../../../data/repositories/local_repository.dart';
-import '../../../../data/repositories/remote_repository.dart';
+import '../../../../data/repositories/local/local.dart';
+import '../../../../data/repositories/remote/remote.dart';
 
 part 'history_event.dart';
 

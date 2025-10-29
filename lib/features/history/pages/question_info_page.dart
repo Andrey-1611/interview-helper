@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app/widgets/custom_info_card.dart';
-import '../../../data/models/interview/question.dart';
+import '../../../data/models/question.dart';
 
 class QuestionInfoPage extends StatelessWidget {
   final Question question;

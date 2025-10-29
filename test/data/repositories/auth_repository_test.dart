@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/data/models/user/my_user.dart';
-import 'package:interview_master/data/repositories/auth_repository.dart';
+import 'package:interview_master/data/repositories/auth_repository/auth_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../tests_data.dart';
 

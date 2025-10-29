@@ -1,16 +1,16 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
-import 'package:interview_master/data/models/interview/question.dart';
-import '../models/interview/interview_data.dart';
-import '../models/user/user_data.dart';
-import '../repositories/local_repository.dart';
+import 'package:interview_master/data/models/question.dart';
+import '../../models/interview_data.dart';
+import '../../models/user_data.dart';
+import 'local_repository.dart';
 
 @LazySingleton(as: LocalRepository)
-class HiveDataSource implements LocalRepository {
+class LocalDataSource implements LocalRepository {
   final HiveInterface _hive;
 
-  HiveDataSource(this._hive);
+  LocalDataSource(this._hive);
 
   Box<InterviewData> get _interviewsBox =>
       _hive.box<InterviewData>(HiveData.interviewsBox);

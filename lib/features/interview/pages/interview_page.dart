@@ -9,8 +9,8 @@ import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cu
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/models/interview/interview_info.dart';
-import '../../../data/models/interview/user_input.dart';
+import '../../../data/repositories/ai/models/interview_info.dart';
+import '../../../data/repositories/ai/models/user_input.dart';
 import '../../../app/widgets/custom_button.dart';
 
 class InterviewPage extends StatefulWidget {
