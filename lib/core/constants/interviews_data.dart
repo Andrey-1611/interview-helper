@@ -1,4 +1,4 @@
-class InitialData {
+class InterviewsData {
   static const flutter = 'Flutter';
   static const kotlin = 'Kotlin';
   static const swift = 'Swift';

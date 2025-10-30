@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
 import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
+import 'package:interview_master/data/repositories/ai/ai.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../app/router/app_router_names.dart';
@@ -100,16 +101,34 @@ class _InterviewCard extends StatelessWidget {
           trailing: isCurrentUser
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: IconButton(
-                    onPressed: () => context.read<HistoryBloc>().add(
-                      ChangeIsFavouriteInterview(interviewId: interview.id),
-                    ),
-                    icon: Icon(
-                      Icons.favorite,
-                      color: interview.isFavourite
-                          ? AppPalette.error
-                          : AppPalette.textSecondary,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          StatefulNavigationShell.of(context).goBranch(0);
+                          context.push(
+                            AppRouterNames.interview,
+                            extra: InterviewInfo(
+                              userInputs: [],
+                              direction: interview.direction,
+                              difficulty: interview.difficulty,
+                              id: interview.id,
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.refresh),
+                      ),
+                      IconButton(
+                        onPressed: () => context.read<HistoryBloc>().add(
+                          ChangeIsFavouriteInterview(interviewId: interview.id),
+                        ),
+                        icon: Icon(Icons.favorite),
+                        color: interview.isFavourite
+                            ? AppPalette.error
+                            : AppPalette.textSecondary,
+                      ),
+                    ],
                   ),
                 )
               : SizedBox(),

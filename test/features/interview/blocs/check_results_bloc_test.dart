@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:interview_master/features/interview/data/models/interview_data.dart';
+import 'package:interview_master/features/interview/data/models/interviews_data.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/use_cases/check_results_use_case.dart';

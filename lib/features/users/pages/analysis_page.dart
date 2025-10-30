@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
-import '../../../core/constants/data.dart';
+import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../../data/repositories/local/local.dart';
@@ -99,6 +100,7 @@ class _AnalysisPageView extends StatelessWidget {
               child: Column(
                 children: [
                   _TitleInfo(
+                    user: selectedUser,
                     currentUserName: 'Вы',
                     selectedUserName: filteredSelectedUser.name,
                   ),
@@ -167,12 +169,14 @@ class _AnalysisPageView extends StatelessWidget {
 }
 
 class _TitleInfo extends StatelessWidget {
+  final UserData user;
   final String currentUserName;
   final String selectedUserName;
 
   const _TitleInfo({
     required this.currentUserName,
     required this.selectedUserName,
+    required this.user,
   });
 
   @override
@@ -201,15 +205,18 @@ class _TitleInfo extends StatelessWidget {
                 Text('VS'),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.person, size: size.height * 0.06),
-                Text(
-                  selectedUserName,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
+            GestureDetector(
+              onTap: () => context.push(AppRouterNames.user, extra: user),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(Icons.person, size: size.height * 0.06),
+                  Text(
+                    selectedUserName,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -360,13 +367,13 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InitialData.directions,
+            data: InterviewsData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
             value: difficulty,
-            data: InitialData.difficulties,
+            data: InterviewsData.difficulties,
             change: (value) => difficulty = value,
             hintText: 'Все сложности',
           ),

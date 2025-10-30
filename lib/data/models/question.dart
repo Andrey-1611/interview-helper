@@ -3,7 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
-import '../../core/constants/data.dart';
+import '../../core/constants/interviews_data.dart';
 
 part 'question.g.dart';
 
@@ -94,9 +94,9 @@ class Question extends Equatable {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
     }
 
-    if (sort == InitialData.firstNew) {
+    if (sort == InterviewsData.firstNew) {
       interviews.sort((a, b) => b.date.compareTo(a.date));
-    } else if (sort == InitialData.firstOld) {
+    } else if (sort == InterviewsData.firstOld) {
       interviews.sort((a, b) => a.date.compareTo(b.date));
     }
 
@@ -110,9 +110,9 @@ class Question extends Equatable {
           .toList();
     }
 
-    if (sort == InitialData.firstBest) {
+    if (sort == InterviewsData.firstBest) {
       questions.sort((a, b) => b.score.compareTo(a.score));
-    } else if (sort == InitialData.firstWorst) {
+    } else if (sort == InterviewsData.firstWorst) {
       questions.sort((a, b) => a.score.compareTo(b.score));
     }
 

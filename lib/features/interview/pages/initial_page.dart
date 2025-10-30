@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
-import 'package:interview_master/core/constants/data.dart';
+import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
@@ -56,7 +56,10 @@ class _InitialPageView extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final form = context.watch<InterviewFormCubit>();
     return Scaffold(
-      appBar: AppBar(title: Text('Собеседование')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Собеседование'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -66,14 +69,14 @@ class _InitialPageView extends StatelessWidget {
               SizedBox(height: size.height * 0.2),
               CustomDropdownMenu(
                 value: form.state.direction,
-                data: InitialData.directions,
+                data: InterviewsData.directions,
                 change: form.changeDirection,
                 hintText: 'Выберите направление',
               ),
               SizedBox(height: size.height * 0.03),
               CustomDropdownMenu(
                 value: form.state.difficulty,
-                data: InitialData.difficulties,
+                data: InterviewsData.difficulties,
                 change: form.changeDifficulty,
                 hintText: 'Выберите сложность',
               ),

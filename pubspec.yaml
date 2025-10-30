@@ -2,7 +2,7 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.5.0+8
+version: 1.7.0+10
 
 environment:
   sdk: ^3.8.1
@@ -39,6 +39,7 @@ dependencies:
   url_launcher: ^6.3.2
   speech_to_text: ^7.3.0
   flutter_tts: ^4.2.3
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

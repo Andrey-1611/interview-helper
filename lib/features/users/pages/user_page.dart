@@ -10,7 +10,7 @@ import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
-import '../../../core/constants/data.dart';
+import '../../../core/constants/interviews_data.dart';
 import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
@@ -199,19 +199,19 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InitialData.directions,
+            data: InterviewsData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
             value: difficulty,
-            data: InitialData.difficulties,
+            data: InterviewsData.difficulties,
             change: (value) => difficulty = value,
             hintText: 'Все сложности',
           ),
           CustomDropdownMenu(
             value: sort,
-            data: InitialData.interviewsSorts,
+            data: InterviewsData.interviewsSorts,
             change: (value) => sort = value,
             hintText: 'Сортировка',
           ),

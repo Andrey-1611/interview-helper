@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'app_dependencies.config.dart';
@@ -47,6 +48,9 @@ abstract class Modules {
 
   @lazySingleton
   FlutterTts get flutterTts => FlutterTts();
+
+  @lazySingleton
+  SharePlus get sharePlus => SharePlus.instance;
 
   @singleton
   Talker get talker => TalkerFlutter.init();
