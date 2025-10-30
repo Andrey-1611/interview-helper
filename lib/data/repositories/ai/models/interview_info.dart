@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:equatable/equatable.dart';
-import 'package:interview_master/core/constants/data.dart';
+import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/constants/questions/c++_questions.dart';
 import 'package:interview_master/core/constants/questions/flutter_questions.dart';
 import 'package:interview_master/core/constants/questions/javascript_questions.dart';
@@ -37,67 +37,67 @@ class InterviewInfo extends Equatable {
   static List<String> selectQuestions(InterviewInfo info) {
     final random = Random();
     final questions = switch ([info.direction, info.difficulty]) {
-      [InitialData.flutter, InitialData.junior] => FlutterQuestions.junior,
-      [InitialData.flutter, InitialData.middle] => FlutterQuestions.middle,
-      [InitialData.flutter, InitialData.senior] => FlutterQuestions.senior,
+      [InterviewsData.flutter, InterviewsData.junior] => FlutterQuestions.junior,
+      [InterviewsData.flutter, InterviewsData.middle] => FlutterQuestions.middle,
+      [InterviewsData.flutter, InterviewsData.senior] => FlutterQuestions.senior,
 
-      [InitialData.kotlin, InitialData.junior] => KotlinQuestions.junior,
-      [InitialData.kotlin, InitialData.middle] => KotlinQuestions.middle,
-      [InitialData.kotlin, InitialData.senior] => KotlinQuestions.senior,
+      [InterviewsData.kotlin, InterviewsData.junior] => KotlinQuestions.junior,
+      [InterviewsData.kotlin, InterviewsData.middle] => KotlinQuestions.middle,
+      [InterviewsData.kotlin, InterviewsData.senior] => KotlinQuestions.senior,
 
-      [InitialData.swift, InitialData.junior] => SwiftQuestions.junior,
-      [InitialData.swift, InitialData.middle] => SwiftQuestions.middle,
-      [InitialData.swift, InitialData.senior] => SwiftQuestions.senior,
+      [InterviewsData.swift, InterviewsData.junior] => SwiftQuestions.junior,
+      [InterviewsData.swift, InterviewsData.middle] => SwiftQuestions.middle,
+      [InterviewsData.swift, InterviewsData.senior] => SwiftQuestions.senior,
 
-      [InitialData.javascript, InitialData.junior] =>
+      [InterviewsData.javascript, InterviewsData.junior] =>
         JavascriptQuestions.junior,
-      [InitialData.javascript, InitialData.middle] =>
+      [InterviewsData.javascript, InterviewsData.middle] =>
         JavascriptQuestions.middle,
-      [InitialData.javascript, InitialData.senior] =>
+      [InterviewsData.javascript, InterviewsData.senior] =>
         JavascriptQuestions.senior,
 
-      [InitialData.python, InitialData.junior] => PythonQuestions.junior,
-      [InitialData.python, InitialData.middle] => PythonQuestions.middle,
-      [InitialData.python, InitialData.senior] => PythonQuestions.senior,
+      [InterviewsData.python, InterviewsData.junior] => PythonQuestions.junior,
+      [InterviewsData.python, InterviewsData.middle] => PythonQuestions.middle,
+      [InterviewsData.python, InterviewsData.senior] => PythonQuestions.senior,
 
-      [InitialData.cPlusPlus, InitialData.junior] => CPlusPlusQuestions.junior,
-      [InitialData.cPlusPlus, InitialData.middle] => CPlusPlusQuestions.middle,
-      [InitialData.cPlusPlus, InitialData.senior] => CPlusPlusQuestions.senior,
+      [InterviewsData.cPlusPlus, InterviewsData.junior] => CPlusPlusQuestions.junior,
+      [InterviewsData.cPlusPlus, InterviewsData.middle] => CPlusPlusQuestions.middle,
+      [InterviewsData.cPlusPlus, InterviewsData.senior] => CPlusPlusQuestions.senior,
 
-      [InitialData.java, InitialData.junior] => JavaQuestions.junior,
-      [InitialData.java, InitialData.middle] => JavaQuestions.middle,
-      [InitialData.java, InitialData.senior] => JavaQuestions.senior,
+      [InterviewsData.java, InterviewsData.junior] => JavaQuestions.junior,
+      [InterviewsData.java, InterviewsData.middle] => JavaQuestions.middle,
+      [InterviewsData.java, InterviewsData.senior] => JavaQuestions.senior,
 
-      [InitialData.go, InitialData.junior] => GoQuestions.junior,
-      [InitialData.go, InitialData.middle] => GoQuestions.middle,
-      [InitialData.go, InitialData.senior] => GoQuestions.senior,
+      [InterviewsData.go, InterviewsData.junior] => GoQuestions.junior,
+      [InterviewsData.go, InterviewsData.middle] => GoQuestions.middle,
+      [InterviewsData.go, InterviewsData.senior] => GoQuestions.senior,
 
-      [InitialData.git, InitialData.junior] => GitQuestions.junior,
-      [InitialData.git, InitialData.middle] => GitQuestions.middle,
-      [InitialData.git, InitialData.senior] => GitQuestions.senior,
+      [InterviewsData.git, InterviewsData.junior] => GitQuestions.junior,
+      [InterviewsData.git, InterviewsData.middle] => GitQuestions.middle,
+      [InterviewsData.git, InterviewsData.senior] => GitQuestions.senior,
 
-      [InitialData.sql, InitialData.junior] => SQLQuestions.junior,
-      [InitialData.sql, InitialData.middle] => SQLQuestions.middle,
-      [InitialData.sql, InitialData.senior] => SQLQuestions.senior,
+      [InterviewsData.sql, InterviewsData.junior] => SQLQuestions.junior,
+      [InterviewsData.sql, InterviewsData.middle] => SQLQuestions.middle,
+      [InterviewsData.sql, InterviewsData.senior] => SQLQuestions.senior,
 
-      [InitialData.typescript, InitialData.junior] =>
+      [InterviewsData.typescript, InterviewsData.junior] =>
         TypescriptQuestions.junior,
-      [InitialData.typescript, InitialData.middle] =>
+      [InterviewsData.typescript, InterviewsData.middle] =>
         TypescriptQuestions.middle,
-      [InitialData.typescript, InitialData.senior] =>
+      [InterviewsData.typescript, InterviewsData.senior] =>
         TypescriptQuestions.senior,
 
-      [InitialData.rust, InitialData.junior] => RustQuestions.junior,
-      [InitialData.rust, InitialData.middle] => RustQuestions.middle,
-      [InitialData.rust, InitialData.senior] => RustQuestions.senior,
+      [InterviewsData.rust, InterviewsData.junior] => RustQuestions.junior,
+      [InterviewsData.rust, InterviewsData.middle] => RustQuestions.middle,
+      [InterviewsData.rust, InterviewsData.senior] => RustQuestions.senior,
 
-      [InitialData.devops, InitialData.junior] => DevopsQuestions.junior,
-      [InitialData.devops, InitialData.middle] => DevopsQuestions.middle,
-      [InitialData.devops, InitialData.senior] => DevopsQuestions.senior,
+      [InterviewsData.devops, InterviewsData.junior] => DevopsQuestions.junior,
+      [InterviewsData.devops, InterviewsData.middle] => DevopsQuestions.middle,
+      [InterviewsData.devops, InterviewsData.senior] => DevopsQuestions.senior,
 
-      [InitialData.php, InitialData.junior] => PhpQuestions.junior,
-      [InitialData.php, InitialData.middle] => PhpQuestions.middle,
-      [InitialData.php, InitialData.senior] => PhpQuestions.senior,
+      [InterviewsData.php, InterviewsData.junior] => PhpQuestions.junior,
+      [InterviewsData.php, InterviewsData.middle] => PhpQuestions.middle,
+      [InterviewsData.php, InterviewsData.senior] => PhpQuestions.senior,
 
       _ => [],
     };

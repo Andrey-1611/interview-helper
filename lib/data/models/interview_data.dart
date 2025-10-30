@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:interview_master/core/constants/data.dart';
+import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -122,15 +122,15 @@ class InterviewData extends Equatable {
       interviews = interviews.where((i) => i.isFavourite == true).toList();
     }
 
-    if (sort == InitialData.firstNew) {
+    if (sort == InterviewsData.firstNew) {
       interviews.sort((a, b) => b.date.compareTo(a.date));
-    } else if (sort == InitialData.firstOld) {
+    } else if (sort == InterviewsData.firstOld) {
       interviews.sort((a, b) => a.date.compareTo(b.date));
     }
 
-    if (sort == InitialData.firstBest) {
+    if (sort == InterviewsData.firstBest) {
       interviews.sort((a, b) => b.score.compareTo(a.score));
-    } else if (sort == InitialData.firstWorst) {
+    } else if (sort == InterviewsData.firstWorst) {
       interviews.sort((a, b) => a.score.compareTo(b.score));
     }
 

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:interview_master/data/models/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../../core/constants/data.dart';
+import '../../core/constants/interviews_data.dart';
 import 'interview_data.dart';
 
 part 'user_data.g.dart';
@@ -93,11 +93,11 @@ class UserData extends Equatable {
       );
     }).toList();
 
-    if (sort == InitialData.firstTotalScore) {
+    if (sort == InterviewsData.firstTotalScore) {
       users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
-    } else if (sort == InitialData.firstTotalInterviews) {
+    } else if (sort == InterviewsData.firstTotalInterviews) {
       users.sort((a, b) => b.totalInterviews.compareTo(a.totalInterviews));
-    } else if (sort == InitialData.firstAverageScore) {
+    } else if (sort == InterviewsData.firstAverageScore) {
       users.sort((a, b) => b.averageScore.compareTo(a.averageScore));
     }
 

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/data/models/user/my_user.dart';
 import 'package:interview_master/features/auth/domain/repositories/auth.dart';
-import 'package:interview_master/features/interview/data/models/interview_data.dart';
+import 'package:interview_master/features/interview/data/models/interviews_data.dart';
 import 'package:interview_master/features/interview/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/data/models/user_input.dart';

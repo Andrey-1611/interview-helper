@@ -19,10 +19,12 @@ import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
+import 'package:share_plus/share_plus.dart' as _i998;
 import 'package:speech_to_text/speech_to_text.dart' as _i941;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
 import '../../core/utils/network_info.dart' as _i668;
+import '../../core/utils/share_info.dart' as _i502;
 import '../../core/utils/stopwatch_info.dart' as _i742;
 import '../../core/utils/url_launch.dart' as _i1057;
 import '../../data/repositories/ai/ai_data_source.dart' as _i452;
@@ -58,6 +60,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<Stopwatch>(() => modules.stopWatch);
     gh.lazySingleton<_i941.SpeechToText>(() => modules.speechToText);
     gh.lazySingleton<_i50.FlutterTts>(() => modules.flutterTts);
+    gh.lazySingleton<_i998.SharePlus>(() => modules.sharePlus);
     gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
     gh.lazySingleton<_i728.LocalRepository>(
         () => _i513.LocalDataSource(gh<_i986.HiveInterface>()));
@@ -67,6 +70,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i742.StopwatchInfo(gh<Stopwatch>()));
     gh.lazySingleton<_i300.RemoteRepository>(
         () => _i176.RemoteDataSource(gh<_i974.FirebaseFirestore>()));
+    gh.lazySingleton<_i502.ShareInfo>(
+        () => _i502.ShareInfo(gh<_i998.SharePlus>()));
     gh.lazySingleton<_i179.AuthRepository>(() => _i623.AuthDataSource(
           gh<_i59.FirebaseAuth>(),
           gh<_i116.GoogleSignIn>(),

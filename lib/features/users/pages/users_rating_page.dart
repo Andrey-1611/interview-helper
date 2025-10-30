@@ -15,7 +15,7 @@ import 'package:interview_master/features/users/widgets/custom_user_info.dart';
 import '../../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
-import '../../../core/constants/data.dart';
+import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/ai/ai.dart';
@@ -242,13 +242,13 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InitialData.directions,
+            data: InterviewsData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
             value: sort,
-            data: InitialData.usersSorts,
+            data: InterviewsData.usersSorts,
             change: (value) => sort = value,
             hintText: 'Сортировка',
           ),

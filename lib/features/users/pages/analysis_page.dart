@@ -9,7 +9,7 @@ import 'package:interview_master/core/utils/time_formatter.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
-import '../../../core/constants/data.dart';
+import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../../data/repositories/local/local.dart';
@@ -367,13 +367,13 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InitialData.directions,
+            data: InterviewsData.directions,
             change: (value) => direction = value,
             hintText: 'Все направления',
           ),
           CustomDropdownMenu(
             value: difficulty,
-            data: InitialData.difficulties,
+            data: InterviewsData.difficulties,
             change: (value) => difficulty = value,
             hintText: 'Все сложности',
           ),
