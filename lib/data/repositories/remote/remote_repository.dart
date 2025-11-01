@@ -1,3 +1,4 @@
+import 'package:interview_master/data/models/task.dart';
 import '../../models/interview_data.dart';
 import '../../models/user_data.dart';
 
@@ -13,4 +14,8 @@ abstract interface class RemoteRepository {
   Future<List<InterviewData>> getInterviews(String userId);
 
   Future<void> updateInterviews(String userId, List<InterviewData> interviews);
+
+  Future<void> updateTasks(String userId, List<Task> tasks);
+
+  Future<List<Task>> getTasks(String userId);
 }

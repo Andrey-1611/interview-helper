@@ -45,4 +45,12 @@ class ToastHelper {
   static void interviewFormError() {
     _showToast(msg: 'Выберите направление и сложность');
   }
+
+  static void taskSelectorError() {
+    _showToast(msg: 'Заполните все необходимые поля');
+  }
+
+  static void tasksIsCompletedError() {
+    _showToast(msg: 'Достигнут лимит активных задач');
+  }
 }

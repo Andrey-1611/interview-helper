@@ -7,7 +7,7 @@ import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
-import '../../../../data/repositories/auth/auth.dart';
+import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import '../../../../data/repositories/local/local.dart';
 import '../../../../data/repositories/remote/remote.dart';
 import 'package:interview_master/features/users/blocs/users_bloc/users_bloc.dart';
@@ -18,19 +18,11 @@ import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
-import '../../../data/repositories/ai/ai.dart';
 import '../blocs/filter_users_cubit/filter_users_cubit.dart';
 import '../widgets/custom_network_failure.dart';
 
-class UsersRatingPage extends StatefulWidget {
+class UsersRatingPage extends StatelessWidget {
   const UsersRatingPage({super.key});
-
-  @override
-  State<UsersRatingPage> createState() => _UsersRatingPageState();
-}
-
-class _UsersRatingPageState extends State<UsersRatingPage> {
-  final _filterController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +37,26 @@ class _UsersRatingPageState extends State<UsersRatingPage> {
         ),
         BlocProvider(create: (context) => FilterUsersCubit()),
       ],
-      child: _UsersRatingView(filterController: _filterController),
+      child: _UsersRatingView(),
     );
   }
 }
 
 class _UsersRatingView extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const _UsersRatingView({required this.filterController});
+  const _UsersRatingView();
 
   @override
   Widget build(BuildContext context) {
-    final filter = context.read<FilterUsersCubit>();
+    final filter = context.watch<FilterUsersCubit>();
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRouterNames.profile),
+            icon: Icon(Icons.settings),
+          ),
+        ],
         title: const Text('Рейтинг'),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, size.height * 0.077),
@@ -68,53 +64,56 @@ class _UsersRatingView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: CustomFilterButton(
               resetFilter: filter.resetUsers,
-              filterController: filterController,
-              filterDialog: _FilterDialog(
-                filterCubit: filter,
-                filterController: filterController,
+              filterController: TextEditingController(
+                text: FilterTextFormatter.users(
+                  filter.state.direction,
+                  filter.state.sort,
+                ),
               ),
+              filterDialog: _FilterDialog(filterCubit: filter),
             ),
           ),
         ),
       ),
-      body: _UsersList(filterController: filterController),
+      body: _UsersList(),
     );
   }
 }
 
 class _UsersList extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const _UsersList({required this.filterController});
+  const _UsersList();
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UsersBloc, UsersState>(
-      builder: (context, usersState) {
-        if (usersState is UsersSuccess) {
-          final filterState = context.watch<FilterUsersCubit>().state;
+      builder: (context, state) {
+        if (state is UsersNetworkFailure) {
+          return const CustomNetworkFailure();
+        } else if (state is UsersSuccess) {
+          final filter = context.watch<FilterUsersCubit>();
           final filteredUsers = UserData.filterUsers(
-            filterState.direction,
-            filterState.sort,
-            usersState.users,
+            filter.state.direction,
+            filter.state.sort,
+            state.users,
           );
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView.builder(
-              itemCount: usersState.users.length,
+              itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
+                final filteredUser = filteredUsers[index];
+                final user = state.users.firstWhere(
+                  (user) => user.id == filteredUser.id,
+                );
                 return _UserCard(
-                  user: usersState.users[index],
-                  filteredUser: filteredUsers[index],
-                  isCurrentUser:
-                      usersState.users[index].id == usersState.currentUser.id,
+                  user: user,
+                  filteredUser: filteredUser,
+                  isCurrentUser: user.id == state.currentUser.id,
                   index: index,
                 );
               },
             ),
           );
-        } else if (usersState is UsersNetworkFailure) {
-          return const CustomNetworkFailure();
         }
         return const CustomLoadingIndicator();
       },
@@ -224,12 +223,8 @@ class _UserSheet extends StatelessWidget {
 
 class _FilterDialog extends StatelessWidget {
   final FilterUsersCubit filterCubit;
-  final TextEditingController filterController;
 
-  const _FilterDialog({
-    required this.filterCubit,
-    required this.filterController,
-  });
+  const _FilterDialog({required this.filterCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -256,21 +251,12 @@ class _FilterDialog extends StatelessWidget {
             text: 'Применить',
             selectedColor: AppPalette.primary,
             onPressed: () {
-              _filter(direction, sort);
+              filterCubit.filterUsers(direction, sort);
               context.pop();
             },
           ),
         ],
       ),
-    );
-  }
-
-  void _filter(String? direction, String? sort) {
-    filterCubit.filterUsers(direction, sort);
-    filterController.text = InterviewInfo.textInFilter(
-      direction ?? '',
-      sort ?? '',
-      '',
     );
   }
 }

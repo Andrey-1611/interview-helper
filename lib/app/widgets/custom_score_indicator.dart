@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 class CustomScoreIndicator extends StatelessWidget {
   final int score;
+  final double? height;
 
-  const CustomScoreIndicator({super.key, required this.score});
+  const CustomScoreIndicator({super.key, required this.score, this.height});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return SizedBox(
-      height: size.height * 0.07,
-      width: size.height * 0.07,
+      height: height ?? size.height * 0.06,
+      width: height ?? size.height * 0.06,
       child: Stack(
         alignment: Alignment.center,
         children: [

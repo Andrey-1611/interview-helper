@@ -37,7 +37,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       if (!isConnected) return emit(SettingsNetworkFailure());
       final user = await _localRepository.getUser();
       final interviews = await _localRepository.getInterviews();
+      final tasks = await _localRepository.getTasks();
       await _remoteRepository.updateInterviews(user!.id, interviews);
+      await _remoteRepository.updateTasks(user.id, tasks);
       await _authRepository.signOut();
       await _localRepository.deleteData();
       return emit(SignOutSuccess());

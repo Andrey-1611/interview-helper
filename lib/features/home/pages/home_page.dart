@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/app.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 
 class HomePage extends StatelessWidget {
@@ -31,12 +33,12 @@ class HomePage extends StatelessWidget {
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.star),
+              icon: Icon(Icons.workspace_premium),
               label: _labels[2],
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.star),
               label: _labels[3],
               backgroundColor: AppPalette.cardBackground,
             ),
@@ -49,7 +51,7 @@ class HomePage extends StatelessWidget {
   List<String> get _labels => [
     'Собеседование',
     'Аналитика',
+    'Трекер',
     'Рейтинг',
-    'Профиль',
   ];
 }

@@ -36,7 +36,11 @@ class SpeechCubit extends Cubit<SpeechState> {
   }
 
   Future<void> speak(String text) async {
-    await _flutterTts.setLanguage('ru_RU');
-    await _flutterTts.speak(text);
+    if (state.needSpeak) {
+      await _flutterTts.setLanguage('ru_RU');
+      await _flutterTts.speak(text);
+    }
   }
+
+  void toggleSpeaking() => emit(state.copyWith(needSpeak: !state.needSpeak));
 }
