@@ -166,8 +166,8 @@ class _InterviewPageView extends StatelessWidget {
   }
 
   void _updateController(SpeechCubit speech) {
-    if (speech.state.text.isNotEmpty) {
-      answerController.text += ' ${speech.state.text}';
+    if (speech.state.text.isNotEmpty && answerController.text.length < 290) {
+      answerController.text += speech.state.text;
       speech.clearText();
     }
   }
