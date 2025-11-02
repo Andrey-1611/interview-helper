@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
+import 'package:interview_master/data/models/task.dart';
 import '../../models/interview_data.dart';
 import '../../models/user_data.dart';
 import 'remote_repository.dart';
@@ -19,6 +20,13 @@ class RemoteDataSource implements RemoteRepository {
         .collection('users')
         .doc(userId)
         .collection('interviews');
+  }
+
+  CollectionReference _tasksCollection(String userId) {
+    return _firebaseFirestore
+        .collection('users')
+        .doc(userId)
+        .collection('tasks');
   }
 
   @override
@@ -77,5 +85,23 @@ class RemoteDataSource implements RemoteRepository {
         userId,
       ).doc(interview.id).update({'isFavourite': interview.isFavourite});
     }
+  }
+
+  @override
+  Future<void> updateTasks(String userId, List<Task> tasks) async {
+    for (final task in tasks) {
+      await _tasksCollection(userId).doc(task.id).set(task.toJson());
+    }
+  }
+
+  @override
+  Future<List<Task>> getTasks(String userId) async {
+    final data = await _tasksCollection(
+      userId,
+    ).orderBy('createdAt', descending: true).get();
+    final List<Task> tasks = data.docs
+        .map((doc) => Task.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+    return tasks;
   }
 }

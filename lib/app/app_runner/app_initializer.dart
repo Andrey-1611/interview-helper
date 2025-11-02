@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
+import 'package:interview_master/data/models/task.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -35,8 +36,10 @@ class AppInitializer {
     Hive.registerAdapter(UserDataAdapter());
     Hive.registerAdapter(QuestionAdapter());
     Hive.registerAdapter(InterviewDataAdapter());
+    Hive.registerAdapter(TaskAdapter());
     await Hive.openBox<InterviewData>(HiveData.interviewsBox);
     await Hive.openBox<UserData>(HiveData.userBox);
+    await Hive.openBox<Task>(HiveData.tasksBox);
   }
 
   static Future<void> _loadApi() async {

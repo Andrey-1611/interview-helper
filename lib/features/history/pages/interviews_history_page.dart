@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/filter_user_cubit/filter_favourite_cubit.dart';
-import 'package:interview_master/core/utils/filter_user_cubit/filter_cubit.dart';
 import 'package:interview_master/data/repositories/ai/ai.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import 'package:intl/intl.dart';
@@ -11,19 +9,15 @@ import '../../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../core/theme/app_pallete.dart';
 import '../../../data/models/interview_data.dart';
+import '../../users/blocs/filter_user_cubit/filter_user_cubit.dart';
 import '../../users/widgets/custom_network_failure.dart';
 import '../widgets/custom_empty_filter_history.dart';
 import '../widgets/custom_empty_history.dart';
 
 class InterviewsHistoryPage extends StatelessWidget {
-  final TextEditingController filterController;
   final bool isCurrentUser;
 
-  const InterviewsHistoryPage({
-    super.key,
-    required this.filterController,
-    required this.isCurrentUser,
-  });
+  const InterviewsHistoryPage({super.key, required this.isCurrentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +29,16 @@ class InterviewsHistoryPage extends StatelessWidget {
           if (state.interviews.isEmpty) {
             return CustomEmptyHistory(isCurrentUser: isCurrentUser);
           }
-          final filterState = context.watch<FilterUserCubit>().state;
-          final isFavourite = context.watch<FilterFavouriteCubit>().state;
+          final filter = context.watch<FilterUserCubit>();
           final filteredInterviews = InterviewData.filterInterviews(
-            filterState.direction,
-            filterState.difficulty,
-            filterState.sort,
-            isFavourite,
+            filter.state.direction,
+            filter.state.difficulty,
+            filter.state.sort,
+            filter.state.isFavourite,
             state.interviews,
           );
           if (filteredInterviews.isEmpty) {
-            return CustomEmptyFilterHistory(filterController: filterController);
+            return CustomEmptyFilterHistory();
           }
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -131,7 +124,7 @@ class _InterviewCard extends StatelessWidget {
                     ],
                   ),
                 )
-              : SizedBox(),
+              : Icon(Icons.chevron_right),
         ),
       ),
     );

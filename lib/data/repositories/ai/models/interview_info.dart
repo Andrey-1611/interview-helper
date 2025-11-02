@@ -37,9 +37,12 @@ class InterviewInfo extends Equatable {
   static List<String> selectQuestions(InterviewInfo info) {
     final random = Random();
     final questions = switch ([info.direction, info.difficulty]) {
-      [InterviewsData.flutter, InterviewsData.junior] => FlutterQuestions.junior,
-      [InterviewsData.flutter, InterviewsData.middle] => FlutterQuestions.middle,
-      [InterviewsData.flutter, InterviewsData.senior] => FlutterQuestions.senior,
+      [InterviewsData.flutter, InterviewsData.junior] =>
+        FlutterQuestions.junior,
+      [InterviewsData.flutter, InterviewsData.middle] =>
+        FlutterQuestions.middle,
+      [InterviewsData.flutter, InterviewsData.senior] =>
+        FlutterQuestions.senior,
 
       [InterviewsData.kotlin, InterviewsData.junior] => KotlinQuestions.junior,
       [InterviewsData.kotlin, InterviewsData.middle] => KotlinQuestions.middle,
@@ -60,9 +63,12 @@ class InterviewInfo extends Equatable {
       [InterviewsData.python, InterviewsData.middle] => PythonQuestions.middle,
       [InterviewsData.python, InterviewsData.senior] => PythonQuestions.senior,
 
-      [InterviewsData.cPlusPlus, InterviewsData.junior] => CPlusPlusQuestions.junior,
-      [InterviewsData.cPlusPlus, InterviewsData.middle] => CPlusPlusQuestions.middle,
-      [InterviewsData.cPlusPlus, InterviewsData.senior] => CPlusPlusQuestions.senior,
+      [InterviewsData.cPlusPlus, InterviewsData.junior] =>
+        CPlusPlusQuestions.junior,
+      [InterviewsData.cPlusPlus, InterviewsData.middle] =>
+        CPlusPlusQuestions.middle,
+      [InterviewsData.cPlusPlus, InterviewsData.senior] =>
+        CPlusPlusQuestions.senior,
 
       [InterviewsData.java, InterviewsData.junior] => JavaQuestions.junior,
       [InterviewsData.java, InterviewsData.middle] => JavaQuestions.middle,
@@ -103,20 +109,5 @@ class InterviewInfo extends Equatable {
     };
     final myQuestions = List<String>.from(questions)..shuffle(random);
     return myQuestions.take(10).toList();
-  }
-
-  static String textInFilter(String direction, String difficulty, String sort) {
-    return [
-      if (direction.isNotEmpty) direction,
-      if (difficulty.isNotEmpty) difficulty,
-      if (sort.isNotEmpty) sort,
-    ].join(', ');
-  }
-
-  static String createPrompt(InterviewInfo interviewInfo) {
-    final prompt = interviewInfo.userInputs
-        .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
-        .join('\n\n');
-    return '${MainPrompt.mainPrompt}\n\nВопросы:\n$prompt';
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
@@ -10,13 +9,13 @@ import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
-import 'package:interview_master/features/users/blocs/users_bloc/users_bloc.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../data/repositories/ai/ai.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../data/repositories/local/local.dart';
 import '../../../data/repositories/remote/remote.dart';
+import '../../history/blocs/history_bloc/history_bloc.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -35,11 +34,11 @@ class InitialPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => UsersBloc(
+          create: (context) => HistoryBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<NetworkInfo>(),
-          )..add(GetUser()),
+          )..add(GetInterviews(userId: null)),
         ),
         BlocProvider(create: (context) => InterviewFormCubit()),
       ],
@@ -59,6 +58,12 @@ class _InitialPageView extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Собеседование'),
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRouterNames.profile),
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,7 +88,10 @@ class _InitialPageView extends StatelessWidget {
               SizedBox(height: size.height * 0.03),
               _InterviewButton(),
               SizedBox(height: size.height * 0.08),
-              _LastInterviewsList(),
+              SizedBox(
+                height: size.height * 0.14,
+                child: _LastInterviewsList(),
+              ),
             ],
           ),
         ),
@@ -107,7 +115,7 @@ class _InterviewButton extends StatelessWidget {
         } else if (state is InterviewFailure) {
           ToastHelper.unknownError();
         } else if (state is InterviewStartSuccess) {
-          context.pushReplacement(
+          context.push(
             AppRouterNames.interview,
             extra: InterviewInfo(
               direction: form.state.direction!,
@@ -137,39 +145,36 @@ class _LastInterviewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return BlocBuilder<UsersBloc, UsersState>(
+    return BlocBuilder<HistoryBloc, HistoryState>(
       builder: (context, state) {
-        if (state is UserSuccess) {
-          return SizedBox(
-            height: size.height * 0.14,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: state.user.interviews.length,
-              itemBuilder: (context, index) {
-                final interview = state.user.interviews[index];
-                return GestureDetector(
-                  onTap: () => context.read<InterviewFormCubit>().changeAll(
-                    interview.direction,
-                    interview.difficulty,
-                  ),
-                  child: SizedBox(
-                    width: size.height * 0.14,
-                    child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(interview.direction),
-                          Text(interview.difficulty),
-                        ],
-                      ),
+        if (state is HistorySuccess) {
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: state.interviews.length,
+            itemBuilder: (context, index) {
+              final interview = state.interviews[index];
+              return GestureDetector(
+                onTap: () => context.read<InterviewFormCubit>().changeAll(
+                  interview.direction,
+                  interview.difficulty,
+                ),
+                child: SizedBox(
+                  width: size.height * 0.14,
+                  child: Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(interview.direction),
+                        Text(interview.difficulty),
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         }
-        return CustomLoadingIndicator();
+        return SizedBox.shrink();
       },
     );
   }

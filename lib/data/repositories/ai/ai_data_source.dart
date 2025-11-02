@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
@@ -25,8 +24,10 @@ class AIDataSource implements AIRepository {
 
   @override
   Future<List<Question>> checkAnswers(InterviewInfo interviewInfo) async {
-    final prompt =
-        '${MainPrompt.mainPrompt}\n\nВопросы:\n${InterviewInfo.createPrompt(interviewInfo)}';
+    final questionsData = interviewInfo.userInputs
+        .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
+        .join('\n\n');
+    final prompt = '${MainPrompt.mainPrompt}\n\nВопросы:\n$questionsData';
 
     final response = await _dio.post(
       '/networks/gpt-4-1',

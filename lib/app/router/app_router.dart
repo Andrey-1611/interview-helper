@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/data/models/task.dart';
+import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/users/pages/profile_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -19,6 +21,7 @@ import '../../features/interview/pages/initial_page.dart';
 import '../../features/interview/pages/interview_page.dart';
 import '../../features/interview/pages/results_page.dart';
 import '../../features/home/pages/splash_page.dart';
+import '../../features/tracker/pages/tracker_page.dart';
 import '../../features/users/pages/user_page.dart';
 import '../../features/users/pages/users_rating_page.dart';
 import 'app_router_names.dart';
@@ -69,6 +72,17 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final interviewInfo = state.extra as InterviewInfo;
         return ResultsPage(interviewInfo: interviewInfo);
+      },
+    ),
+    GoRoute(
+      path: AppRouterNames.profile,
+      builder: (context, state) => const ProfilePage(),
+    ),
+    GoRoute(
+      path: AppRouterNames.task,
+      builder: (context, state) {
+        final task = state.extra as Task;
+        return TaskPage(task: task);
       },
     ),
     GoRoute(
@@ -132,16 +146,16 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.usersRating,
-              builder: (context, state) => const UsersRatingPage(),
+              path: AppRouterNames.tracker,
+              builder: (context, state) => const TrackerPage(),
             ),
           ],
         ),
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.profile,
-              builder: (context, state) => const ProfilePage(),
+              path: AppRouterNames.usersRating,
+              builder: (context, state) => const UsersRatingPage(),
             ),
           ],
         ),

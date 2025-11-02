@@ -103,7 +103,12 @@ class AppTheme {
           side: BorderSide.none,
         ),
       ),
-      listTileTheme: ListTileThemeData(contentPadding: EdgeInsets.all(12.0.sp)),
+      listTileTheme: ListTileThemeData(
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 8.0.sp,
+          horizontal: 12.0.sp,
+        ),
+      ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppPalette.cardBackground,
         selectedItemColor: AppPalette.primary,

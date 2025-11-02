@@ -37,10 +37,10 @@ class InterviewsData {
 
   static const List<String> difficulties = [junior, middle, senior];
 
-  static const firstNew = 'сначала новые';
-  static const firstOld = 'сначала старые';
-  static const firstBest = 'сначала лучшие';
-  static const firstWorst = 'сначала худшие';
+  static const firstNew = 'Новые';
+  static const firstOld = 'Старые';
+  static const firstBest = 'Лучшие';
+  static const firstWorst = 'Худшие';
 
   static const List<String> interviewsSorts = [
     firstNew,
@@ -49,13 +49,21 @@ class InterviewsData {
     firstWorst,
   ];
 
-  static const firstTotalScore = 'больше всего очков опыта';
-  static const firstTotalInterviews = 'больше всего собеседований';
-  static const firstAverageScore = 'лучший средний результат';
+  static const firstTotalScore = 'Опыт';
+  static const firstTotalInterviews = 'Собеседования';
+  static const firstAverageScore = 'Средний результат';
 
   static const List<String> usersSorts = [
     firstTotalScore,
     firstTotalInterviews,
     firstAverageScore,
   ];
+
+  static const interviews = 'Cобеседования';
+  static const time = 'Время';
+  static const score = 'Опыт';
+
+  static const types = [interviews, time, score];
+
+  static const tasksSorts = [firstNew, firstOld];
 }

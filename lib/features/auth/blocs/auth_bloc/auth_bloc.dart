@@ -45,7 +45,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       final user = await _remoteRepository.getUserData(userId);
       final interviews = await _remoteRepository.getInterviews(userId);
+      final tasks = await _remoteRepository.getTasks(userId);
       await _localRepository.loadInterviews(interviews);
+      await _localRepository.loadTasks(tasks);
       await _localRepository.loadUser(user);
       return emit(AuthSuccess());
     } catch (e, st) {

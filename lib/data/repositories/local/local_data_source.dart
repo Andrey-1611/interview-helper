@@ -1,7 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
+import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
+import 'package:interview_master/data/models/task.dart';
 import '../../models/interview_data.dart';
 import '../../models/user_data.dart';
 import 'local_repository.dart';
@@ -17,6 +19,8 @@ class LocalDataSource implements LocalRepository {
 
   Box<UserData> get _usersBox => _hive.box<UserData>(HiveData.userBox);
 
+  Box<Task> get _tasksBox => _hive.box<Task>(HiveData.tasksBox);
+
   @override
   Future<void> loadInterviews(List<InterviewData> interviews) async {
     final data = {for (final interview in interviews) interview.id: interview};
@@ -30,6 +34,30 @@ class LocalDataSource implements LocalRepository {
   ) async {
     await _interviewsBox.put(interview.id, interview);
     await _usersBox.put(HiveData.userKey, updatedUser);
+
+    final tasks = _tasksBox.values.toList();
+    final filteredTasks = tasks.where(
+      (task) => task.direction == interview.direction,
+    );
+
+    final updatedTasks = filteredTasks.map((task) {
+      final addValue = switch (task.type) {
+        InterviewsData.interviews => 1,
+        InterviewsData.time => interview.duration.inMinutes,
+        InterviewsData.score => interview.score,
+        _ => 0,
+      };
+
+      final value = task.currentValue + addValue;
+      final isCompleted = value >= task.targetValue;
+      final completedAt = !task.isCompleted && isCompleted
+          ? DateTime.now()
+          : task.completedAt;
+      return task.copyWith(currentValue: value, completedAt: completedAt);
+    }).toList();
+
+    final data = {for (final task in updatedTasks) task.id: task};
+    await _tasksBox.putAll(data);
   }
 
   @override
@@ -93,5 +121,28 @@ class LocalDataSource implements LocalRepository {
         return;
       }
     }
+  }
+
+  @override
+  Future<void> createTask(Task task) async {
+    await _tasksBox.put(task.id, task);
+  }
+
+  @override
+  Future<void> deleteTask(String id) async {
+    await _tasksBox.delete(id);
+  }
+
+  @override
+  Future<List<Task>> getTasks() async {
+    final tasks = _tasksBox.values.toList();
+    tasks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return tasks;
+  }
+
+  @override
+  Future<void> loadTasks(List<Task> tasks) async {
+    final data = {for (final task in tasks) task.id: task};
+    await _tasksBox.putAll(data);
   }
 }

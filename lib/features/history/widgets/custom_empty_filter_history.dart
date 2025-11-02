@@ -1,14 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/utils/filter_user_cubit/filter_favourite_cubit.dart';
-import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
+import '../../users/blocs/filter_user_cubit/filter_user_cubit.dart';
 
 class CustomEmptyFilterHistory extends StatelessWidget {
-  final TextEditingController filterController;
-
-  const CustomEmptyFilterHistory({super.key, required this.filterController});
+  const CustomEmptyFilterHistory({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +23,8 @@ class CustomEmptyFilterHistory extends StatelessWidget {
   }
 
   void _resetFilter(BuildContext context) {
-    final favourite = context.read<FilterFavouriteCubit>();
-    context.read<FilterUserCubit>().resetUser();
-    filterController.clear();
-    if (favourite.state == true) favourite.changeFavourite();
+    final filter = context.read<FilterUserCubit>();
+    filter.resetUser();
+    if (filter.state.isFavourite == true) filter.changeIsFavourite();
   }
 }

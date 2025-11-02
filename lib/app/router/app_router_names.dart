@@ -8,6 +8,8 @@ class AppRouterNames {
   static const initial = '/initial';
   static const currentUser = '/current_user';
   static const usersRating = '/users_rating';
+  static const tracker = '/tracker';
+  static const task = '/task';
   static const analysis = '/analysis';
   static const profile = '/profile';
   static const user = '/user_info';

@@ -24,8 +24,15 @@ class SpeechCubit extends Cubit<SpeechState> {
       _speechToText.stop();
     } else {
       _speechToText.listen(
-        onResult: (text) => emit(state.copyWith(text: text.recognizedWords)),
+        onResult: (text) {
+          if (text.finalResult) {
+            emit(state.copyWith(text: text.recognizedWords));
+          }
+        },
         localeId: 'ru_RU',
+        listenFor: Duration(seconds: 30),
+        pauseFor: Duration(seconds: 3),
+        listenOptions: SpeechListenOptions(partialResults: true),
       );
     }
     emit(state.copyWith(isListening: !state.isListening));
@@ -36,7 +43,11 @@ class SpeechCubit extends Cubit<SpeechState> {
   }
 
   Future<void> speak(String text) async {
-    await _flutterTts.setLanguage('ru_RU');
-    await _flutterTts.speak(text);
+    if (state.needSpeak) {
+      await _flutterTts.setLanguage('ru_RU');
+      await _flutterTts.speak(text);
+    }
   }
+
+  void toggleSpeaking() => emit(state.copyWith(needSpeak: !state.needSpeak));
 }

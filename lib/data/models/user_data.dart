@@ -31,7 +31,7 @@ class UserData extends Equatable {
   });
 
   @override
-  List<Object?> get props => [name, id, interviews];
+  List<Object?> get props => [name, id, email, interviews];
 
   int get totalInterviews => interviews.length;
 

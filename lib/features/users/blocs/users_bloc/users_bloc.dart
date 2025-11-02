@@ -60,7 +60,9 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(UserSuccess(user: user));
       final interviews = await _localRepository.getInterviews();
+      final tasks = await _localRepository.getTasks();
       await _remoteRepository.updateInterviews(user.id, interviews);
+      await _remoteRepository.updateTasks(user.id, tasks);
       return emit(UserSuccess(user: user));
     } catch (e, st) {
       emit(UsersFailure());

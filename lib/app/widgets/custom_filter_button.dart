@@ -22,9 +22,10 @@ class CustomFilterButton extends StatelessWidget {
         readOnly: true,
         focusNode: FocusNode(canRequestFocus: false),
         controller: filterController,
-        onTap: () {
-          DialogHelper.showCustomDialog(dialog: filterDialog, context: context);
-        },
+        onTap: () => DialogHelper.showCustomDialog(
+          dialog: filterDialog,
+          context: context,
+        ),
         decoration: InputDecoration(
           fillColor: AppPalette.background,
           hintText: 'Фильтр',
@@ -32,7 +33,7 @@ class CustomFilterButton extends StatelessWidget {
           suffixIcon: IconButton(
             onPressed: () {
               resetFilter();
-              filterController.text = '';
+              filterController.clear();
             },
             icon: Icon(Icons.close),
           ),

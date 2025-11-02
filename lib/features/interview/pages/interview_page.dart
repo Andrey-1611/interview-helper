@@ -106,7 +106,8 @@ class _InterviewPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
-    _updateController(context);
+    final speech = context.watch<SpeechCubit>();
+    _updateController(speech);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -120,6 +121,12 @@ class _InterviewPageView extends StatelessWidget {
           ),
           icon: Icon(Icons.arrow_back),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => speech.toggleSpeaking(),
+            icon: Icon(speech.state.needSpeak ? Icons.mic : Icons.mic_off),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -158,10 +165,9 @@ class _InterviewPageView extends StatelessWidget {
     );
   }
 
-  void _updateController(BuildContext context) {
-    final speech = context.watch<SpeechCubit>();
-    if (speech.state.text.isNotEmpty) {
-      answerController.text += ' ${speech.state.text}';
+  void _updateController(SpeechCubit speech) {
+    if (speech.state.text.isNotEmpty && answerController.text.length < 290) {
+      answerController.text += speech.state.text;
       speech.clearText();
     }
   }

@@ -5,30 +5,23 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../core/constants/interviews_data.dart';
-import '../../../core/utils/filter_user_cubit/filter_cubit.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../../data/repositories/local/local.dart';
 import '../../../../data/repositories/remote/remote.dart';
 import '../../../data/models/user_data.dart';
-import '../../../data/repositories/ai/ai.dart';
+import '../blocs/filter_user_cubit/filter_user_cubit.dart' show FilterUserCubit;
 import '../blocs/users_bloc/users_bloc.dart';
 
-class AnalysisPage extends StatefulWidget {
+class AnalysisPage extends StatelessWidget {
   final UserData selectedUser;
 
   const AnalysisPage({super.key, required this.selectedUser});
-
-  @override
-  State<AnalysisPage> createState() => _AnalysisPageState();
-}
-
-class _AnalysisPageState extends State<AnalysisPage> {
-  final _filterController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +36,15 @@ class _AnalysisPageState extends State<AnalysisPage> {
         ),
         BlocProvider(create: (context) => FilterUserCubit()),
       ],
-      child: _AnalysisPageView(
-        selectedUser: widget.selectedUser,
-        filterController: _filterController,
-      ),
+      child: _AnalysisPageView(selectedUser: selectedUser),
     );
   }
 }
 
 class _AnalysisPageView extends StatelessWidget {
   final UserData selectedUser;
-  final TextEditingController filterController;
 
-  const _AnalysisPageView({
-    required this.selectedUser,
-    required this.filterController,
-  });
+  const _AnalysisPageView({required this.selectedUser});
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +58,13 @@ class _AnalysisPageView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: CustomFilterButton(
-              filterController: filterController,
-              filterDialog: _FilterDialog(
-                filterCubit: filter,
-                filterController: filterController,
+              filterController: TextEditingController(
+                text: FilterTextFormatter.analysis(
+                  filter.state.direction,
+                  filter.state.difficulty,
+                ),
               ),
+              filterDialog: _FilterDialog(filterCubit: filter),
               resetFilter: filter.resetUser,
             ),
           ),
@@ -349,12 +337,8 @@ class _CompareTimeCard extends StatelessWidget {
 
 class _FilterDialog extends StatelessWidget {
   final FilterUserCubit filterCubit;
-  final TextEditingController filterController;
 
-  const _FilterDialog({
-    required this.filterCubit,
-    required this.filterController,
-  });
+  const _FilterDialog({required this.filterCubit});
 
   @override
   Widget build(BuildContext context) {
@@ -381,21 +365,12 @@ class _FilterDialog extends StatelessWidget {
             text: 'Применить',
             selectedColor: AppPalette.primary,
             onPressed: () {
-              _filter(direction, difficulty);
+              filterCubit.filterUser(direction, difficulty, null);
               context.pop();
             },
           ),
         ],
       ),
-    );
-  }
-
-  void _filter(String? direction, String? difficulty) {
-    filterCubit.filterUser(direction, difficulty, null);
-    filterController.text = InterviewInfo.textInFilter(
-      direction ?? '',
-      difficulty ?? '',
-      '',
     );
   }
 }
