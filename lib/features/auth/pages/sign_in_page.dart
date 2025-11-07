@@ -51,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
             DialogHelper.showLoadingDialog(context, 'Вход в систему');
           } else if (state is AuthSuccess) {
             context.pop();
-            context.pushReplacement(AppRouterNames.initial);
+            context.go(AppRouterNames.initial);
           } else if (state is AuthEmailNotVerified) {
             context.pop();
             context.pushReplacement(

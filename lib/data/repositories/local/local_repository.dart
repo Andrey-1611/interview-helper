@@ -3,13 +3,13 @@ import '../../models/interview_data.dart';
 import '../../models/user_data.dart';
 
 abstract interface class LocalRepository {
-  Future<void> loadInterviews(List<InterviewData> interviews);
+  Future<void> setInterviews(List<InterviewData> interviews);
 
   Future<void> addInterview(InterviewData interview, UserData updatedUser);
 
   Future<List<InterviewData>> getInterviews();
 
-  Future<void> loadUser(UserData user);
+  Future<void> setUser(UserData user);
 
   Future<UserData?> getUser();
 
@@ -27,5 +27,5 @@ abstract interface class LocalRepository {
 
   Future<void> deleteTask(String id);
 
-  Future<void> loadTasks(List<Task> tasks);
+  Future<void> setTasks(List<Task> tasks);
 }

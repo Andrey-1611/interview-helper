@@ -3,7 +3,7 @@ import '../../models/interview_data.dart';
 import '../../models/user_data.dart';
 
 abstract interface class RemoteRepository {
-  Future<void> saveUser(UserData user);
+  Future<void> setUser(UserData user);
 
   Future<List<UserData>> getUsers();
 

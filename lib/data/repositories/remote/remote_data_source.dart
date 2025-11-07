@@ -30,14 +30,14 @@ class RemoteDataSource implements RemoteRepository {
   }
 
   @override
-  Future<void> saveUser(UserData user) async {
+  Future<void> setUser(UserData user) async {
     await _usersCollection().doc(user.id).set(user.toJson());
   }
 
   @override
   Future<List<UserData>> getUsers() async {
-    final data = await _usersCollection().get();
-    final List<UserData> users = data.docs
+    final data = await _usersCollection().limit(100).get();
+    final users = data.docs
         .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
     users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
@@ -47,8 +47,7 @@ class RemoteDataSource implements RemoteRepository {
   @override
   Future<UserData> getUserData(String userId) async {
     final data = await _usersCollection().doc(userId).get();
-    final user = UserData.fromJson(data.data() as Map<String, dynamic>);
-    return user;
+    return UserData.fromJson(data.data() as Map<String, dynamic>);
   }
 
   @override
@@ -56,10 +55,14 @@ class RemoteDataSource implements RemoteRepository {
     InterviewData interview,
     UserData updatedUser,
   ) async {
-    await _interviewsCollection(
+    final batch = _firebaseFirestore.batch();
+    final interviewDoc = _interviewsCollection(
       updatedUser.id,
-    ).doc(interview.id).set(interview.toJson());
-    await _usersCollection().doc(updatedUser.id).update(updatedUser.toJson());
+    ).doc(interview.id);
+    final userDoc = _usersCollection().doc(updatedUser.id);
+    batch.set(interviewDoc, interview.toJson());
+    batch.update(userDoc, updatedUser.toJson());
+    await batch.commit();
   }
 
   @override
@@ -67,12 +70,11 @@ class RemoteDataSource implements RemoteRepository {
     final data = await _interviewsCollection(
       userId,
     ).orderBy('date', descending: true).get();
-    final List<InterviewData> interviews = data.docs
+    return data.docs
         .map(
           (doc) => InterviewData.fromJson(doc.data() as Map<String, dynamic>),
         )
         .toList();
-    return interviews;
   }
 
   @override
@@ -80,18 +82,22 @@ class RemoteDataSource implements RemoteRepository {
     String userId,
     List<InterviewData> interviews,
   ) async {
-    for (final interview in interviews) {
-      await _interviewsCollection(
-        userId,
-      ).doc(interview.id).update({'isFavourite': interview.isFavourite});
-    }
+    final batch = _firebaseFirestore.batch();
+    interviews.map((interview) {
+      final doc = _interviewsCollection(userId).doc(interview.id);
+      batch.update(doc, {'isFavourite': interview.isFavourite});
+    }).toList();
+    await batch.commit();
   }
 
   @override
   Future<void> updateTasks(String userId, List<Task> tasks) async {
-    for (final task in tasks) {
-      await _tasksCollection(userId).doc(task.id).set(task.toJson());
-    }
+    final batch = _firebaseFirestore.batch();
+    tasks.map((task) {
+      final doc = _tasksCollection(userId).doc(task.id);
+      batch.set(doc, task.toJson());
+    }).toList();
+    await batch.commit();
   }
 
   @override
@@ -99,9 +105,8 @@ class RemoteDataSource implements RemoteRepository {
     final data = await _tasksCollection(
       userId,
     ).orderBy('createdAt', descending: true).get();
-    final List<Task> tasks = data.docs
+    return data.docs
         .map((doc) => Task.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
-    return tasks;
   }
 }

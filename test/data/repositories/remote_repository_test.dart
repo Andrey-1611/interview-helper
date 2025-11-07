@@ -25,11 +25,11 @@ void main() {
 
   group('remote repository', () {
     test('save user', () async {
-      when(() => mockRepository.saveUser(any())).thenAnswer((_) async => {});
+      when(() => mockRepository.setUser(any())).thenAnswer((_) async => {});
 
-      await mockRepository.saveUser(TestsData.userData);
+      await mockRepository.setUser(TestsData.userData);
 
-      verify(() => mockRepository.saveUser(any())).called(1);
+      verify(() => mockRepository.setUser(any())).called(1);
     });
 
     test('show users', () async {

@@ -42,7 +42,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(InterviewNetworkFailure());
       final interviews = await _localRepository.getTotalInterviewsToady();
-      if (interviews == 10) return emit(InterviewAttemptsFailure());
+      if (interviews == 20) return emit(InterviewAttemptsFailure());
       emit(InterviewStartSuccess());
     } catch (e, st) {
       emit(InterviewFailure());

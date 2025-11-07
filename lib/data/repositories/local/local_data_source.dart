@@ -22,7 +22,7 @@ class LocalDataSource implements LocalRepository {
   Box<Task> get _tasksBox => _hive.box<Task>(HiveData.tasksBox);
 
   @override
-  Future<void> loadInterviews(List<InterviewData> interviews) async {
+  Future<void> setInterviews(List<InterviewData> interviews) async {
     final data = {for (final interview in interviews) interview.id: interview};
     await _interviewsBox.putAll(data);
   }
@@ -68,7 +68,7 @@ class LocalDataSource implements LocalRepository {
   }
 
   @override
-  Future<void> loadUser(UserData user) async {
+  Future<void> setUser(UserData user) async {
     await _usersBox.put(HiveData.userKey, user);
   }
 
@@ -141,7 +141,7 @@ class LocalDataSource implements LocalRepository {
   }
 
   @override
-  Future<void> loadTasks(List<Task> tasks) async {
+  Future<void> setTasks(List<Task> tasks) async {
     final data = {for (final task in tasks) task.id: task};
     await _tasksBox.putAll(data);
   }

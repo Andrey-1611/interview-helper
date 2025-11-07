@@ -45,14 +45,14 @@ void main() {
       () => mockAuthRepository.watchEmailVerified(),
     ).thenAnswer((_) async => emailVerifiedResult);
     when(
-          () => mockRemoteRepository.saveUser(any()),
+          () => mockRemoteRepository.setUser(any()),
     ).thenAnswer((_) async => {});
 
     final user = await useCase.call();
 
     verify(() => mockAuthRepository.watchEmailVerified()).called(1);
     verify(
-      () => mockRemoteRepository.saveUser(
+      () => mockRemoteRepository.setUser(
         any(
           that: isA<UserData>()
               .having((e) => e.name, 'name', name)
