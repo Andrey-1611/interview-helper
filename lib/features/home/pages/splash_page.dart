@@ -37,6 +37,8 @@ class _SplashPageView extends StatelessWidget {
           context.pushReplacement(AppRouterNames.initial);
         } else if (state is UserNotFound) {
           context.pushReplacement(AppRouterNames.signIn);
+        } else if (state is UserWithoutDirections) {
+          context.pushReplacement(AppRouterNames.directions);
         } else if (state is UsersFailure) {
           ToastHelper.unknownError();
         }

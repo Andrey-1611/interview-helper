@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
+import '../../../core/utils/data_cubit.dart';
 import '../../../data/repositories/auth/auth.dart';
 import '../../../data/repositories/local/local.dart';
 import '../../../data/repositories/remote/remote.dart';
@@ -51,6 +52,7 @@ class _SignInPageState extends State<SignInPage> {
             DialogHelper.showLoadingDialog(context, 'Вход в систему');
           } else if (state is AuthSuccess) {
             context.pop();
+            context.read<DataCubit>().updateKeyValue();
             context.go(AppRouterNames.initial);
           } else if (state is AuthEmailNotVerified) {
             context.pop();
@@ -59,6 +61,9 @@ class _SignInPageState extends State<SignInPage> {
               extra: _passwordController.text.trim(),
             );
             ToastHelper.sendEmailVerification(_emailController.text);
+          } else if (state is AuthWithoutDirections) {
+            context.pop();
+            context.pushReplacement(AppRouterNames.directions);
           } else if (state is AuthNetworkFailure) {
             context.pop();
             ToastHelper.networkError();

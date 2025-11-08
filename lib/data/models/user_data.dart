@@ -23,15 +23,35 @@ class UserData extends Equatable {
   @HiveField(3)
   final List<Interview> interviews;
 
+  @HiveField(4)
+  final List<String> directions;
+
   const UserData({
     required this.id,
     required this.name,
     required this.email,
-    required this.interviews,
+    this.interviews = const [],
+    this.directions = const [],
   });
 
+  UserData copyWith({
+    String? id,
+    String? name,
+    String? email,
+    List<Interview>? interviews,
+    List<String>? directions,
+  }) {
+    return UserData(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      interviews: interviews ?? this.interviews,
+      directions: directions ?? this.directions,
+    );
+  }
+
   @override
-  List<Object?> get props => [name, id, email, interviews];
+  List<Object?> get props => [name, id, email, interviews, directions];
 
   int get totalInterviews => interviews.length;
 
@@ -67,14 +87,15 @@ class UserData extends Equatable {
 
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
 
-  factory UserData.updateData(UserData userData, InterviewData interview) {
-    return UserData(
-      id: userData.id,
-      name: userData.name,
-      email: userData.email,
-      interviews: List.from(userData.interviews)
+  factory UserData.updateInterviews(UserData user, InterviewData interview) {
+    return user.copyWith(
+      interviews: List.from(user.interviews)
         ..add(Interview.fromInterviewData(interview)),
     );
+  }
+
+  factory UserData.updateDirections(UserData user, List<String> directions) {
+    return user.copyWith(directions: directions);
   }
 
   static List<UserData> filterUsers(
@@ -116,11 +137,6 @@ class UserData extends Equatable {
     if (difficulty != null) {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
     }
-    return UserData(
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      interviews: interviews,
-    );
+    return user.copyWith(interviews: interviews);
   }
 }

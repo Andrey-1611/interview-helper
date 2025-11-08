@@ -205,7 +205,7 @@ class _UserSheet extends StatelessWidget {
         child: Column(
           children: [
             Text(user.name, style: theme.textTheme.displayLarge),
-            Expanded(child: CustomUserInfo(data: user)),
+            Expanded(child: CustomUserInfo(user: user)),
             SizedBox(
               width: size.width * 0.8,
               child: TextButton(

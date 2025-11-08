@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:interview_master/data/repositories/local/local.dart';
+import 'package:interview_master/data/repositories/remote/remote.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../../../../data/models/user_data.dart';
 
 part 'tracker_event.dart';
 
@@ -11,11 +14,14 @@ part 'tracker_state.dart';
 
 class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   final LocalRepository _localRepository;
+  final RemoteRepository _remoteRepository;
 
-  TrackerBloc(this._localRepository) : super(TrackerInitial()) {
+  TrackerBloc(this._localRepository, this._remoteRepository)
+    : super(TrackerInitial()) {
     on<GetTasks>(_getTasks);
     on<CreateTask>(_createTask);
     on<DeleteTask>(_deleteTask);
+    on<SetDirections>(_setDirections);
   }
 
   Future<void> _getTasks(GetTasks event, Emitter<TrackerState> emit) async {
@@ -53,6 +59,23 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       await _localRepository.deleteTask(event.id);
       final tasks = await _localRepository.getTasks();
       return emit(TrackerSuccess(tasks: tasks));
+    } catch (e, st) {
+      emit(TrackerFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _setDirections(
+    SetDirections event,
+    Emitter<TrackerState> emit,
+  ) async {
+    emit(TrackerLoading());
+    try {
+      final user = await _localRepository.getUser();
+      final updatedUser = UserData.updateDirections(user!, event.directions);
+      await _localRepository.setUser(updatedUser);
+      await _remoteRepository.setUser(updatedUser);
+      return emit(TrackerDirectionsSuccess());
     } catch (e, st) {
       emit(TrackerFailure());
       GetIt.I<Talker>().handle(e, st);

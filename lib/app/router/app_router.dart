@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/data/models/task.dart';
+import 'package:interview_master/features/tracker/pages/directions_page.dart';
 import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/users/pages/profile_page.dart';
@@ -59,6 +60,10 @@ final appRouter = GoRouter(
         final password = state.extra as String;
         return ChangeEmailPage(password: password);
       },
+    ),
+    GoRoute(
+      path: AppRouterNames.directions,
+      builder: (context, state) => DirectionsPage(),
     ),
     GoRoute(
       path: AppRouterNames.interview,

@@ -49,7 +49,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _localRepository.setInterviews(interviews);
       await _localRepository.setTasks(tasks);
       await _localRepository.setUser(user);
-      return emit(AuthSuccess());
+      user.directions.isNotEmpty
+          ? emit(AuthSuccess())
+          : emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
       GetIt.I<Talker>().handle(e, st);
@@ -72,9 +74,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _localRepository.setInterviews(interviews);
         await _localRepository.setUser(user);
         await _localRepository.setTasks(tasks);
+        user.directions.isNotEmpty
+            ? emit(AuthSuccess())
+            : emit(AuthWithoutDirections());
       } else {
         await _remoteRepository.setUser(googleUser);
         await _localRepository.setUser(googleUser);
+        return emit(AuthWithoutDirections());
       }
       return emit(AuthSuccess());
     } catch (e, st) {
@@ -154,7 +160,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _authRepository.getUser();
       await _remoteRepository.setUser(user);
       await _localRepository.setUser(user);
-      return emit(AuthSuccess());
+      return emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
       GetIt.I<Talker>().handle(e, st);

@@ -94,7 +94,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
         duration,
       );
       final user = (await _localRepository.getUser())!;
-      final updatedUser = UserData.updateData(user, interview);
+      final updatedUser = UserData.updateInterviews(user, interview);
       await _remoteRepository.addInterview(interview, updatedUser);
       await _localRepository.addInterview(interview, updatedUser);
       emit(InterviewFinishSuccess(interview: interview));

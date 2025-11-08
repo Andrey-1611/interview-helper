@@ -24,6 +24,15 @@ final class CreateTask extends TrackerEvent {
   List<Object?> get props => [direction, type, targetValue];
 }
 
+final class SetDirections extends TrackerEvent {
+  final List<String> directions;
+
+  const SetDirections({required this.directions});
+
+  @override
+  List<Object?> get props => [directions];
+}
+
 final class DeleteTask extends TrackerEvent {
   final String id;
 

@@ -81,6 +81,7 @@ class LocalDataSource implements LocalRepository {
   Future<void> deleteData() async {
     await _usersBox.clear();
     await _interviewsBox.clear();
+    await _tasksBox.clear();
   }
 
   @override
@@ -145,4 +146,5 @@ class LocalDataSource implements LocalRepository {
     final data = {for (final task in tasks) task.id: task};
     await _tasksBox.putAll(data);
   }
+
 }

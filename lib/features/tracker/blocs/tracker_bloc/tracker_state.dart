@@ -22,6 +22,8 @@ final class TrackerTasksFailure extends TrackerState {
   List<Object> get props => [tasks];
 }
 
+final class TrackerDirectionsSuccess extends TrackerState {}
+
 final class TrackerSuccess extends TrackerState {
   final List<Task> tasks;
 

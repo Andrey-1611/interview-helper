@@ -5,6 +5,7 @@ class AppRouterNames {
   static const emailVerification = '/email_verification';
   static const changeEmail = '/change_email';
   static const changePassword = '/change_password';
+  static const directions = '/directions';
   static const initial = '/initial';
   static const currentUser = '/current_user';
   static const usersRating = '/users_rating';

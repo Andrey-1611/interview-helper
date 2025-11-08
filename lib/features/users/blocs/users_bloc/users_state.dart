@@ -19,6 +19,8 @@ final class UsersNetworkFailure extends UsersState {}
 
 final class UserNotFound extends UsersState {}
 
+final class UserWithoutDirections extends UsersState {}
+
 final class UserSuccess extends UsersState {
   final UserData user;
 
