@@ -6,6 +6,7 @@ import 'package:interview_master/features/tracker/pages/directions_page.dart';
 import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/users/pages/profile_page.dart';
+import 'package:interview_master/features/users/pages/rating_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../data/models/question.dart';
 import '../../data/models/user_data.dart';
@@ -159,8 +160,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.usersRating,
-              builder: (context, state) => const UsersRatingPage(),
+              path: AppRouterNames.rating,
+              builder: (context, state) => const RatingPage(),
             ),
           ],
         ),

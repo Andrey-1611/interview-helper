@@ -21,6 +21,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     on<GetUser>(_getUser);
     on<GetUsers>(_getUsers);
     on<GetCurrentUser>(_getCurrentUser);
+    on<GetFriends>(_getFriends);
   }
 
   Future<void> _getUser(GetUser event, Emitter<UsersState> emit) async {
@@ -66,6 +67,20 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       user.directions.isNotEmpty
           ? emit(UserSuccess(user: user))
           : emit(UserWithoutDirections());
+    } catch (e, st) {
+      emit(UsersFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _getFriends(GetFriends event, Emitter<UsersState> emit) async {
+    emit(UsersLoading());
+    try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) return emit(UsersNetworkFailure());
+      final currentUser = (await _localRepository.getUser())!;
+      final users = await _remoteRepository.getFriends(currentUser.friendsId);
+      emit(UsersSuccess(users: users, currentUser: currentUser));
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);

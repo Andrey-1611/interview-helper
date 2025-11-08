@@ -109,4 +109,17 @@ class RemoteDataSource implements RemoteRepository {
         .map((doc) => Task.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
   }
+
+  @override
+  Future<List<UserData>> getFriends(List<String> friendsId) async {
+    if (friendsId.isEmpty) return [];
+    final data = await _usersCollection()
+        .where(FieldPath.documentId, whereIn: friendsId)
+        .get();
+    final users = data.docs
+        .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+    users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
+    return users;
+  }
 }

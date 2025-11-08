@@ -26,12 +26,16 @@ class UserData extends Equatable {
   @HiveField(4)
   final List<String> directions;
 
+  @HiveField(5)
+  final List<String> friendsId;
+
   const UserData({
     required this.id,
     required this.name,
     required this.email,
     this.interviews = const [],
     this.directions = const [],
+    this.friendsId = const [],
   });
 
   UserData copyWith({
@@ -40,6 +44,7 @@ class UserData extends Equatable {
     String? email,
     List<Interview>? interviews,
     List<String>? directions,
+    List<String>? friendsId,
   }) {
     return UserData(
       id: id ?? this.id,
@@ -47,11 +52,19 @@ class UserData extends Equatable {
       email: email ?? this.email,
       interviews: interviews ?? this.interviews,
       directions: directions ?? this.directions,
+      friendsId: friendsId ?? this.friendsId,
     );
   }
 
   @override
-  List<Object?> get props => [name, id, email, interviews, directions];
+  List<Object?> get props => [
+    name,
+    id,
+    email,
+    interviews,
+    directions,
+    friendsId,
+  ];
 
   int get totalInterviews => interviews.length;
 

@@ -19,3 +19,5 @@ final class GetUser extends UsersEvent {
 }
 
 final class GetCurrentUser extends UsersEvent {}
+
+final class GetFriends extends UsersEvent {}

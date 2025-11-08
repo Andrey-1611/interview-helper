@@ -8,7 +8,7 @@ class AppRouterNames {
   static const directions = '/directions';
   static const initial = '/initial';
   static const currentUser = '/current_user';
-  static const usersRating = '/users_rating';
+  static const rating = '/rating';
   static const tracker = '/tracker';
   static const task = '/task';
   static const analysis = '/analysis';
