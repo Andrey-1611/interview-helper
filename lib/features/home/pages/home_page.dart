@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      body: navigationShell,
+      body: SafeArea(top: false, child: navigationShell),
       bottomNavigationBar: SizedBox(
         height: size.height * 0.08,
         child: BottomNavigationBar(
@@ -22,22 +22,22 @@ class HomePage extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.chat),
-              label: _labels[0],
+              label: 'Собеседование',
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart),
-              label: _labels[1],
+              label: 'Аналитика',
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.workspace_premium),
-              label: _labels[2],
+              label: 'Трекер',
               backgroundColor: AppPalette.cardBackground,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.star),
-              label: _labels[3],
+              label: 'Рейтинг',
               backgroundColor: AppPalette.cardBackground,
             ),
           ],
@@ -45,11 +45,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
-  List<String> get _labels => [
-    'Собеседование',
-    'Аналитика',
-    'Трекер',
-    'Рейтинг',
-  ];
 }
