@@ -21,13 +21,14 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       name: fields[1] as String,
       email: fields[2] as String,
       interviews: (fields[3] as List).cast<Interview>(),
+      directions: (fields[4] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserData obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       ..writeByte(2)
       ..write(obj.email)
       ..writeByte(3)
-      ..write(obj.interviews);
+      ..write(obj.interviews)
+      ..writeByte(4)
+      ..write(obj.directions);
   }
 
   @override
@@ -60,6 +63,10 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       interviews: (json['interviews'] as List<dynamic>)
           .map((e) => Interview.fromJson(e as Map<String, dynamic>))
           .toList(),
+      directions: (json['directions'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
@@ -67,4 +74,5 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
       'interviews': instance.interviews.map((e) => e.toJson()).toList(),
+      'directions': instance.directions,
     };

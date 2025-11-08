@@ -20,7 +20,7 @@ class UserInfoPage extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
             child: CustomUserInfo(
-              data: UserData.filterUser(
+              user: UserData.filterUser(
                 filterState.direction,
                 filterState.difficulty,
                 state.user,

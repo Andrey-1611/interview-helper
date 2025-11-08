@@ -118,7 +118,6 @@ class _SignUpPageView extends StatelessWidget {
               isObscure: isObscure,
               isObscureChange: isObscureChange,
             ),
-            CustomGoogleButton(),
             const Spacer(),
             TextButton(
               onPressed: () => context.pushReplacement(AppRouterNames.signIn),

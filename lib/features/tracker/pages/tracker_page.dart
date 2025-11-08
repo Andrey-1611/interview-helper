@@ -6,6 +6,7 @@ import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
+import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
@@ -19,6 +20,7 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
 import '../../../data/models/task.dart';
+import '../../../data/repositories/remote/remote_repository.dart';
 import '../blocs/filter_tasks_cubit/filter_tasks_cubit.dart';
 
 class TrackerPage extends StatelessWidget {
@@ -29,8 +31,11 @@ class TrackerPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              TrackerBloc(GetIt.I<LocalRepository>())..add(GetTasks()),
+          key: ValueKey(context.watch<DataCubit>().state),
+          create: (context) => TrackerBloc(
+            GetIt.I<LocalRepository>(),
+            GetIt.I<RemoteRepository>(),
+          )..add(GetTasks()),
         ),
         BlocProvider(create: (context) => FilterTasksCubit()),
         BlocProvider(create: (context) => SelectorCubit()),

@@ -46,10 +46,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _remoteRepository.getUserData(userId);
       final interviews = await _remoteRepository.getInterviews(userId);
       final tasks = await _remoteRepository.getTasks(userId);
-      await _localRepository.loadInterviews(interviews);
-      await _localRepository.loadTasks(tasks);
-      await _localRepository.loadUser(user);
-      return emit(AuthSuccess());
+      await _localRepository.setInterviews(interviews);
+      await _localRepository.setTasks(tasks);
+      await _localRepository.setUser(user);
+      user.directions.isNotEmpty
+          ? emit(AuthSuccess())
+          : emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
       GetIt.I<Talker>().handle(e, st);
@@ -68,11 +70,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (googleUser.name.isEmpty) {
         final user = await _remoteRepository.getUserData(googleUser.id);
         final interviews = await _remoteRepository.getInterviews(googleUser.id);
-        await _localRepository.loadInterviews(interviews);
-        await _localRepository.loadUser(user);
+        final tasks = await _remoteRepository.getTasks(googleUser.id);
+        await _localRepository.setInterviews(interviews);
+        await _localRepository.setUser(user);
+        await _localRepository.setTasks(tasks);
+        user.directions.isNotEmpty
+            ? emit(AuthSuccess())
+            : emit(AuthWithoutDirections());
       } else {
-        await _remoteRepository.saveUser(googleUser);
-        await _localRepository.loadUser(googleUser);
+        await _remoteRepository.setUser(googleUser);
+        await _localRepository.setUser(googleUser);
+        return emit(AuthWithoutDirections());
       }
       return emit(AuthSuccess());
     } catch (e, st) {
@@ -150,9 +158,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.watchEmailVerified();
       final user = await _authRepository.getUser();
-      await _remoteRepository.saveUser(user);
-      await _localRepository.loadUser(user);
-      return emit(AuthSuccess());
+      await _remoteRepository.setUser(user);
+      await _localRepository.setUser(user);
+      return emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
       GetIt.I<Talker>().handle(e, st);

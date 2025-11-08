@@ -17,4 +17,6 @@ final class AuthNetworkFailure extends AuthState {}
 
 final class AuthEmailNotVerified extends AuthState {}
 
+final class AuthWithoutDirections extends AuthState {}
+
 final class AuthSuccess extends AuthState {}

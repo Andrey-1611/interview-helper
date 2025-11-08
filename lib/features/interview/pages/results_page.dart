@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/share_info.dart';
 import 'package:interview_master/data/models/interview_data.dart';
@@ -71,7 +72,10 @@ class _ResultsPageView extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.home),
-            onPressed: () => context.pushReplacement(AppRouterNames.initial),
+            onPressed: () {
+              context.pushReplacement(AppRouterNames.initial);
+              context.read<DataCubit>().updateKeyValue();
+            },
           ),
         ],
       ),

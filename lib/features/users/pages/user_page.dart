@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
 import 'package:interview_master/features/history/pages/questions_history_page.dart';
@@ -27,9 +28,11 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final value = context.watch<DataCubit>().state;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          key: ValueKey(value),
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
@@ -37,6 +40,7 @@ class UserPage extends StatelessWidget {
           )..add(GetUser(user)),
         ),
         BlocProvider(
+          key: ValueKey(value),
           create: (context) => HistoryBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),

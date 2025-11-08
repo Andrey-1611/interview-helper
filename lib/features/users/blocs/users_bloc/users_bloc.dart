@@ -63,7 +63,9 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       final tasks = await _localRepository.getTasks();
       await _remoteRepository.updateInterviews(user.id, interviews);
       await _remoteRepository.updateTasks(user.id, tasks);
-      return emit(UserSuccess(user: user));
+      user.directions.isNotEmpty
+          ? emit(UserSuccess(user: user))
+          : emit(UserWithoutDirections());
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);

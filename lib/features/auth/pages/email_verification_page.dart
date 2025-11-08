@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
+import '../../../core/utils/data_cubit.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth/auth.dart';
 import '../../../data/repositories/local/local.dart';
@@ -73,8 +74,9 @@ class _EmailVerificationForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
-          context.pushReplacement(AppRouterNames.initial);
+        if (state is AuthWithoutDirections) {
+          context.read<DataCubit>().updateKeyValue();
+          context.pushReplacement(AppRouterNames.directions);
         } else if (state is AuthNetworkFailure) {
           ToastHelper.networkError();
         } else if (state is AuthFailure) {

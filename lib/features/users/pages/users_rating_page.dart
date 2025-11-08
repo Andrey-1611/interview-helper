@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
@@ -29,6 +30,7 @@ class UsersRatingPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          key: ValueKey(context.watch<DataCubit>().state),
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
@@ -203,7 +205,7 @@ class _UserSheet extends StatelessWidget {
         child: Column(
           children: [
             Text(user.name, style: theme.textTheme.displayLarge),
-            Expanded(child: CustomUserInfo(data: user)),
+            Expanded(child: CustomUserInfo(user: user)),
             SizedBox(
               width: size.width * 0.8,
               child: TextButton(
