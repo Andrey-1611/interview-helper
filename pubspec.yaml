@@ -2,7 +2,7 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.1.1+13
+version: 2.1.2+14
 
 environment:
   sdk: ^3.8.1

@@ -9,39 +9,35 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      body: SafeArea(top: false, child: navigationShell),
-      bottomNavigationBar: SizedBox(
-        height: size.height * 0.08,
-        child: BottomNavigationBar(
-          backgroundColor: AppPalette.cardBackground,
-          type: BottomNavigationBarType.shifting,
-          currentIndex: navigationShell.currentIndex,
-          onTap: (index) => navigationShell.goBranch(index),
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Собеседование',
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: 'Аналитика',
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.workspace_premium),
-              label: 'Трекер',
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: 'Рейтинг',
-              backgroundColor: AppPalette.cardBackground,
-            ),
-          ],
-        ),
+      body: navigationShell,
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppPalette.cardBackground,
+        type: BottomNavigationBarType.shifting,
+        currentIndex: navigationShell.currentIndex,
+        onTap: (index) => navigationShell.goBranch(index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Собеседование',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Аналитика',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.workspace_premium),
+            label: 'Трекер',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Рейтинг',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+        ],
       ),
     );
   }
