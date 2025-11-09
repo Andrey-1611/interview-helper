@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 import 'package:interview_master/data/models/task.dart';
@@ -37,6 +39,7 @@ class RemoteDataSource implements RemoteRepository {
   @override
   Future<List<UserData>> getUsers() async {
     final data = await _usersCollection().limit(100).get();
+    log(data.docs.length.toString());
     final users = data.docs
         .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
         .toList();

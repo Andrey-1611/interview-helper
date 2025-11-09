@@ -80,7 +80,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       if (!isConnected) return emit(UsersNetworkFailure());
       final currentUser = (await _localRepository.getUser())!;
       final users = await _remoteRepository.getFriends(currentUser.friendsId);
-      emit(UsersSuccess(users: users, currentUser: currentUser));
+      emit(UsersFriendsSuccess(users: users, currentUser: currentUser));
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);

@@ -15,7 +15,6 @@ import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../../data/repositories/local/local.dart';
 import '../../../../data/repositories/remote/remote.dart';
-import '../blocs/filter_user_cubit/filter_user_cubit.dart';
 import '../blocs/filter_users_cubit/filter_users_cubit.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
@@ -35,10 +34,10 @@ class RatingPage extends StatelessWidget {
                   GetIt.I<LocalRepository>(),
                   GetIt.I<NetworkInfo>(),
                 )
-                ..add(GetUser())
+                ..add(GetUsers())
                 ..add(GetFriends()),
         ),
-        BlocProvider(create: (context) => FilterUserCubit()),
+        BlocProvider(create: (context) => FilterUsersCubit()),
       ],
       child: DefaultTabController(length: 2, child: _RatingPageView()),
     );
