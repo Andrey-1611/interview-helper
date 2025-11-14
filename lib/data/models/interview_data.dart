@@ -4,7 +4,7 @@ import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
-import '../repositories/ai/ai.dart';
+import 'interview_info.dart';
 
 part 'interview_data.g.dart';
 

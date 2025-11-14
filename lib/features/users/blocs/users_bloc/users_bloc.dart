@@ -2,10 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/data/models/friend_request.dart';
 import 'package:interview_master/data/models/user_data.dart';
-import '../../../../data/repositories/local/local.dart';
-import '../../../../data/repositories/remote/remote.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../../../data/repositories/local_repository.dart';
+import '../../../../data/repositories/remote_repository.dart';
 
 part 'users_event.dart';
 
@@ -21,7 +22,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     on<GetUser>(_getUser);
     on<GetUsers>(_getUsers);
     on<GetCurrentUser>(_getCurrentUser);
-    on<GetFriends>(_getFriends);
   }
 
   Future<void> _getUser(GetUser event, Emitter<UsersState> emit) async {
@@ -42,8 +42,13 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(UsersNetworkFailure());
       final users = await _remoteRepository.getUsers();
-      final currentUser = await _localRepository.getUser();
-      emit(UsersSuccess(users: users, currentUser: currentUser!));
+      final currentUser = (await _localRepository.getUser())!;
+      final friends = users
+          .where((user) => user.isFriend(currentUser))
+          .toList();
+      emit(
+        UsersSuccess(users: users, friends: friends, currentUser: currentUser),
+      );
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);
@@ -67,20 +72,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       user.directions.isNotEmpty
           ? emit(UserSuccess(user: user))
           : emit(UserWithoutDirections());
-    } catch (e, st) {
-      emit(UsersFailure());
-      GetIt.I<Talker>().handle(e, st);
-    }
-  }
-
-  Future<void> _getFriends(GetFriends event, Emitter<UsersState> emit) async {
-    emit(UsersLoading());
-    try {
-      final isConnected = await _networkInfo.isConnected;
-      if (!isConnected) return emit(UsersNetworkFailure());
-      final currentUser = (await _localRepository.getUser())!;
-      final users = await _remoteRepository.getFriends(currentUser.friendsId);
-      emit(UsersFriendsSuccess(users: users, currentUser: currentUser));
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);

@@ -22,7 +22,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, user: id);
+  final testUser = MyUser(email: email, name: name, profile: id);
 
   group('watch email verified bloc', () {
     test('initial state', () {

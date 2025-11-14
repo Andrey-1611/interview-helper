@@ -7,10 +7,10 @@ import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import 'package:interview_master/data/repositories/remote/remote.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../core/utils/data_cubit.dart';
-import '../../../data/repositories/local/local_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../blocs/directions_cubit/directions_cubit.dart';
 import '../blocs/tracker_bloc/tracker_bloc.dart';
 

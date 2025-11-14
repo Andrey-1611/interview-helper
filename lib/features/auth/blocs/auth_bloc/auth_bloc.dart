@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../core/utils/network_info.dart';
-import '../../../../data/repositories/auth/auth.dart';
-import '../../../../data/repositories/local/local.dart';
-import '../../../../data/repositories/remote/remote.dart';
+import '../../../../data/repositories/auth_repository.dart';
+import '../../../../data/repositories/local_repository.dart';
+import '../../../../data/repositories/remote_repository.dart';
 
 part 'auth_event.dart';
 

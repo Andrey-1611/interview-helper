@@ -27,7 +27,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, user: id);
+  final testUser = MyUser(email: email, name: name, profile: id);
 
   group('change email bloc', () {
     test('initial state', () {
@@ -52,7 +52,7 @@ void main() {
               that: isA<MyUser>()
                   .having((e) => e.email, 'email', email)
                   .having((e) => e.name, 'name', name)
-                  .having((e) => e.user, 'id', id),
+                  .having((e) => e.profile, 'id', id),
             ),
           ),
         ).called(1);

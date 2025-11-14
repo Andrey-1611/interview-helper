@@ -28,7 +28,7 @@ void main() {
   const name = 'testName';
   const id = 'testId';
   const password = 'testPassword';
-  final testUser = MyUser(email: email, name: name, user: id);
+  final testUser = MyUser(email: email, name: name, profile: id);
 
   group('sign in bloc', () {
     test('initial state', () {

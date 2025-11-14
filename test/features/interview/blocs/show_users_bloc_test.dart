@@ -28,7 +28,7 @@ void main() {
   final testUsers = [
     UserData(
       name: name,
-      user: id,
+      profile: id,
       totalInterviews: totalInterviews,
       totalScore: totalScore,
       averageScore: averageScore,

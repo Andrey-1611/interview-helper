@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../data/repositories/local/local.dart';
-import '../../../data/repositories/remote/remote.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../../users/blocs/users_bloc/users_bloc.dart';
 
 class SplashPage extends StatelessWidget {

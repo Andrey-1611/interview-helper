@@ -7,15 +7,15 @@ import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
+import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../../data/repositories/local/local.dart';
-import '../../../../data/repositories/remote/remote.dart';
 import '../../../data/models/user_data.dart';
-import '../blocs/filter_user_cubit/filter_user_cubit.dart' show FilterUserCubit;
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
 class AnalysisPage extends StatelessWidget {
@@ -34,7 +34,7 @@ class AnalysisPage extends StatelessWidget {
             GetIt.I<NetworkInfo>(),
           )..add(GetUser()),
         ),
-        BlocProvider(create: (context) => FilterUserCubit()),
+        BlocProvider(create: (context) => FilterAnalysisCubit()),
       ],
       child: _AnalysisPageView(selectedUser: selectedUser),
     );
@@ -49,7 +49,7 @@ class _AnalysisPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final filter = context.watch<FilterUserCubit>();
+    final filter = context.watch<FilterAnalysisCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Анализ'),
@@ -65,7 +65,7 @@ class _AnalysisPageView extends StatelessWidget {
                 ),
               ),
               filterDialog: _FilterDialog(filterCubit: filter),
-              resetFilter: filter.resetUser,
+              resetFilter: filter.reset,
             ),
           ),
         ),
@@ -194,7 +194,7 @@ class _TitleInfo extends StatelessWidget {
               ],
             ),
             GestureDetector(
-              onTap: () => context.push(AppRouterNames.user, extra: user),
+              onTap: () => context.push(AppRouterNames.profile, extra: user),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -336,7 +336,7 @@ class _CompareTimeCard extends StatelessWidget {
 }
 
 class _FilterDialog extends StatelessWidget {
-  final FilterUserCubit filterCubit;
+  final FilterAnalysisCubit filterCubit;
 
   const _FilterDialog({required this.filterCubit});
 
@@ -365,7 +365,7 @@ class _FilterDialog extends StatelessWidget {
             text: 'Применить',
             selectedColor: AppPalette.primary,
             onPressed: () {
-              filterCubit.filterUser(direction, difficulty, null);
+              filterCubit.filter(direction, difficulty, null);
               context.pop();
             },
           ),

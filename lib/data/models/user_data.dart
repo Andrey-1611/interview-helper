@@ -95,6 +95,8 @@ class UserData extends Equatable {
       ? interviews.map((i) => i.duration).reduce((a, b) => a > b ? b : a)
       : Duration.zero;
 
+  bool isFriend(UserData user) => user.friendsId.contains(id);
+
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
 

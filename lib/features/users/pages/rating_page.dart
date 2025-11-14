@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
+import 'package:interview_master/features/users/blocs/friends_bloc/friends_bloc.dart';
 import 'package:interview_master/features/users/pages/friends_page.dart';
 import 'package:interview_master/features/users/pages/users_page.dart';
 import '../../../app/router/app_router_names.dart';
@@ -13,8 +14,8 @@ import '../../../app/widgets/custom_filter_button.dart';
 import '../../../core/constants/interviews_data.dart';
 import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../../data/repositories/local/local.dart';
-import '../../../../data/repositories/remote/remote.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../blocs/filter_users_cubit/filter_users_cubit.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
@@ -28,14 +29,19 @@ class RatingPage extends StatelessWidget {
       providers: [
         BlocProvider(
           key: ValueKey(value),
-          create: (context) =>
-              UsersBloc(
-                  GetIt.I<RemoteRepository>(),
-                  GetIt.I<LocalRepository>(),
-                  GetIt.I<NetworkInfo>(),
-                )
-                ..add(GetUsers())
-                ..add(GetFriends()),
+          create: (context) => UsersBloc(
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<NetworkInfo>(),
+          )..add(GetUsers()),
+        ),
+        BlocProvider(
+          key: ValueKey(value),
+          create: (context) => FriendsBloc(
+            GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
+            GetIt.I<NetworkInfo>(),
+          ),
         ),
         BlocProvider(create: (context) => FilterUsersCubit()),
       ],
@@ -57,7 +63,11 @@ class _RatingPageView extends StatelessWidget {
         title: Text('Рейтинг', style: theme.textTheme.displayLarge),
         actions: [
           IconButton(
-            onPressed: () => context.push(AppRouterNames.profile),
+            onPressed: () => context.push(AppRouterNames.friendRequests),
+            icon: Icon(Icons.group),
+          ),
+          IconButton(
+            onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),
           ),
         ],

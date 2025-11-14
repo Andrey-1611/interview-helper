@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interview_master/features/interview/data/models/interviews_data.dart';
 import 'package:interview_master/features/interview/data/models/question.dart';
-import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
+import 'package:interview_master/features/profile/use_cases/show_interviews_use_case.dart';
 import 'package:interview_master/features/interview/presentation/blocs/show_interviews_bloc/show_interviews_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -26,7 +26,7 @@ void main() {
   const questions = <Question>[];
   final date = DateTime.now();
   final interview = Interview(
-    user: id,
+    profile: id,
     score: score,
     difficulty: difficulty,
     direction: direction,

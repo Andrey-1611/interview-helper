@@ -3,7 +3,7 @@ import 'package:interview_master/features/interview/data/models/interviews_data.
 import 'package:interview_master/features/interview/data/models/question.dart';
 import 'package:interview_master/features/interview/domain/repositories/local.dart';
 import 'package:interview_master/features/interview/domain/repositories/remote.dart';
-import 'package:interview_master/features/history/use_cases/show_interviews_use_case.dart';
+import 'package:interview_master/features/profile/use_cases/show_interviews_use_case.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRemoteRepository extends Mock implements RemoteRepository {}
@@ -41,7 +41,7 @@ void main() {
   final date = DateTime.now();
   final testInterviews = [
     Interview(
-      user: id,
+      profile: id,
       score: score,
       difficulty: difficulty,
       direction: direction,

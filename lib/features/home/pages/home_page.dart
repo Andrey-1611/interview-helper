@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,47 +10,27 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: SizedBox(
-        height: size.height * 0.08,
-        child: BottomNavigationBar(
-          backgroundColor: AppPalette.cardBackground,
-          type: BottomNavigationBarType.shifting,
-          currentIndex: navigationShell.currentIndex,
-          onTap: (index) => navigationShell.goBranch(index),
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: _labels[0],
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: _labels[1],
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.workspace_premium),
-              label: _labels[2],
-              backgroundColor: AppPalette.cardBackground,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: _labels[3],
-              backgroundColor: AppPalette.cardBackground,
-            ),
-          ],
-        ),
+      backgroundColor: AppPalette.cardBackground,
+      bottomNavigationBar: GNav(
+        selectedIndex: navigationShell.currentIndex,
+        onTabChange: (index) => navigationShell.goBranch(index),
+        gap: 4,
+       tabMargin: EdgeInsets.symmetric(vertical: 8),
+        haptic: false,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        activeColor: AppPalette.primary,
+        color: Colors.grey[600],
+        tabBackgroundColor: AppPalette.primary.withOpacity(0.1),
+        backgroundColor: AppPalette.cardBackground,
+        tabs: [
+          GButton(icon: Icons.chat, text: 'Интервью'),
+          GButton(icon: Icons.bar_chart, text: 'Профиль'),
+          GButton(icon: Icons.workspace_premium, text: 'Трекер'),
+          GButton(icon: Icons.star, text: 'Рейтинг'),
+        ],
       ),
     );
   }
-
-  List<String> get _labels => [
-    'Собеседование',
-    'Аналитика',
-    'Трекер',
-    'Рейтинг',
-  ];
 }
