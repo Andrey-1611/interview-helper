@@ -12,23 +12,32 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      backgroundColor: AppPalette.cardBackground,
-      bottomNavigationBar: GNav(
-        selectedIndex: navigationShell.currentIndex,
-        onTabChange: (index) => navigationShell.goBranch(index),
-        gap: 4,
-       tabMargin: EdgeInsets.symmetric(vertical: 8),
-        haptic: false,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        activeColor: AppPalette.primary,
-        color: Colors.grey[600],
-        tabBackgroundColor: AppPalette.primary.withOpacity(0.1),
+      bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppPalette.cardBackground,
-        tabs: [
-          GButton(icon: Icons.chat, text: 'Интервью'),
-          GButton(icon: Icons.bar_chart, text: 'Профиль'),
-          GButton(icon: Icons.workspace_premium, text: 'Трекер'),
-          GButton(icon: Icons.star, text: 'Рейтинг'),
+        type: BottomNavigationBarType.shifting,
+        currentIndex: navigationShell.currentIndex,
+        onTap: (index) => navigationShell.goBranch(index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Собеседование',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Аналитика',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.workspace_premium),
+            label: 'Трекер',
+            backgroundColor: AppPalette.cardBackground,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Рейтинг',
+            backgroundColor: AppPalette.cardBackground,
+          ),
         ],
       ),
     );
