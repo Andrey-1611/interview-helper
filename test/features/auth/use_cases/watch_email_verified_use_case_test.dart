@@ -34,7 +34,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, user: id);
+  final testUser = MyUser(email: email, name: name, profile: id);
   final emailVerifiedResult = EmailVerificationResult(
     isEmailVerified: true,
     userBox: testUser,

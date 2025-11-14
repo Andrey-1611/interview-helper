@@ -66,4 +66,10 @@ class InterviewsData {
   static const types = [interviews, time, score];
 
   static const tasksSorts = [firstNew, firstOld];
+
+  static const String pending = 'ожидание';
+  static const String accepted = 'принято';
+  static const String rejected = 'отклонено';
+
+  static const statuses = [pending, accepted, rejected];
 }

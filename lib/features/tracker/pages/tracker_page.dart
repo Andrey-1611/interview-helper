@@ -11,7 +11,6 @@ import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/core/utils/task_type_helper.dart';
-import 'package:interview_master/data/repositories/local/local.dart';
 import 'package:interview_master/features/tracker/blocs/selector_subit/selector_cubit.dart';
 import 'package:interview_master/features/tracker/blocs/tracker_bloc/tracker_bloc.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +19,8 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
 import '../../../data/models/task.dart';
-import '../../../data/repositories/remote/remote_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../blocs/filter_tasks_cubit/filter_tasks_cubit.dart';
 
 class TrackerPage extends StatelessWidget {
@@ -67,7 +67,7 @@ class _TrackerPageView extends StatelessWidget {
             icon: Icon(Icons.add_task),
           ),
           IconButton(
-            onPressed: () => context.push(AppRouterNames.profile),
+            onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),
           ),
         ],

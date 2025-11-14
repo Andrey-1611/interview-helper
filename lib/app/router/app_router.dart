@@ -1,30 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:interview_master/features/tracker/pages/directions_page.dart';
 import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
-import 'package:interview_master/features/users/pages/profile_page.dart';
+import 'package:interview_master/features/users/pages/friend_requests_page.dart';
+import 'package:interview_master/features/settings/pages/settings_page.dart';
+import 'package:interview_master/features/users/pages/rating_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../data/models/interview_info.dart';
 import '../../data/models/question.dart';
 import '../../data/models/user_data.dart';
-import '../../data/repositories/ai/ai.dart';
 import '../../features/auth/pages/change_email_page.dart';
 import '../../features/auth/pages/change_password_page.dart';
 import '../../features/auth/pages/email_verification_page.dart';
 import '../../features/auth/pages/sign_in_page.dart';
 import '../../features/auth/pages/sign_up_page.dart';
-import '../../features/history/pages/interview_info_page.dart';
-import '../../features/history/pages/question_info_page.dart';
 import '../../features/home/pages/home_page.dart';
 import '../../features/interview/pages/initial_page.dart';
 import '../../features/interview/pages/interview_page.dart';
 import '../../features/interview/pages/results_page.dart';
 import '../../features/home/pages/splash_page.dart';
+import '../../features/profile/pages/interview_info_page.dart';
+import '../../features/profile/pages/question_info_page.dart';
 import '../../features/tracker/pages/tracker_page.dart';
-import '../../features/users/pages/user_page.dart';
-import '../../features/users/pages/users_rating_page.dart';
+import '../../features/profile/pages/profile_page.dart';
 import 'app_router_names.dart';
 
 final appRouter = GoRouter(
@@ -80,8 +82,8 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRouterNames.profile,
-      builder: (context, state) => const ProfilePage(),
+      path: AppRouterNames.settings,
+      builder: (context, state) => const SettingsPage(),
     ),
     GoRoute(
       path: AppRouterNames.task,
@@ -93,11 +95,8 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouterNames.interviewInfo,
       builder: (context, state) {
-        final data = state.extra as Map<String, dynamic>;
-        return InterviewInfoPage(
-          interview: data['interview'],
-          isCurrentUser: data['isCurrentUser'],
-        );
+        final interview = state.extra as InterviewData;
+        return InterviewInfoPage(interview: interview);
       },
     ),
     GoRoute(
@@ -108,10 +107,10 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRouterNames.user,
+      path: AppRouterNames.profile,
       builder: (context, state) {
         final user = state.extra as UserData?;
-        return UserPage(user: user);
+        return ProfilePage(user: user);
       },
     ),
     GoRoute(
@@ -120,6 +119,10 @@ final appRouter = GoRouter(
         final user = state.extra as UserData;
         return AnalysisPage(selectedUser: user);
       },
+    ),
+    GoRoute(
+      path: AppRouterNames.friendRequests,
+      builder: (context, state) => FriendRequestsPage(),
     ),
     StatefulShellRoute(
       navigatorContainerBuilder: (context, navigationShell, branchNavigators) {
@@ -143,8 +146,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.currentUser,
-              builder: (context, state) => const UserPage(user: null),
+              path: AppRouterNames.currentProfile,
+              builder: (context, state) => const ProfilePage(user: null),
             ),
           ],
         ),
@@ -159,8 +162,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: <RouteBase>[
             GoRoute(
-              path: AppRouterNames.usersRating,
-              builder: (context, state) => const UsersRatingPage(),
+              path: AppRouterNames.rating,
+              builder: (context, state) => const RatingPage(),
             ),
           ],
         ),

@@ -5,17 +5,18 @@ class AppRouterNames {
   static const emailVerification = '/email_verification';
   static const changeEmail = '/change_email';
   static const changePassword = '/change_password';
-  static const directions = '/directions';
+  static const directions = 'directions';
   static const initial = '/initial';
-  static const currentUser = '/current_user';
-  static const usersRating = '/users_rating';
+  static const currentProfile = '/current_profile';
+  static const rating = '/rating';
   static const tracker = '/tracker';
   static const task = '/task';
   static const analysis = '/analysis';
+  static const settings = '/settings';
   static const profile = '/profile';
-  static const user = '/user_info';
   static const interview = '/interview';
   static const results = '/results';
   static const interviewInfo = '/interview_info';
   static const questionInfo = '/question_info';
+  static const friendRequests = '/friend_requests';
 }

@@ -22,7 +22,7 @@ void main() {
   const email = 'testEmail';
   const name = 'testName';
   const id = 'testId';
-  final testUser = MyUser(email: email, name: name, user: id);
+  final testUser = MyUser(email: email, name: name, profile: id);
 
   group('get current user bloc', () {
     test('initial state', () {

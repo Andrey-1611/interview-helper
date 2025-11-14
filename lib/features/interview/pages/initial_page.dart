@@ -10,12 +10,13 @@ import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
 import '../../../../app/router/app_router_names.dart';
-import '../../../data/repositories/ai/ai.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
-import '../../../data/repositories/local/local.dart';
-import '../../../data/repositories/remote/remote.dart';
-import '../../history/blocs/history_bloc/history_bloc.dart';
+import '../../../data/models/interview_info.dart';
+import '../../../data/repositories/ai_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
+import '../../profile/blocs/profile_bloc/profile_bloc.dart';
 
 class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
@@ -34,11 +35,11 @@ class InitialPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => HistoryBloc(
+          create: (context) => ProfileBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<NetworkInfo>(),
-          )..add(GetInterviews(userId: null)),
+          )..add(GetProfile(userId: null)),
         ),
         BlocProvider(create: (context) => InterviewFormCubit()),
       ],
@@ -57,10 +58,10 @@ class _InitialPageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Собеседование'),
+        title: Text('Интервью'),
         actions: [
           IconButton(
-            onPressed: () => context.push(AppRouterNames.profile),
+            onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),
           ),
         ],
@@ -145,9 +146,9 @@ class _LastInterviewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return BlocBuilder<HistoryBloc, HistoryState>(
+    return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        if (state is HistorySuccess) {
+        if (state is ProfileSuccess) {
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: state.interviews.length,

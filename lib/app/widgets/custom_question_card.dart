@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/features/history/blocs/history_bloc/history_bloc.dart';
+import 'package:interview_master/features/profile/blocs/profile_bloc/profile_bloc.dart';
 import '../../core/theme/app_pallete.dart';
 import '../../data/models/question.dart';
 import '../router/app_router_names.dart';
@@ -30,7 +30,7 @@ class CustomQuestionCard extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: IconButton(
                     onPressed: () {
-                      context.read<HistoryBloc>().add(
+                      context.read<ProfileBloc>().add(
                         ChangeIsFavouriteQuestion(questionId: question.id),
                       );
                     },

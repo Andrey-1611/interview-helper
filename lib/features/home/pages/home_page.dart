@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 
 class HomePage extends StatelessWidget {

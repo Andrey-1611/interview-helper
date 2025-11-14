@@ -2,11 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/data/models/task.dart';
-import 'package:interview_master/data/repositories/local/local.dart';
-import 'package:interview_master/data/repositories/remote/remote.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-
 import '../../../../data/models/user_data.dart';
+import '../../../../data/repositories/local_repository.dart';
+import '../../../../data/repositories/remote_repository.dart';
 
 part 'tracker_event.dart';
 

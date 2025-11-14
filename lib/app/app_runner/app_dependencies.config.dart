@@ -27,14 +27,14 @@ import '../../core/utils/network_info.dart' as _i668;
 import '../../core/utils/share_info.dart' as _i502;
 import '../../core/utils/stopwatch_info.dart' as _i742;
 import '../../core/utils/url_launch.dart' as _i1057;
-import '../../data/repositories/ai/ai_data_source.dart' as _i452;
-import '../../data/repositories/ai/ai_repository.dart' as _i239;
-import '../../data/repositories/auth/auth_data_source.dart' as _i623;
-import '../../data/repositories/auth/auth_repository.dart' as _i179;
-import '../../data/repositories/local/local_data_source.dart' as _i513;
-import '../../data/repositories/local/local_repository.dart' as _i728;
-import '../../data/repositories/remote/remote_data_source.dart' as _i176;
-import '../../data/repositories/remote/remote_repository.dart' as _i300;
+import '../../data/data_sources/ai_data_source.dart' as _i982;
+import '../../data/data_sources/auth_data_source.dart' as _i315;
+import '../../data/data_sources/local_data_source.dart' as _i466;
+import '../../data/data_sources/remote_data_source.dart' as _i264;
+import '../../data/repositories/ai_repository.dart' as _i504;
+import '../../data/repositories/auth_repository.dart' as _i481;
+import '../../data/repositories/local_repository.dart' as _i29;
+import '../../data/repositories/remote_repository.dart' as _i137;
 import 'app_dependencies.dart' as _i469;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -62,17 +62,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i50.FlutterTts>(() => modules.flutterTts);
     gh.lazySingleton<_i998.SharePlus>(() => modules.sharePlus);
     gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
-    gh.lazySingleton<_i728.LocalRepository>(
-        () => _i513.LocalDataSource(gh<_i986.HiveInterface>()));
-    gh.lazySingleton<_i239.AIRepository>(
-        () => _i452.AIDataSource(gh<_i361.Dio>()));
+    gh.lazySingleton<_i29.LocalRepository>(
+        () => _i466.LocalDataSource(gh<_i986.HiveInterface>()));
+    gh.lazySingleton<_i504.AIRepository>(
+        () => _i982.AIDataSource(gh<_i361.Dio>()));
+    gh.lazySingleton<_i137.RemoteRepository>(
+        () => _i264.RemoteDataSource(gh<_i974.FirebaseFirestore>()));
     gh.lazySingleton<_i742.StopwatchInfo>(
         () => _i742.StopwatchInfo(gh<Stopwatch>()));
-    gh.lazySingleton<_i300.RemoteRepository>(
-        () => _i176.RemoteDataSource(gh<_i974.FirebaseFirestore>()));
     gh.lazySingleton<_i502.ShareInfo>(
         () => _i502.ShareInfo(gh<_i998.SharePlus>()));
-    gh.lazySingleton<_i179.AuthRepository>(() => _i623.AuthDataSource(
+    gh.lazySingleton<_i481.AuthRepository>(() => _i315.AuthDataSource(
           gh<_i59.FirebaseAuth>(),
           gh<_i116.GoogleSignIn>(),
         ));

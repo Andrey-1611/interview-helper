@@ -13,10 +13,12 @@ import 'package:speech_to_text/speech_to_text.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/stopwatch_info.dart';
-import '../../../data/repositories/ai/ai.dart';
+import '../../../data/models/interview_info.dart';
+import '../../../data/models/user_input.dart';
 import '../../../app/widgets/custom_button.dart';
-import '../../../data/repositories/local/local_repository.dart';
-import '../../../data/repositories/remote/remote_repository.dart';
+import '../../../data/repositories/ai_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class InterviewPage extends StatefulWidget {

@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../core/utils/data_cubit.dart';
-import '../../../data/repositories/auth/auth.dart';
-import '../../../data/repositories/local/local.dart';
-import '../../../data/repositories/remote/remote.dart';
 import 'package:interview_master/features/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:interview_master/features/auth/widgets/custom_google_button.dart';
 import '../../../../app/router/app_router_names.dart';
 import '../../../core/utils/dialog_helper.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/local_repository.dart';
+import '../../../data/repositories/remote_repository.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
