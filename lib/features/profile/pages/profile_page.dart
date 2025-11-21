@@ -58,6 +58,7 @@ class _ProfilePageView extends StatelessWidget {
     final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterProfileCubit>();
+    final isCurrentUser = user == null;
     return Scaffold(
       appBar: AppBar(
         title: Text('Профиль', style: theme.textTheme.displayLarge),
@@ -74,25 +75,19 @@ class _ProfilePageView extends StatelessWidget {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, size.height * 0.14),
+          preferredSize: Size(double.infinity, size.height * 0.12),
           child: _ProfileAppBar(filter: filter, isCurrentUser: isCurrentUser),
         ),
       ),
       body: TabBarView(
         children: [
-          _KeepAlivePage(child: StatisticsPage(isCurrentUser: isCurrentUser)),
-          _KeepAlivePage(
-            child: InterviewsHistoryPage(isCurrentUser: isCurrentUser),
-          ),
-          _KeepAlivePage(
-            child: QuestionsHistoryPage(isCurrentUser: isCurrentUser),
-          ),
+          _KeepAlivePage(child: StatisticsPage(user: user)),
+          _KeepAlivePage(child: InterviewsHistoryPage(user: user)),
+          _KeepAlivePage(child: QuestionsHistoryPage(user: user)),
         ],
       ),
     );
   }
-
-  bool get isCurrentUser => user == null;
 }
 
 class _ProfileAppBar extends StatelessWidget {

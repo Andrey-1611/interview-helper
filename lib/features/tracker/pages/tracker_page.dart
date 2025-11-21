@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
+import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
@@ -128,18 +129,13 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TrackerBloc, TrackerState>(
-      listener: (context, state) {
-        if (state is TrackerFailure) {
-          ToastHelper.unknownError();
-        } else if (state is TrackerTasksFailure) {
-          ToastHelper.tasksIsCompletedError();
-        }
-      },
+    return BlocBuilder<TrackerBloc, TrackerState>(
       builder: (context, state) {
-        if (state is TrackerSuccess) {
-          return _TasksListView(tasks: state.tasks, filter: filter);
-        } else if (state is TrackerTasksFailure) {
+        if (state is TrackerFailure) {
+          return CustomUnknownFailure(
+            onPressed: () => context.read<TrackerBloc>().add(GetTasks()),
+          );
+        } else if (state is TrackerSuccess) {
           return _TasksListView(tasks: state.tasks, filter: filter);
         }
         return CustomLoadingIndicator();
@@ -229,7 +225,7 @@ class _EmptyList extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Задач еще нету', style: theme.textTheme.displayLarge),
+          Text('Задач еще нет', style: theme.textTheme.displayLarge),
           TextButton(
             onPressed: () => DialogHelper.showCustomDialog(
               dialog: _CreateTaskDialog(

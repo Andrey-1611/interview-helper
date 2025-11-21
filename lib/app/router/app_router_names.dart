@@ -18,5 +18,7 @@ class AppRouterNames {
   static const results = '/results';
   static const interviewInfo = '/interview_info';
   static const questionInfo = '/question_info';
-  static const friendRequests = '/friend_requests';
+  static const questionsDatabase = '/questions_database';
+  static const directionQuestionsDatabase = '/direction_questions_database';
+
 }

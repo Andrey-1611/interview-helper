@@ -35,12 +35,6 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   }
 
   Future<void> _createTask(CreateTask event, Emitter<TrackerState> emit) async {
-    if (state is TrackerSuccess) {
-      final tasks = (state as TrackerSuccess).tasks;
-      if (tasks.where((task) => !task.isCompleted).length >= 10) {
-        return emit(TrackerTasksFailure(tasks: tasks));
-      }
-    }
     emit(TrackerLoading());
     try {
       final task = Task.create(event.targetValue, event.type, event.direction);

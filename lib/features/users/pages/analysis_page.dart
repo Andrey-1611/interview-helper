@@ -11,6 +11,7 @@ import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filt
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
+import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
@@ -72,7 +73,11 @@ class _AnalysisPageView extends StatelessWidget {
       ),
       body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
-          if (state is UserSuccess) {
+          if (state is UsersFailure) {
+            return CustomUnknownFailure(
+              onPressed: () => context.read<UsersBloc>().add(GetUser()),
+            );
+          } else if (state is UserSuccess) {
             final filteredCurrentUser = UserData.filterUser(
               filter.state.direction,
               filter.state.difficulty,

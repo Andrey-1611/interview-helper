@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
@@ -18,7 +17,7 @@ import 'firebase_options.dart';
 
 class AppInitializer {
   static Future<void> init() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    await _initTalker();
     await _initFirebase();
     await _initHive();
     await _loadApi();
@@ -46,7 +45,7 @@ class AppInitializer {
     await dotenv.load(fileName: '.env');
   }
 
-  static Future<void> initTalker() async {
+  static Future<void> _initTalker() async {
     final talker = GetIt.I<Talker>();
     Bloc.observer = TalkerBlocObserver(
       talker: talker,

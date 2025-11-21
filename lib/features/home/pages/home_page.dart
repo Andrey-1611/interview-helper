@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:interview_master/core/theme/app_pallete.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,30 +13,23 @@ class HomePage extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppPalette.cardBackground,
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
         currentIndex: navigationShell.currentIndex,
+        selectedFontSize: 13,
+        unselectedFontSize: 12,
         onTap: (index) => navigationShell.goBranch(index),
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Собеседование',
-            backgroundColor: AppPalette.cardBackground,
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Собеседование'),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
             label: 'Аналитика',
-            backgroundColor: AppPalette.cardBackground,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.workspace_premium),
             label: 'Трекер',
-            backgroundColor: AppPalette.cardBackground,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Рейтинг',
-            backgroundColor: AppPalette.cardBackground,
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Рейтинг'),
         ],
       ),
     );

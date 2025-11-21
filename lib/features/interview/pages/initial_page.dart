@@ -58,8 +58,12 @@ class _InitialPageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Интервью'),
+        title: Text('Собеседование'),
         actions: [
+          IconButton(
+            onPressed: () => context.push(AppRouterNames.questionsDatabase),
+            icon: Icon(Icons.library_books),
+          ),
           IconButton(
             onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),

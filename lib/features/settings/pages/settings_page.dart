@@ -7,6 +7,8 @@ import 'package:interview_master/core/utils/url_launch.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_info_card.dart';
+import '../../../app/widgets/custom_network_failure.dart';
+import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/toast_helper.dart';
@@ -52,6 +54,7 @@ class _SettingsPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final appInfo = GetIt.I<PackageInfo>();
+    final onPressed = context.read<UsersBloc>().add(GetUser());
     return Scaffold(
       appBar: AppBar(title: const Text('Настройки')),
       body: BlocListener<SettingsBloc, SettingsState>(
@@ -71,7 +74,11 @@ class _SettingsPageView extends StatelessWidget {
         },
         child: BlocBuilder<UsersBloc, UsersState>(
           builder: (context, state) {
-            if (state is UserSuccess) {
+            if (state is UsersNetworkFailure) {
+              return CustomNetworkFailure(onPressed: () => onPressed);
+            } else if (state is UsersFailure) {
+              return CustomUnknownFailure(onPressed: () => onPressed);
+            } else if (state is UserSuccess) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

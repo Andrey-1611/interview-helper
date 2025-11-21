@@ -1,9 +1,5 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
-import 'package:interview_master/data/models/friend_request.dart';
 import 'package:interview_master/data/models/task.dart';
 import '../models/interview_data.dart';
 import '../models/user_data.dart';
@@ -26,10 +22,6 @@ class RemoteDataSource implements RemoteRepository {
         .collection('interviews');
   }
 
-  CollectionReference _requestsCollection() {
-    return _firebaseFirestore.collection('requests');
-  }
-
   CollectionReference _tasksCollection(String userId) {
     return _firebaseFirestore
         .collection('users')
@@ -45,7 +37,6 @@ class RemoteDataSource implements RemoteRepository {
   @override
   Future<List<UserData>> getUsers() async {
     final data = await _usersCollection().limit(100).get();
-    log(data.docs.length.toString());
     final users = data.docs
         .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
@@ -130,42 +121,5 @@ class RemoteDataSource implements RemoteRepository {
         .toList();
     users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
     return users;
-  }
-
-  @override
-  Future<List<FriendRequest>> getFriendRequests(String userId) async {
-    log(userId);
-    final data = await _requestsCollection()
-        .where('toUserId', isEqualTo: userId)
-        .where('status', isEqualTo: InterviewsData.pending)
-        .get();
-    return data.docs
-        .map(
-          (doc) => FriendRequest.fromJson(doc.data() as Map<String, dynamic>),
-        )
-        .toList();
-  }
-
-  @override
-  Future<void> sendFriendRequest(FriendRequest request) async {
-    await _requestsCollection().doc(request.id).set(request.toJson());
-  }
-
-  @override
-  Future<void> updateFriendRequest(FriendRequest request) async {
-    await _requestsCollection().doc(request.id).update({
-      'status': request.status,
-    });
-  }
-
-  @override
-  Future<List<UserData>> getUsersByIds(List<String> ids) async {
-    ids = ids.toSet().toList();
-    final data = await _usersCollection()
-        .where(FieldPath.documentId, whereIn: ids)
-        .get();
-    return data.docs
-        .map((doc) => UserData.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
   }
 }

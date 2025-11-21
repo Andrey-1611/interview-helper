@@ -290,10 +290,9 @@ class _GoOutDialog extends StatelessWidget {
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text(
-        'Вы уверены, что хотите выйти из аккаунта?',
+        'Вы уверены, что хотите сбросить собседование?',
         style: theme.textTheme.displaySmall,
       ),
-      content: const Text('Текущий прогресс будет сброшен'),
       actions: [
         TextButton(
           onPressed: () {
