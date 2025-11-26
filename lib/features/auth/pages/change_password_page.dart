@@ -58,6 +58,7 @@ class _ChangePasswordPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Смена пароля')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -107,12 +108,12 @@ class _ChangePasswordButton extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          ToastHelper.sendPasswordResetEmail(emailController.text);
+          ToastHelper.sendPasswordResetEmail(emailController.text, context);
           context.pushReplacement(AppRouterNames.signIn);
         } else if (state is AuthNetworkFailure) {
-          ToastHelper.networkError();
+          ToastHelper.networkError(context);
         } else if (state is AuthFailure) {
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         }
       },
       child: CustomAuthButton(

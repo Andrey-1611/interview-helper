@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/features/profile/blocs/profile_bloc/profile_bloc.dart';
-import '../../core/theme/app_pallete.dart';
 import '../../data/models/question.dart';
 import '../router/app_router_names.dart';
 import 'custom_score_indicator.dart';
@@ -19,6 +18,7 @@ class CustomQuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => context.push(AppRouterNames.questionInfo, extra: question),
       child: Card(
@@ -37,8 +37,8 @@ class CustomQuestionCard extends StatelessWidget {
                     icon: Icon(
                       Icons.favorite,
                       color: question.isFavourite
-                          ? AppPalette.error
-                          : AppPalette.textSecondary,
+                          ? theme.colorScheme.error
+                          : theme.hintColor,
                     ),
                   ),
                 )

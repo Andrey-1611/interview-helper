@@ -5,7 +5,7 @@ class AppRouterNames {
   static const emailVerification = '/email_verification';
   static const changeEmail = '/change_email';
   static const changePassword = '/change_password';
-  static const directions = 'directions';
+  static const directions = '/directions';
   static const initial = '/initial';
   static const currentProfile = '/current_profile';
   static const rating = '/rating';
@@ -20,5 +20,4 @@ class AppRouterNames {
   static const questionInfo = '/question_info';
   static const questionsDatabase = '/questions_database';
   static const directionQuestionsDatabase = '/direction_questions_database';
-
 }

@@ -40,11 +40,18 @@ class _SplashPageView extends StatelessWidget {
         } else if (state is UserWithoutDirections) {
           context.pushReplacement(AppRouterNames.directions);
         } else if (state is UsersFailure) {
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         }
       },
       child: Scaffold(
-        body: Center(child: Text('SkillAI', style: theme.textTheme.titleLarge)),
+        body: Center(
+          child: Text(
+            'SkillAI',
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.primaryColor,
+            ),
+          ),
+        ),
       ),
     );
   }

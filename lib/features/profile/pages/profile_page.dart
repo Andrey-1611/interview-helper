@@ -10,7 +10,6 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
 import '../../../core/constants/interviews_data.dart';
-import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -55,13 +54,12 @@ class _ProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterProfileCubit>();
     final isCurrentUser = user == null;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Профиль', style: theme.textTheme.displayLarge),
+        title: Text('Профиль'),
         actions: [
           if (!isCurrentUser)
             IconButton(
@@ -98,6 +96,7 @@ class _ProfileAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Padding(
@@ -125,8 +124,8 @@ class _ProfileAppBar extends StatelessWidget {
                         icon: Icon(
                           Icons.favorite,
                           color: filter.state.isFavourite
-                              ? AppPalette.error
-                              : AppPalette.textSecondary,
+                              ? theme.colorScheme.error
+                              : theme.hintColor,
                         ),
                       ),
                     )
@@ -181,7 +180,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filter.filter(direction, difficulty, sort);
               context.pop();

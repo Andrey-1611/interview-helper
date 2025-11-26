@@ -1,131 +1,128 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'app_pallete.dart';
 
-class AppTheme {
-  static ThemeData getTheme() {
-    return ThemeData(
-      colorScheme: ColorScheme.dark(
-        primary: AppPalette.primary,
-        secondary: AppPalette.primary,
-        surface: AppPalette.background,
-        error: AppPalette.error,
-      ),
-      scaffoldBackgroundColor: AppPalette.background,
-      textTheme: TextTheme(
-        titleLarge: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 60.sp,
-          color: AppPalette.primary,
-        ),
-        titleMedium: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 45.sp,
-          color: AppPalette.primary,
-        ),
-        displayLarge: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 27.sp,
-          color: AppPalette.textPrimary,
-        ),
-        displayMedium: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 22.sp,
-          color: AppPalette.textPrimary,
-        ),
-        displaySmall: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18.sp,
-          color: AppPalette.textPrimary,
-        ),
-        bodyLarge: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 17.sp,
-          color: AppPalette.textPrimary,
-        ),
-        bodyMedium: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 16.sp,
-          color: AppPalette.textSecondary,
-        ),
-        bodySmall: TextStyle(fontSize: 13.sp, color: AppPalette.textSecondary),
-        labelLarge: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 13.sp,
-          color: AppPalette.textPrimary,
-        ),
-        labelMedium: TextStyle(fontSize: 18.sp, color: AppPalette.error),
-        labelSmall: TextStyle(fontSize: 12.sp, color: AppPalette.textSecondary),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: AppPalette.cardBackground,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8.0.sp),
-        ),
+const _primary = Color(0xFF6366F1);
+const _darkCard = Color(0xFF2A2A2A);
 
-        contentPadding: EdgeInsets.all(12.sp),
+const _hintColor = Color(0xFFB3B3B3);
+const _lightBackground = Color(0xFFE8EAED);
+const _darkBackground = Color(0xFF1E1E1E);
 
-        hintStyle: TextStyle(color: AppPalette.textSecondary),
-        errorStyle: TextStyle(color: AppPalette.error),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: AppPalette.textPrimary,
-          backgroundColor: AppPalette.primary,
-          textStyle: TextStyle(color: AppPalette.textPrimary),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0.sp),
-          ),
-          side: BorderSide(width: 2.sp, color: AppPalette.primary),
-        ),
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16.sp,
-            color: AppPalette.textPrimary,
-          ),
-          foregroundColor: AppPalette.primary,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.sp),
-          ),
-        ),
-      ),
-      cardTheme: CardThemeData(
-        color: AppPalette.cardBackground,
-        margin: EdgeInsets.all(8.0.sp),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0.sp),
-          side: BorderSide.none,
-        ),
-      ),
-      listTileTheme: ListTileThemeData(
-        contentPadding: EdgeInsets.symmetric(
-          vertical: 8.0.sp,
-          horizontal: 12.0.sp,
-        ),
-      ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: AppPalette.cardBackground,
-        selectedItemColor: AppPalette.primary,
-        unselectedItemColor: AppPalette.textPrimary,
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-      ),
-      appBarTheme: AppBarTheme(
-        centerTitle: true,
-        surfaceTintColor: AppPalette.transparent,
-        backgroundColor: AppPalette.cardBackground,
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 27.sp,
-          color: AppPalette.textPrimary,
-        ), //TextStyle(),
-      ),
+final darkTheme = ThemeData(
+  useMaterial3: true,
+  primaryColor: _primary,
+  inputDecorationTheme: _inputDecorationTheme(_darkCard),
+  appBarTheme: _appBarTheme(_darkCard, Colors.white),
+  listTileTheme: _listTileTheme,
+  cardTheme: _cardTheme(_darkCard),
+  cardColor: _darkCard,
+  textTheme: _textTheme,
+  switchTheme: _switchTheme,
+  bottomNavigationBarTheme: _bottomNavigationBarTheme(_darkCard),
+  textButtonTheme: _textButtonTheme,
+  elevatedButtonTheme: _elevatedButtonTheme,
+  scaffoldBackgroundColor: _darkBackground,
+  hintColor: _hintColor,
+  colorScheme: ColorScheme.dark(primary: _primary, error: Colors.red),
+);
+
+final lightTheme = ThemeData(
+  useMaterial3: true,
+  primaryColor: _primary,
+  inputDecorationTheme: _inputDecorationTheme(Colors.white),
+  appBarTheme: _appBarTheme(Colors.white, Colors.black),
+  listTileTheme: _listTileTheme,
+  cardTheme: _cardTheme(Colors.white),
+  cardColor: _darkCard,
+  textTheme: _textTheme,
+  switchTheme: _switchTheme,
+  bottomNavigationBarTheme: _bottomNavigationBarTheme(Colors.white),
+  textButtonTheme: _textButtonTheme,
+  elevatedButtonTheme: _elevatedButtonTheme,
+  scaffoldBackgroundColor: _lightBackground,
+  bottomSheetTheme: _bottomSheetTheme(_lightBackground),
+  hintColor: _hintColor,
+  colorScheme: ColorScheme.light(primary: _primary, error: Colors.red),
+);
+
+final _textTheme = TextTheme(
+  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
+  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45),
+  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27),
+  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22),
+  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+  labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+);
+
+InputDecorationTheme _inputDecorationTheme(Color color) => InputDecorationTheme(
+  filled: true,
+  fillColor: color,
+  hintStyle: TextStyle(fontSize: 15, color: _hintColor),
+  contentPadding: EdgeInsets.all(12),
+  border: OutlineInputBorder(
+    borderSide: BorderSide.none,
+    borderRadius: BorderRadius.circular(8.0),
+  ),
+);
+
+final _listTileTheme = ListTileThemeData(
+  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+);
+
+CardThemeData _cardTheme(Color color) => CardThemeData(
+  color: color,
+  margin: EdgeInsets.all(8.0),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(8.0),
+    side: BorderSide.none,
+  ),
+);
+
+AppBarTheme _appBarTheme(Color color, Color titleColor) => AppBarTheme(
+  centerTitle: true,
+  backgroundColor: color,
+  titleTextStyle: TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    color: titleColor,
+  ),
+  surfaceTintColor: Colors.transparent,
+);
+
+BottomNavigationBarThemeData _bottomNavigationBarTheme(Color color) =>
+    BottomNavigationBarThemeData(
+      backgroundColor: color,
+      selectedItemColor: _primary,
+      type: BottomNavigationBarType.fixed,
+      selectedLabelStyle: TextStyle(fontSize: 12),
+      selectedIconTheme: IconThemeData(size: 26),
+      unselectedLabelStyle: TextStyle(fontSize: 10),
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
     );
-  }
-}
+
+final _textButtonTheme = TextButtonThemeData(
+  style: TextButton.styleFrom(
+    textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    foregroundColor: _primary,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  ),
+);
+
+final _elevatedButtonTheme = ElevatedButtonThemeData(
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: _primary,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+  ),
+);
+
+final _switchTheme = SwitchThemeData(
+  thumbColor: WidgetStateProperty.resolveWith((states) {
+    return states.contains(WidgetState.selected) ? Colors.white : _primary;
+  }),
+);
+
+BottomSheetThemeData _bottomSheetTheme(Color color) =>
+    BottomSheetThemeData(backgroundColor: color);

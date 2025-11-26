@@ -17,6 +17,7 @@ import '../../../data/repositories/ai_repository.dart';
 import '../../../app/widgets/custom_interview_info.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class ResultsPage extends StatelessWidget {
@@ -31,6 +32,7 @@ class ResultsPage extends StatelessWidget {
         GetIt.I<AIRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
         GetIt.I<StopwatchInfo>(),
       )..add(FinishInterview(interviewInfo: interviewInfo)),
@@ -58,7 +60,7 @@ class _ResultsInfo extends StatelessWidget {
         } else if (state is InterviewFailure) {
           context.pop();
           context.pushReplacement(AppRouterNames.initial);
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         }
       },
       builder: (context, state) {

@@ -21,8 +21,12 @@ final class InterviewStartSuccess extends InterviewState {}
 
 final class InterviewQuestionsSuccess extends InterviewState {
   final List<String> questions;
+  final bool isVoiceEnable;
 
-  const InterviewQuestionsSuccess({required this.questions});
+  const InterviewQuestionsSuccess({
+    required this.questions,
+    required this.isVoiceEnable,
+  });
 
   @override
   List<Object> get props => [questions];

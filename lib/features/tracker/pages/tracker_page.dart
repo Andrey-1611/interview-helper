@@ -6,7 +6,6 @@ import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
@@ -52,6 +51,7 @@ class _TrackerPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
     final filter = context.watch<FilterTasksCubit>();
     return Scaffold(
       appBar: AppBar(
@@ -103,9 +103,9 @@ class _TrackerPageView extends StatelessWidget {
                           : Icons.remove_circle,
                     ),
                     color: switch (filter.state.isCompleted) {
-                      null => AppPalette.textSecondary,
-                      false => AppPalette.error,
-                      true => AppPalette.primary,
+                      null => theme.hintColor,
+                      false => theme.colorScheme.error,
+                      true => theme.primaryColor,
                     },
                   ),
                 ),
@@ -153,6 +153,7 @@ class _TasksListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
     if (tasks.isEmpty) return _EmptyList();
     final filteredTasks = Task.filterTasks(
       filter.state.direction,
@@ -169,7 +170,7 @@ class _TasksListView extends StatelessWidget {
         return Card(
           shape: RoundedRectangleBorder(
             side: task.isCompleted
-                ? BorderSide(color: AppPalette.primary, width: 2.0)
+                ? BorderSide(color: theme.primaryColor, width: 2.0)
                 : BorderSide.none,
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -191,8 +192,8 @@ class _TasksListView extends StatelessWidget {
                 Icon(
                   task.isCompleted ? Icons.check : Icons.remove_circle,
                   color: task.isCompleted
-                      ? AppPalette.primary
-                      : AppPalette.textSecondary,
+                      ? theme.primaryColor
+                      : theme.hintColor,
                 ),
                 !task.isCompleted
                     ? IconButton(
@@ -367,7 +368,7 @@ class _CreateTaskDialog extends StatelessWidget {
       selectorCubit.reset();
       context.pop();
     } else {
-      ToastHelper.taskSelectorError();
+      ToastHelper.taskSelectorError(context);
     }
   }
 }
@@ -407,7 +408,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filterCubit.runFilter(direction, type, sort);
               context.pop();

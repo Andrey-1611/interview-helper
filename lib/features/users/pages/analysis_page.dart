@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
@@ -270,7 +269,7 @@ class _CompareCard extends StatelessWidget {
 
   TextStyle? style(ThemeData theme, String value1, String value2) {
     return int.parse(value1) >= int.parse(value2)
-        ? theme.textTheme.displayMedium?.copyWith(color: AppPalette.primary)
+        ? theme.textTheme.displayMedium?.copyWith(color: theme.primaryColor)
         : theme.textTheme.displayMedium;
   }
 }
@@ -335,7 +334,7 @@ class _CompareTimeCard extends StatelessWidget {
 
   TextStyle? style(ThemeData theme, Duration value1, Duration value2) {
     return value1 >= value2
-        ? theme.textTheme.bodySmall?.copyWith(color: AppPalette.primary)
+        ? theme.textTheme.bodySmall?.copyWith(color: theme.primaryColor)
         : theme.textTheme.bodySmall;
   }
 }
@@ -368,7 +367,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filterCubit.filter(direction, difficulty, null);
               context.pop();

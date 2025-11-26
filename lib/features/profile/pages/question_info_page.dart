@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app/widgets/custom_info_card.dart';
 import '../../../data/models/question.dart';
 
 class QuestionInfoPage extends StatelessWidget {
@@ -18,15 +17,12 @@ class QuestionInfoPage extends StatelessWidget {
             children: [
               _MainResultPanel(result: 'Точность: ${question.score} %'),
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-              CustomInfoCard(
-                titleText: 'Вопрос:',
-                subtitleText: question.question,
-              ),
-              CustomInfoCard(
+              _InfoCard(titleText: 'Вопрос:', subtitleText: question.question),
+              _InfoCard(
                 titleText: 'Ваш ответ:',
                 subtitleText: question.userAnswer,
               ),
-              CustomInfoCard(
+              _InfoCard(
                 titleText: 'Правильный ответ:',
                 subtitleText: question.correctAnswer,
               ),
@@ -53,6 +49,24 @@ class _MainResultPanel extends StatelessWidget {
         width: size.width,
         height: size.height * 0.2,
         child: Center(child: Text(result, style: textTheme.displayLarge)),
+      ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  final String titleText;
+  final String subtitleText;
+
+  const _InfoCard({required this.titleText, required this.subtitleText});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Card(
+      child: ListTile(
+        title: Text(titleText, style: textTheme.displayMedium),
+        subtitle: Text(subtitleText, style: textTheme.bodyLarge),
       ),
     );
   }

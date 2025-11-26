@@ -64,6 +64,7 @@ class _ChangeEmailPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Смена почты')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -129,10 +130,10 @@ class _ChangeEmailButton extends StatelessWidget {
           );
         } else if (state is AuthNetworkFailure) {
           context.pop();
-          ToastHelper.networkError();
+          ToastHelper.networkError(context);
         } else if (state is AuthFailure) {
           context.pop();
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         }
       },
       child: CustomAuthButton(

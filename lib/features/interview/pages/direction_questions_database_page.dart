@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/core/constants/direction.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/capitalize_extention.dart';
 import 'package:interview_master/features/interview/blocs/search_cubit/search_cubit.dart';
 
@@ -104,13 +103,14 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final search = context.read<SearchCubit>();
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
       child: TextField(
         onChanged: search.update,
         decoration: InputDecoration(
+          fillColor: theme.canvasColor,
           hintText: 'Поиск',
-          fillColor: AppPalette.background,
           prefixIcon: Icon(Icons.search),
         ),
       ),

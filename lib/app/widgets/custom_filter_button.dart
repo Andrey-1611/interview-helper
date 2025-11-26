@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import '../../core/utils/dialog_helper.dart';
 
 class CustomFilterButton extends StatelessWidget {
@@ -16,6 +15,7 @@ class CustomFilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
@@ -27,8 +27,8 @@ class CustomFilterButton extends StatelessWidget {
           context: context,
         ),
         decoration: InputDecoration(
-          fillColor: AppPalette.background,
           hintText: 'Фильтр',
+          fillColor: theme.scaffoldBackgroundColor,
           prefixIcon: Icon(Icons.search),
           suffixIcon: IconButton(
             onPressed: () {

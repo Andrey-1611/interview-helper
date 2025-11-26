@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-
-import '../../../core/theme/app_pallete.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 
 class CustomGoogleButton extends StatelessWidget {
@@ -20,12 +18,12 @@ class CustomGoogleButton extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(child: Divider(color: AppPalette.textSecondary)),
+              Expanded(child: Divider()),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text('или'),
               ),
-              Expanded(child: Divider(color: AppPalette.textSecondary)),
+              Expanded(child: Divider()),
             ],
           ),
           SignInButton(

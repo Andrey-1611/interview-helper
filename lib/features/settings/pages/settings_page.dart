@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
+import 'package:interview_master/core/utils/theme_cubit.dart';
 import 'package:interview_master/core/utils/url_launch.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../../app/widgets/custom_info_card.dart';
-import '../../../app/widgets/custom_network_failure.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../core/utils/network_info.dart';
@@ -37,9 +37,10 @@ class SettingsPage extends StatelessWidget {
             GetIt.I<AuthRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
+            GetIt.I<SettingsRepository>(),
             GetIt.I<UrlLaunch>(),
             GetIt.I<NetworkInfo>(),
-          ),
+          )..add(GetSettings()),
         ),
       ],
       child: _SettingsPageView(),
@@ -52,8 +53,10 @@ class _SettingsPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     final appInfo = GetIt.I<PackageInfo>();
+    final themeCubit = context.watch<ThemeCubit>();
+    final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
     final onPressed = context.read<UsersBloc>().add(GetUser());
     return Scaffold(
       appBar: AppBar(title: const Text('Настройки')),
@@ -64,74 +67,145 @@ class _SettingsPageView extends StatelessWidget {
           } else if (state is SignOutSuccess) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
+          } else if (state is RuStoreSuccess) {
+            context.read<SettingsBloc>().add(GetSettings());
           } else if (state is SettingsNetworkFailure) {
             context.pop();
-            ToastHelper.networkError();
+            ToastHelper.networkError(context);
           } else if (state is SettingsFailure) {
             context.pop();
-            ToastHelper.unknownError();
+            ToastHelper.unknownError(context);
           }
         },
-        child: BlocBuilder<UsersBloc, UsersState>(
-          builder: (context, state) {
-            if (state is UsersNetworkFailure) {
-              return CustomNetworkFailure(onPressed: () => onPressed);
-            } else if (state is UsersFailure) {
-              return CustomUnknownFailure(onPressed: () => onPressed);
-            } else if (state is UserSuccess) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Spacer(),
-                    CustomInfoCard(
-                      titleText: 'Имя',
-                      subtitleText: state.user.name,
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    CustomInfoCard(
-                      titleText: 'Почта',
-                      subtitleText: state.user.email,
-                    ),
-                    SizedBox(height: size.height * 0.03),
-                    SizedBox(
-                      width: size.width * 0.8,
-                      child: ElevatedButton.icon(
-                        onPressed: () => DialogHelper.showCustomDialog(
-                          dialog: _SignOutDialog(
-                            settingsBloc: context.read<SettingsBloc>(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              BlocBuilder<UsersBloc, UsersState>(
+                builder: (context, state) {
+                  if (state is UsersFailure) {
+                    return CustomUnknownFailure(onPressed: () => onPressed);
+                  } else if (state is UserSuccess) {
+                    return Card(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: size.height * 0.12,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Пользователь',
+                              style: theme.textTheme.displayMedium,
+                            ),
+                            SizedBox(height: size.height * 0.01),
+                            Text(
+                              'Имя: ${state.user.name}',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                            Text(
+                              'Почта: ${state.user.email}',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return CustomLoadingIndicator();
+                },
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BlocBuilder<SettingsBloc, SettingsState>(
+                    builder: (context, state) {
+                      if (state is SettingsSuccess) {
+                        return _SettingsToggleCard(
+                          title: 'Озвучка',
+                          value: state.voice,
+                          onChanged: (_) => context.read<SettingsBloc>().add(
+                            SetVoice(isEnable: !state.voice),
                           ),
-                          context: context,
-                        ),
-                        icon: const Icon(Icons.logout),
-                        iconAlignment: IconAlignment.end,
-                        label: Text('Выйти из аккаунта'),
+                        );
+                      }
+                      return CustomLoadingIndicator();
+                    },
+                  ),
+                  _SettingsToggleCard(
+                    title: 'Темная тема',
+                    value: themeCubit.state,
+                    onChanged: (_) => themeCubit.changeTheme(),
+                  ),
+                  _SettingsCard(
+                    title: 'Оценить приложение',
+                    onTap: () =>
+                        context.read<SettingsBloc>().add(OpenAppInRuStore()),
+                    icon: Icon(Icons.favorite, color: theme.primaryColor),
+                  ),
+                  _SettingsCard(
+                    title: 'Выйти из приложения',
+                    onTap: () => DialogHelper.showCustomDialog(
+                      dialog: _SignOutDialog(
+                        settingsBloc: context.read<SettingsBloc>(),
                       ),
+                      context: context,
                     ),
-                    SizedBox(
-                      width: size.width * 0.8,
-                      child: ElevatedButton.icon(
-                        onPressed: () => context.read<SettingsBloc>().add(
-                          OpenAppInRuStore(),
-                        ),
-                        icon: const Icon(Icons.favorite),
-                        iconAlignment: IconAlignment.end,
-                        label: Text('Оценить приложение'),
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const CustomLoadingIndicator();
-          },
+                    icon: Icon(Icons.logout, color: theme.colorScheme.error),
+                  ),
+                ],
+              ),
+              Text(
+                '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  final Icon icon;
+
+  const _SettingsCard({
+    required this.title,
+    required this.onTap,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        child: ListTile(title: Text(title), trailing: icon),
+      ),
+    );
+  }
+}
+
+class _SettingsToggleCard extends StatelessWidget {
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _SettingsToggleCard({
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        trailing: Switch(value: value, onChanged: onChanged),
       ),
     );
   }

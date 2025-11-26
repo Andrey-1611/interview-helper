@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
@@ -40,7 +39,7 @@ class DirectionsPage extends StatelessWidget {
           } else if (state is TrackerFailure) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
-            ToastHelper.unknownError();
+            ToastHelper.unknownError(context);
           }
         },
         child: _DirectionsPageView(),
@@ -66,16 +65,16 @@ class _DirectionsPageView extends StatelessWidget {
         child: Column(
           children: [
             Card(
-              color: AppPalette.primary.withValues(alpha: 0.1),
+              color: theme.primaryColor.withValues(alpha: 0.1),
               child: ListTile(
-                leading: Icon(Icons.info_outline, color: AppPalette.primary),
+                leading: Icon(Icons.info_outline),
                 title: Text(
                   'Выберите от 1 до 3 направлений',
                   style: theme.textTheme.bodyMedium,
                 ),
               ),
             ),
-            SizedBox(height: size.height * 0.02),
+            SizedBox(height: size.height * 0.01),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -94,7 +93,6 @@ class _DirectionsPageView extends StatelessWidget {
             SizedBox(height: size.height * 0.02),
             CustomButton(
               text: 'Продолжить',
-              selectedColor: AppPalette.primary,
               onPressed: () => context.read<TrackerBloc>().add(
                 SetDirections(
                   directions: context.read<DirectionsCubit>().state,
@@ -121,11 +119,11 @@ class _DirectionCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => directions.add(direction),
       child: Card(
-        color: isSelected ? AppPalette.primary.withValues(alpha: 0.1) : null,
+        color: isSelected ? theme.primaryColor.withValues(alpha: 0.1) : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
-            color: isSelected ? AppPalette.primary : AppPalette.textSecondary,
+            color: isSelected ? theme.primaryColor : theme.hintColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -135,7 +133,7 @@ class _DirectionCard extends StatelessWidget {
               child: Text(
                 direction,
                 style: theme.textTheme.displaySmall?.copyWith(
-                  color: isSelected ? AppPalette.primary : null,
+                  color: isSelected ? theme.primaryColor : null,
                 ),
               ),
             ),
@@ -145,7 +143,7 @@ class _DirectionCard extends StatelessWidget {
                 right: 8,
                 child: Icon(
                   Icons.check_circle,
-                  color: AppPalette.primary,
+                  color: theme.primaryColor,
                   size: 20,
                 ),
               ),

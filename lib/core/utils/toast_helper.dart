@@ -1,56 +1,45 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 
 class ToastHelper {
-  static void _showToast({required String msg}) {
+  static void _showToast(String msg, BuildContext context) {
+    final theme = Theme.of(context);
     Fluttertoast.showToast(
       msg: msg,
-      backgroundColor: AppPalette.cardBackground,
-      textColor: AppPalette.textPrimary,
+      backgroundColor: theme.hintColor,
+      textColor: theme.cardColor,
     );
   }
 
-  static void sendEmailVerification(String email) {
-    _showToast(msg: 'Письмо с подтвержением отправлено на ${email.trim()}');
+  static void sendEmailVerification(String email, BuildContext context) {
+    _showToast('Письмо с подтвержением отправлено на $email', context);
   }
 
-  static void sendAgainEmailVerification() {
-    _showToast(msg: 'Письмо с подтвержением отправлено на вашу почту');
+  static void sendPasswordResetEmail(String email, BuildContext context) {
+    _showToast('Письмо со сбросом пароля отправлено на $email', context);
   }
 
-  static void sendPasswordResetEmail(String email) {
-    _showToast(msg: 'Письмо со сбросом пароля отправлено на ${email.trim()}');
+  static void signInError(BuildContext context) {
+    _showToast('Ошибка входа, проверьте введенные данные', context);
   }
 
-  static void signInError() {
-    _showToast(msg: 'Ошибка входа, проверьте введенные данные');
+  static void unknownError(BuildContext context) {
+    _showToast('Неизвестная ошибка, попробуйте позже', context);
   }
 
-  static void loadingError() {
-    _showToast(msg: 'Ошибка загрузки данных, попробуйте позже');
+  static void networkError(BuildContext context) {
+    _showToast('Нет подключения к интернету', context);
   }
 
-  static void unknownError() {
-    _showToast(msg: 'Неизвестная ошибка, попробуйте позже');
+  static void attemptsError(BuildContext context) {
+    _showToast('Попытки закончились, возвращайтесь завтра', context);
   }
 
-  static void networkError() {
-    _showToast(msg: 'Нет подключения к интернету');
+  static void interviewFormError(BuildContext context) {
+    _showToast('Выберите направление и сложность', context);
   }
 
-  static void attemptsError() {
-    _showToast(msg: 'Попытки закончились, возвращайтесь завтра');
-  }
-
-  static void interviewFormError() {
-    _showToast(msg: 'Выберите направление и сложность');
-  }
-
-  static void taskSelectorError() {
-    _showToast(msg: 'Заполните все необходимые поля');
-  }
-
-  static void tasksIsCompletedError() {
-    _showToast(msg: 'Достигнут лимит активных задач');
+  static void taskSelectorError(BuildContext context) {
+    _showToast('Заполните все необходимые поля', context);
   }
 }

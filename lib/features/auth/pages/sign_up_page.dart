@@ -56,13 +56,13 @@ class _SignUpPageState extends State<SignUpPage> {
               AppRouterNames.emailVerification,
               extra: _passwordController.text.trim(),
             );
-            ToastHelper.sendEmailVerification(_emailController.text);
+            ToastHelper.sendEmailVerification(_emailController.text, context);
           } else if (state is AuthNetworkFailure) {
             context.pop();
-            ToastHelper.unknownError();
+            ToastHelper.unknownError(context);
           } else if (state is AuthFailure) {
             context.pop();
-            ToastHelper.unknownError();
+            ToastHelper.unknownError(context);
           }
         },
         child: _SignUpPageView(

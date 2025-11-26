@@ -13,7 +13,6 @@ import '../../../app/widgets/custom_network_failure.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/constants/interviews_data.dart';
-import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
@@ -51,12 +50,11 @@ class _RatingPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterUsersCubit>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Рейтинг', style: theme.textTheme.displayLarge),
+        title: Text('Рейтинг'),
         actions: [
           IconButton(
             onPressed: () => context.push(AppRouterNames.settings),
@@ -149,7 +147,7 @@ class _UserCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(
         side: isCurrentUser
-            ? BorderSide(color: AppPalette.primary, width: 2.0)
+            ? BorderSide(color: theme.primaryColor, width: 2.0)
             : BorderSide.none,
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -175,7 +173,7 @@ class _UserCard extends StatelessWidget {
               '${filteredUser.totalScore} ',
               style: theme.textTheme.bodyLarge,
             ),
-            Icon(Icons.star, color: AppPalette.primary),
+            Icon(Icons.star, color: theme.primaryColor,),
           ],
         ),
         trailing: Row(
@@ -258,7 +256,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filter.filterUsers(direction, sort);
               context.pop();
