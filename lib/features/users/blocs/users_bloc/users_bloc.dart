@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
-import 'package:interview_master/data/models/friend_request.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../data/repositories/local_repository.dart';
@@ -43,11 +42,8 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       if (!isConnected) return emit(UsersNetworkFailure());
       final users = await _remoteRepository.getUsers();
       final currentUser = (await _localRepository.getUser())!;
-      final friends = users
-          .where((user) => user.isFriend(currentUser))
-          .toList();
       emit(
-        UsersSuccess(users: users, friends: friends, currentUser: currentUser),
+        UsersSuccess(users: users, currentUser: currentUser),
       );
     } catch (e, st) {
       emit(UsersFailure());
@@ -69,7 +65,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       final tasks = await _localRepository.getTasks();
       await _remoteRepository.updateInterviews(user.id, interviews);
       await _remoteRepository.updateTasks(user.id, tasks);
-      user.directions.isNotEmpty
+      return user.directions.isNotEmpty
           ? emit(UserSuccess(user: user))
           : emit(UserWithoutDirections());
     } catch (e, st) {

@@ -9,6 +9,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'app_dependencies.config.dart';
@@ -57,4 +58,9 @@ abstract class Modules {
 
   @singleton
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
+
+  @preResolve
+  @lazySingleton
+  Future<SharedPreferences> get prefs async =>
+      await SharedPreferences.getInstance();
 }

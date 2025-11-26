@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/url_launch.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../data/repositories/auth_repository.dart';
 import '../../../../data/repositories/local_repository.dart';
@@ -16,6 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final AuthRepository _authRepository;
   final LocalRepository _localRepository;
   final RemoteRepository _remoteRepository;
+  final SettingsRepository _settingsRepository;
   final UrlLaunch _urlLaunch;
   final NetworkInfo _networkInfo;
 
@@ -23,11 +25,27 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     this._authRepository,
     this._localRepository,
     this._remoteRepository,
+    this._settingsRepository,
     this._urlLaunch,
     this._networkInfo,
   ) : super(SettingsInitial()) {
     on<SignOut>(_signOut);
     on<OpenAppInRuStore>(_openAppInRuStore);
+    on<SetVoice>(_setVoice);
+    on<GetSettings>(_getSettings);
+  }
+
+  Future<void> _getSettings(
+    GetSettings event,
+    Emitter<SettingsState> emit,
+  ) async {
+    try {
+      final voice = _settingsRepository.isVoiceEnable();
+      return emit(SettingsSuccess(voice: voice));
+    } catch (e, st) {
+      emit(SettingsFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
   }
 
   Future<void> _signOut(SignOut event, Emitter<SettingsState> emit) async {
@@ -57,7 +75,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(SettingsNetworkFailure());
       await _urlLaunch.openAppInRuStore();
-      return emit(SettingsSuccess());
+      return emit(RuStoreSuccess());
+    } catch (e, st) {
+      emit(SettingsFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _setVoice(SetVoice event, Emitter<SettingsState> emit) async {
+    try {
+      await _settingsRepository.setVoice(event.isEnable);
+      return emit(SettingsSuccess(voice: event.isEnable));
     } catch (e, st) {
       emit(SettingsFailure());
       GetIt.I<Talker>().handle(e, st);

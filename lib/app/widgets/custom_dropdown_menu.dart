@@ -23,7 +23,7 @@ class CustomDropdownMenu extends StatelessWidget {
       child: DropdownButtonFormField(
         isExpanded: true,
         style: theme.textTheme.displaySmall,
-        value: value,
+        initialValue: value,
         items: data
             .map(
               (String value) =>

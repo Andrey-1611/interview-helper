@@ -10,7 +10,6 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
 import '../../../core/constants/interviews_data.dart';
-import '../../../core/theme/app_pallete.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -55,12 +54,12 @@ class _ProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterProfileCubit>();
+    final isCurrentUser = user == null;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Профиль', style: theme.textTheme.displayLarge),
+        title: Text('Профиль'),
         actions: [
           if (!isCurrentUser)
             IconButton(
@@ -74,25 +73,19 @@ class _ProfilePageView extends StatelessWidget {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, size.height * 0.14),
+          preferredSize: Size(double.infinity, size.height * 0.12),
           child: _ProfileAppBar(filter: filter, isCurrentUser: isCurrentUser),
         ),
       ),
       body: TabBarView(
         children: [
-          _KeepAlivePage(child: StatisticsPage(isCurrentUser: isCurrentUser)),
-          _KeepAlivePage(
-            child: InterviewsHistoryPage(isCurrentUser: isCurrentUser),
-          ),
-          _KeepAlivePage(
-            child: QuestionsHistoryPage(isCurrentUser: isCurrentUser),
-          ),
+          _KeepAlivePage(child: StatisticsPage(user: user)),
+          _KeepAlivePage(child: InterviewsHistoryPage(user: user)),
+          _KeepAlivePage(child: QuestionsHistoryPage(user: user)),
         ],
       ),
     );
   }
-
-  bool get isCurrentUser => user == null;
 }
 
 class _ProfileAppBar extends StatelessWidget {
@@ -103,6 +96,7 @@ class _ProfileAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Padding(
@@ -130,8 +124,8 @@ class _ProfileAppBar extends StatelessWidget {
                         icon: Icon(
                           Icons.favorite,
                           color: filter.state.isFavourite
-                              ? AppPalette.error
-                              : AppPalette.textSecondary,
+                              ? theme.colorScheme.error
+                              : theme.hintColor,
                         ),
                       ),
                     )
@@ -186,7 +180,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filter.filter(direction, difficulty, sort);
               context.pop();

@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/constants/direction.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/models/task.dart';
+import 'package:interview_master/features/interview/pages/direction_questions_database_page.dart';
+import 'package:interview_master/features/interview/pages/questions_database_page.dart';
 import 'package:interview_master/features/tracker/pages/directions_page.dart';
 import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
-import 'package:interview_master/features/users/pages/friend_requests_page.dart';
 import 'package:interview_master/features/settings/pages/settings_page.dart';
 import 'package:interview_master/features/users/pages/rating_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -75,6 +77,13 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: AppRouterNames.directionQuestionsDatabase,
+      builder: (context, state) {
+        final direction = state.extra as Direction;
+        return DirectionQuestionsDatabasePage(direction: direction);
+      },
+    ),
+    GoRoute(
       path: AppRouterNames.results,
       builder: (context, state) {
         final interviewInfo = state.extra as InterviewInfo;
@@ -114,15 +123,15 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: AppRouterNames.questionsDatabase,
+      builder: (context, state) => QuestionsDatabasePage(),
+    ),
+    GoRoute(
       path: AppRouterNames.analysis,
       builder: (context, state) {
         final user = state.extra as UserData;
         return AnalysisPage(selectedUser: user);
       },
-    ),
-    GoRoute(
-      path: AppRouterNames.friendRequests,
-      builder: (context, state) => FriendRequestsPage(),
     ),
     StatefulShellRoute(
       navigatorContainerBuilder: (context, navigationShell, branchNavigators) {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -52,8 +54,10 @@ class Task extends Equatable {
     completedAt,
   ];
 
-  int get progress =>
-      targetValue != 0 ? (currentValue / targetValue * 100).round() : 0;
+  int get progress => min(
+    targetValue != 0 ? (currentValue / targetValue * 100).round() : 0,
+    100,
+  );
 
   bool get isCompleted => currentValue >= targetValue;
 

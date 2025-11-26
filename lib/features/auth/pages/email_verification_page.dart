@@ -38,6 +38,7 @@ class _EmailVerificationPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Подтверждение почты')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -78,10 +79,10 @@ class _EmailVerificationForm extends StatelessWidget {
           context.read<DataCubit>().updateKeyValue();
           context.pushReplacement(AppRouterNames.directions);
         } else if (state is AuthNetworkFailure) {
-          ToastHelper.networkError();
+          ToastHelper.networkError(context);
         } else if (state is AuthFailure) {
           context.pushReplacement(AppRouterNames.signUp);
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         }
       },
       child: Text(

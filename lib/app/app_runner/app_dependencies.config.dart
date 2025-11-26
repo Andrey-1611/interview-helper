@@ -20,6 +20,7 @@ import 'package:hive_flutter/hive_flutter.dart' as _i986;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:share_plus/share_plus.dart' as _i998;
+import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:speech_to_text/speech_to_text.dart' as _i941;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
@@ -31,18 +32,20 @@ import '../../data/data_sources/ai_data_source.dart' as _i982;
 import '../../data/data_sources/auth_data_source.dart' as _i315;
 import '../../data/data_sources/local_data_source.dart' as _i466;
 import '../../data/data_sources/remote_data_source.dart' as _i264;
+import '../../data/data_sources/settings_data_source.dart' as _i504;
 import '../../data/repositories/ai_repository.dart' as _i504;
 import '../../data/repositories/auth_repository.dart' as _i481;
 import '../../data/repositories/local_repository.dart' as _i29;
 import '../../data/repositories/remote_repository.dart' as _i137;
+import '../../data/repositories/settings_repository.dart' as _i373;
 import 'app_dependencies.dart' as _i469;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
-  _i174.GetIt setup({
+  Future<_i174.GetIt> setup({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
-  }) {
+  }) async {
     final gh = _i526.GetItHelper(
       this,
       environment,
@@ -61,6 +64,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i941.SpeechToText>(() => modules.speechToText);
     gh.lazySingleton<_i50.FlutterTts>(() => modules.flutterTts);
     gh.lazySingleton<_i998.SharePlus>(() => modules.sharePlus);
+    await gh.lazySingletonAsync<_i460.SharedPreferences>(
+      () => modules.prefs,
+      preResolve: true,
+    );
     gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
     gh.lazySingleton<_i29.LocalRepository>(
         () => _i466.LocalDataSource(gh<_i986.HiveInterface>()));
@@ -70,6 +77,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i264.RemoteDataSource(gh<_i974.FirebaseFirestore>()));
     gh.lazySingleton<_i742.StopwatchInfo>(
         () => _i742.StopwatchInfo(gh<Stopwatch>()));
+    gh.lazySingleton<_i373.SettingsRepository>(
+        () => _i504.SettingsDataSource(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i502.ShareInfo>(
         () => _i502.ShareInfo(gh<_i998.SharePlus>()));
     gh.lazySingleton<_i481.AuthRepository>(() => _i315.AuthDataSource(

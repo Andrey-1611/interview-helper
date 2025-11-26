@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -19,6 +18,7 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class InterviewPage extends StatefulWidget {
@@ -51,6 +51,7 @@ class _InterviewPageState extends State<InterviewPage> {
             GetIt.I<AIRepository>(),
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
+            GetIt.I<SettingsRepository>(),
             GetIt.I<NetworkInfo>(),
             GetIt.I<StopwatchInfo>(),
           )..add(GetQuestions(interviewInfo: widget.interviewInfo)),
@@ -63,12 +64,14 @@ class _InterviewPageState extends State<InterviewPage> {
       child: BlocConsumer<InterviewBloc, InterviewState>(
         listener: (context, state) {
           if (state is InterviewQuestionsSuccess) {
-            context.read<SpeechCubit>().speak(state.questions.first);
+            if (state.isVoiceEnable) {
+              context.read<SpeechCubit>().speak(state.questions.first);
+            }
           } else if (state is InterviewNetworkFailure) {
-            ToastHelper.networkError();
+            ToastHelper.networkError(context);
             context.pop();
           } else if (state is InterviewFailure) {
-            ToastHelper.unknownError();
+            ToastHelper.unknownError(context);
             context.pop();
           }
         },
@@ -80,6 +83,7 @@ class _InterviewPageState extends State<InterviewPage> {
               answers: _answers,
               interviewInfo: widget.interviewInfo,
               questions: state.questions,
+              isVoiceEnable: state.isVoiceEnable,
             );
           }
           return CustomLoadingIndicator();
@@ -95,6 +99,7 @@ class _InterviewPageView extends StatelessWidget {
   final List<String> answers;
   final InterviewInfo interviewInfo;
   final List<String> questions;
+  final bool isVoiceEnable;
 
   const _InterviewPageView({
     required this.answerController,
@@ -102,6 +107,7 @@ class _InterviewPageView extends StatelessWidget {
     required this.answers,
     required this.interviewInfo,
     required this.questions,
+    required this.isVoiceEnable,
   });
 
   @override
@@ -124,10 +130,14 @@ class _InterviewPageView extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
-          IconButton(
-            onPressed: () => speech.toggleSpeaking(),
-            icon: Icon(speech.state.needSpeak ? Icons.mic : Icons.mic_off),
-          ),
+          isVoiceEnable
+              ? IconButton(
+                  onPressed: () => speech.toggleSpeaking(),
+                  icon: Icon(
+                    speech.state.needSpeak ? Icons.mic : Icons.mic_off,
+                  ),
+                )
+              : SizedBox.shrink(),
         ],
       ),
       body: Column(
@@ -137,7 +147,7 @@ class _InterviewPageView extends StatelessWidget {
             child: SmoothPageIndicator(
               controller: pageController,
               count: 10,
-              onDotClicked: (page) => _jumpToPage(context, page),
+              onDotClicked: (page) => _jumpToPage(context, page, isVoiceEnable),
               effect: WormEffect(
                 radius: size.height * 0.025,
                 dotHeight: size.height * 0.025,
@@ -158,6 +168,7 @@ class _InterviewPageView extends StatelessWidget {
                   interviewInfo: interviewInfo,
                   questions: questions,
                   currentPage: index,
+                  isVoiceEnable: isVoiceEnable,
                 );
               },
             ),
@@ -174,8 +185,8 @@ class _InterviewPageView extends StatelessWidget {
     }
   }
 
-  void _jumpToPage(BuildContext context, int page) {
-    context.read<SpeechCubit>().speak(questions[page]);
+  void _jumpToPage(BuildContext context, int page, bool isVoiceEnable) {
+    if (isVoiceEnable) context.read<SpeechCubit>().speak(questions[page]);
     answers[pageController.page?.round() ?? 0] = answerController.text.trim();
     answerController.text = answers[page];
     pageController.jumpToPage(page);
@@ -189,6 +200,7 @@ class _InterviewQuestionPage extends StatelessWidget {
   final InterviewInfo interviewInfo;
   final List<String> questions;
   final int currentPage;
+  final bool isVoiceEnable;
 
   const _InterviewQuestionPage({
     required this.answerController,
@@ -197,6 +209,7 @@ class _InterviewQuestionPage extends StatelessWidget {
     required this.interviewInfo,
     required this.questions,
     required this.currentPage,
+    required this.isVoiceEnable,
   });
 
   @override
@@ -231,21 +244,19 @@ class _InterviewQuestionPage extends StatelessWidget {
                     ? const SizedBox.shrink()
                     : CustomButton(
                         text: 'Назад',
-                        selectedColor: AppPalette.primary,
                         percentsWidth: 0.34,
-                        onPressed: () => _pop(context),
+                        onPressed: () => _pop(context, isVoiceEnable),
                       ),
               ),
               FloatingActionButton(
                 onPressed: () => context.read<SpeechCubit>().toggleListening(),
-                child: Icon(Icons.mic, color: AppPalette.textPrimary),
+                child: Icon(Icons.mic, color: theme.canvasColor),
               ),
               Expanded(
                 child: CustomButton(
                   text: currentPage == 9 ? 'Завершить' : 'Дальше',
-                  selectedColor: AppPalette.primary,
                   percentsWidth: 0.34,
-                  onPressed: () => _push(context),
+                  onPressed: () => _push(context, isVoiceEnable),
                 ),
               ),
             ],
@@ -255,19 +266,23 @@ class _InterviewQuestionPage extends StatelessWidget {
     );
   }
 
-  void _pop(BuildContext context) {
+  void _pop(BuildContext context, bool isVoiceEnable) {
     answers[currentPage] = answerController.text.trim();
     answerController.text = answers[currentPage - 1];
     pageController.jumpToPage(currentPage - 1);
-    context.read<SpeechCubit>().speak(questions[currentPage - 1]);
+    if (isVoiceEnable) {
+      context.read<SpeechCubit>().speak(questions[currentPage - 1]);
+    }
   }
 
-  void _push(BuildContext context) {
+  void _push(BuildContext context, bool isVoiceEnable) {
     if (currentPage != 9) {
       answers[currentPage] = answerController.text.trim();
       answerController.text = answers[currentPage + 1];
       pageController.jumpToPage(currentPage + 1);
-      context.read<SpeechCubit>().speak(questions[currentPage + 1]);
+      if (isVoiceEnable) {
+        context.read<SpeechCubit>().speak(questions[currentPage + 1]);
+      }
     } else {
       answers[currentPage] = answerController.text.trim();
       context.pushReplacement(
@@ -290,10 +305,9 @@ class _GoOutDialog extends StatelessWidget {
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text(
-        'Вы уверены, что хотите выйти из аккаунта?',
+        'Вы уверены, что хотите сбросить собседование?',
         style: theme.textTheme.displaySmall,
       ),
-      content: const Text('Текущий прогресс будет сброшен'),
       actions: [
         TextButton(
           onPressed: () {

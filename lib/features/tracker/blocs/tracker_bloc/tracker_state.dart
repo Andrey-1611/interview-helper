@@ -13,15 +13,6 @@ final class TrackerLoading extends TrackerState {}
 
 final class TrackerFailure extends TrackerState {}
 
-final class TrackerTasksFailure extends TrackerState {
-  final List<Task> tasks;
-
-  const TrackerTasksFailure({required this.tasks});
-
-  @override
-  List<Object> get props => [tasks];
-}
-
 final class TrackerDirectionsSuccess extends TrackerState {}
 
 final class TrackerSuccess extends TrackerState {

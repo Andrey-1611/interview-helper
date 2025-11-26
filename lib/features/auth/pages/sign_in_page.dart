@@ -60,16 +60,16 @@ class _SignInPageState extends State<SignInPage> {
               AppRouterNames.emailVerification,
               extra: _passwordController.text.trim(),
             );
-            ToastHelper.sendEmailVerification(_emailController.text);
+            ToastHelper.sendEmailVerification(_emailController.text, context);
           } else if (state is AuthWithoutDirections) {
             context.pop();
             context.pushReplacement(AppRouterNames.directions);
           } else if (state is AuthNetworkFailure) {
             context.pop();
-            ToastHelper.networkError();
+            ToastHelper.networkError(context);
           } else if (state is AuthFailure) {
             context.pop();
-            ToastHelper.signInError();
+            ToastHelper.signInError(context);
           }
         },
         child: _SignInPageView(

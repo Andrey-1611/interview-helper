@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/widgets/custom_network_failure.dart';
+import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/share_info.dart';
@@ -15,6 +17,7 @@ import '../../../data/repositories/ai_repository.dart';
 import '../../../app/widgets/custom_interview_info.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class ResultsPage extends StatelessWidget {
@@ -29,28 +32,47 @@ class ResultsPage extends StatelessWidget {
         GetIt.I<AIRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
         GetIt.I<StopwatchInfo>(),
       )..add(FinishInterview(interviewInfo: interviewInfo)),
-      child: BlocConsumer<InterviewBloc, InterviewState>(
-        listener: (context, state) {
-          if (state is InterviewLoading) {
-            DialogHelper.showLoadingDialog(context, 'Проверка ответов...');
-          } else if (state is InterviewFinishSuccess) {
-            context.pop();
-          } else if (state is InterviewFailure) {
-            context.pop();
-            context.pushReplacement(AppRouterNames.initial);
-            ToastHelper.unknownError();
-          }
-        },
-        builder: (context, state) {
-          if (state is InterviewFinishSuccess) {
-            return _ResultsPageView(interview: state.interview);
-          }
-          return SizedBox.shrink();
-        },
-      ),
+      child: _ResultsInfo(interviewInfo: interviewInfo),
+    );
+  }
+}
+
+class _ResultsInfo extends StatelessWidget {
+  final InterviewInfo interviewInfo;
+
+  const _ResultsInfo({required this.interviewInfo});
+
+  @override
+  Widget build(BuildContext context) {
+    final onPressed = context.read<InterviewBloc>().add(
+      FinishInterview(interviewInfo: interviewInfo),
+    );
+    return BlocConsumer<InterviewBloc, InterviewState>(
+      listener: (context, state) {
+        if (state is InterviewLoading) {
+          DialogHelper.showLoadingDialog(context, 'Проверка ответов...');
+        } else if (state is InterviewFinishSuccess) {
+          context.pop();
+        } else if (state is InterviewFailure) {
+          context.pop();
+          context.pushReplacement(AppRouterNames.initial);
+          ToastHelper.unknownError(context);
+        }
+      },
+      builder: (context, state) {
+        if (state is InterviewNetworkFailure) {
+          return CustomNetworkFailure(onPressed: () => onPressed);
+        } else if (state is InterviewFailure) {
+          return CustomUnknownFailure(onPressed: () => onPressed);
+        } else if (state is InterviewFinishSuccess) {
+          return _ResultsPageView(interview: state.interview);
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 }

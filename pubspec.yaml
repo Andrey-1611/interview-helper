@@ -2,7 +2,7 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.1.0+15
+version: 2.2.0+16
 
 environment:
   sdk: ^3.8.1
@@ -16,7 +16,6 @@ dependencies:
   get_it: ^8.2.0
   injectable: ^2.5.1
   intl: ^0.20.2
-  flutter_screenutil: ^5.9.3
   uuid: ^4.5.1
   connectivity_plus: ^6.1.5
   firebase_core: ^3.15.0
@@ -41,6 +40,7 @@ dependencies:
   flutter_tts: ^4.2.3
   share_plus: ^12.0.1
   google_nav_bar: ^5.0.7
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -48,10 +48,10 @@ dev_dependencies:
   bloc_test: ^10.0.0
   firebase_auth_mocks: ^0.14.2
   fake_cloud_firestore: ^3.1.0
-  build_runner: ^2.5.4
+  build_runner: ^2.3.4
   hive_generator: ^2.0.1
   json_serializable: ^6.7.1
-  injectable_generator: ^2.6.2
+  injectable_generator: ^2.2.2
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
@@ -63,6 +63,6 @@ flutter:
     - .env
 
 flutter_launcher_icons:
-  android: true
+  android: false
   ios: true
   image_path: "assets/play_store_512.png"

@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
 import '../../../../app/router/app_router_names.dart';
@@ -30,6 +30,7 @@ class InitialPage extends StatelessWidget {
             GetIt.I<AIRepository>(),
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
+            GetIt.I<SettingsRepository>(),
             GetIt.I<NetworkInfo>(),
             GetIt.I<StopwatchInfo>(),
           ),
@@ -58,8 +59,12 @@ class _InitialPageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Интервью'),
+        title: Text('Собеседование'),
         actions: [
+          IconButton(
+            onPressed: () => context.push(AppRouterNames.questionsDatabase),
+            icon: Icon(Icons.library_books),
+          ),
           IconButton(
             onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),
@@ -110,11 +115,11 @@ class _InterviewButton extends StatelessWidget {
     return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
         if (state is InterviewAttemptsFailure) {
-          ToastHelper.attemptsError();
+          ToastHelper.attemptsError(context);
         } else if (state is InterviewNetworkFailure) {
-          ToastHelper.networkError();
+          ToastHelper.networkError(context);
         } else if (state is InterviewFailure) {
-          ToastHelper.unknownError();
+          ToastHelper.unknownError(context);
         } else if (state is InterviewStartSuccess) {
           context.push(
             AppRouterNames.interview,
@@ -128,12 +133,11 @@ class _InterviewButton extends StatelessWidget {
       },
       child: CustomButton(
         text: 'Начать',
-        selectedColor: AppPalette.primary,
         onPressed: () {
           if (form.state.direction != null && form.state.difficulty != null) {
             return context.read<InterviewBloc>().add(StartInterview());
           }
-          ToastHelper.interviewFormError();
+          ToastHelper.interviewFormError(context);
         },
       ),
     );

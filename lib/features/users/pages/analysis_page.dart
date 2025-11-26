@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
-import 'package:interview_master/core/theme/app_pallete.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
+import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
@@ -72,7 +72,11 @@ class _AnalysisPageView extends StatelessWidget {
       ),
       body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
-          if (state is UserSuccess) {
+          if (state is UsersFailure) {
+            return CustomUnknownFailure(
+              onPressed: () => context.read<UsersBloc>().add(GetUser()),
+            );
+          } else if (state is UserSuccess) {
             final filteredCurrentUser = UserData.filterUser(
               filter.state.direction,
               filter.state.difficulty,
@@ -265,7 +269,7 @@ class _CompareCard extends StatelessWidget {
 
   TextStyle? style(ThemeData theme, String value1, String value2) {
     return int.parse(value1) >= int.parse(value2)
-        ? theme.textTheme.displayMedium?.copyWith(color: AppPalette.primary)
+        ? theme.textTheme.displayMedium?.copyWith(color: theme.primaryColor)
         : theme.textTheme.displayMedium;
   }
 }
@@ -330,7 +334,7 @@ class _CompareTimeCard extends StatelessWidget {
 
   TextStyle? style(ThemeData theme, Duration value1, Duration value2) {
     return value1 >= value2
-        ? theme.textTheme.bodySmall?.copyWith(color: AppPalette.primary)
+        ? theme.textTheme.bodySmall?.copyWith(color: theme.primaryColor)
         : theme.textTheme.bodySmall;
   }
 }
@@ -363,7 +367,6 @@ class _FilterDialog extends StatelessWidget {
           ),
           CustomButton(
             text: 'Применить',
-            selectedColor: AppPalette.primary,
             onPressed: () {
               filterCubit.filter(direction, difficulty, null);
               context.pop();
