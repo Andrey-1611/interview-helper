@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   firebase_auth
   firebase_core
+  flutter_localization
   flutter_tts
   share_plus
   speech_to_text_windows
