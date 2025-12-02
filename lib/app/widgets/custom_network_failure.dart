@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/generated/l10n.dart';
 
 class CustomNetworkFailure extends StatelessWidget {
   final VoidCallback onPressed;
@@ -7,18 +8,16 @@ class CustomNetworkFailure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Нет подключения к интернету',
+            s.no_internet_connection,
             style: Theme.of(context).textTheme.displayLarge,
           ),
-          TextButton(
-            onPressed: onPressed,
-            child: const Text('Попробовать еще раз'),
-          ),
+          TextButton(onPressed: onPressed, child: Text(s.try_again)),
         ],
       ),
     );

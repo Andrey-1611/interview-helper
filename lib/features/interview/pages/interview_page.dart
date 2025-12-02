@@ -9,16 +9,16 @@ import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/stopwatch_info.dart';
 import '../../../data/models/interview_info.dart';
-import '../../../data/models/user_input.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class InterviewPage extends StatefulWidget {
@@ -216,11 +216,12 @@ class _InterviewQuestionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
         children: [
-          Text('Вопрос ${currentPage + 1}'),
+          Text(s.questionN(currentPage + 1)),
           Text(questions[currentPage], style: theme.textTheme.bodyLarge),
           SizedBox(height: size.height * 0.02),
           Expanded(
@@ -231,9 +232,7 @@ class _InterviewQuestionPage extends StatelessWidget {
               maxLength: 300,
               textAlignVertical: TextAlignVertical.top,
               controller: answerController,
-              decoration: const InputDecoration(
-                hintText: 'Введите ваш ответ...',
-              ),
+              decoration: InputDecoration(hintText: s.enter_your_answer),
             ),
           ),
           Row(
@@ -243,18 +242,18 @@ class _InterviewQuestionPage extends StatelessWidget {
                 child: currentPage == 0
                     ? const SizedBox.shrink()
                     : CustomButton(
-                        text: 'Назад',
+                        text: s.back,
                         percentsWidth: 0.34,
                         onPressed: () => _pop(context, isVoiceEnable),
                       ),
               ),
               FloatingActionButton(
                 onPressed: () => context.read<SpeechCubit>().toggleListening(),
-                child: Icon(Icons.mic, color: theme.canvasColor),
+                child: Icon(Icons.mic, color: theme.iconTheme.color),
               ),
               Expanded(
                 child: CustomButton(
-                  text: currentPage == 9 ? 'Завершить' : 'Дальше',
+                  text: currentPage == 9 ? s.finish : s.next,
                   percentsWidth: 0.34,
                   onPressed: () => _push(context, isVoiceEnable),
                 ),
@@ -290,7 +289,10 @@ class _InterviewQuestionPage extends StatelessWidget {
         extra: InterviewInfo(
           direction: interviewInfo.direction,
           difficulty: interviewInfo.difficulty,
-          userInputs: UserInput.fromInput(questions, answers),
+          userInputs: List.generate(
+            10,
+            (i) => (question: questions[i], answer: answers[i]),
+          ),
         ),
       );
     }
@@ -302,10 +304,11 @@ class _GoOutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text(
-        'Вы уверены, что хотите сбросить собседование?',
+        s.reset_interview_confirmation,
         style: theme.textTheme.displaySmall,
       ),
       actions: [
@@ -314,9 +317,9 @@ class _GoOutDialog extends StatelessWidget {
             context.pop();
             context.pop();
           },
-          child: Text('Да'),
+          child: Text(s.yes),
         ),
-        TextButton(onPressed: () => context.pop(), child: Text('Нет')),
+        TextButton(onPressed: () => context.pop(), child: Text(s.no)),
       ],
     );
   }

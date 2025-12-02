@@ -3,22 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
-import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../../app/widgets/custom_button.dart';
-import '../../../app/widgets/custom_dropdown_menu.dart';
-import '../../../app/widgets/custom_filter_button.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_network_failure.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
-import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
-import '../blocs/filter_users_cubit/filter_users_cubit.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 import '../widgets/custom_user_info.dart';
 
@@ -28,18 +23,13 @@ class RatingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = context.watch<DataCubit>().state;
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          key: ValueKey(value),
-          create: (context) => UsersBloc(
-            GetIt.I<RemoteRepository>(),
-            GetIt.I<LocalRepository>(),
-            GetIt.I<NetworkInfo>(),
-          )..add(GetUsers()),
-        ),
-        BlocProvider(create: (context) => FilterUsersCubit()),
-      ],
+    return BlocProvider(
+      key: ValueKey(value),
+      create: (context) => UsersBloc(
+        GetIt.I<RemoteRepository>(),
+        GetIt.I<LocalRepository>(),
+        GetIt.I<NetworkInfo>(),
+      )..add(GetUsers()),
       child: DefaultTabController(length: 2, child: _RatingPageView()),
     );
   }
@@ -50,33 +40,16 @@ class _RatingPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final filter = context.watch<FilterUsersCubit>();
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Рейтинг'),
+        title: Text(s.rating),
         actions: [
           IconButton(
             onPressed: () => context.push(AppRouterNames.settings),
             icon: Icon(Icons.settings),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size(double.infinity, size.height * 0.07),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: CustomFilterButton(
-              resetFilter: () => filter.resetUsers(),
-              filterController: TextEditingController(
-                text: FilterTextFormatter.users(
-                  filter.state.direction,
-                  filter.state.sort,
-                ),
-              ),
-              filterDialog: _FilterDialog(filter: filter),
-            ),
-          ),
-        ),
       ),
       body: _UsersList(),
     );
@@ -96,18 +69,12 @@ class _UsersList extends StatelessWidget {
         } else if (state is UsersFailure) {
           return CustomUnknownFailure(onPressed: () => onPressed);
         } else if (state is UsersSuccess) {
-          final filter = context.watch<FilterUsersCubit>();
-          final filteredUsers = UserData.filterUsers(
-            filter.state.direction,
-            filter.state.sort,
-            state.users,
-          );
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView.builder(
-              itemCount: filteredUsers.length,
+              itemCount: state.users.length,
               itemBuilder: (context, index) {
-                final filteredUser = filteredUsers[index];
+                final filteredUser = state.users[index];
                 final user = state.users.firstWhere(
                   (user) => user.id == filteredUser.id,
                 );
@@ -144,6 +111,7 @@ class _UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isCurrentUser = currentUser.id == user.id;
+    final s = S.of(context);
     return Card(
       shape: RoundedRectangleBorder(
         side: isCurrentUser
@@ -164,7 +132,7 @@ class _UserCard extends StatelessWidget {
           style: Theme.of(context).textTheme.displayMedium,
         ),
         title: Text(
-          isCurrentUser ? 'Вы' : user.name,
+          isCurrentUser ? s.you : user.name,
           style: theme.textTheme.displaySmall,
         ),
         subtitle: Row(
@@ -173,7 +141,7 @@ class _UserCard extends StatelessWidget {
               '${filteredUser.totalScore} ',
               style: theme.textTheme.bodyLarge,
             ),
-            Icon(Icons.star, color: theme.primaryColor,),
+            Icon(Icons.star, color: theme.primaryColor),
           ],
         ),
         trailing: Row(
@@ -203,6 +171,7 @@ class _UserSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
+    final s = S.of(context);
     return BottomSheet(
       onClosing: () {},
       builder: (context) => SizedBox(
@@ -218,50 +187,11 @@ class _UserSheet extends StatelessWidget {
                   context.pop();
                   context.push(AppRouterNames.profile, extra: user);
                 },
-                child: Text('Подобная иноформация'),
+                child: Text(s.similar_information),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _FilterDialog extends StatelessWidget {
-  final FilterUsersCubit filter;
-
-  const _FilterDialog({required this.filter});
-
-  @override
-  Widget build(BuildContext context) {
-    String? direction = filter.state.direction;
-    String? sort = filter.state.sort;
-    return AlertDialog(
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomDropdownMenu(
-            value: direction,
-            data: InterviewsData.directions,
-            change: (value) => direction = value,
-            hintText: 'Все направления',
-          ),
-          CustomDropdownMenu(
-            value: sort,
-            data: InterviewsData.usersSorts,
-            change: (value) => sort = value,
-            hintText: 'Сортировка',
-          ),
-          CustomButton(
-            text: 'Применить',
-            onPressed: () {
-              filter.filterUsers(direction, sort);
-              context.pop();
-            },
-          ),
-        ],
       ),
     );
   }

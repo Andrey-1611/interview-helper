@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
+import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../core/utils/data_cubit.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/directions_cubit/directions_cubit.dart';
 import '../blocs/tracker_bloc/tracker_bloc.dart';
 
@@ -18,12 +20,14 @@ class DirectionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => TrackerBloc(
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
+            GetIt.I<NetworkInfo>(),
           ),
         ),
         BlocProvider(create: (context) => DirectionsCubit()),
@@ -31,11 +35,14 @@ class DirectionsPage extends StatelessWidget {
       child: BlocListener<TrackerBloc, TrackerState>(
         listener: (context, state) {
           if (state is TrackerLoading) {
-            DialogHelper.showLoadingDialog(context, 'Сохранение данных...');
+            DialogHelper.showLoadingDialog(context, s.saving_data);
           } else if (state is TrackerDirectionsSuccess) {
             context.pop();
             context.read<DataCubit>().updateKeyValue();
             context.go(AppRouterNames.initial);
+          } else if (state is TrackerFailure) {
+            context.pop();
+            ToastHelper.networkError(context);
           } else if (state is TrackerFailure) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
@@ -55,9 +62,10 @@ class _DirectionsPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Выбор направлений'),
+        title: Text(s.directions_selection),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -69,7 +77,7 @@ class _DirectionsPageView extends StatelessWidget {
               child: ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text(
-                  'Выберите от 1 до 3 направлений',
+                  s.select_1_to_3_directions,
                   style: theme.textTheme.bodyMedium,
                 ),
               ),
@@ -92,7 +100,7 @@ class _DirectionsPageView extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.02),
             CustomButton(
-              text: 'Продолжить',
+              text: s.proceed,
               onPressed: () => context.read<TrackerBloc>().add(
                 SetDirections(
                   directions: context.read<DirectionsCubit>().state,

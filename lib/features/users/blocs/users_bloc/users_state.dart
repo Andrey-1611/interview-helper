@@ -34,10 +34,7 @@ final class UsersSuccess extends UsersState {
   final List<UserData> users;
   final UserData currentUser;
 
-  const UsersSuccess({
-    required this.users,
-    required this.currentUser,
-  });
+  const UsersSuccess({required this.users, required this.currentUser});
 
   @override
   List<Object> get props => [users, currentUser];

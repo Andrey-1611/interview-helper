@@ -103,7 +103,7 @@ class CPlusPlusQuestions {
     "Как работать с бинарными файлами?",
     "Что такое stringstream?",
     "Как парсить строки?",
-    "Что такое сериализация данных?"
+    "Что такое сериализация данных?",
   ];
 
   static const List<String> middle = [
@@ -210,7 +210,7 @@ class CPlusPlusQuestions {
     "Как избежать integer overflow?",
     "Что такое type punning?",
     "Как безопасно использовать union?",
-    "Что такое undefined behavior?"
+    "Что такое undefined behavior?",
   ];
 
   static const List<String> senior = [
@@ -318,6 +318,6 @@ class CPlusPlusQuestions {
     "Как работать с PyTorch C++?",
     "Что такое embedded C++?",
     "Как использовать C++ в IoT?",
-    "Какие тренды в C++ разработке?"
+    "Какие тренды в C++ разработке?",
   ];
 }

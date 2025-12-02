@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import '../../../../app/router/app_router_names.dart';
+import 'package:interview_master/generated/l10n.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -57,8 +58,9 @@ class _ChangePasswordPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Смена пароля')),
+      appBar: AppBar(title: Text(s.change_password)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -71,7 +73,7 @@ class _ChangePasswordPageView extends StatelessWidget {
                 const Spacer(),
                 CustomTextFormField(
                   controller: emailController,
-                  hintText: 'Почта',
+                  hintText: s.email,
                   prefixIcon: Icon(Icons.email),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -83,7 +85,7 @@ class _ChangePasswordPageView extends StatelessWidget {
                 TextButton(
                   onPressed: () =>
                       context.pushReplacement(AppRouterNames.signIn),
-                  child: const Text('Вернуться на экран входа'),
+                  child: Text(s.back_to_sign_in),
                 ),
               ],
             ),
@@ -105,6 +107,7 @@ class _ChangePasswordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
@@ -117,7 +120,7 @@ class _ChangePasswordButton extends StatelessWidget {
         }
       },
       child: CustomAuthButton(
-        text: 'Подтвердить',
+        text: s.confirm,
         onPressed: () {
           if (formKey.currentState!.validate()) {
             context.read<AuthBloc>().add(

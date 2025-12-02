@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:interview_master/app/widgets/custom_question_card.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import '../../data/models/interview_data.dart';
+import '../../generated/l10n.dart';
 
 class CustomInterviewInfo extends StatelessWidget {
   final InterviewData interview;
@@ -10,13 +11,14 @@ class CustomInterviewInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _MainResultPanel(
           data:
               '${interview.direction}, ${interview.difficulty}, ${interview.score} %',
-          duration: 'Время:  ${TimeFormatter.time(interview.duration)}',
+          duration: s.timeT(TimeFormatter.time(interview.duration, context)),
         ),
         const SizedBox(height: 20),
         Expanded(

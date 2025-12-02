@@ -103,7 +103,7 @@ class FlutterQuestions {
     "Что такое `Flavor` и зачем он нужен?",
     "Как опубликовать приложение в Google Play/App Store?",
     "Что такое `Fastlane`?",
-    "Как настроить CI/CD для Flutter?"
+    "Как настроить CI/CD для Flutter?",
   ];
 
   static const List<String> middle = [
@@ -210,7 +210,7 @@ class FlutterQuestions {
     "Как работать с Flutter для web?",
     "Как реализовать PWA с Flutter?",
     "Как работать с Flutter в embedded системах?",
-    "Как реализовать custom engine для Flutter?"
+    "Как реализовать custom engine для Flutter?",
   ];
 
   static const List<String> senior = [
@@ -318,6 +318,6 @@ class FlutterQuestions {
     "Как управлять expectations стейкхолдеров?",
     "Как проводить технический due diligence?",
     "Что такое technology radar?",
-    "Как создавать техническую стратегию компании?"
+    "Как создавать техническую стратегию компании?",
   ];
 }

@@ -9,15 +9,18 @@ import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
+import 'package:interview_master/core/utils/localization_data.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/core/utils/task_type_helper.dart';
 import 'package:interview_master/features/tracker/blocs/selector_subit/selector_cubit.dart';
 import 'package:interview_master/features/tracker/blocs/tracker_bloc/tracker_bloc.dart';
+import 'package:interview_master/generated/l10n.dart';
 import 'package:intl/intl.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
+import '../../../core/utils/network_info.dart';
 import '../../../data/models/task.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -35,6 +38,7 @@ class TrackerPage extends StatelessWidget {
           create: (context) => TrackerBloc(
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
+            GetIt.I<NetworkInfo>(),
           )..add(GetTasks()),
         ),
         BlocProvider(create: (context) => FilterTasksCubit()),
@@ -53,9 +57,10 @@ class _TrackerPageView extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
     final filter = context.watch<FilterTasksCubit>();
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Трекер'),
+        title: Text(s.tracker),
         actions: [
           IconButton(
             onPressed: () => DialogHelper.showCustomDialog(
@@ -84,7 +89,6 @@ class _TrackerPageView extends StatelessWidget {
                       text: FilterTextFormatter.tasks(
                         filter.state.direction,
                         filter.state.type,
-                        filter.state.sort,
                       ),
                     ),
                     resetFilter: () => filter.reset(),
@@ -129,7 +133,12 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrackerBloc, TrackerState>(
+    return BlocConsumer<TrackerBloc, TrackerState>(
+      listener: (context, state) {
+        if (state is TrackerNetworkFailure) {
+          ToastHelper.networkError(context);
+        }
+      },
       builder: (context, state) {
         if (state is TrackerFailure) {
           return CustomUnknownFailure(
@@ -184,7 +193,7 @@ class _TasksListView extends StatelessWidget {
               '${task.direction}, ${DateFormat('dd/MM/yyyy').format(task.createdAt)}',
             ),
             subtitle: Text(
-              '${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type)}',
+              '${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type, context)}',
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -226,7 +235,7 @@ class _EmptyList extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Задач еще нет', style: theme.textTheme.displayLarge),
+          Text(S.of(context).no_tasks_yet, style: theme.textTheme.displayLarge),
           TextButton(
             onPressed: () => DialogHelper.showCustomDialog(
               dialog: _CreateTaskDialog(
@@ -235,7 +244,7 @@ class _EmptyList extends StatelessWidget {
               ),
               context: context,
             ),
-            child: Text('Создать задачу'),
+            child: Text(S.of(context).create_task),
           ),
         ],
       ),
@@ -249,17 +258,15 @@ class _EmptyFilterList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Задач по данному фильтру нет',
-            style: theme.textTheme.displayLarge,
-          ),
+          Text(s.no_tasks_for_filter, style: theme.textTheme.displayLarge),
           TextButton(
             onPressed: () => context.read<FilterTasksCubit>().reset(),
-            child: Text('Сбросить фильтр'),
+            child: Text(s.reset_filter),
           ),
         ],
       ),
@@ -276,9 +283,10 @@ class _DeleteTaskDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return AlertDialog(
       content: Text(
-        'Вы уверены, что хотите удалить эту задачу?',
+        S.of(context).delete_task_confirmation,
         style: theme.textTheme.bodyLarge,
       ),
       actions: [
@@ -287,9 +295,9 @@ class _DeleteTaskDialog extends StatelessWidget {
             context.pop();
             trackerBloc.add(DeleteTask(id: taskId));
           },
-          child: const Text('Да'),
+          child: Text(s.yes),
         ),
-        TextButton(onPressed: () => context.pop(), child: const Text('Нет')),
+        TextButton(onPressed: () => context.pop(), child: Text(s.no)),
       ],
     );
   }
@@ -306,28 +314,38 @@ class _CreateTaskDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final state = selectorCubit.state;
     return AlertDialog(
-      title: const Text('Новая задача'),
+      title: Text(s.new_task),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomDropdownMenu(
             value: state.direction,
-            data: InterviewsData.directions,
+            data: List.generate(
+              InterviewsData.directions.length,
+              (i) => (value: InterviewsData.directions[i], text: null),
+            ),
             change: selectorCubit.changeDirection,
-            hintText: 'Направление',
+            hintText: s.direction,
           ),
           CustomDropdownMenu(
             value: state.type,
-            data: InterviewsData.types,
+            data: List.generate(
+              InterviewsData.types.length,
+              (i) => (
+                value: InterviewsData.types[i],
+                text: LocalizationData(s).types[i],
+              ),
+            ),
             change: selectorCubit.changeType,
-            hintText: 'Тип',
+            hintText: s.type,
           ),
           const SizedBox(height: 6),
           TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'Цель',
+            decoration: InputDecoration(
+              hintText: s.goal,
               border: OutlineInputBorder(borderSide: BorderSide.none),
             ),
             initialValue: state.value?.toString() ?? '',
@@ -342,11 +360,11 @@ class _CreateTaskDialog extends StatelessWidget {
             Navigator.pop(context);
             selectorCubit.reset();
           },
-          child: const Text('Отмена'),
+          child: Text(S.of(context).cancel),
         ),
         TextButton(
           onPressed: () => _createTask(context, selectorCubit),
-          child: const Text('Создать'),
+          child: Text(S.of(context).create),
         ),
       ],
     );
@@ -383,6 +401,7 @@ class _FilterDialog extends StatelessWidget {
     String? direction = filterCubit.state.direction;
     String? type = filterCubit.state.type;
     String? sort = filterCubit.state.sort;
+    final s = S.of(context);
     return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -390,24 +409,27 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InterviewsData.directions,
+            data: List.generate(
+              InterviewsData.directions.length,
+              (i) => (value: InterviewsData.directions[i], text: null),
+            ),
             change: (value) => direction = value,
-            hintText: 'Направление',
+            hintText: s.direction,
           ),
           CustomDropdownMenu(
             value: type,
-            data: InterviewsData.types,
+            data: List.generate(
+              InterviewsData.types.length,
+              (i) => (
+                value: InterviewsData.types[i],
+                text: LocalizationData(s).types[i],
+              ),
+            ),
             change: (value) => type = value,
-            hintText: 'Тип',
-          ),
-          CustomDropdownMenu(
-            value: sort,
-            data: InterviewsData.tasksSorts,
-            change: (value) => sort = value,
-            hintText: 'Сортировка',
+            hintText: s.type,
           ),
           CustomButton(
-            text: 'Применить',
+            text: s.confirm,
             onPressed: () {
               filterCubit.runFilter(direction, type, sort);
               context.pop();

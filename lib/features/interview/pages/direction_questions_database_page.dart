@@ -5,6 +5,8 @@ import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/capitalize_extention.dart';
 import 'package:interview_master/features/interview/blocs/search_cubit/search_cubit.dart';
 
+import '../../../generated/l10n.dart';
+
 class DirectionQuestionsDatabasePage extends StatelessWidget {
   final Direction direction;
 
@@ -104,16 +106,32 @@ class _SearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final search = context.read<SearchCubit>();
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
       child: TextField(
         onChanged: search.update,
         decoration: InputDecoration(
           fillColor: theme.canvasColor,
-          hintText: 'Поиск',
+          hintText: s.search,
           prefixIcon: Icon(Icons.search),
         ),
       ),
+    );
+  }
+}
+
+class _EmptyList extends StatelessWidget {
+  final SearchCubit search;
+
+  const _EmptyList(this.search);
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+    return Center(
+      child: Text(s.nothing_found, style: theme.textTheme.displayLarge),
     );
   }
 }
@@ -122,6 +140,7 @@ class _KeepAlivePage extends StatefulWidget {
   final Widget child;
 
   const _KeepAlivePage({required this.child});
+
   @override
   State<_KeepAlivePage> createState() => _KeepAlivePageState();
 }
@@ -135,19 +154,5 @@ class _KeepAlivePageState extends State<_KeepAlivePage>
   Widget build(BuildContext context) {
     super.build(context);
     return widget.child;
-  }
-}
-
-class _EmptyList extends StatelessWidget {
-  final SearchCubit search;
-
-  const _EmptyList(this.search);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Text('Ничего не найдено', style: theme.textTheme.displayLarge),
-    );
   }
 }

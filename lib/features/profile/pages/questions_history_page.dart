@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:interview_master/features/profile/blocs/profile_bloc/profile_bloc.dart';
-import '../../../../app/widgets/custom_loading_indicator.dart';
+import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_question_card.dart';
 import '../../../app/widgets/custom_network_failure.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
@@ -36,7 +36,6 @@ class QuestionsHistoryPage extends StatelessWidget {
           final questions = Question.filterQuestions(
             filter.state.direction,
             filter.state.difficulty,
-            filter.state.sort,
             filter.state.isFavourite,
             state.interviews,
           );

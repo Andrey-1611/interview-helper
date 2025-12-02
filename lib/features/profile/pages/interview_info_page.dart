@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../app/widgets/custom_interview_info.dart';
+import '../../../app/widgets/custom_interview_info.dart';
 import '../../../data/models/interview_data.dart';
 
 class InterviewInfoPage extends StatelessWidget {

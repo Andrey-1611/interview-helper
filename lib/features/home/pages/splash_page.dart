@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../../users/blocs/users_bloc/users_bloc.dart';
 
 class SplashPage extends StatelessWidget {
@@ -30,6 +31,7 @@ class _SplashPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     return BlocListener<UsersBloc, UsersState>(
       listener: (context, state) {
@@ -46,7 +48,7 @@ class _SplashPageView extends StatelessWidget {
       child: Scaffold(
         body: Center(
           child: Text(
-            'SkillAI',
+            s.skillai,
             style: theme.textTheme.titleLarge?.copyWith(
               color: theme.primaryColor,
             ),

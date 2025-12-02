@@ -52,41 +52,11 @@ class InterviewsData {
 
   static const List<String> difficulties = [junior, middle, senior];
 
-  static const firstNew = 'Новые';
-  static const firstOld = 'Старые';
-  static const firstBest = 'Лучшие';
-  static const firstWorst = 'Худшие';
-
-  static const List<String> interviewsSorts = [
-    firstNew,
-    firstOld,
-    firstBest,
-    firstWorst,
-  ];
-
-  static const firstTotalScore = 'Опыт';
-  static const firstTotalInterviews = 'Собеседования';
-  static const firstAverageScore = 'Средний результат';
-
-  static const List<String> usersSorts = [
-    firstTotalScore,
-    firstTotalInterviews,
-    firstAverageScore,
-  ];
-
-  static const interviews = 'Cобеседования';
-  static const time = 'Время';
-  static const score = 'Опыт';
+  static const interviews = 'Interviews';
+  static const time = 'Time';
+  static const score = 'Score';
 
   static const types = [interviews, time, score];
-
-  static const tasksSorts = [firstNew, firstOld];
-
-  static const String pending = 'ожидание';
-  static const String accepted = 'принято';
-  static const String rejected = 'отклонено';
-
-  static const statuses = [pending, accepted, rejected];
 
   static const allFQuestions = [
     ...FlutterQuestions.junior,

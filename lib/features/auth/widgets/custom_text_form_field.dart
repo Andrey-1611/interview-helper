@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/utils/field_vaildator.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -30,7 +29,7 @@ class CustomTextFormField extends StatelessWidget {
         enableSuggestions: false,
         textInputAction: TextInputAction.next,
         keyboardType: keyboardType,
-        validator: (value) => fieldValidator(value, hintText),
+        validator: (value) => fieldValidator(value?.trim()),
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
           suffixIcon: iconButton,
@@ -38,5 +37,10 @@ class CustomTextFormField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? fieldValidator(String? value) {
+    if (value == null || value.isEmpty) return '';
+    return null;
   }
 }

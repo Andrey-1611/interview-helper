@@ -12,10 +12,7 @@ class CustomUnknownFailure extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Незвестная ошибка',
-            style: theme.textTheme.displayLarge,
-          ),
+          Text('Незвестная ошибка', style: theme.textTheme.displayLarge),
           TextButton(
             onPressed: onPressed,
             child: const Text('Попробовать еще раз'),

@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:speech_to_text/speech_to_text.dart' as _i941;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
+import '../../core/utils/device_info.dart' as _i168;
 import '../../core/utils/network_info.dart' as _i668;
 import '../../core/utils/share_info.dart' as _i502;
 import '../../core/utils/stopwatch_info.dart' as _i742;
@@ -68,6 +69,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => modules.prefs,
       preResolve: true,
     );
+    gh.lazySingleton<_i168.DeviceInfo>(() => _i168.DeviceInfo());
     gh.lazySingleton<_i1057.UrlLaunch>(() => _i1057.UrlLaunch());
     gh.lazySingleton<_i29.LocalRepository>(
         () => _i466.LocalDataSource(gh<_i986.HiveInterface>()));

@@ -9,8 +9,6 @@ class FilterAnalysisState extends Equatable {
   FilterAnalysisState copyWith({
     String? direction,
     String? difficulty,
-    String? sort,
-    bool? isFavourite,
   }) {
     return FilterAnalysisState(
       direction: direction ?? this.direction,

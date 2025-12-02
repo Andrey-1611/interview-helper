@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import '../../../core/constants/direction.dart';
+import '../../../generated/l10n.dart';
 
 class QuestionsDatabasePage extends StatelessWidget {
   const QuestionsDatabasePage({super.key});
@@ -10,8 +11,9 @@ class QuestionsDatabasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('База вопросов')),
+      appBar: AppBar(title: Text(S.of(context).questions_database)),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -38,7 +40,7 @@ class QuestionsDatabasePage extends StatelessWidget {
                     direction.direction,
                     style: theme.textTheme.displayMedium,
                   ),
-                  Text('${direction.questions.length} вопросов'),
+                  Text(s.questions_count(direction.questions.length)),
                 ],
               ),
             ),

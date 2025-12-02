@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../generated/l10n.dart';
+
 class HomePage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
@@ -8,25 +10,23 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(index),
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Собеседование',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: s.interview),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
-            label: 'Профиль',
+            label: s.profile,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.workspace_premium),
-            label: 'Трекер',
+            label: s.tracker,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Рейтинг'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: s.rating),
         ],
       ),
     );

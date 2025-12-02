@@ -8,7 +8,7 @@ import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/share_info.dart';
 import 'package:interview_master/data/models/interview_data.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../core/utils/stopwatch_info.dart';
 import '../../../core/utils/toast_helper.dart';
@@ -18,6 +18,7 @@ import '../../../app/widgets/custom_interview_info.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/interview_bloc/interview_bloc.dart';
 
 class ResultsPage extends StatelessWidget {
@@ -48,13 +49,12 @@ class _ResultsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPressed = context.read<InterviewBloc>().add(
-      FinishInterview(interviewInfo: interviewInfo),
-    );
+    final s = S.of(context);
+    final bloc = context.read<InterviewBloc>();
     return BlocConsumer<InterviewBloc, InterviewState>(
       listener: (context, state) {
         if (state is InterviewLoading) {
-          DialogHelper.showLoadingDialog(context, 'Проверка ответов...');
+          DialogHelper.showLoadingDialog(context, s.checking_answers);
         } else if (state is InterviewFinishSuccess) {
           context.pop();
         } else if (state is InterviewFailure) {
@@ -65,9 +65,15 @@ class _ResultsInfo extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is InterviewNetworkFailure) {
-          return CustomNetworkFailure(onPressed: () => onPressed);
+          return CustomNetworkFailure(
+            onPressed: () =>
+                bloc.add(FinishInterview(interviewInfo: interviewInfo)),
+          );
         } else if (state is InterviewFailure) {
-          return CustomUnknownFailure(onPressed: () => onPressed);
+          return CustomUnknownFailure(
+            onPressed: () =>
+                bloc.add(FinishInterview(interviewInfo: interviewInfo)),
+          );
         } else if (state is InterviewFinishSuccess) {
           return _ResultsPageView(interview: state.interview);
         }
@@ -90,7 +96,7 @@ class _ResultsPageView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () =>
-                GetIt.I<ShareInfo>().shareInterviewResults(interview),
+                GetIt.I<ShareInfo>().shareInterviewResults(interview, context),
             icon: Icon(Icons.share),
           ),
           IconButton(

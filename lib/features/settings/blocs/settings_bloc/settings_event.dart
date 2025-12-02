@@ -21,4 +21,3 @@ final class SetVoice extends SettingsEvent {
   @override
   List<Object?> get props => [isEnable];
 }
-

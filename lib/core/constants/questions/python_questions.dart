@@ -103,7 +103,7 @@ class PythonQuestions {
     "Что такое TDD?",
     "Как дебажить код?",
     "Что делает pdb?",
-    "Как использовать breakpoint()?"
+    "Как использовать breakpoint()?",
   ];
 
   static const List<String> middle = [
@@ -210,7 +210,7 @@ class PythonQuestions {
     "Как работать с Kubernetes?",
     "Что такое Helm?",
     "Как реализовать blue-green deployment?",
-    "Что делает canary release?"
+    "Что делает canary release?",
   ];
 
   static const List<String> senior = [
@@ -318,6 +318,6 @@ class PythonQuestions {
     "Что такое WebAssembly в Python?",
     "Как использовать Python для ML?",
     "Что делает PyTorch?",
-    "Как работать с TensorFlow?"
+    "Как работать с TensorFlow?",
   ];
 }

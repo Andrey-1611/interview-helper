@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/question.dart';
+import '../../../generated/l10n.dart';
 
 class QuestionInfoPage extends StatelessWidget {
   final Question question;
@@ -8,6 +9,7 @@ class QuestionInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -15,15 +17,15 @@ class QuestionInfoPage extends StatelessWidget {
         child: Center(
           child: ListView(
             children: [
-              _MainResultPanel(result: 'Точность: ${question.score} %'),
+              _MainResultPanel(result: s.accuracy(question.score)),
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-              _InfoCard(titleText: 'Вопрос:', subtitleText: question.question),
+              _InfoCard(titleText: s.question, subtitleText: question.question),
               _InfoCard(
-                titleText: 'Ваш ответ:',
+                titleText: s.your_answer,
                 subtitleText: question.userAnswer,
               ),
               _InfoCard(
-                titleText: 'Правильный ответ:',
+                titleText: s.correct_answer,
                 subtitleText: question.correctAnswer,
               ),
             ],

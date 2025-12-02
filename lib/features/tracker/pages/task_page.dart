@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/utils/localization_data.dart';
 import 'package:interview_master/core/utils/task_type_helper.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
+
+import '../../../generated/l10n.dart';
 
 class TaskPage extends StatelessWidget {
   final Task task;
@@ -12,8 +15,9 @@ class TaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Детали задачи')),
+      appBar: AppBar(title: Text(s.task_details)),
       body: Padding(
         padding: EdgeInsets.all(size.width * 0.04),
         child: Column(
@@ -24,30 +28,30 @@ class TaskPage extends StatelessWidget {
                 score: task.progress,
                 height: size.height * 0.05,
               ),
-              title: 'Прогресс',
+              title: s.progress,
               value:
-                  '${task.currentValue} / ${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type)}',
+                  '${task.currentValue} / ${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type, context)}',
             ),
             _DetailItem(
               leading: Icon(Icons.schedule),
-              title: 'Создана',
+              title: s.created,
               value: DateFormat('dd.MM.yyyy HH:mm').format(task.createdAt),
             ),
             _DetailItem(
               leading: Icon(Icons.check_circle),
-              title: 'Завершена',
+              title: s.created,
               value: task.isCompleted
                   ? DateFormat('dd.MM.yyyy HH:mm').format(task.completedAt!)
                   : '?',
             ),
             _DetailItem(
               leading: Icon(Icons.category),
-              title: 'Тип',
-              value: task.type,
+              title: s.type,
+              value: LocalizationData(s).type(task.type),
             ),
             _DetailItem(
               leading: Icon(Icons.explore),
-              title: 'Направление',
+              title: s.direction,
               value: task.direction,
             ),
           ],

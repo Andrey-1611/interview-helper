@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../data/models/user_data.dart';
@@ -14,8 +15,9 @@ part 'tracker_state.dart';
 class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   final LocalRepository _localRepository;
   final RemoteRepository _remoteRepository;
+  final NetworkInfo _networkInfo;
 
-  TrackerBloc(this._localRepository, this._remoteRepository)
+  TrackerBloc(this._localRepository, this._remoteRepository, this._networkInfo)
     : super(TrackerInitial()) {
     on<GetTasks>(_getTasks);
     on<CreateTask>(_createTask);
@@ -64,6 +66,8 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   ) async {
     emit(TrackerLoading());
     try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) return emit(TrackerNetworkFailure());
       final user = await _localRepository.getUser();
       final updatedUser = UserData.updateDirections(user!, event.directions);
       await _localRepository.setUser(updatedUser);

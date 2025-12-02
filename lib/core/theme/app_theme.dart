@@ -7,7 +7,7 @@ const _hintColor = Color(0xFFB3B3B3);
 const _lightBackground = Color(0xFFE8EAED);
 const _darkBackground = Color(0xFF1E1E1E);
 
-final darkTheme = ThemeData(
+ThemeData darkTheme(double width) => ThemeData(
   useMaterial3: true,
   primaryColor: _primary,
   inputDecorationTheme: _inputDecorationTheme(_darkCard),
@@ -15,17 +15,18 @@ final darkTheme = ThemeData(
   listTileTheme: _listTileTheme,
   cardTheme: _cardTheme(_darkCard),
   cardColor: _darkCard,
-  textTheme: _textTheme,
+  textTheme: _textTheme(width),
   switchTheme: _switchTheme,
   bottomNavigationBarTheme: _bottomNavigationBarTheme(_darkCard),
-  textButtonTheme: _textButtonTheme,
+  textButtonTheme: _textButtonTheme(width),
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _darkBackground,
   hintColor: _hintColor,
+  iconTheme: _iconTheme,
   colorScheme: ColorScheme.dark(primary: _primary, error: Colors.red),
 );
 
-final lightTheme = ThemeData(
+ThemeData lightTheme(double width) => ThemeData(
   useMaterial3: true,
   primaryColor: _primary,
   inputDecorationTheme: _inputDecorationTheme(Colors.white),
@@ -33,26 +34,27 @@ final lightTheme = ThemeData(
   listTileTheme: _listTileTheme,
   cardTheme: _cardTheme(Colors.white),
   cardColor: _darkCard,
-  textTheme: _textTheme,
+  textTheme: _textTheme(width),
   switchTheme: _switchTheme,
   bottomNavigationBarTheme: _bottomNavigationBarTheme(Colors.white),
-  textButtonTheme: _textButtonTheme,
+  textButtonTheme: _textButtonTheme(width),
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _lightBackground,
   bottomSheetTheme: _bottomSheetTheme(_lightBackground),
   hintColor: _hintColor,
+  iconTheme: _iconTheme,
   colorScheme: ColorScheme.light(primary: _primary, error: Colors.red),
 );
 
-final _textTheme = TextTheme(
-  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
-  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45),
-  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27),
-  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22),
-  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
-  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
-  labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+TextTheme _textTheme(double width) => TextTheme(
+  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60.a(width)),
+  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45.a(width)),
+  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27.a(width)),
+  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22.a(width)),
+  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.a(width)),
+  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17.a(width)),
+  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.a(width)),
+  labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.a(width)),
 );
 
 InputDecorationTheme _inputDecorationTheme(Color color) => InputDecorationTheme(
@@ -102,9 +104,9 @@ BottomNavigationBarThemeData _bottomNavigationBarTheme(Color color) =>
       showUnselectedLabels: false,
     );
 
-final _textButtonTheme = TextButtonThemeData(
+TextButtonThemeData _textButtonTheme(double width) => TextButtonThemeData(
   style: TextButton.styleFrom(
-    textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.a(width)),
     foregroundColor: _primary,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   ),
@@ -126,3 +128,9 @@ final _switchTheme = SwitchThemeData(
 
 BottomSheetThemeData _bottomSheetTheme(Color color) =>
     BottomSheetThemeData(backgroundColor: color);
+
+final _iconTheme = IconThemeData(color: Colors.white);
+
+extension AdaptiveText on int {
+  double a(double width) => width * this / 430;
+}

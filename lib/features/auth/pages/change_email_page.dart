@@ -4,11 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -63,8 +64,9 @@ class _ChangeEmailPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Смена почты')),
+      appBar: AppBar(title: Text(s.change_email)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -77,7 +79,7 @@ class _ChangeEmailPageView extends StatelessWidget {
                 const Spacer(),
                 CustomTextFormField(
                   controller: emailController,
-                  hintText: 'Почта',
+                  hintText: s.email,
                   prefixIcon: Icon(Icons.email),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -94,7 +96,7 @@ class _ChangeEmailPageView extends StatelessWidget {
                       extra: password,
                     );
                   },
-                  child: const Text('Вернуться на экран подтверджения почты'),
+                  child: Text(s.back_to_email_verification),
                 ),
               ],
             ),
@@ -118,10 +120,11 @@ class _ChangeEmailButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          DialogHelper.showLoadingDialog(context, 'Смена почты...');
+          DialogHelper.showLoadingDialog(context, s.changing_email);
         } else if (state is AuthSuccess) {
           context.pop();
           context.pushReplacement(
@@ -137,7 +140,7 @@ class _ChangeEmailButton extends StatelessWidget {
         }
       },
       child: CustomAuthButton(
-        text: 'Подтвердить',
+        text: s.confirm,
         onPressed: () {
           if (formKey.currentState!.validate()) {
             context.read<AuthBloc>().add(

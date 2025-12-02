@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:interview_master/data/models/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../../core/constants/interviews_data.dart';
 import 'interview_data.dart';
 
 part 'user_data.g.dart';
@@ -97,33 +96,6 @@ class UserData extends Equatable {
 
   factory UserData.updateDirections(UserData user, List<String> directions) {
     return user.copyWith(directions: directions);
-  }
-
-  static List<UserData> filterUsers(
-    String? direction,
-    String? sort,
-    List<UserData> users,
-  ) {
-    users = users.map((user) {
-      return UserData(
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        interviews: direction != null
-            ? user.interviews.where((i) => i.direction == direction).toList()
-            : user.interviews,
-      );
-    }).toList();
-
-    if (sort == InterviewsData.firstTotalScore) {
-      users.sort((a, b) => b.totalScore.compareTo(a.totalScore));
-    } else if (sort == InterviewsData.firstTotalInterviews) {
-      users.sort((a, b) => b.totalInterviews.compareTo(a.totalInterviews));
-    } else if (sort == InterviewsData.firstAverageScore) {
-      users.sort((a, b) => b.averageScore.compareTo(a.averageScore));
-    }
-
-    return users;
   }
 
   static UserData filterUser(

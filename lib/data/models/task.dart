@@ -1,11 +1,8 @@
 import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../core/constants/interviews_data.dart';
 
 part 'task.g.dart';
 
@@ -122,13 +119,6 @@ class Task extends Equatable {
     }
     if (isComplete != null) {
       tasks = tasks.where((task) => task.isCompleted == isComplete).toList();
-    }
-    if (sort != null) {
-      if (sort == InterviewsData.firstNew) {
-        tasks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      } else if (sort == InterviewsData.firstOld) {
-        tasks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-      }
     }
     return tasks;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../generated/l10n.dart';
 
 class ToastHelper {
   static void _showToast(String msg, BuildContext context) {
@@ -12,34 +13,34 @@ class ToastHelper {
   }
 
   static void sendEmailVerification(String email, BuildContext context) {
-    _showToast('Письмо с подтвержением отправлено на $email', context);
+    _showToast(S.of(context).email_verification_sent(email), context);
   }
 
   static void sendPasswordResetEmail(String email, BuildContext context) {
-    _showToast('Письмо со сбросом пароля отправлено на $email', context);
+    _showToast(S.of(context).password_reset_sent(email), context);
   }
 
   static void signInError(BuildContext context) {
-    _showToast('Ошибка входа, проверьте введенные данные', context);
+    _showToast(S.of(context).sign_in_error, context);
   }
 
   static void unknownError(BuildContext context) {
-    _showToast('Неизвестная ошибка, попробуйте позже', context);
+    _showToast(S.of(context).unknown_error, context);
   }
 
   static void networkError(BuildContext context) {
-    _showToast('Нет подключения к интернету', context);
+    _showToast(S.of(context).network_error, context);
   }
 
   static void attemptsError(BuildContext context) {
-    _showToast('Попытки закончились, возвращайтесь завтра', context);
+    _showToast(S.of(context).attempts_ended, context);
   }
 
   static void interviewFormError(BuildContext context) {
-    _showToast('Выберите направление и сложность', context);
+    _showToast(S.of(context).interview_form_error, context);
   }
 
   static void taskSelectorError(BuildContext context) {
-    _showToast('Заполните все необходимые поля', context);
+    _showToast(S.of(context).task_selector_error, context);
   }
 }

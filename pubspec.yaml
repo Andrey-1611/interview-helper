@@ -2,13 +2,16 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.2.0+16
+version: 2.3.0+17
 
 environment:
   sdk: ^3.8.1
 
 dependencies:
   flutter:
+    sdk: flutter
+
+  flutter_localizations:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
@@ -36,7 +39,7 @@ dependencies:
   flutter_signin_button: ^2.1.1
   smooth_page_indicator: ^1.2.1
   url_launcher: ^6.3.2
-  speech_to_text: ^7.3.0
+  speech_to_text: ^7.0.0
   flutter_tts: ^4.2.3
   share_plus: ^12.0.1
   google_nav_bar: ^5.0.7
@@ -66,3 +69,5 @@ flutter_launcher_icons:
   android: false
   ios: true
   image_path: "assets/play_store_512.png"
+flutter_intl:
+  enabled: true

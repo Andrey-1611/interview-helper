@@ -146,5 +146,4 @@ class LocalDataSource implements LocalRepository {
     final data = {for (final task in tasks) task.id: task};
     await _tasksBox.putAll(data);
   }
-
 }

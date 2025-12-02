@@ -13,6 +13,8 @@ final class TrackerLoading extends TrackerState {}
 
 final class TrackerFailure extends TrackerState {}
 
+final class TrackerNetworkFailure extends TrackerState {}
+
 final class TrackerDirectionsSuccess extends TrackerState {}
 
 final class TrackerSuccess extends TrackerState {

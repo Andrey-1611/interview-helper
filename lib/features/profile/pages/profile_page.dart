@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/features/profile/pages/statistics_page.dart';
+import 'package:interview_master/generated/l10n.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
@@ -54,12 +55,13 @@ class _ProfilePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterProfileCubit>();
     final isCurrentUser = user == null;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Профиль'),
+        title: Text(s.profile),
         actions: [
           if (!isCurrentUser)
             IconButton(
@@ -96,6 +98,7 @@ class _ProfileAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -110,7 +113,6 @@ class _ProfileAppBar extends StatelessWidget {
                     text: FilterTextFormatter.user(
                       filter.state.direction,
                       filter.state.difficulty,
-                      filter.state.sort,
                     ),
                   ),
                   filterDialog: _FilterDialog(filter: filter),
@@ -135,9 +137,9 @@ class _ProfileAppBar extends StatelessWidget {
         ),
         TabBar(
           tabs: [
-            Tab(text: 'Статистика'),
-            Tab(text: 'История'),
-            Tab(text: 'Библиотека'),
+            Tab(text: s.statistics),
+            Tab(text: s.history),
+            Tab(text: s.library),
           ],
         ),
       ],
@@ -154,7 +156,7 @@ class _FilterDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     String? direction = filter.state.direction;
     String? difficulty = filter.state.difficulty;
-    String? sort = filter.state.sort;
+    final s = S.of(context);
     return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -162,26 +164,26 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InterviewsData.directions,
+            data: List.generate(
+              InterviewsData.directions.length,
+              (i) => (value: InterviewsData.directions[i], text: null),
+            ),
             change: (value) => direction = value,
-            hintText: 'Направление',
+            hintText: s.direction,
           ),
           CustomDropdownMenu(
             value: difficulty,
-            data: InterviewsData.difficulties,
+            data: List.generate(
+              InterviewsData.difficulties.length,
+              (i) => (value: InterviewsData.difficulties[i], text: null),
+            ),
             change: (value) => difficulty = value,
-            hintText: 'Сложность',
-          ),
-          CustomDropdownMenu(
-            value: sort,
-            data: InterviewsData.interviewsSorts,
-            change: (value) => sort = value,
-            hintText: 'Сортировка',
+            hintText: s.difficulty,
           ),
           CustomButton(
-            text: 'Применить',
+            text: s.apply,
             onPressed: () {
-              filter.filter(direction, difficulty, sort);
+              filter.filter(direction, difficulty);
               context.pop();
             },
           ),

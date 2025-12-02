@@ -7,11 +7,12 @@ import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../core/utils/data_cubit.dart';
 import 'package:interview_master/features/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:interview_master/features/auth/widgets/custom_google_button.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -39,6 +40,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocProvider(
       create: (context) => AuthBloc(
         GetIt.I<AuthRepository>(),
@@ -49,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            DialogHelper.showLoadingDialog(context, 'Вход в систему');
+            DialogHelper.showLoadingDialog(context, s.signing_in);
           } else if (state is AuthSuccess) {
             context.pop();
             context.read<DataCubit>().updateKeyValue();
@@ -103,6 +105,7 @@ class _SignInPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -120,13 +123,13 @@ class _SignInPageView extends StatelessWidget {
             TextButton(
               onPressed: () =>
                   context.pushReplacement(AppRouterNames.changePassword),
-              child: const Text('Забыли пароль?  Изменить пароль'),
+              child: Text(s.forgot_password_change),
             ),
             CustomGoogleButton(),
             const Spacer(),
             TextButton(
               onPressed: () => context.pushReplacement(AppRouterNames.signUp),
-              child: const Text('Еще нет аккаунта?  Создать аккаунт'),
+              child: Text(s.no_account_create),
             ),
           ],
         ),
@@ -152,6 +155,7 @@ class _SignInForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Form(
       key: formKey,
       child: Column(
@@ -160,13 +164,13 @@ class _SignInForm extends StatelessWidget {
         children: [
           CustomTextFormField(
             controller: emailController,
-            hintText: 'Почта',
+            hintText: s.email,
             prefixIcon: const Icon(Icons.email),
             keyboardType: TextInputType.emailAddress,
           ),
           CustomTextFormField(
             controller: passwordController,
-            hintText: 'Пароль',
+            hintText: s.password,
             prefixIcon: const Icon(Icons.lock),
             keyboardType: TextInputType.visiblePassword,
             obscureText: isObscure,
@@ -176,7 +180,7 @@ class _SignInForm extends StatelessWidget {
             ),
           ),
           CustomAuthButton(
-            text: 'Войти',
+            text: s.sign_in,
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 context.read<AuthBloc>().add(

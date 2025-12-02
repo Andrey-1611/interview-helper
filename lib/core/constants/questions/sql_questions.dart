@@ -103,7 +103,7 @@ class SQLQuestions {
     "Как использовать LIMIT при обновлении?",
     "Как использовать LIMIT при удалении?",
     "Что такое TRUNCATE TABLE?",
-    "В чем разница между DELETE и TRUNCATE?"
+    "В чем разница между DELETE и TRUNCATE?",
   ];
 
   static const List<String> middle = [
@@ -201,7 +201,7 @@ class SQLQuestions {
     "Как создать хранимую процедуру?",
     "Что такое функции в SQL?",
     "Как создать пользовательскую функцию?",
-    "Как работать с JSON в SQL?"
+    "Как работать с JSON в SQL?",
   ];
 
   static const List<String> senior = [
@@ -304,6 +304,6 @@ class SQLQuestions {
     "Как тестировать миграции?",
     "Что такое blue-green deployment для БД?",
     "Как реализовать zero-downtime миграции?",
-    "Что такое database refactoring?"
+    "Что такое database refactoring?",
   ];
 }

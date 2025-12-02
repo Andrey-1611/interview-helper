@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomDropdownMenu extends StatelessWidget {
-  final List<String> data;
+  final List<({String value, String? text})> data;
   final ValueChanged<String> change;
   final String hintText;
   final String? value;
@@ -26,8 +26,10 @@ class CustomDropdownMenu extends StatelessWidget {
         initialValue: value,
         items: data
             .map(
-              (String value) =>
-                  DropdownMenuItem<String>(value: value, child: Text(value)),
+              (final value) => DropdownMenuItem<String>(
+                value: value.value,
+                child: Text(value.text ?? value.value),
+              ),
             )
             .toList(),
         onChanged: (String? value) {

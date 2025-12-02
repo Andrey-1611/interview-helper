@@ -9,7 +9,8 @@ import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
-import '../../../../app/router/app_router_names.dart';
+import 'package:interview_master/generated/l10n.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../data/models/interview_info.dart';
@@ -56,10 +57,11 @@ class _InitialPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final form = context.watch<InterviewFormCubit>();
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Собеседование'),
+        title: Text(s.interview),
         actions: [
           IconButton(
             onPressed: () => context.push(AppRouterNames.questionsDatabase),
@@ -80,16 +82,22 @@ class _InitialPageView extends StatelessWidget {
               SizedBox(height: size.height * 0.2),
               CustomDropdownMenu(
                 value: form.state.direction,
-                data: InterviewsData.directions,
+                data: List.generate(
+                  InterviewsData.directions.length,
+                  (i) => (value: InterviewsData.directions[i], text: null),
+                ),
                 change: form.changeDirection,
-                hintText: 'Выберите направление',
+                hintText: s.choose_direction,
               ),
               SizedBox(height: size.height * 0.03),
               CustomDropdownMenu(
                 value: form.state.difficulty,
-                data: InterviewsData.difficulties,
+                data: List.generate(
+                  InterviewsData.difficulties.length,
+                  (i) => (value: InterviewsData.difficulties[i], text: null),
+                ),
                 change: form.changeDifficulty,
-                hintText: 'Выберите сложность',
+                hintText: s.choose_difficulty,
               ),
               SizedBox(height: size.height * 0.03),
               _InterviewButton(),
@@ -111,6 +119,7 @@ class _InterviewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final form = context.read<InterviewFormCubit>();
     return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
@@ -132,7 +141,7 @@ class _InterviewButton extends StatelessWidget {
         }
       },
       child: CustomButton(
-        text: 'Начать',
+        text: s.start,
         onPressed: () {
           if (form.state.direction != null && form.state.difficulty != null) {
             return context.read<InterviewBloc>().add(StartInterview());

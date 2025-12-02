@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
 import 'package:interview_master/data/models/user_data.dart';
+import '../../../generated/l10n.dart';
 
 class CustomUserInfo extends StatelessWidget {
   final UserData user;
@@ -9,47 +10,50 @@ class CustomUserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: ListView(
         children: [
           _InfoCard(
             iconData: Icons.assignment_turned_in,
-            title: 'Направления:  ${user.directions.join(', ')}',
+            title: '${s.directions}: ${user.directions.join(', ')}',
           ),
           _InfoCard(
             iconData: Icons.assignment_turned_in,
-            title: 'Собеседования:  ${user.totalInterviews}',
+            title: '${s.interviews}:  ${user.totalInterviews}',
           ),
           _InfoCard(
             iconData: Icons.score,
-            title: 'Очки опыта:  ${user.totalScore} ',
+            title: '${s.total_score}:  ${user.totalScore} ',
           ),
           _InfoCard(
             iconData: Icons.analytics,
-            title: 'Средний результат:  ${user.averageScore} % ',
+            title: '${s.average_score}:  ${user.averageScore} % ',
           ),
           _InfoCard(
             iconData: Icons.emoji_events,
-            title: 'Лучший результат:  ${user.bestScore} %',
+            title: '${s.best_score}:  ${user.bestScore} %',
           ),
           _InfoCard(
             iconData: Icons.timer,
-            title: 'Общее время:  ${TimeFormatter.time(user.totalDuration)}',
+            title:
+                '${s.total_time}:  ${TimeFormatter.time(user.totalDuration, context)}',
           ),
           _InfoCard(
             iconData: Icons.av_timer,
-            title: 'Среднее время:  ${TimeFormatter.time(user.averageDuration)} ',
+            title:
+                '${s.average_time}:  ${TimeFormatter.time(user.averageDuration, context)} ',
           ),
           _InfoCard(
             iconData: Icons.arrow_upward,
             title:
-                'Максимальное время:  ${TimeFormatter.time(user.maxDuration)}',
+                '${s.max_time}:  ${TimeFormatter.time(user.maxDuration, context)}',
           ),
           _InfoCard(
             iconData: Icons.arrow_downward,
             title:
-                'Минимальное время:  ${TimeFormatter.time(user.minDuration)}',
+                '${s.min_time}:  ${TimeFormatter.time(user.minDuration, context)}',
           ),
         ],
       ),

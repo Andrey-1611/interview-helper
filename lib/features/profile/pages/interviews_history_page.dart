@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:interview_master/features/profile/blocs/profile_bloc/profile_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../../app/router/app_router_names.dart';
-import '../../../../app/widgets/custom_loading_indicator.dart';
+import '../../../app/router/app_router_names.dart';
+import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../data/models/interview_data.dart';
@@ -40,7 +40,6 @@ class InterviewsHistoryPage extends StatelessWidget {
           final filteredInterviews = InterviewData.filterInterviews(
             filter.state.direction,
             filter.state.difficulty,
-            filter.state.sort,
             filter.state.isFavourite,
             state.interviews,
           );

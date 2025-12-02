@@ -103,7 +103,7 @@ class JavascriptQuestions {
     "Как работать с Drag and Drop API?",
     "Что такое Intersection Observer API?",
     "Как использовать Geolocation API?",
-    "Как работать с Device Orientation API?"
+    "Как работать с Device Orientation API?",
   ];
 
   static const List<String> middle = [
@@ -210,7 +210,7 @@ class JavascriptQuestions {
     "Что такое HSTS?",
     "Как реализовать rate limiting?",
     "Что такое безопасные заголовки HTTP?",
-    "Как проводить аудит безопасности?"
+    "Как проводить аудит безопасности?",
   ];
 
   static const List<String> senior = [
@@ -317,6 +317,6 @@ class JavascriptQuestions {
     "Что такое WebTransport?",
     "Как использовать WebCodecs?",
     "Что такое WebNN?",
-    "Какие тренды в веб-разработке?"
+    "Какие тренды в веб-разработке?",
   ];
 }

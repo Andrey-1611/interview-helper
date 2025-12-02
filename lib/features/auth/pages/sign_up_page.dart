@@ -4,11 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -39,6 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocProvider(
       create: (context) => AuthBloc(
         GetIt.I<AuthRepository>(),
@@ -49,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            DialogHelper.showLoadingDialog(context, 'Авторизация');
+            DialogHelper.showLoadingDialog(context, s.authorization);
           } else if (state is AuthSuccess) {
             context.pop();
             context.pushReplacement(
@@ -103,6 +105,7 @@ class _SignUpPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -120,7 +123,7 @@ class _SignUpPageView extends StatelessWidget {
             const Spacer(),
             TextButton(
               onPressed: () => context.pushReplacement(AppRouterNames.signIn),
-              child: const Text('Уже есть аккаунт?  Войти в аккаунт'),
+              child: Text(s.already_have_account),
             ),
           ],
         ),
@@ -148,6 +151,7 @@ class _SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Form(
       key: formKey,
       child: Column(
@@ -155,19 +159,19 @@ class _SignUpForm extends StatelessWidget {
         children: [
           CustomTextFormField(
             controller: nameController,
-            hintText: 'Имя',
+            hintText: s.name,
             prefixIcon: const Icon(Icons.person),
             keyboardType: TextInputType.name,
           ),
           CustomTextFormField(
             controller: emailController,
-            hintText: 'Почта',
+            hintText: s.email,
             prefixIcon: const Icon(Icons.email),
             keyboardType: TextInputType.emailAddress,
           ),
           CustomTextFormField(
             controller: passwordController,
-            hintText: 'Пароль',
+            hintText: s.password,
             prefixIcon: const Icon(Icons.lock),
             keyboardType: TextInputType.visiblePassword,
             obscureText: isObscure,
@@ -177,7 +181,7 @@ class _SignUpForm extends StatelessWidget {
             ),
           ),
           CustomAuthButton(
-            text: 'Зарегистрироваться',
+            text: s.sign_up,
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 context.read<AuthBloc>().add(

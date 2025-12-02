@@ -24,7 +24,7 @@ class CustomQuestionCard extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: CustomScoreIndicator(score: question.score),
-          title: Text('Вопрос ${question.question}'),
+          title: Text(question.question),
           trailing: isCurrentUser
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),

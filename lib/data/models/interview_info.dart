@@ -7,20 +7,19 @@ import 'package:interview_master/core/constants/questions/javascript_questions.d
 import 'package:interview_master/core/constants/questions/kotlin_questions.dart';
 import 'package:interview_master/core/constants/questions/python_questions.dart';
 import 'package:interview_master/core/constants/questions/swift_questions.dart';
-import 'package:interview_master/data/models/user_input.dart';
-import '../../../../core/constants/questions/devops_questions.dart';
-import '../../../../core/constants/questions/git_questions.dart';
-import '../../../../core/constants/questions/go_questions.dart';
-import '../../../../core/constants/questions/java_questions.dart';
-import '../../../../core/constants/questions/php_questions.dart';
-import '../../../../core/constants/questions/rust_questions.dart';
-import '../../../../core/constants/questions/sql_questions.dart';
-import '../../../../core/constants/questions/typescript_questions.dart';
+import '../../core/constants/questions/devops_questions.dart';
+import '../../core/constants/questions/git_questions.dart';
+import '../../core/constants/questions/go_questions.dart';
+import '../../core/constants/questions/java_questions.dart';
+import '../../core/constants/questions/php_questions.dart';
+import '../../core/constants/questions/rust_questions.dart';
+import '../../core/constants/questions/sql_questions.dart';
+import '../../core/constants/questions/typescript_questions.dart';
 
 class InterviewInfo extends Equatable {
   final String direction;
   final String difficulty;
-  final List<UserInput> userInputs;
+  final List<({String question, String answer})> userInputs;
   final String? id;
 
   const InterviewInfo({

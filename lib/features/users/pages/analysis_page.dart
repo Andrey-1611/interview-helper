@@ -16,6 +16,7 @@ import '../../../core/utils/network_info.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/users_bloc/users_bloc.dart';
 
 class AnalysisPage extends StatelessWidget {
@@ -50,9 +51,10 @@ class _AnalysisPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final filter = context.watch<FilterAnalysisCubit>();
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Анализ'),
+        title: Text(s.analysis),
         bottom: PreferredSize(
           preferredSize: Size(size.width, size.height * 0.07),
           child: Padding(
@@ -93,7 +95,7 @@ class _AnalysisPageView extends StatelessWidget {
                 children: [
                   _TitleInfo(
                     user: selectedUser,
-                    currentUserName: 'Вы',
+                    currentUserName: s.you,
                     selectedUserName: filteredSelectedUser.name,
                   ),
                   SizedBox(height: size.height * 0.03),
@@ -101,7 +103,7 @@ class _AnalysisPageView extends StatelessWidget {
                     child: ListView(
                       children: [
                         _CompareCard(
-                          title: 'Количество собеседований',
+                          title: s.interviews_count,
                           currentUserValue:
                               '${filteredCurrentUser.totalInterviews}',
                           selectedUserValue:
@@ -109,14 +111,14 @@ class _AnalysisPageView extends StatelessWidget {
                           icon: Icons.assignment_turned_in,
                         ),
                         _CompareCard(
-                          title: 'Общее количество очков',
+                          title: s.total_score,
                           currentUserValue: '${filteredCurrentUser.totalScore}',
                           selectedUserValue:
                               '${filteredSelectedUser.totalScore}',
                           icon: Icons.score,
                         ),
                         _CompareCard(
-                          title: 'Средний результат',
+                          title: s.average_score,
                           currentUserValue:
                               '${filteredCurrentUser.averageScore}',
                           selectedUserValue:
@@ -124,14 +126,14 @@ class _AnalysisPageView extends StatelessWidget {
                           icon: Icons.analytics,
                         ),
                         _CompareCard(
-                          title: 'Лучший результат',
+                          title: s.best_score,
                           currentUserValue: '${filteredCurrentUser.bestScore}',
                           selectedUserValue:
                               '${filteredSelectedUser.bestScore}',
                           icon: Icons.emoji_events,
                         ),
                         _CompareTimeCard(
-                          title: 'Общее время',
+                          title: s.total_time,
                           currentUserDuration:
                               filteredCurrentUser.totalDuration,
                           selectedUserDuration:
@@ -139,7 +141,7 @@ class _AnalysisPageView extends StatelessWidget {
                           icon: Icons.timer,
                         ),
                         _CompareTimeCard(
-                          title: 'Среднее время',
+                          title: s.average_time,
                           currentUserDuration:
                               filteredCurrentUser.averageDuration,
                           selectedUserDuration:
@@ -308,7 +310,7 @@ class _CompareTimeCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  TimeFormatter.time(currentUserDuration),
+                  TimeFormatter.time(currentUserDuration, context),
                   style: style(
                     theme,
                     currentUserDuration,
@@ -317,7 +319,7 @@ class _CompareTimeCard extends StatelessWidget {
                 ),
                 const Text('vs'),
                 Text(
-                  TimeFormatter.time(selectedUserDuration),
+                  TimeFormatter.time(selectedUserDuration, context),
                   style: style(
                     theme,
                     selectedUserDuration,
@@ -348,6 +350,7 @@ class _FilterDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     String? direction = filterCubit.state.direction;
     String? difficulty = filterCubit.state.difficulty;
+    final s = S.of(context);
     return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -355,18 +358,24 @@ class _FilterDialog extends StatelessWidget {
         children: [
           CustomDropdownMenu(
             value: direction,
-            data: InterviewsData.directions,
+            data: List.generate(
+              InterviewsData.directions.length,
+              (i) => (value: InterviewsData.directions[i], text: null),
+            ),
             change: (value) => direction = value,
-            hintText: 'Все направления',
+            hintText: s.all_directions,
           ),
           CustomDropdownMenu(
             value: difficulty,
-            data: InterviewsData.difficulties,
+            data: List.generate(
+              InterviewsData.difficulties.length,
+              (i) => (value: InterviewsData.difficulties[i], text: null),
+            ),
             change: (value) => difficulty = value,
-            hintText: 'Все сложности',
+            hintText: s.all_difficulties,
           ),
           CustomButton(
-            text: 'Применить',
+            text: s.apply,
             onPressed: () {
               filterCubit.filter(direction, difficulty, null);
               context.pop();

@@ -1,9 +1,13 @@
 abstract interface class SettingsRepository {
-  bool isDarkTheme();
-
   Future<void> setTheme(bool isDark);
+
+  Future<void> setVoice(bool isEnable);
+
+  Future<void> setLanguage(bool isRussian);
+
+  bool isDarkTheme();
 
   bool isVoiceEnable();
 
-  Future<void> setVoice(bool isEnable);
+  bool? isRussianLanguage();
 }

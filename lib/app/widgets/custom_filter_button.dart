@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/dialog_helper.dart';
+import '../../generated/l10n.dart';
 
 class CustomFilterButton extends StatelessWidget {
   final TextEditingController filterController;
@@ -16,6 +17,7 @@ class CustomFilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
@@ -27,7 +29,7 @@ class CustomFilterButton extends StatelessWidget {
           context: context,
         ),
         decoration: InputDecoration(
-          hintText: 'Фильтр',
+          hintText: s.filter,
           fillColor: theme.scaffoldBackgroundColor,
           prefixIcon: Icon(Icons.search),
           suffixIcon: IconButton(

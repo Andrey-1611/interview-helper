@@ -103,7 +103,7 @@ class KotlinQuestions {
     "Что такое StrictMode?",
     "Как тестировать coroutines?",
     "Что такое MockK?",
-    "Как тестировать flow?"
+    "Как тестировать flow?",
   ];
 
   static const List<String> middle = [
@@ -210,7 +210,7 @@ class KotlinQuestions {
     "Что такое mutation testing?",
     "Как использовать static analysis tools?",
     "Что такое Detekt?",
-    "Как настроить CI/CD для Android?"
+    "Как настроить CI/CD для Android?",
   ];
 
   static const List<String> senior = [
@@ -317,6 +317,6 @@ class KotlinQuestions {
     "Что такое Ktor?",
     "Как работает Kotlin/Native memory model?",
     "Что такое new memory manager?",
-    "Какие тренды в mobile development?"
+    "Какие тренды в mobile development?",
   ];
 }

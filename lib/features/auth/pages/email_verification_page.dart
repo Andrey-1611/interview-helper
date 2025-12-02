@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import '../../../../app/router/app_router_names.dart';
+import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/data_cubit.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../generated/l10n.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 
 class EmailVerificationPage extends StatelessWidget {
@@ -37,8 +38,9 @@ class _EmailVerificationPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Подтверждение почты')),
+      appBar: AppBar(title: Text(s.email_verification)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -50,7 +52,7 @@ class _EmailVerificationPageView extends StatelessWidget {
               TextButton(
                 onPressed: () =>
                     context.read<AuthBloc>().add(SendEmailVerification()),
-                child: const Text('Отпраавить письмо повторно'),
+                child: Text(s.resend_email),
               ),
               const Spacer(),
               TextButton(
@@ -58,7 +60,7 @@ class _EmailVerificationPageView extends StatelessWidget {
                   AppRouterNames.changeEmail,
                   extra: password,
                 ),
-                child: const Text('Не приходит письмо?  Изменить почту'),
+                child: Text(s.email_not_received),
               ),
             ],
           ),
@@ -73,6 +75,7 @@ class _EmailVerificationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthWithoutDirections) {
@@ -86,7 +89,7 @@ class _EmailVerificationForm extends StatelessWidget {
         }
       },
       child: Text(
-        'Подтвердите свою почту',
+        s.verify_your_email,
         style: Theme.of(context).textTheme.displayMedium,
       ),
     );

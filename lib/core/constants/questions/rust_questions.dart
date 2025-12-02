@@ -103,7 +103,7 @@ class RustQuestions {
     "Что такое String и как с ним работать?",
     "Как конвертировать &str в String?",
     "Как конвертировать String в &str?",
-    "Что такое VecDeque и когда его использовать?"
+    "Что такое VecDeque и когда его использовать?",
   ];
 
   static const List<String> middle = [
@@ -211,7 +211,7 @@ class RustQuestions {
     "Как использовать assert! и assert_eq!?",
     "Как тестировать приватные функции?",
     "Что такое property-based testing?",
-    "Как использовать proptest для property-based testing?"
+    "Как использовать proptest для property-based testing?",
   ];
 
   static const List<String> senior = [
@@ -309,6 +309,6 @@ class RustQuestions {
     "Что такое Rust language server (RLS)?",
     "Как использовать rust-analyzer?",
     "Что такое cargo clippy и как его использовать?",
-    "Какие best practices для Rust разработки?"
+    "Какие best practices для Rust разработки?",
   ];
 }

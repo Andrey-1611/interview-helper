@@ -42,9 +42,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       if (!isConnected) return emit(UsersNetworkFailure());
       final users = await _remoteRepository.getUsers();
       final currentUser = (await _localRepository.getUser())!;
-      emit(
-        UsersSuccess(users: users, currentUser: currentUser),
-      );
+      emit(UsersSuccess(users: users, currentUser: currentUser));
     } catch (e, st) {
       emit(UsersFailure());
       GetIt.I<Talker>().handle(e, st);
@@ -61,10 +59,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       if (user == null) return emit(UserNotFound());
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) return emit(UserSuccess(user: user));
-      final interviews = await _localRepository.getInterviews();
-      final tasks = await _localRepository.getTasks();
-      await _remoteRepository.updateInterviews(user.id, interviews);
-      await _remoteRepository.updateTasks(user.id, tasks);
       return user.directions.isNotEmpty
           ? emit(UserSuccess(user: user))
           : emit(UserWithoutDirections());
