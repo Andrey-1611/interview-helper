@@ -12,6 +12,7 @@ import '../../../core/utils/dialog_helper.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../../../generated/l10n.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -46,6 +47,7 @@ class _SignInPageState extends State<SignInPage> {
         GetIt.I<AuthRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
       ),
       child: BlocListener<AuthBloc, AuthState>(

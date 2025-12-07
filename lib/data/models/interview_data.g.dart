@@ -25,13 +25,14 @@ class InterviewDataAdapter extends TypeAdapter<InterviewData> {
       questions: (fields[5] as List).cast<Question>(),
       isFavourite: fields[6] as bool,
       durationMs: fields[7] as int,
+      isEnglish: fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, InterviewData obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class InterviewDataAdapter extends TypeAdapter<InterviewData> {
       ..writeByte(6)
       ..write(obj.isFavourite)
       ..writeByte(7)
-      ..write(obj.durationMs);
+      ..write(obj.durationMs)
+      ..writeByte(8)
+      ..write(obj.isEnglish);
   }
 
   @override
@@ -77,6 +80,7 @@ InterviewData _$InterviewDataFromJson(Map<String, dynamic> json) =>
           .toList(),
       isFavourite: json['isFavourite'] as bool? ?? false,
       durationMs: (json['durationMs'] as num).toInt(),
+      isEnglish: json['isEnglish'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$InterviewDataToJson(InterviewData instance) =>
@@ -89,4 +93,5 @@ Map<String, dynamic> _$InterviewDataToJson(InterviewData instance) =>
       'questions': instance.questions.map((e) => e.toJson()).toList(),
       'isFavourite': instance.isFavourite,
       'durationMs': instance.durationMs,
+      'isEnglish': instance.isEnglish,
     };

@@ -1,5 +1,4 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:injectable/injectable.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
@@ -8,7 +7,6 @@ import '../models/interview_data.dart';
 import '../models/user_data.dart';
 import '../repositories/local_repository.dart';
 
-@LazySingleton(as: LocalRepository)
 class LocalDataSource implements LocalRepository {
   final HiveInterface _hive;
 

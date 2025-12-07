@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -35,6 +34,9 @@ class InterviewData extends Equatable {
   @HiveField(7)
   final int durationMs;
 
+  @HiveField(8)
+  final bool isEnglish;
+
   const InterviewData({
     required this.id,
     required this.score,
@@ -44,6 +46,7 @@ class InterviewData extends Equatable {
     required this.questions,
     this.isFavourite = false,
     required this.durationMs,
+    this.isEnglish = false,
   });
 
   @override
@@ -54,6 +57,7 @@ class InterviewData extends Equatable {
     date,
     questions,
     isFavourite,
+    isEnglish,
   ];
 
   factory InterviewData.fromJson(Map<String, dynamic> json) =>
@@ -80,6 +84,7 @@ class InterviewData extends Equatable {
       date: DateTime.now(),
       questions: questions,
       durationMs: duration,
+      isEnglish: info.isEnglish
     );
   }
 

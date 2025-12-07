@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:injectable/injectable.dart';
 import '../../core/constants/main_prompt.dart';
 import '../models/interview_info.dart';
 import '../models/question.dart';
 import '../repositories/ai_repository.dart';
 
-@LazySingleton(as: AIRepository)
 class AIDataSource implements AIRepository {
   final Dio _dio;
 

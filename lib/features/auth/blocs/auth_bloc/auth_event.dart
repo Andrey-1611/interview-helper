@@ -56,3 +56,5 @@ final class ChangePassword extends AuthEvent {
 final class SendEmailVerification extends AuthEvent {}
 
 final class WatchEmailVerified extends AuthEvent {}
+
+final class SignOut extends AuthEvent {}

@@ -844,10 +844,10 @@ class S {
     );
   }
 
-  /// `Please select direction and difficulty`
+  /// `Please fill in all fields`
   String get interview_form_error {
     return Intl.message(
-      'Please select direction and difficulty',
+      'Please fill in all fields',
       name: 'interview_form_error',
       desc: '',
       args: [],
@@ -1037,6 +1037,26 @@ class S {
   /// `Score`
   String get score {
     return Intl.message('Score', name: 'score', desc: '', args: []);
+  }
+
+  /// `Russian`
+  String get russian {
+    return Intl.message('Russian', name: 'russian', desc: '', args: []);
+  }
+
+  /// `English`
+  String get english {
+    return Intl.message('English', name: 'english', desc: '', args: []);
+  }
+
+  /// `Choose language`
+  String get choose_language {
+    return Intl.message(
+      'Choose language',
+      name: 'choose_language',
+      desc: '',
+      args: [],
+    );
   }
 }
 

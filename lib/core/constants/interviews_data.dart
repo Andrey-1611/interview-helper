@@ -58,6 +58,11 @@ class InterviewsData {
 
   static const types = [interviews, time, score];
 
+  static const russian = 'Russian';
+  static const english = 'English';
+
+  static const languages = [russian, english];
+
   static const allFQuestions = [
     ...FlutterQuestions.junior,
     ...FlutterQuestions.middle,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const _primary = Color(0xFF6366F1);
 const _darkCard = Color(0xFF2A2A2A);
@@ -7,7 +8,7 @@ const _hintColor = Color(0xFFB3B3B3);
 const _lightBackground = Color(0xFFE8EAED);
 const _darkBackground = Color(0xFF1E1E1E);
 
-ThemeData darkTheme(double width) => ThemeData(
+final darkTheme = ThemeData(
   useMaterial3: true,
   primaryColor: _primary,
   inputDecorationTheme: _inputDecorationTheme(_darkCard),
@@ -15,10 +16,10 @@ ThemeData darkTheme(double width) => ThemeData(
   listTileTheme: _listTileTheme,
   cardTheme: _cardTheme(_darkCard),
   cardColor: _darkCard,
-  textTheme: _textTheme(width),
+  textTheme: _textTheme,
   switchTheme: _switchTheme,
   bottomNavigationBarTheme: _bottomNavigationBarTheme(_darkCard),
-  textButtonTheme: _textButtonTheme(width),
+  textButtonTheme: _textButtonTheme,
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _darkBackground,
   hintColor: _hintColor,
@@ -26,7 +27,7 @@ ThemeData darkTheme(double width) => ThemeData(
   colorScheme: ColorScheme.dark(primary: _primary, error: Colors.red),
 );
 
-ThemeData lightTheme(double width) => ThemeData(
+final lightTheme = ThemeData(
   useMaterial3: true,
   primaryColor: _primary,
   inputDecorationTheme: _inputDecorationTheme(Colors.white),
@@ -34,10 +35,10 @@ ThemeData lightTheme(double width) => ThemeData(
   listTileTheme: _listTileTheme,
   cardTheme: _cardTheme(Colors.white),
   cardColor: _darkCard,
-  textTheme: _textTheme(width),
+  textTheme: _textTheme,
   switchTheme: _switchTheme,
   bottomNavigationBarTheme: _bottomNavigationBarTheme(Colors.white),
-  textButtonTheme: _textButtonTheme(width),
+  textButtonTheme: _textButtonTheme,
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _lightBackground,
   bottomSheetTheme: _bottomSheetTheme(_lightBackground),
@@ -46,21 +47,21 @@ ThemeData lightTheme(double width) => ThemeData(
   colorScheme: ColorScheme.light(primary: _primary, error: Colors.red),
 );
 
-TextTheme _textTheme(double width) => TextTheme(
-  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60.a(width)),
-  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45.a(width)),
-  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27.a(width)),
-  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22.a(width)),
-  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.a(width)),
-  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17.a(width)),
-  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.a(width)),
-  labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.a(width)),
+final _textTheme = TextTheme(
+  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60.sp),
+  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45.sp),
+  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27.sp),
+  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22.sp),
+  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
+  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17.sp),
+  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp),
+  labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.sp),
 );
 
 InputDecorationTheme _inputDecorationTheme(Color color) => InputDecorationTheme(
   filled: true,
   fillColor: color,
-  hintStyle: TextStyle(fontSize: 15, color: _hintColor),
+  hintStyle: TextStyle(fontSize: 15.sp, color: _hintColor),
   contentPadding: EdgeInsets.all(12),
   border: OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -85,7 +86,7 @@ AppBarTheme _appBarTheme(Color color, Color titleColor) => AppBarTheme(
   centerTitle: true,
   backgroundColor: color,
   titleTextStyle: TextStyle(
-    fontSize: 28,
+    fontSize: 28.sp,
     fontWeight: FontWeight.bold,
     color: titleColor,
   ),
@@ -97,16 +98,16 @@ BottomNavigationBarThemeData _bottomNavigationBarTheme(Color color) =>
       backgroundColor: color,
       selectedItemColor: _primary,
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: TextStyle(fontSize: 12),
+      selectedLabelStyle: TextStyle(fontSize: 12.sp),
       selectedIconTheme: IconThemeData(size: 26),
-      unselectedLabelStyle: TextStyle(fontSize: 10),
+      unselectedLabelStyle: TextStyle(fontSize: 10.sp),
       showSelectedLabels: true,
       showUnselectedLabels: false,
     );
 
-TextButtonThemeData _textButtonTheme(double width) => TextButtonThemeData(
+final _textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
-    textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.a(width)),
+    textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
     foregroundColor: _primary,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   ),
@@ -130,7 +131,3 @@ BottomSheetThemeData _bottomSheetTheme(Color color) =>
     BottomSheetThemeData(backgroundColor: color);
 
 final _iconTheme = IconThemeData(color: Colors.white);
-
-extension AdaptiveText on int {
-  double a(double width) => width * this / 430;
-}

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/constants/interviews_data.dart';
+import 'package:interview_master/core/utils/localization_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
@@ -75,39 +76,44 @@ class _InitialPageView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: size.height * 0.2),
-              CustomDropdownMenu(
-                value: form.state.direction,
-                data: List.generate(
-                  InterviewsData.directions.length,
-                  (i) => (value: InterviewsData.directions[i], text: null),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: size.height * 0.24),
+            CustomDropdownMenu(
+              value: form.state.direction,
+              data: List.generate(
+                InterviewsData.directions.length,
+                (i) => (value: InterviewsData.directions[i], text: null),
+              ),
+              change: form.changeDirection,
+              hintText: s.choose_direction,
+            ),
+            CustomDropdownMenu(
+              value: form.state.difficulty,
+              data: List.generate(
+                InterviewsData.difficulties.length,
+                (i) => (value: InterviewsData.difficulties[i], text: null),
+              ),
+              change: form.changeDifficulty,
+              hintText: s.choose_difficulty,
+            ),
+            CustomDropdownMenu(
+              value: form.state.language,
+              data: List.generate(
+                InterviewsData.languages.length,
+                (i) => (
+                  value: InterviewsData.languages[i],
+                  text: LocalizationData(s).languages[i],
                 ),
-                change: form.changeDirection,
-                hintText: s.choose_direction,
               ),
-              SizedBox(height: size.height * 0.03),
-              CustomDropdownMenu(
-                value: form.state.difficulty,
-                data: List.generate(
-                  InterviewsData.difficulties.length,
-                  (i) => (value: InterviewsData.difficulties[i], text: null),
-                ),
-                change: form.changeDifficulty,
-                hintText: s.choose_difficulty,
-              ),
-              SizedBox(height: size.height * 0.03),
-              _InterviewButton(),
-              SizedBox(height: size.height * 0.08),
-              SizedBox(
-                height: size.height * 0.14,
-                child: _LastInterviewsList(),
-              ),
-            ],
-          ),
+              change: form.changeLanguage,
+              hintText: s.choose_language,
+            ),
+            _InterviewButton(),
+            const Spacer(),
+            SizedBox(height: size.height * 0.14, child: _LastInterviewsList()),
+          ],
         ),
       ),
     );
@@ -135,7 +141,7 @@ class _InterviewButton extends StatelessWidget {
             extra: InterviewInfo(
               direction: form.state.direction!,
               difficulty: form.state.difficulty!,
-              userInputs: [],
+              isEnglish: form.state.language == InterviewsData.russian,
             ),
           );
         }
@@ -143,7 +149,10 @@ class _InterviewButton extends StatelessWidget {
       child: CustomButton(
         text: s.start,
         onPressed: () {
-          if (form.state.direction != null && form.state.difficulty != null) {
+          final state = form.state;
+          if (state.direction != null &&
+              state.difficulty != null &&
+              state.language != null) {
             return context.read<InterviewBloc>().add(StartInterview());
           }
           ToastHelper.interviewFormError(context);

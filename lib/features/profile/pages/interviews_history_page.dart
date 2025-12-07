@@ -106,6 +106,7 @@ class _InterviewCard extends StatelessWidget {
                           context.push(
                             AppRouterNames.interview,
                             extra: InterviewInfo(
+                              isEnglish: interview.isEnglish,
                               userInputs: [],
                               direction: interview.direction,
                               difficulty: interview.difficulty,

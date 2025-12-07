@@ -2,29 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/core/utils/settings_cubit/settings_cubit.dart';
+import 'package:interview_master/core/utils/toast_helper.dart';
 import 'package:interview_master/core/utils/url_launch.dart';
+import 'package:interview_master/data/repositories/auth_repository.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
+import 'package:interview_master/features/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
 import '../../../core/utils/dialog_helper.dart';
 import '../../../core/utils/network_info.dart';
-import '../../../core/utils/toast_helper.dart';
-import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../../../generated/l10n.dart';
 import '../../users/blocs/users_bloc/users_bloc.dart';
-import '../blocs/settings_bloc/settings_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -35,29 +34,24 @@ class SettingsPage extends StatelessWidget {
           )..add(GetUser()),
         ),
         BlocProvider(
-          create: (context) => SettingsBloc(
+          create: (context) => AuthBloc(
             GetIt.I<AuthRepository>(),
-            GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
+            GetIt.I<LocalRepository>(),
             GetIt.I<SettingsRepository>(),
-            GetIt.I<UrlLaunch>(),
             GetIt.I<NetworkInfo>(),
-          )..add(GetSettings()),
+          ),
         ),
       ],
-      child: BlocListener<SettingsBloc, SettingsState>(
+      child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is SettingsLoading) {
-            DialogHelper.showLoadingDialog(context, s.signing_out);
-          } else if (state is SignOutSuccess) {
+          if (state is AuthSuccess) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
-          } else if (state is RuStoreSuccess) {
-            context.read<SettingsBloc>().add(GetSettings());
-          } else if (state is SettingsNetworkFailure) {
+          } else if (state is AuthNetworkFailure) {
             context.pop();
             ToastHelper.networkError(context);
-          } else if (state is SettingsFailure) {
+          } else if (state is AuthFailure) {
             context.pop();
             ToastHelper.unknownError(context);
           }
@@ -106,16 +100,13 @@ class _SettingsPageView extends StatelessWidget {
                 ),
                 _SettingsCard(
                   title: s.rate_app,
-                  onTap: () =>
-                      context.read<SettingsBloc>().add(OpenAppInRuStore()),
+                  onTap: () => GetIt.I<UrlLaunch>().openAppInRuStore(),
                   icon: Icon(Icons.favorite, color: theme.primaryColor),
                 ),
                 _SettingsCard(
                   title: s.sign_out,
                   onTap: () => DialogHelper.showCustomDialog(
-                    dialog: _SignOutDialog(
-                      settingsBloc: context.read<SettingsBloc>(),
-                    ),
+                    dialog: _SignOutDialog(authBloc: context.read<AuthBloc>()),
                     context: context,
                   ),
                   icon: Icon(Icons.logout, color: theme.colorScheme.error),
@@ -221,9 +212,9 @@ class _SettingsToggleCard extends StatelessWidget {
 }
 
 class _SignOutDialog extends StatelessWidget {
-  final SettingsBloc settingsBloc;
+  final AuthBloc authBloc;
 
-  const _SignOutDialog({required this.settingsBloc});
+  const _SignOutDialog({required this.authBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -233,10 +224,7 @@ class _SignOutDialog extends StatelessWidget {
       content: Text(s.sign_out_confirmation, style: theme.textTheme.bodyLarge),
       actions: [
         TextButton(
-          onPressed: () {
-            context.pop();
-            settingsBloc.add(SignOut());
-          },
+          onPressed: () => authBloc.add(SignOut()),
           child: Text(s.yes),
         ),
         TextButton(onPressed: () => context.pop(), child: Text(s.no)),

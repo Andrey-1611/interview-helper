@@ -19,13 +19,15 @@ import '../../core/constants/questions/typescript_questions.dart';
 class InterviewInfo extends Equatable {
   final String direction;
   final String difficulty;
+  final bool isEnglish;
   final List<({String question, String answer})> userInputs;
   final String? id;
 
   const InterviewInfo({
-    required this.userInputs,
+    this.userInputs = const [],
     required this.direction,
     required this.difficulty,
+    required this.isEnglish,
     this.id,
   });
 

@@ -23,16 +23,27 @@ class Interview extends Equatable {
   @HiveField(4)
   final int durationMs;
 
+  @HiveField(5)
+  final bool isEnglish;
+
   const Interview({
     required this.id,
     required this.direction,
     required this.difficulty,
     required this.score,
     required this.durationMs,
+    this.isEnglish = false,
   });
 
   @override
-  List<Object?> get props => [id, direction, difficulty, score, duration];
+  List<Object?> get props => [
+    id,
+    direction,
+    difficulty,
+    score,
+    duration,
+    isEnglish,
+  ];
 
   factory Interview.fromJson(Map<String, dynamic> json) =>
       _$InterviewFromJson(json);
@@ -48,6 +59,7 @@ class Interview extends Equatable {
       difficulty: interview.difficulty,
       score: interview.score,
       durationMs: interview.durationMs,
+      isEnglish: interview.isEnglish,
     );
   }
 }
