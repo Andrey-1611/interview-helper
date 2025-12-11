@@ -5,13 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
-import 'package:interview_master/core/utils/localization_data.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
-import 'package:interview_master/core/utils/task_type_helper.dart';
 import 'package:interview_master/features/tracker/blocs/selector_subit/selector_cubit.dart';
 import 'package:interview_master/features/tracker/blocs/tracker_bloc/tracker_bloc.dart';
 import 'package:interview_master/generated/l10n.dart';
@@ -21,6 +18,8 @@ import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
 import '../../../core/utils/network_info.dart';
+import '../../../data/enums/direction.dart';
+import '../../../data/enums/task_type.dart';
 import '../../../data/models/task.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -87,8 +86,8 @@ class _TrackerPageView extends StatelessWidget {
                   child: CustomFilterButton(
                     filterController: TextEditingController(
                       text: FilterTextFormatter.tasks(
-                        filter.state.direction,
-                        filter.state.type,
+                        filter.state.direction?.name,
+                        filter.state.type?.name,
                       ),
                     ),
                     resetFilter: () => filter.reset(),
@@ -161,6 +160,7 @@ class _TasksListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
     if (tasks.isEmpty) return _EmptyList();
@@ -193,7 +193,7 @@ class _TasksListView extends StatelessWidget {
               '${task.direction}, ${DateFormat('dd/MM/yyyy').format(task.createdAt)}',
             ),
             subtitle: Text(
-              '${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type, context)}',
+              '${task.targetValue} ${task.type.localizedWord(task.targetValue, s)}',
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -321,25 +321,20 @@ class _CreateTaskDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomDropdownMenu(
+          CustomDropdownMenu<Direction>(
             value: state.direction,
-            data: List.generate(
-              InterviewsData.directions.length,
-              (i) => (value: InterviewsData.directions[i], text: null),
-            ),
-            change: selectorCubit.changeDirection,
+            data: Direction.values
+                .map((direction) => (direction, null))
+                .toList(),
+            change: (value) => selectorCubit.changeDirection(value!),
             hintText: s.direction,
           ),
-          CustomDropdownMenu(
+          CustomDropdownMenu<TaskType>(
             value: state.type,
-            data: List.generate(
-              InterviewsData.types.length,
-              (i) => (
-                value: InterviewsData.types[i],
-                text: LocalizationData(s).types[i],
-              ),
-            ),
-            change: selectorCubit.changeType,
+            data: TaskType.values
+                .map((type) => (type, type.localizedName(s)))
+                .toList(),
+            change: (value) => selectorCubit.changeType(value!),
             hintText: s.type,
           ),
           const SizedBox(height: 6),
@@ -357,7 +352,7 @@ class _CreateTaskDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.pop(context);
             selectorCubit.reset();
           },
           child: Text(S.of(context).cancel),
@@ -398,33 +393,28 @@ class _FilterDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? direction = filterCubit.state.direction;
-    String? type = filterCubit.state.type;
-    String? sort = filterCubit.state.sort;
+    var direction = filterCubit.state.direction;
+    var type = filterCubit.state.type;
+    var sort = filterCubit.state.sort;
     final s = S.of(context);
     return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomDropdownMenu(
+          CustomDropdownMenu<Direction>(
             value: direction,
-            data: List.generate(
-              InterviewsData.directions.length,
-              (i) => (value: InterviewsData.directions[i], text: null),
-            ),
+            data: Direction.values
+                .map((direction) => (direction, null))
+                .toList(),
             change: (value) => direction = value,
             hintText: s.direction,
           ),
-          CustomDropdownMenu(
+          CustomDropdownMenu<TaskType>(
             value: type,
-            data: List.generate(
-              InterviewsData.types.length,
-              (i) => (
-                value: InterviewsData.types[i],
-                text: LocalizationData(s).types[i],
-              ),
-            ),
+            data: TaskType.values
+                .map((type) => (type, type.localizedName(s)))
+                .toList(),
             change: (value) => type = value,
             hintText: s.type,
           ),

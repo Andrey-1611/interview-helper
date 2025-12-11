@@ -1,8 +1,8 @@
 part of 'filter_tasks_cubit.dart';
 
 class FilterTasksState extends Equatable {
-  final String? direction;
-  final String? type;
+  final Direction? direction;
+  final TaskType? type;
   final String? sort;
   final bool? isCompleted;
 
@@ -17,8 +17,8 @@ class FilterTasksState extends Equatable {
   List<Object?> get props => [direction, type, sort, isCompleted];
 
   FilterTasksState copyWith({
-    String? direction,
-    String? type,
+    Direction? direction,
+    TaskType? type,
     String? sort,
     bool? isCompleted,
   }) {

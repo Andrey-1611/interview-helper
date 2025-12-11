@@ -1,15 +1,12 @@
 part of 'filter_analysis_cubit.dart';
 
 class FilterAnalysisState extends Equatable {
-  final String? direction;
-  final String? difficulty;
+  final Direction? direction;
+  final Difficulty? difficulty;
 
   const FilterAnalysisState({this.direction, this.difficulty});
 
-  FilterAnalysisState copyWith({
-    String? direction,
-    String? difficulty,
-  }) {
+  FilterAnalysisState copyWith({Direction? direction, Difficulty? difficulty}) {
     return FilterAnalysisState(
       direction: direction ?? this.direction,
       difficulty: difficulty ?? this.difficulty,

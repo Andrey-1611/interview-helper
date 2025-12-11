@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
@@ -13,6 +12,9 @@ import 'package:interview_master/generated/l10n.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
+import '../../../data/enums/difficulty.dart';
+import '../../../data/enums/direction.dart';
+import '../../../data/enums/language.dart';
 import '../../../data/models/interview_info.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -75,39 +77,38 @@ class _InitialPageView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: size.height * 0.2),
-              CustomDropdownMenu(
-                value: form.state.direction,
-                data: List.generate(
-                  InterviewsData.directions.length,
-                  (i) => (value: InterviewsData.directions[i], text: null),
-                ),
-                change: form.changeDirection,
-                hintText: s.choose_direction,
-              ),
-              SizedBox(height: size.height * 0.03),
-              CustomDropdownMenu(
-                value: form.state.difficulty,
-                data: List.generate(
-                  InterviewsData.difficulties.length,
-                  (i) => (value: InterviewsData.difficulties[i], text: null),
-                ),
-                change: form.changeDifficulty,
-                hintText: s.choose_difficulty,
-              ),
-              SizedBox(height: size.height * 0.03),
-              _InterviewButton(),
-              SizedBox(height: size.height * 0.08),
-              SizedBox(
-                height: size.height * 0.14,
-                child: _LastInterviewsList(),
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: size.height * 0.24),
+            CustomDropdownMenu<Direction>(
+              value: form.state.direction,
+              data: Direction.values
+                  .map((direction) => (direction, null))
+                  .toList(),
+              change: (value) => form.changeDirection(value!),
+              hintText: s.choose_direction,
+            ),
+            CustomDropdownMenu<Difficulty>(
+              value: form.state.difficulty,
+              data: Difficulty.values
+                  .map((difficulty) => (difficulty, null))
+                  .toList(),
+              change: (value) => form.changeDifficulty(value!),
+              hintText: s.choose_difficulty,
+            ),
+            CustomDropdownMenu<Language>(
+              value: form.state.language,
+              data: Language.values
+                  .map((language) => (language, language.localizedName(s)))
+                  .toList(),
+              change: (value) => form.changeLanguage(value!),
+              hintText: s.choose_language,
+            ),
+            _InterviewButton(),
+            const Spacer(),
+            SizedBox(height: size.height * 0.14, child: _LastInterviewsList()),
+          ],
         ),
       ),
     );
@@ -135,7 +136,7 @@ class _InterviewButton extends StatelessWidget {
             extra: InterviewInfo(
               direction: form.state.direction!,
               difficulty: form.state.difficulty!,
-              userInputs: [],
+              language: form.state.language!,
             ),
           );
         }
@@ -143,7 +144,10 @@ class _InterviewButton extends StatelessWidget {
       child: CustomButton(
         text: s.start,
         onPressed: () {
-          if (form.state.direction != null && form.state.difficulty != null) {
+          final state = form.state;
+          if (state.direction != null &&
+              state.difficulty != null &&
+              state.language != null) {
             return context.read<InterviewBloc>().add(StartInterview());
           }
           ToastHelper.interviewFormError(context);
@@ -171,6 +175,7 @@ class _LastInterviewsList extends StatelessWidget {
                 onTap: () => context.read<InterviewFormCubit>().changeAll(
                   interview.direction,
                   interview.difficulty,
+                  interview.language,
                 ),
                 child: SizedBox(
                   width: size.height * 0.14,
@@ -178,8 +183,8 @@ class _LastInterviewsList extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(interview.direction),
-                        Text(interview.difficulty),
+                        Text(interview.direction.name),
+                        Text(interview.difficulty.name),
                       ],
                     ),
                   ),

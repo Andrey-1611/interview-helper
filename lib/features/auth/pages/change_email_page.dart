@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
@@ -40,6 +41,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
         GetIt.I<AuthRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
       ),
       child: _ChangeEmailPageView(

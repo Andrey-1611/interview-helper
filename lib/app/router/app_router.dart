@@ -1,17 +1,18 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/constants/direction.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/models/task.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:interview_master/features/interview/pages/direction_questions_database_page.dart';
 import 'package:interview_master/features/interview/pages/questions_database_page.dart';
 import 'package:interview_master/features/tracker/pages/directions_page.dart';
 import 'package:interview_master/features/tracker/pages/task_page.dart';
 import 'package:interview_master/features/users/pages/analysis_page.dart';
-import 'package:interview_master/features/settings/pages/settings_page.dart';
+import 'package:interview_master/features/home/pages/settings_page.dart';
 import 'package:interview_master/features/users/pages/rating_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../data/enums/direction.dart';
 import '../../data/models/interview_info.dart';
 import '../../data/models/question.dart';
 import '../../data/models/user_data.dart';
@@ -24,7 +25,6 @@ import '../../features/home/pages/home_page.dart';
 import '../../features/interview/pages/initial_page.dart';
 import '../../features/interview/pages/interview_page.dart';
 import '../../features/interview/pages/results_page.dart';
-import '../../features/home/pages/splash_page.dart';
 import '../../features/profile/pages/interview_info_page.dart';
 import '../../features/profile/pages/question_info_page.dart';
 import '../../features/tracker/pages/tracker_page.dart';
@@ -37,7 +37,12 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(
       path: AppRouterNames.splash,
-      builder: (context, state) => const SplashPage(),
+      redirect: (context, state) {
+        final isAuth = GetIt.I<SettingsRepository>().isAuth();
+        if (isAuth) return AppRouterNames.initial;
+        if (!isAuth) return AppRouterNames.signIn;
+        return null;
+      },
     ),
     GoRoute(
       path: AppRouterNames.signIn,

@@ -3,9 +3,7 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
     id("com.google.gms.google-services")
-    // END: FlutterFire Configuration
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -19,7 +17,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.example.interview_master"
     compileSdk = flutter.compileSdkVersion.toInt()
-    ndkVersion = "28.2.13676358"
+    ndkVersion =  flutter.ndkVersion
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

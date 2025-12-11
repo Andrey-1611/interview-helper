@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class CustomDropdownMenu extends StatelessWidget {
-  final List<({String value, String? text})> data;
-  final ValueChanged<String> change;
+class CustomDropdownMenu<T> extends StatelessWidget {
+  final T? value;
+  final List<(T, String?)> data;
+  final Function(T?) change;
   final String hintText;
-  final String? value;
 
   const CustomDropdownMenu({
     super.key,
-    this.value,
+    required this.value,
     required this.data,
     required this.change,
     required this.hintText,
@@ -16,26 +16,21 @@ class CustomDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: DropdownButtonFormField(
+      child: DropdownButtonFormField<T>(
         isExpanded: true,
         style: theme.textTheme.displaySmall,
         initialValue: value,
-        items: data
-            .map(
-              (final value) => DropdownMenuItem<String>(
-                value: value.value,
-                child: Text(value.text ?? value.value),
-              ),
-            )
-            .toList(),
-        onChanged: (String? value) {
-          if (value != null) change(value);
-        },
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        items: data.map((item) {
+          return DropdownMenuItem<T>(
+            value: item.$1,
+            child: Text(item.$2 ?? item.$1.toString()),
+          );
+        }).toList(),
+        onChanged: change,
         menuMaxHeight: size.height * 0.5,
         hint: Text(hintText),
       ),

@@ -1,7 +1,5 @@
-import 'package:injectable/injectable.dart';
 import 'dart:ui' as info;
 
-@lazySingleton
 class DeviceInfo {
   Future<bool> getLanguage() async {
     final locale = info.PlatformDispatcher.instance.locale;

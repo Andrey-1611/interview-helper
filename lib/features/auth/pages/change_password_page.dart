@@ -9,6 +9,7 @@ import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -37,6 +38,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         GetIt.I<AuthRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
       ),
       child: _ChangePasswordPageView(

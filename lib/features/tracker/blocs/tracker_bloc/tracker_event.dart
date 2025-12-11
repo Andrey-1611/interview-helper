@@ -10,8 +10,8 @@ sealed class TrackerEvent extends Equatable {
 final class GetTasks extends TrackerEvent {}
 
 final class CreateTask extends TrackerEvent {
-  final String direction;
-  final String type;
+  final Direction direction;
+  final TaskType type;
   final int targetValue;
 
   const CreateTask({

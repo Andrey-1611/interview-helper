@@ -38,7 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(count) =>
       "${Intl.plural(count, one: 'point', other: 'points')}";
 
-  static String m7(count) => "Вопрос ${count}";
+  static String m7(count) => "Question ${count}";
 
   static String m8(count) => "${count} questions";
 
@@ -91,6 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "choose_direction": MessageLookupByLibrary.simpleMessage(
       "Choose direction",
     ),
+    "choose_language": MessageLookupByLibrary.simpleMessage("Choose language"),
     "completed": MessageLookupByLibrary.simpleMessage("Completed"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
@@ -119,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "email_verification_sent": m1,
     "empty_history": MessageLookupByLibrary.simpleMessage("History is empty"),
+    "english": MessageLookupByLibrary.simpleMessage("English"),
     "enter_your_answer": MessageLookupByLibrary.simpleMessage(
       "Enter your answer...",
     ),
@@ -139,7 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "history": MessageLookupByLibrary.simpleMessage("History"),
     "interview": MessageLookupByLibrary.simpleMessage("Interview"),
     "interview_form_error": MessageLookupByLibrary.simpleMessage(
-      "Please select direction and difficulty",
+      "Please fill in all fields",
     ),
     "interview_word": m2,
     "interviews": MessageLookupByLibrary.simpleMessage("Interviews"),
@@ -189,6 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_interview_confirmation": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to reset the interview?",
     ),
+    "russian": MessageLookupByLibrary.simpleMessage("Russian"),
     "russian_language": MessageLookupByLibrary.simpleMessage(
       "Russain language",
     ),

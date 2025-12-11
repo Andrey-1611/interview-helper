@@ -1,46 +1,49 @@
-import 'package:injectable/injectable.dart';
+import 'package:interview_master/core/constants/shared_prefs_data.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@LazySingleton(as: SettingsRepository)
 class SettingsDataSource implements SettingsRepository {
   final SharedPreferences _sharedPreferences;
 
   SettingsDataSource(this._sharedPreferences);
 
-  static const _themeKey = 'theme_key';
-  static const _voiceKey = 'voice_key';
-  static const _languageKey = 'languageKey';
-
   @override
   Future<void> setTheme(bool isDark) async {
-    await _sharedPreferences.setBool(_themeKey, isDark);
+    await _sharedPreferences.setBool(SharedPrefsData.themeKey, isDark);
   }
 
   @override
   Future<void> setVoice(bool isEnable) async {
-    await _sharedPreferences.setBool(_voiceKey, isEnable);
+    await _sharedPreferences.setBool(SharedPrefsData.voiceKey, isEnable);
   }
 
   @override
   Future<void> setLanguage(bool isRussian) async {
-    await _sharedPreferences.setBool(_languageKey, isRussian);
+    await _sharedPreferences.setBool(SharedPrefsData.languageKey, isRussian);
   }
 
   @override
   bool isDarkTheme() {
-    final theme = _sharedPreferences.getBool(_themeKey);
+    final theme = _sharedPreferences.getBool(SharedPrefsData.themeKey);
     return theme ?? true;
   }
 
   @override
   bool isVoiceEnable() {
-    final voice = _sharedPreferences.getBool(_voiceKey);
+    final voice = _sharedPreferences.getBool(SharedPrefsData.voiceKey);
     return voice ?? true;
   }
 
   @override
   bool? isRussianLanguage() {
-    return _sharedPreferences.getBool(_languageKey);
+    return _sharedPreferences.getBool(SharedPrefsData.languageKey);
+  }
+
+  @override
+  bool isAuth() => _sharedPreferences.getBool(SharedPrefsData.authKey) ?? false;
+
+  @override
+  Future<void> setAuth(bool isAuth) async {
+    await _sharedPreferences.setBool(SharedPrefsData.authKey, isAuth);
   }
 }

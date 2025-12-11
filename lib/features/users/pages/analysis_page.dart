@@ -6,13 +6,14 @@ import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
 import 'package:interview_master/core/utils/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/time_formatter.dart';
+import 'package:interview_master/data/enums/difficulty.dart';
 import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
-import '../../../core/constants/interviews_data.dart';
 import '../../../core/utils/network_info.dart';
+import '../../../data/enums/direction.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -62,8 +63,8 @@ class _AnalysisPageView extends StatelessWidget {
             child: CustomFilterButton(
               filterController: TextEditingController(
                 text: FilterTextFormatter.analysis(
-                  filter.state.direction,
-                  filter.state.difficulty,
+                  filter.state.direction?.name,
+                  filter.state.difficulty?.name,
                 ),
               ),
               filterDialog: _FilterDialog(filterCubit: filter),
@@ -348,36 +349,34 @@ class _FilterDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? direction = filterCubit.state.direction;
-    String? difficulty = filterCubit.state.difficulty;
+    var directionS = filterCubit.state.direction;
+    var difficultyS = filterCubit.state.difficulty;
     final s = S.of(context);
     return AlertDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomDropdownMenu(
-            value: direction,
-            data: List.generate(
-              InterviewsData.directions.length,
-              (i) => (value: InterviewsData.directions[i], text: null),
-            ),
-            change: (value) => direction = value,
+          CustomDropdownMenu<Direction>(
+            value: directionS,
+            data: Direction.values
+                .map((direction) => (direction, null))
+                .toList(),
+            change: (value) => directionS = value,
             hintText: s.all_directions,
           ),
-          CustomDropdownMenu(
-            value: difficulty,
-            data: List.generate(
-              InterviewsData.difficulties.length,
-              (i) => (value: InterviewsData.difficulties[i], text: null),
-            ),
-            change: (value) => difficulty = value,
+          CustomDropdownMenu<Difficulty>(
+            value: difficultyS,
+            data: Difficulty.values
+                .map((difficulty) => (difficulty, null))
+                .toList(),
+            change: (value) => difficultyS = value,
             hintText: s.all_difficulties,
           ),
           CustomButton(
             text: s.apply,
             onPressed: () {
-              filterCubit.filter(direction, difficulty, null);
+              filterCubit.filter(directionS, difficultyS);
               context.pop();
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../core/utils/network_info.dart';
 import '../../../../data/repositories/auth_repository.dart';
@@ -15,12 +16,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
+  final SettingsRepository _settingsRepository;
   final NetworkInfo _networkInfo;
 
   AuthBloc(
     this._authRepository,
     this._remoteRepository,
     this._localRepository,
+    this._settingsRepository,
     this._networkInfo,
   ) : super(AuthInitial()) {
     on<SignIn>(_signIn);
@@ -30,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ChangePassword>(_changePassword);
     on<SendEmailVerification>(_sendEmailVerification);
     on<WatchEmailVerified>(_watchEmailVerified);
+    on<SignOut>(_signOut);
   }
 
   Future<void> _signIn(SignIn event, Emitter<AuthState> emit) async {
@@ -49,6 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _localRepository.setInterviews(interviews);
       await _localRepository.setTasks(tasks);
       await _localRepository.setUser(user);
+      await _settingsRepository.setAuth(true);
       user.directions.isNotEmpty
           ? emit(AuthSuccess())
           : emit(AuthWithoutDirections());
@@ -74,12 +79,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _localRepository.setInterviews(interviews);
         await _localRepository.setUser(user);
         await _localRepository.setTasks(tasks);
+        await _settingsRepository.setAuth(true);
         user.directions.isNotEmpty
             ? emit(AuthSuccess())
             : emit(AuthWithoutDirections());
       } else {
         await _remoteRepository.setUser(googleUser);
         await _localRepository.setUser(googleUser);
+        await _settingsRepository.setAuth(true);
         return emit(AuthWithoutDirections());
       }
       return emit(AuthSuccess());
@@ -160,7 +167,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _authRepository.getUser();
       await _remoteRepository.setUser(user);
       await _localRepository.setUser(user);
+      await _settingsRepository.setAuth(true);
       return emit(AuthWithoutDirections());
+    } catch (e, st) {
+      emit(AuthFailure());
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _signOut(SignOut event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) return emit(AuthNetworkFailure());
+      final user = await _localRepository.getUser();
+      final interviews = await _localRepository.getInterviews();
+      final tasks = await _localRepository.getTasks();
+      await _remoteRepository.updateInterviews(user!.id, interviews);
+      await _remoteRepository.updateTasks(user.id, tasks);
+      await _authRepository.signOut();
+      await _localRepository.deleteData();
+      await _settingsRepository.setAuth(false);
+      return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
       GetIt.I<Talker>().handle(e, st);

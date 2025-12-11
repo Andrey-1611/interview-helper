@@ -52,7 +52,7 @@
   "accuracy": "Accuracy: {score}%",
   "your_answer": "Your answer:",
   "correct_answer": "Correct answer:",
-  "questionN": "Вопрос {count}",
+  "questionN": "Question {count}",
   "empty_history": "History is empty",
   "reset_filter": "Reset filter",
   "take_interview": "Take an interview",
@@ -104,7 +104,7 @@
   "unknown_error": "Unknown error, please try again later",
   "network_error": "No internet connection",
   "attempts_ended": "Attempts ended, come back tomorrow",
-  "interview_form_error": "Please select direction and difficulty",
+  "interview_form_error": "Please fill in all fields",
   "task_selector_error": "Please fill all required fields",
   "interview_word": "{count, plural, =1{interview} other{interviews}}",
   "minutes_word": "{count, plural, =1{minute} other{minutes}}",
@@ -126,5 +126,8 @@
   "firstAverageScore": "Average result",
   "firstTotalTime": "Time",
   "time": "Time",
-  "score": "Score"
+  "score": "Score",
+  "russian": "Russian",
+  "english": "English",
+  "choose_language": "Choose language"
 }

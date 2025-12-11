@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/core/utils/dialog_helper.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../core/utils/data_cubit.dart';
+import '../../../data/enums/direction.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../../../generated/l10n.dart';
@@ -91,9 +91,9 @@ class _DirectionsPageView extends StatelessWidget {
                   mainAxisSpacing: 12,
                   childAspectRatio: 1.8,
                 ),
-                itemCount: InterviewsData.directions.length,
+                itemCount: Direction.values.length,
                 itemBuilder: (context, index) {
-                  final direction = InterviewsData.directions[index];
+                  final direction = Direction.values[index];
                   return _DirectionCard(direction: direction);
                 },
               ),
@@ -115,7 +115,7 @@ class _DirectionsPageView extends StatelessWidget {
 }
 
 class _DirectionCard extends StatelessWidget {
-  final String direction;
+  final Direction direction;
 
   const _DirectionCard({required this.direction});
 
@@ -123,9 +123,9 @@ class _DirectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final directions = context.watch<DirectionsCubit>();
-    final isSelected = directions.state.contains(direction);
+    final isSelected = directions.state.contains(direction.name);
     return GestureDetector(
-      onTap: () => directions.add(direction),
+      onTap: () => directions.add(direction.name),
       child: Card(
         color: isSelected ? theme.primaryColor.withValues(alpha: 0.1) : null,
         shape: RoundedRectangleBorder(
@@ -139,7 +139,7 @@ class _DirectionCard extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                direction,
+                direction.name,
                 style: theme.textTheme.displaySmall?.copyWith(
                   color: isSelected ? theme.primaryColor : null,
                 ),

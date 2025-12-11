@@ -1,6 +1,3 @@
-import 'package:injectable/injectable.dart';
-
-@lazySingleton
 class StopwatchInfo {
   final Stopwatch _stopwatch;
 

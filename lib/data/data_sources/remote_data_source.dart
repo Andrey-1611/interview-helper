@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:injectable/injectable.dart';
 import 'package:interview_master/data/models/task.dart';
 import '../models/interview_data.dart';
 import '../models/user_data.dart';
 import '../repositories/remote_repository.dart';
 
-@LazySingleton(as: RemoteRepository)
 class RemoteDataSource implements RemoteRepository {
   final FirebaseFirestore _firebaseFirestore;
 

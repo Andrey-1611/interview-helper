@@ -9,6 +9,7 @@ import '../../../core/utils/network_info.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../../../generated/l10n.dart';
 import '../blocs/auth_bloc/auth_bloc.dart';
 
@@ -24,6 +25,7 @@ class EmailVerificationPage extends StatelessWidget {
         GetIt.I<AuthRepository>(),
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
+        GetIt.I<SettingsRepository>(),
         GetIt.I<NetworkInfo>(),
       )..add(WatchEmailVerified()),
       child: _EmailVerificationPageView(password: password),

@@ -1,8 +1,8 @@
 part of 'filter_profile_cubit.dart';
 
 class FilterProfileState extends Equatable {
-  final String? direction;
-  final String? difficulty;
+  final Direction? direction;
+  final Difficulty? difficulty;
   final bool isFavourite;
 
   const FilterProfileState({
@@ -12,8 +12,8 @@ class FilterProfileState extends Equatable {
   });
 
   FilterProfileState copyWith({
-    String? direction,
-    String? difficulty,
+    Direction? direction,
+    Difficulty? difficulty,
     String? sort,
     bool? isFavourite,
   }) {

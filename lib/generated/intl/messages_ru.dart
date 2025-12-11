@@ -41,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m7(count) => "Вопрос ${count}";
 
+  static String m8(count) => "${count} вопросов";
+
   static String m9(count) =>
       "${Intl.plural(count, one: 'секунда', few: 'секунды', other: 'секунд')}";
 
@@ -83,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "choose_direction": MessageLookupByLibrary.simpleMessage(
       "Выберите направление",
     ),
+    "choose_language": MessageLookupByLibrary.simpleMessage("Выберите язык"),
     "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
       "Продолжить с Google",
@@ -110,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "email_verification_sent": m1,
     "empty_history": MessageLookupByLibrary.simpleMessage("История пуста"),
+    "english": MessageLookupByLibrary.simpleMessage("Английский"),
     "enter_your_answer": MessageLookupByLibrary.simpleMessage(
       "Введите ваш ответ...",
     ),
@@ -133,7 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "history": MessageLookupByLibrary.simpleMessage("История"),
     "interview": MessageLookupByLibrary.simpleMessage("Собеседование"),
     "interview_form_error": MessageLookupByLibrary.simpleMessage(
-      "Выберите направление и сложность",
+      "Заполните все поля",
     ),
     "interview_word": m2,
     "interviews": MessageLookupByLibrary.simpleMessage("Собеседования"),
@@ -172,6 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "progress": MessageLookupByLibrary.simpleMessage("Прогресс"),
     "question": MessageLookupByLibrary.simpleMessage("Вопрос: "),
     "questionN": m7,
+    "questions_count": m8,
     "questions_database": MessageLookupByLibrary.simpleMessage("База вопросов"),
     "rate_app": MessageLookupByLibrary.simpleMessage("Оценить приложение"),
     "rating": MessageLookupByLibrary.simpleMessage("Рейтинг"),
@@ -182,6 +187,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_interview_confirmation": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите сбросить собседование?",
     ),
+    "russian": MessageLookupByLibrary.simpleMessage("Русский"),
     "russian_language": MessageLookupByLibrary.simpleMessage("Русский язык"),
     "saving_data": MessageLookupByLibrary.simpleMessage("Сохранение данных..."),
     "score": MessageLookupByLibrary.simpleMessage("Опыт"),

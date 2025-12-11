@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:interview_master/app/router/app_router.dart';
 import 'package:interview_master/core/utils/data_cubit.dart';
@@ -36,19 +37,21 @@ class _AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<SettingsCubit>().state;
-    final width = MediaQuery.sizeOf(context).width;
-    return MaterialApp.router(
-      localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: Locale(state.language ? 'ru' : 'en'),
-      supportedLocales: S.delegate.supportedLocales,
-      debugShowCheckedModeBanner: false,
-      theme: state.theme ? darkTheme(width) : lightTheme(width),
-      routerConfig: appRouter,
+    return ScreenUtilInit(
+      designSize: const Size(427, 952),
+      builder: (context, child) => MaterialApp.router(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: Locale(state.language ? 'ru' : 'en'),
+        supportedLocales: S.delegate.supportedLocales,
+        debugShowCheckedModeBanner: false,
+        theme: state.theme ? darkTheme : lightTheme,
+        routerConfig: appRouter,
+      ),
     );
   }
 }

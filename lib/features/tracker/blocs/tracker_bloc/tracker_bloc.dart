@@ -4,12 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../../../data/enums/direction.dart';
+import '../../../../data/enums/task_type.dart';
 import '../../../../data/models/user_data.dart';
 import '../../../../data/repositories/local_repository.dart';
 import '../../../../data/repositories/remote_repository.dart';
 
 part 'tracker_event.dart';
-
 part 'tracker_state.dart';
 
 class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {

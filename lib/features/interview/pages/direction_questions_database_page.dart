@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interview_master/core/constants/direction.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
-import 'package:interview_master/core/utils/capitalize_extention.dart';
+import 'package:interview_master/core/constants/questions/questions_manager.dart';
+import 'package:interview_master/data/models/interview_info.dart';
 import 'package:interview_master/features/interview/blocs/search_cubit/search_cubit.dart';
-
+import '../../../data/enums/difficulty.dart';
+import '../../../data/enums/direction.dart';
+import '../../../data/enums/language.dart';
 import '../../../generated/l10n.dart';
 
 class DirectionQuestionsDatabasePage extends StatelessWidget {
@@ -32,9 +33,10 @@ class _DirectionQuestionsDatabasePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final manager = QuestionsManager.direction(direction);
     return Scaffold(
       appBar: AppBar(
-        title: Text(direction.direction),
+        title: Text(direction.name),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, size.height * 0.12),
           child: Column(
@@ -42,9 +44,9 @@ class _DirectionQuestionsDatabasePageView extends StatelessWidget {
               _SearchField(),
               TabBar(
                 tabs: [
-                  Tab(text: InterviewsData.junior.capitalize),
-                  Tab(text: InterviewsData.middle.capitalize),
-                  Tab(text: InterviewsData.senior.capitalize),
+                  Tab(text: Difficulty.junior.name),
+                  Tab(text: Difficulty.middle.name),
+                  Tab(text: Difficulty.senior.name),
                 ],
               ),
             ],
@@ -57,17 +59,26 @@ class _DirectionQuestionsDatabasePageView extends StatelessWidget {
           children: [
             _KeepAlivePage(
               child: _DifficultyQuestionsDatabaseTab(
-                questions: direction.juniorQuestions,
+                questions: manager.questions(
+                  Language.russian,
+                  Difficulty.junior,
+                ),
               ),
             ),
             _KeepAlivePage(
               child: _DifficultyQuestionsDatabaseTab(
-                questions: direction.middleQuestions,
+                questions: manager.questions(
+                  Language.russian,
+                  Difficulty.middle,
+                ),
               ),
             ),
             _KeepAlivePage(
               child: _DifficultyQuestionsDatabaseTab(
-                questions: direction.seniorQuestions,
+                questions: manager.questions(
+                  Language.russian,
+                  Difficulty.senior,
+                ),
               ),
             ),
           ],
@@ -85,7 +96,10 @@ class _DifficultyQuestionsDatabaseTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final search = context.watch<SearchCubit>();
-    final searchQuestions = Direction.searchQuestions(search.state, questions);
+    final searchQuestions = InterviewInfo.searchQuestions(
+      search.state,
+      questions,
+    );
     if (searchQuestions.isEmpty) return _EmptyList(search);
     return ListView.builder(
       itemCount: searchQuestions.length,
