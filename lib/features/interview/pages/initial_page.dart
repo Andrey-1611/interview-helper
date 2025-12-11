@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
-import 'package:interview_master/core/utils/localization_data.dart';
 import 'package:interview_master/core/utils/network_info.dart';
 import 'package:interview_master/core/utils/stopwatch_info.dart';
 import 'package:interview_master/core/utils/toast_helper.dart';
@@ -14,6 +12,9 @@ import 'package:interview_master/generated/l10n.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
+import '../../../data/enums/difficulty.dart';
+import '../../../data/enums/direction.dart';
+import '../../../data/enums/language.dart';
 import '../../../data/models/interview_info.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -80,34 +81,28 @@ class _InitialPageView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: size.height * 0.24),
-            CustomDropdownMenu(
+            CustomDropdownMenu<Direction>(
               value: form.state.direction,
-              data: List.generate(
-                InterviewsData.directions.length,
-                (i) => (value: InterviewsData.directions[i], text: null),
-              ),
-              change: form.changeDirection,
+              data: Direction.values
+                  .map((direction) => (direction, null))
+                  .toList(),
+              change: (value) => form.changeDirection(value!),
               hintText: s.choose_direction,
             ),
-            CustomDropdownMenu(
+            CustomDropdownMenu<Difficulty>(
               value: form.state.difficulty,
-              data: List.generate(
-                InterviewsData.difficulties.length,
-                (i) => (value: InterviewsData.difficulties[i], text: null),
-              ),
-              change: form.changeDifficulty,
+              data: Difficulty.values
+                  .map((difficulty) => (difficulty, null))
+                  .toList(),
+              change: (value) => form.changeDifficulty(value!),
               hintText: s.choose_difficulty,
             ),
-            CustomDropdownMenu(
+            CustomDropdownMenu<Language>(
               value: form.state.language,
-              data: List.generate(
-                InterviewsData.languages.length,
-                (i) => (
-                  value: InterviewsData.languages[i],
-                  text: LocalizationData(s).languages[i],
-                ),
-              ),
-              change: form.changeLanguage,
+              data: Language.values
+                  .map((language) => (language, language.localizedName(s)))
+                  .toList(),
+              change: (value) => form.changeLanguage(value!),
               hintText: s.choose_language,
             ),
             _InterviewButton(),
@@ -141,7 +136,7 @@ class _InterviewButton extends StatelessWidget {
             extra: InterviewInfo(
               direction: form.state.direction!,
               difficulty: form.state.difficulty!,
-              isEnglish: form.state.language == InterviewsData.russian,
+              language: form.state.language!,
             ),
           );
         }
@@ -180,6 +175,7 @@ class _LastInterviewsList extends StatelessWidget {
                 onTap: () => context.read<InterviewFormCubit>().changeAll(
                   interview.direction,
                   interview.difficulty,
+                  interview.language,
                 ),
                 child: SizedBox(
                   width: size.height * 0.14,
@@ -187,8 +183,8 @@ class _LastInterviewsList extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(interview.direction),
-                        Text(interview.difficulty),
+                        Text(interview.direction.name),
+                        Text(interview.difficulty.name),
                       ],
                     ),
                   ),

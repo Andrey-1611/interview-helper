@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:interview_master/data/enums/difficulty.dart';
+import 'package:interview_master/data/enums/direction.dart';
 import 'package:interview_master/data/models/interview.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'interview_data.dart';
@@ -99,8 +101,8 @@ class UserData extends Equatable {
   }
 
   static UserData filterUser(
-    String? direction,
-    String? difficulty,
+    Direction? direction,
+    Difficulty? difficulty,
     UserData user,
   ) {
     List<Interview> interviews = user.interviews;

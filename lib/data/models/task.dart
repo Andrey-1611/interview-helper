@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import '../enums/direction.dart';
+import '../enums/task_type.dart';
 
 part 'task.g.dart';
 
@@ -19,10 +21,10 @@ class Task extends Equatable {
   final int targetValue;
 
   @HiveField(3)
-  final String type;
+  final TaskType type;
 
   @HiveField(4)
-  final String direction;
+  final Direction direction;
 
   @HiveField(6)
   final DateTime createdAt;
@@ -62,7 +64,7 @@ class Task extends Equatable {
 
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
-  factory Task.create(int value, String type, String direction) {
+  factory Task.create(int value, TaskType type, Direction direction) {
     return Task(
       id: Uuid().v1(),
       targetValue: value,
@@ -87,8 +89,8 @@ class Task extends Equatable {
     String? id,
     int? currentValue,
     int? targetValue,
-    String? type,
-    String? direction,
+    TaskType? type,
+    Direction? direction,
     bool? isCompleted,
     DateTime? createdAt,
     DateTime? completedAt,
@@ -105,8 +107,8 @@ class Task extends Equatable {
   }
 
   static List<Task> filterTasks(
-    String? direction,
-    String? type,
+    Direction? direction,
+    TaskType? type,
     String? sort,
     bool? isComplete,
     List<Task> tasks,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:interview_master/data/enums/language.dart';
 import '../../core/constants/main_prompt.dart';
 import '../models/interview_info.dart';
 import '../models/question.dart';
@@ -25,7 +26,8 @@ class AIDataSource implements AIRepository {
     final questionsData = interviewInfo.userInputs
         .map((e) => 'Вопрос: ${e.question}\nОтвет: ${e.answer}')
         .join('\n\n');
-    final prompt = '${MainPrompt.mainPrompt}\n\nВопросы:\n$questionsData';
+    final prompt =
+        '${interviewInfo.language == Language.english ? MainPrompt.english : MainPrompt.russian}\n\nВопросы:\n$questionsData';
 
     final response = await _dio.post(
       '/networks/gpt-4-1',
@@ -35,14 +37,13 @@ class AIDataSource implements AIRepository {
           {'role': 'user', 'content': prompt},
         ],
         'is_sync': true,
-        'temperature': 0.2,
+        'max_tokens': 1000,
+        'temperature': 0.1,
       },
     );
-    final content =
-        response.data['response'][0]['message']['content'] as String;
-    final parsedJson = jsonDecode(content) as Map<String, dynamic>;
+    final data = response.data['response'][0]['message']['content'] as String;
+    final parsedJson = jsonDecode(data) as Map<String, dynamic>;
     final evaluations = parsedJson['evaluations'] as List<dynamic>;
-
     return evaluations.map((e) => Question.fromAI(e)).toList();
   }
 }

@@ -2,6 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../enums/difficulty.dart';
+import '../enums/direction.dart';
+import '../enums/language.dart';
 
 part 'interview.g.dart';
 
@@ -12,10 +15,10 @@ class Interview extends Equatable {
   final String id;
 
   @HiveField(1)
-  final String direction;
+  final Direction direction;
 
   @HiveField(2)
-  final String difficulty;
+  final Difficulty difficulty;
 
   @HiveField(3)
   final int score;
@@ -24,7 +27,7 @@ class Interview extends Equatable {
   final int durationMs;
 
   @HiveField(5)
-  final bool isEnglish;
+  final Language language;
 
   const Interview({
     required this.id,
@@ -32,7 +35,7 @@ class Interview extends Equatable {
     required this.difficulty,
     required this.score,
     required this.durationMs,
-    this.isEnglish = false,
+    required this.language,
   });
 
   @override
@@ -42,7 +45,7 @@ class Interview extends Equatable {
     difficulty,
     score,
     duration,
-    isEnglish,
+    language,
   ];
 
   factory Interview.fromJson(Map<String, dynamic> json) =>
@@ -59,7 +62,7 @@ class Interview extends Equatable {
       difficulty: interview.difficulty,
       score: interview.score,
       durationMs: interview.durationMs,
-      isEnglish: interview.isEnglish,
+      language: interview.language,
     );
   }
 }

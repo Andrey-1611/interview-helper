@@ -52,7 +52,7 @@
   "accuracy": "Accuracy: {score}%",
   "your_answer": "Your answer:",
   "correct_answer": "Correct answer:",
-  "questionN": "Вопрос {count}",
+  "questionN": "Question {count}",
   "empty_history": "History is empty",
   "reset_filter": "Reset filter",
   "take_interview": "Take an interview",

@@ -18,11 +18,11 @@ class InterviewAdapter extends TypeAdapter<Interview> {
     };
     return Interview(
       id: fields[0] as String,
-      direction: fields[1] as String,
-      difficulty: fields[2] as String,
+      direction: fields[1] as Direction,
+      difficulty: fields[2] as Difficulty,
       score: fields[3] as int,
       durationMs: fields[4] as int,
-      isEnglish: fields[5] as bool,
+      language: fields[5] as Language,
     );
   }
 
@@ -41,7 +41,7 @@ class InterviewAdapter extends TypeAdapter<Interview> {
       ..writeByte(4)
       ..write(obj.durationMs)
       ..writeByte(5)
-      ..write(obj.isEnglish);
+      ..write(obj.language);
   }
 
   @override
@@ -61,18 +61,46 @@ class InterviewAdapter extends TypeAdapter<Interview> {
 
 Interview _$InterviewFromJson(Map<String, dynamic> json) => Interview(
       id: json['id'] as String,
-      direction: json['direction'] as String,
-      difficulty: json['difficulty'] as String,
+      direction: $enumDecode(_$DirectionEnumMap, json['direction']),
+      difficulty: $enumDecode(_$DifficultyEnumMap, json['difficulty']),
       score: (json['score'] as num).toInt(),
       durationMs: (json['durationMs'] as num).toInt(),
-      isEnglish: json['isEnglish'] as bool? ?? false,
+      language: $enumDecode(_$LanguageEnumMap, json['language']),
     );
 
 Map<String, dynamic> _$InterviewToJson(Interview instance) => <String, dynamic>{
       'id': instance.id,
-      'direction': instance.direction,
-      'difficulty': instance.difficulty,
+      'direction': _$DirectionEnumMap[instance.direction]!,
+      'difficulty': _$DifficultyEnumMap[instance.difficulty]!,
       'score': instance.score,
       'durationMs': instance.durationMs,
-      'isEnglish': instance.isEnglish,
+      'language': _$LanguageEnumMap[instance.language]!,
     };
+
+const _$DirectionEnumMap = {
+  Direction.flutter: 'flutter',
+  Direction.kotlin: 'kotlin',
+  Direction.swift: 'swift',
+  Direction.javascript: 'javascript',
+  Direction.python: 'python',
+  Direction.cpp: 'cpp',
+  Direction.java: 'java',
+  Direction.go: 'go',
+  Direction.git: 'git',
+  Direction.sql: 'sql',
+  Direction.typescript: 'typescript',
+  Direction.rust: 'rust',
+  Direction.devops: 'devops',
+  Direction.php: 'php',
+};
+
+const _$DifficultyEnumMap = {
+  Difficulty.junior: 'junior',
+  Difficulty.middle: 'middle',
+  Difficulty.senior: 'senior',
+};
+
+const _$LanguageEnumMap = {
+  Language.russian: 'russian',
+  Language.english: 'english',
+};

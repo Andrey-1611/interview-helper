@@ -289,7 +289,7 @@ class _InterviewQuestionPage extends StatelessWidget {
         extra: InterviewInfo(
           direction: interviewInfo.direction,
           difficulty: interviewInfo.difficulty,
-          isEnglish: interviewInfo.isEnglish,
+          language: interviewInfo.language,
           userInputs: List.generate(
             10,
             (i) => (question: questions[i], answer: answers[i]),

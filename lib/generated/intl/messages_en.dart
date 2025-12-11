@@ -38,7 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(count) =>
       "${Intl.plural(count, one: 'point', other: 'points')}";
 
-  static String m7(count) => "Вопрос ${count}";
+  static String m7(count) => "Question ${count}";
 
   static String m8(count) => "${count} questions";
 

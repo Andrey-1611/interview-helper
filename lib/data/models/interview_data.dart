@@ -3,6 +3,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import '../enums/difficulty.dart';
+import '../enums/direction.dart';
+import '../enums/language.dart';
 import 'interview_info.dart';
 
 part 'interview_data.g.dart';
@@ -17,10 +20,10 @@ class InterviewData extends Equatable {
   final int score;
 
   @HiveField(2)
-  final String difficulty;
+  final Difficulty difficulty;
 
   @HiveField(3)
-  final String direction;
+  final Direction direction;
 
   @HiveField(4)
   final DateTime date;
@@ -35,7 +38,7 @@ class InterviewData extends Equatable {
   final int durationMs;
 
   @HiveField(8)
-  final bool isEnglish;
+  final Language language;
 
   const InterviewData({
     required this.id,
@@ -46,7 +49,7 @@ class InterviewData extends Equatable {
     required this.questions,
     this.isFavourite = false,
     required this.durationMs,
-    this.isEnglish = false,
+    required this.language,
   });
 
   @override
@@ -57,7 +60,7 @@ class InterviewData extends Equatable {
     date,
     questions,
     isFavourite,
-    isEnglish,
+    language,
   ];
 
   factory InterviewData.fromJson(Map<String, dynamic> json) =>
@@ -75,7 +78,6 @@ class InterviewData extends Equatable {
     final averageScore =
         questions.map((q) => q.score).reduce((a, b) => a + b) /
         questions.length;
-
     return InterviewData(
       id: Uuid().v1(),
       score: averageScore.toInt(),
@@ -84,19 +86,20 @@ class InterviewData extends Equatable {
       date: DateTime.now(),
       questions: questions,
       durationMs: duration,
-      isEnglish: info.isEnglish
+      language: info.language,
     );
   }
 
   InterviewData copyWith({
     String? id,
     int? score,
-    String? difficulty,
-    String? direction,
+    Difficulty? difficulty,
+    Direction? direction,
     DateTime? date,
     List<Question>? questions,
     bool? isFavourite,
     int? durationMs,
+    Language? language,
   }) {
     return InterviewData(
       id: id ?? this.id,
@@ -107,12 +110,13 @@ class InterviewData extends Equatable {
       questions: questions ?? this.questions,
       isFavourite: isFavourite ?? this.isFavourite,
       durationMs: durationMs ?? this.durationMs,
+      language: language ?? this.language,
     );
   }
 
   static List<InterviewData> filterInterviews(
-    String? direction,
-    String? difficulty,
+    Direction? direction,
+    Difficulty? difficulty,
     bool isFavourite,
     List<InterviewData> interviews,
   ) {

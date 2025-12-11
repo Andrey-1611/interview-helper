@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:interview_master/data/enums/difficulty.dart';
+import 'package:interview_master/data/enums/direction.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
-import '../../core/constants/interviews_data.dart';
 
 part 'question.g.dart';
 
@@ -73,16 +74,16 @@ class Question extends Equatable {
   factory Question.fromAI(Map<String, dynamic> json) {
     return Question(
       id: Uuid().v1(),
-      score: json['score'],
       question: json['question'],
       userAnswer: json['userAnswer'],
+      score: json['score'],
       correctAnswer: json['correctAnswer'],
     );
   }
 
   static List<Question> filterQuestions(
-    String? direction,
-    String? difficulty,
+    Direction? direction,
+    Difficulty? difficulty,
     bool isFavourite,
     List<InterviewData> interviews,
   ) {

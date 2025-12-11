@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/core/utils/localization_data.dart';
-import 'package:interview_master/core/utils/task_type_helper.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
-
 import '../../../generated/l10n.dart';
 
 class TaskPage extends StatelessWidget {
@@ -30,7 +27,7 @@ class TaskPage extends StatelessWidget {
               ),
               title: s.progress,
               value:
-                  '${task.currentValue} / ${task.targetValue} ${TaskTypeHelper.getType(task.targetValue, task.type, context)}',
+                  '${task.currentValue} / ${task.targetValue} ${task.type.localizedWord(task.targetValue, s)}',
             ),
             _DetailItem(
               leading: Icon(Icons.schedule),
@@ -47,12 +44,12 @@ class TaskPage extends StatelessWidget {
             _DetailItem(
               leading: Icon(Icons.category),
               title: s.type,
-              value: LocalizationData(s).type(task.type),
+              value: task.type.localizedName(s),
             ),
             _DetailItem(
               leading: Icon(Icons.explore),
               title: s.direction,
-              value: task.direction,
+              value: task.direction.name,
             ),
           ],
         ),

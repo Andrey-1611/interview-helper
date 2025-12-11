@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
 import 'package:interview_master/data/models/question.dart';
 import 'package:interview_master/data/models/task.dart';
+import '../enums/task_type.dart';
 import '../models/interview_data.dart';
 import '../models/user_data.dart';
 import '../repositories/local_repository.dart';
@@ -40,10 +40,9 @@ class LocalDataSource implements LocalRepository {
 
     final updatedTasks = filteredTasks.map((task) {
       final addValue = switch (task.type) {
-        InterviewsData.interviews => 1,
-        InterviewsData.time => interview.duration.inMinutes,
-        InterviewsData.score => interview.score,
-        _ => 0,
+        TaskType.interviews => 1,
+        TaskType.time => interview.duration.inMinutes,
+        TaskType.score => interview.score,
       };
 
       final value = task.currentValue + addValue;

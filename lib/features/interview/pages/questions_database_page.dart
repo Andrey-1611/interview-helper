@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
-import 'package:interview_master/core/constants/interviews_data.dart';
-import '../../../core/constants/direction.dart';
+import 'package:interview_master/core/constants/questions/questions_manager.dart';
+import '../../../data/enums/direction.dart';
+import '../../../data/enums/language.dart';
 import '../../../generated/l10n.dart';
 
 class QuestionsDatabasePage extends StatelessWidget {
@@ -22,11 +23,9 @@ class QuestionsDatabasePage extends StatelessWidget {
           mainAxisSpacing: 4,
           childAspectRatio: 1.4,
         ),
-        itemCount: InterviewsData.directions.length,
+        itemCount: Direction.values.length,
         itemBuilder: (context, index) {
-          final direction = Direction(
-            direction: InterviewsData.directions[index],
-          );
+          final direction = Direction.values.toList()[index];
           return GestureDetector(
             onTap: () => context.push(
               AppRouterNames.directionQuestionsDatabase,
@@ -36,11 +35,14 @@ class QuestionsDatabasePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text(direction.name, style: theme.textTheme.displayMedium),
                   Text(
-                    direction.direction,
-                    style: theme.textTheme.displayMedium,
+                    s.questions_count(
+                      QuestionsManager.direction(
+                        direction,
+                      ).questionsByLanguage(Language.russian).length,
+                    ),
                   ),
-                  Text(s.questions_count(direction.questions.length)),
                 ],
               ),
             ),

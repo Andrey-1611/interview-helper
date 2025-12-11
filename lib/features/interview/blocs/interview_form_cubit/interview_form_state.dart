@@ -1,9 +1,9 @@
 part of 'interview_form_cubit.dart';
 
 class InterviewFormState extends Equatable {
-  final String? direction;
-  final String? difficulty;
-  final String? language;
+  final Direction? direction;
+  final Difficulty? difficulty;
+  final Language? language;
 
   const InterviewFormState({this.direction, this.difficulty, this.language});
 
@@ -11,9 +11,9 @@ class InterviewFormState extends Equatable {
   List<Object?> get props => [direction, difficulty, language];
 
   InterviewFormState copyWith({
-    String? direction,
-    String? difficulty,
-    String? language,
+    Direction? direction,
+    Difficulty? difficulty,
+    Language? language,
   }) {
     return InterviewFormState(
       direction: direction ?? this.direction,

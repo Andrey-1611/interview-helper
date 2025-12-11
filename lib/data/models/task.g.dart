@@ -20,8 +20,8 @@ class TaskAdapter extends TypeAdapter<Task> {
       id: fields[0] as String,
       currentValue: fields[1] as int,
       targetValue: fields[2] as int,
-      type: fields[3] as String,
-      direction: fields[4] as String,
+      type: fields[3] as TaskType,
+      direction: fields[4] as Direction,
       createdAt: fields[6] as DateTime,
       completedAt: fields[7] as DateTime?,
     );
@@ -66,8 +66,8 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       id: json['id'] as String,
       currentValue: (json['currentValue'] as num?)?.toInt() ?? 0,
       targetValue: (json['targetValue'] as num).toInt(),
-      type: json['type'] as String,
-      direction: json['direction'] as String,
+      type: $enumDecode(_$TaskTypeEnumMap, json['type']),
+      direction: $enumDecode(_$DirectionEnumMap, json['direction']),
       createdAt: DateTime.parse(json['createdAt'] as String),
       completedAt: json['completedAt'] == null
           ? null
@@ -78,8 +78,31 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'id': instance.id,
       'currentValue': instance.currentValue,
       'targetValue': instance.targetValue,
-      'type': instance.type,
-      'direction': instance.direction,
+      'type': _$TaskTypeEnumMap[instance.type]!,
+      'direction': _$DirectionEnumMap[instance.direction]!,
       'createdAt': instance.createdAt.toIso8601String(),
       'completedAt': instance.completedAt?.toIso8601String(),
     };
+
+const _$TaskTypeEnumMap = {
+  TaskType.interviews: 'interviews',
+  TaskType.time: 'time',
+  TaskType.score: 'score',
+};
+
+const _$DirectionEnumMap = {
+  Direction.flutter: 'flutter',
+  Direction.kotlin: 'kotlin',
+  Direction.swift: 'swift',
+  Direction.javascript: 'javascript',
+  Direction.python: 'python',
+  Direction.cpp: 'cpp',
+  Direction.java: 'java',
+  Direction.go: 'go',
+  Direction.git: 'git',
+  Direction.sql: 'sql',
+  Direction.typescript: 'typescript',
+  Direction.rust: 'rust',
+  Direction.devops: 'devops',
+  Direction.php: 'php',
+};

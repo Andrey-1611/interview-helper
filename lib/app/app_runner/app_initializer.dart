@@ -10,6 +10,10 @@ import 'package:interview_master/data/models/task.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../data/enums/difficulty.dart';
+import '../../data/enums/direction.dart';
+import '../../data/enums/language.dart';
+import '../../data/enums/task_type.dart';
 import '../../data/models/interview.dart';
 import '../../data/models/interview_data.dart';
 import '../../data/models/question.dart';
@@ -32,6 +36,10 @@ class AppInitializer {
 
   static Future<void> _initHive() async {
     await Hive.initFlutter();
+    Hive.registerAdapter(TaskTypeAdapter());
+    Hive.registerAdapter(DirectionAdapter());
+    Hive.registerAdapter(DifficultyAdapter());
+    Hive.registerAdapter(LanguageAdapter());
     Hive.registerAdapter(InterviewAdapter());
     Hive.registerAdapter(UserDataAdapter());
     Hive.registerAdapter(QuestionAdapter());

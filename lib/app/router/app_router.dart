@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/constants/direction.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
@@ -13,6 +12,7 @@ import 'package:interview_master/features/users/pages/analysis_page.dart';
 import 'package:interview_master/features/home/pages/settings_page.dart';
 import 'package:interview_master/features/users/pages/rating_page.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import '../../data/enums/direction.dart';
 import '../../data/models/interview_info.dart';
 import '../../data/models/question.dart';
 import '../../data/models/user_data.dart';

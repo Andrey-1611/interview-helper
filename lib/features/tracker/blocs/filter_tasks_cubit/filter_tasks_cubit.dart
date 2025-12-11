@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../data/enums/direction.dart';
+import '../../../../data/enums/task_type.dart';
+
 part 'filter_tasks_state.dart';
 
 class FilterTasksCubit extends Cubit<FilterTasksState> {
@@ -21,7 +24,7 @@ class FilterTasksCubit extends Cubit<FilterTasksState> {
     );
   }
 
-  void runFilter(String? direction, String? type, String? sort) =>
+  void runFilter(Direction? direction, TaskType? type, String? sort) =>
       emit(state.copyWith(direction: direction, type: type, sort: sort));
 
   void reset() => emit(

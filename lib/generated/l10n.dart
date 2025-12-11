@@ -449,10 +449,10 @@ class S {
     );
   }
 
-  /// `Вопрос {count}`
+  /// `Question {count}`
   String questionN(Object count) {
     return Intl.message(
-      'Вопрос $count',
+      'Question $count',
       name: 'questionN',
       desc: '',
       args: [count],
