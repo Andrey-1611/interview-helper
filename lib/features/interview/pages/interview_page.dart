@@ -4,14 +4,15 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
-import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
 import 'package:interview_master/features/interview/blocs/speech_cubit/speech_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../../core/utils/network_info.dart';
-import '../../../core/utils/stopwatch_info.dart';
+import '../../../core/utils/services/network_service.dart';
+import '../../../core/utils/services/stopwatch_service.dart';
 import '../../../data/models/interview_info.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../data/repositories/ai_repository.dart';
@@ -52,8 +53,9 @@ class _InterviewPageState extends State<InterviewPage> {
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<SettingsRepository>(),
-            GetIt.I<NetworkInfo>(),
-            GetIt.I<StopwatchInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<StopwatchService>(),
+            GetIt.I<Talker>(),
           )..add(GetQuestions(interviewInfo: widget.interviewInfo)),
         ),
         BlocProvider(

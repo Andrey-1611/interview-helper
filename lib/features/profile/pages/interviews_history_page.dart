@@ -23,15 +23,17 @@ class InterviewsHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCurrentUser = user == null;
-    final onPressed = context.read<ProfileBloc>().add(
-      GetProfile(userId: user?.id),
-    );
+    final profileBloc = context.read<ProfileBloc>();
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         if (state is ProfileNetworkFailure) {
-          return CustomNetworkFailure(onPressed: () => onPressed);
+          return CustomNetworkFailure(
+            onPressed: () => profileBloc.add(GetProfile(userId: user?.id)),
+          );
         } else if (state is ProfileFailure) {
-          return CustomUnknownFailure(onPressed: () => onPressed);
+          return CustomUnknownFailure(
+            onPressed: () => profileBloc.add(GetProfile(userId: user?.id)),
+          );
         } else if (state is ProfileSuccess) {
           if (state.interviews.isEmpty) {
             return CustomEmptyHistory(isCurrentUser: isCurrentUser);

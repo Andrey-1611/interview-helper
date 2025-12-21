@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/network_info.dart';
-import 'package:interview_master/core/utils/stopwatch_info.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/core/utils/services/network_service.dart';
+import 'package:interview_master/core/utils/services/stopwatch_service.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:interview_master/features/interview/blocs/interview_bloc/interview_bloc.dart';
 import 'package:interview_master/features/interview/blocs/interview_form_cubit/interview_form_cubit.dart';
 import 'package:interview_master/generated/l10n.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_button.dart';
@@ -34,15 +35,17 @@ class InitialPage extends StatelessWidget {
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<SettingsRepository>(),
-            GetIt.I<NetworkInfo>(),
-            GetIt.I<StopwatchInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<StopwatchService>(),
+            GetIt.I<Talker>(),
           ),
         ),
         BlocProvider(
           create: (context) => ProfileBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<Talker>(),
           )..add(GetProfile(userId: null)),
         ),
         BlocProvider(create: (context) => InterviewFormCubit()),
@@ -121,7 +124,7 @@ class _InterviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final form = context.read<InterviewFormCubit>();
+    final form = context.read<InterviewFormCubit>().state;
     return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
         if (state is InterviewAttemptsFailure) {
@@ -134,9 +137,9 @@ class _InterviewButton extends StatelessWidget {
           context.push(
             AppRouterNames.interview,
             extra: InterviewInfo(
-              direction: form.state.direction!,
-              difficulty: form.state.difficulty!,
-              language: form.state.language!,
+              direction: form.direction!,
+              difficulty: form.difficulty!,
+              language: form.language!,
             ),
           );
         }
@@ -144,10 +147,9 @@ class _InterviewButton extends StatelessWidget {
       child: CustomButton(
         text: s.start,
         onPressed: () {
-          final state = form.state;
-          if (state.direction != null &&
-              state.difficulty != null &&
-              state.language != null) {
+          if (form.direction != null &&
+              form.difficulty != null &&
+              form.language != null) {
             return context.read<InterviewBloc>().add(StartInterview());
           }
           ToastHelper.interviewFormError(context);

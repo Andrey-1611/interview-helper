@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
-import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/utils/network_info.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/services/network_service.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/widgets/custom_button.dart';
-import '../../../core/utils/data_cubit.dart';
+import '../../../core/utils/cubits/data_cubit.dart';
 import '../../../data/enums/direction.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -27,7 +28,8 @@ class DirectionsPage extends StatelessWidget {
           create: (context) => TrackerBloc(
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+              GetIt.I<Talker>()
           ),
         ),
         BlocProvider(create: (context) => DirectionsCubit()),
@@ -123,9 +125,9 @@ class _DirectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final directions = context.watch<DirectionsCubit>();
-    final isSelected = directions.state.contains(direction.name);
+    final isSelected = directions.state.contains(direction);
     return GestureDetector(
-      onTap: () => directions.add(direction.name),
+      onTap: () => directions.add(direction),
       child: Card(
         color: isSelected ? theme.primaryColor.withValues(alpha: 0.1) : null,
         shape: RoundedRectangleBorder(

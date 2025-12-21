@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/core/utils/time_formatter.dart';
+import 'package:interview_master/core/utils/formatters/time_formatter.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import '../../../generated/l10n.dart';
 
@@ -17,7 +17,8 @@ class CustomUserInfo extends StatelessWidget {
         children: [
           _InfoCard(
             iconData: Icons.assignment_turned_in,
-            title: '${s.directions}: ${user.directions.join(', ')}',
+            title:
+                '${s.directions}: ${user.directions.map((d) => d.name).toList().join(', ')}',
           ),
           _InfoCard(
             iconData: Icons.assignment_turned_in,

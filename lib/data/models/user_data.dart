@@ -25,7 +25,7 @@ class UserData extends Equatable {
   final List<Interview> interviews;
 
   @HiveField(4)
-  final List<String> directions;
+  final List<Direction> directions;
 
   const UserData({
     required this.id,
@@ -40,7 +40,7 @@ class UserData extends Equatable {
     String? name,
     String? email,
     List<Interview>? interviews,
-    List<String>? directions,
+    List<Direction>? directions,
     List<String>? friendsId,
   }) {
     return UserData(
@@ -96,7 +96,7 @@ class UserData extends Equatable {
     );
   }
 
-  factory UserData.updateDirections(UserData user, List<String> directions) {
+  factory UserData.updateDirections(UserData user, List<Direction> directions) {
     return user.copyWith(directions: directions);
   }
 
@@ -113,5 +113,22 @@ class UserData extends Equatable {
       interviews = interviews.where((i) => i.difficulty == difficulty).toList();
     }
     return user.copyWith(interviews: interviews);
+  }
+
+  static List<UserData> filterUsers(List<UserData> users) {
+    return users.where((user) => user.totalScore > 0).toList();
+  }
+
+  static List<UserData> filterUsersByDirection(
+    List<UserData> users,
+    Direction direction,
+  ) {
+    int score(UserData user) => user.interviews
+        .where((i) => i.direction == direction)
+        .fold(0, (sum, i) => sum + i.score);
+
+    final result = users.where((user) => score(user) > 0).toList();
+    result.sort((a, b) => score(b).compareTo(score(a)));
+    return result;
   }
 }

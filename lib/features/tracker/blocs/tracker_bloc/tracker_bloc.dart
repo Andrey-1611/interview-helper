@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/core/utils/services/network_service.dart';
 import 'package:interview_master/data/models/task.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../data/enums/direction.dart';
@@ -11,15 +10,21 @@ import '../../../../data/repositories/local_repository.dart';
 import '../../../../data/repositories/remote_repository.dart';
 
 part 'tracker_event.dart';
+
 part 'tracker_state.dart';
 
 class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   final LocalRepository _localRepository;
   final RemoteRepository _remoteRepository;
-  final NetworkInfo _networkInfo;
+  final NetworkService _networkInfo;
+  final Talker _talker;
 
-  TrackerBloc(this._localRepository, this._remoteRepository, this._networkInfo)
-    : super(TrackerInitial()) {
+  TrackerBloc(
+    this._localRepository,
+    this._remoteRepository,
+    this._networkInfo,
+    this._talker,
+  ) : super(TrackerInitial()) {
     on<GetTasks>(_getTasks);
     on<CreateTask>(_createTask);
     on<DeleteTask>(_deleteTask);
@@ -33,7 +38,7 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       return emit(TrackerSuccess(tasks: tasks));
     } catch (e, st) {
       emit(TrackerFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -46,7 +51,7 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       return emit(TrackerSuccess(tasks: tasks));
     } catch (e, st) {
       emit(TrackerFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -57,7 +62,7 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       return emit(TrackerSuccess(tasks: tasks));
     } catch (e, st) {
       emit(TrackerFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -76,7 +81,7 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       return emit(TrackerDirectionsSuccess());
     } catch (e, st) {
       emit(TrackerFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 }

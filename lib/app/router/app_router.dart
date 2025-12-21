@@ -41,7 +41,10 @@ final appRouter = GoRouter(
         final isAuth = GetIt.I<SettingsRepository>().isAuth();
         if (isAuth) return AppRouterNames.initial;
         if (!isAuth) return AppRouterNames.signIn;
-        return null;
+        return switch (isAuth) {
+          true => AppRouterNames.initial,
+          false => AppRouterNames.signIn,
+        };
       },
     ),
     GoRoute(

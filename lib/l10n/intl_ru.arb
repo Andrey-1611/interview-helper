@@ -128,5 +128,10 @@
   "questions_count": "{count} вопросов",
   "russian": "Русский",
   "english": "Английский",
-  "choose_language": "Выберите язык"
+  "choose_language": "Выберите язык",
+  "notifications": "Уведомления",
+  "general": "Общий",
+  "ready_for_the_interview": "Готов к собеседованию?",
+  "question_waiting": "Новый вопрос уже ждёт!",
+  "no_users_yet": "Пока нет пользователей"
 }

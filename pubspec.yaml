@@ -2,7 +2,7 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.4.0+18
+version: 2.5.0+20
 
 environment:
   sdk: ^3.8.1
@@ -41,10 +41,9 @@ dependencies:
   speech_to_text: ^7.0.0
   flutter_tts: ^4.2.3
   share_plus: ^12.0.1
-  google_nav_bar: ^5.0.7
   shared_preferences: ^2.5.3
-  flutter_native_splash: ^2.4.7
   flutter_screenutil: ^5.9.3
+  flutter_local_notifications: ^19.5.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -72,11 +71,3 @@ flutter_launcher_icons:
 
 flutter_intl:
   enabled: true
-
-flutter_native_splash:
-  color: "#0E1525"
-  image: assets/play_store_512.png
-  android: true
-  ios: true
-  android_12:
-    image: assets/play_store_512.png

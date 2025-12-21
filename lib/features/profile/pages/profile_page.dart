@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/data_cubit.dart';
-import 'package:interview_master/core/utils/filter_text_formatter.dart';
+import 'package:interview_master/core/utils/cubits/data_cubit.dart';
+import 'package:interview_master/core/utils/formatters/filter_text_formatter.dart';
 import 'package:interview_master/data/enums/difficulty.dart';
 import 'package:interview_master/data/enums/direction.dart';
 import 'package:interview_master/features/profile/pages/statistics_page.dart';
 import 'package:interview_master/generated/l10n.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -36,7 +37,8 @@ class ProfilePage extends StatelessWidget {
           create: (context) => ProfileBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<Talker>(),
           )..add(GetProfile(userId: user?.id)),
         ),
         BlocProvider(create: (context) => FilterProfileCubit()),

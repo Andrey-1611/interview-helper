@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../generated/l10n.dart';
+import '../../../generated/l10n.dart';
 
 class TimeFormatter {
   static String time(Duration duration, BuildContext context) {

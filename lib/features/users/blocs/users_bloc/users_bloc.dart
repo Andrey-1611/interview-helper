@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:interview_master/core/utils/network_info.dart';
+import 'package:interview_master/core/utils/services/network_service.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../../data/repositories/local_repository.dart';
@@ -14,10 +14,15 @@ part 'users_state.dart';
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
-  final NetworkInfo _networkInfo;
+  final NetworkService _networkInfo;
+  final Talker _talker;
 
-  UsersBloc(this._remoteRepository, this._localRepository, this._networkInfo)
-    : super(UsersInitial()) {
+  UsersBloc(
+    this._remoteRepository,
+    this._localRepository,
+    this._networkInfo,
+    this._talker,
+  ) : super(UsersInitial()) {
     on<GetUser>(_getUser);
     on<GetUsers>(_getUsers);
     on<GetCurrentUser>(_getCurrentUser);
@@ -31,7 +36,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       return emit(UserSuccess(user: user!));
     } catch (e, st) {
       emit(UsersFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -45,7 +50,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       emit(UsersSuccess(users: users, currentUser: currentUser));
     } catch (e, st) {
       emit(UsersFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -64,7 +69,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           : emit(UserWithoutDirections());
     } catch (e, st) {
       emit(UsersFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 }

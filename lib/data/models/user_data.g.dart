@@ -21,7 +21,7 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       name: fields[1] as String,
       email: fields[2] as String,
       interviews: (fields[3] as List).cast<Interview>(),
-      directions: (fields[4] as List).cast<String>(),
+      directions: (fields[4] as List).cast<Direction>(),
     );
   }
 
@@ -65,7 +65,7 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
               .toList() ??
           const [],
       directions: (json['directions'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => $enumDecode(_$DirectionEnumMap, e))
               .toList() ??
           const [],
     );
@@ -75,5 +75,23 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
       'interviews': instance.interviews.map((e) => e.toJson()).toList(),
-      'directions': instance.directions,
+      'directions':
+          instance.directions.map((e) => _$DirectionEnumMap[e]!).toList(),
     };
+
+const _$DirectionEnumMap = {
+  Direction.flutter: 'flutter',
+  Direction.kotlin: 'kotlin',
+  Direction.swift: 'swift',
+  Direction.javascript: 'javascript',
+  Direction.python: 'python',
+  Direction.cpp: 'cpp',
+  Direction.java: 'java',
+  Direction.go: 'go',
+  Direction.git: 'git',
+  Direction.sql: 'sql',
+  Direction.typescript: 'typescript',
+  Direction.rust: 'rust',
+  Direction.devops: 'devops',
+  Direction.php: 'php',
+};

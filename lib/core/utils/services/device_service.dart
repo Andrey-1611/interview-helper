@@ -1,6 +1,6 @@
 import 'dart:ui' as info;
 
-class DeviceInfo {
+class DeviceService {
   Future<bool> getLanguage() async {
     final locale = info.PlatformDispatcher.instance.locale;
     final code = locale.languageCode;

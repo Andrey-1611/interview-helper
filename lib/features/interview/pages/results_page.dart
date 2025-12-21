@@ -4,14 +4,15 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_network_failure.dart';
 import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
-import 'package:interview_master/core/utils/data_cubit.dart';
-import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/utils/share_info.dart';
+import 'package:interview_master/core/utils/cubits/data_cubit.dart';
+import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/services/share_service.dart';
 import 'package:interview_master/data/models/interview_data.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../../core/utils/network_info.dart';
-import '../../../core/utils/stopwatch_info.dart';
-import '../../../core/utils/toast_helper.dart';
+import '../../../core/utils/services/network_service.dart';
+import '../../../core/utils/services/stopwatch_service.dart';
+import '../../../core/utils/helpers/toast_helper.dart';
 import '../../../data/models/interview_info.dart';
 import '../../../data/repositories/ai_repository.dart';
 import '../../../app/widgets/custom_interview_info.dart';
@@ -34,8 +35,9 @@ class ResultsPage extends StatelessWidget {
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
         GetIt.I<SettingsRepository>(),
-        GetIt.I<NetworkInfo>(),
-        GetIt.I<StopwatchInfo>(),
+        GetIt.I<NetworkService>(),
+        GetIt.I<StopwatchService>(),
+        GetIt.I<Talker>(),
       )..add(FinishInterview(interviewInfo: interviewInfo)),
       child: _ResultsInfo(interviewInfo: interviewInfo),
     );
@@ -96,7 +98,7 @@ class _ResultsPageView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () =>
-                GetIt.I<ShareInfo>().shareInterviewResults(interview, context),
+                GetIt.I<ShareService>().shareInterviewResults(interview, context),
             icon: Icon(Icons.share),
           ),
           IconButton(

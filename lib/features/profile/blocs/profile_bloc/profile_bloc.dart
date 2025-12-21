@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../../../core/utils/network_info.dart';
+import '../../../../core/utils/services/network_service.dart';
 import '../../../../data/repositories/local_repository.dart';
 import '../../../../data/repositories/remote_repository.dart';
 
@@ -15,10 +14,15 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
-  final NetworkInfo _networkInfo;
+  final NetworkService _networkInfo;
+  final Talker _talker;
 
-  ProfileBloc(this._remoteRepository, this._localRepository, this._networkInfo)
-    : super(ProfileInitial()) {
+  ProfileBloc(
+    this._remoteRepository,
+    this._localRepository,
+    this._networkInfo,
+    this._talker,
+  ) : super(ProfileInitial()) {
     on<GetProfile>(_getProfile);
     on<ChangeIsFavouriteInterview>(_changeIsFavouriteInterview);
     on<ChangeIsFavouriteQuestion>(_changeIsFavouriteQuestion);
@@ -39,7 +43,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       return emit(ProfileSuccess(user: user, interviews: interviews));
     } catch (e, st) {
       emit(ProfileFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -54,7 +58,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       return emit(ProfileSuccess(user: user, interviews: interviews));
     } catch (e, st) {
       emit(ProfileFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -69,7 +73,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       return emit(ProfileSuccess(user: user, interviews: interviews));
     } catch (e, st) {
       emit(ProfileFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 }

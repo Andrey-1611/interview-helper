@@ -133,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgot_password_change": MessageLookupByLibrary.simpleMessage(
       "Забыли пароль? Изменить пароль",
     ),
+    "general": MessageLookupByLibrary.simpleMessage("Общий"),
     "goal": MessageLookupByLibrary.simpleMessage("Цель"),
     "history": MessageLookupByLibrary.simpleMessage("История"),
     "interview": MessageLookupByLibrary.simpleMessage("Собеседование"),
@@ -166,7 +167,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Задач по данному фильтру нет",
     ),
     "no_tasks_yet": MessageLookupByLibrary.simpleMessage("Задач еще нет"),
+    "no_users_yet": MessageLookupByLibrary.simpleMessage(
+      "Пока нет пользователей",
+    ),
     "nothing_found": MessageLookupByLibrary.simpleMessage("Ничего не найдено"),
+    "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
     "or": MessageLookupByLibrary.simpleMessage("или"),
     "password": MessageLookupByLibrary.simpleMessage("Пароль"),
     "password_reset_sent": m5,
@@ -176,10 +181,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "progress": MessageLookupByLibrary.simpleMessage("Прогресс"),
     "question": MessageLookupByLibrary.simpleMessage("Вопрос: "),
     "questionN": m7,
+    "question_waiting": MessageLookupByLibrary.simpleMessage(
+      "Новый вопрос уже ждёт!",
+    ),
     "questions_count": m8,
     "questions_database": MessageLookupByLibrary.simpleMessage("База вопросов"),
     "rate_app": MessageLookupByLibrary.simpleMessage("Оценить приложение"),
     "rating": MessageLookupByLibrary.simpleMessage("Рейтинг"),
+    "ready_for_the_interview": MessageLookupByLibrary.simpleMessage(
+      "Готов к собеседованию?",
+    ),
     "resend_email": MessageLookupByLibrary.simpleMessage(
       "Отправить письмо повторно",
     ),

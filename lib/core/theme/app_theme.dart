@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 const _primary = Color(0xFF6366F1);
 const _darkCard = Color(0xFF2A2A2A);
 
+const _splashColor = Color(0xFF0E1525);
+
 const _hintColor = Color(0xFFB3B3B3);
 const _lightBackground = Color(0xFFE8EAED);
 const _darkBackground = Color(0xFF1E1E1E);
@@ -14,6 +16,7 @@ final darkTheme = ThemeData(
   inputDecorationTheme: _inputDecorationTheme(_darkCard),
   appBarTheme: _appBarTheme(_darkCard, Colors.white),
   listTileTheme: _listTileTheme,
+  splashColor: _splashColor,
   cardTheme: _cardTheme(_darkCard),
   cardColor: _darkCard,
   textTheme: _textTheme,
@@ -30,6 +33,7 @@ final darkTheme = ThemeData(
 final lightTheme = ThemeData(
   useMaterial3: true,
   primaryColor: _primary,
+  splashColor: _splashColor,
   inputDecorationTheme: _inputDecorationTheme(Colors.white),
   appBarTheme: _appBarTheme(Colors.white, Colors.black),
   listTileTheme: _listTileTheme,
