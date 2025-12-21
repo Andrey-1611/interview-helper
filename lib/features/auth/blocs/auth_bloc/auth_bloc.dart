@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
+import 'package:interview_master/core/utils/services/notifications_service.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../../../core/utils/network_info.dart';
+import '../../../../core/utils/services/network_service.dart';
 import '../../../../data/repositories/auth_repository.dart';
 import '../../../../data/repositories/local_repository.dart';
 import '../../../../data/repositories/remote_repository.dart';
@@ -17,14 +17,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
   final SettingsRepository _settingsRepository;
-  final NetworkInfo _networkInfo;
+  final NetworkService _networkService;
+  final Talker _talker;
 
   AuthBloc(
     this._authRepository,
     this._remoteRepository,
     this._localRepository,
     this._settingsRepository,
-    this._networkInfo,
+    this._networkService,
+    this._talker,
   ) : super(AuthInitial()) {
     on<SignIn>(_signIn);
     on<SignInWithGoogle>(_signInWithGoogle);
@@ -39,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _signIn(SignIn event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       final userId = await _authRepository.signIn(event.email, event.password);
       final emailVerified = await _authRepository.checkEmailVerified();
@@ -59,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           : emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -69,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       final googleUser = await _authRepository.signInWithGoogle();
       if (googleUser.name.isEmpty) {
@@ -92,35 +94,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
   Future<void> _signUp(SignUp event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.signUp(event.name, event.email, event.password);
       await _authRepository.sendEmailVerification();
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
   Future<void> _changeEmail(ChangeEmail event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.changeEmail(event.email, event.password);
       await _authRepository.sendEmailVerification();
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -130,13 +132,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.changePassword(event.email);
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -146,12 +148,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.sendEmailVerification();
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -161,7 +163,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       await _authRepository.watchEmailVerified();
       final user = await _authRepository.getUser();
@@ -171,14 +173,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return emit(AuthWithoutDirections());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
   Future<void> _signOut(SignOut event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final isConnected = await _networkInfo.isConnected;
+      final isConnected = await _networkService.isConnected;
       if (!isConnected) return emit(AuthNetworkFailure());
       final user = await _localRepository.getUser();
       final interviews = await _localRepository.getInterviews();
@@ -191,7 +193,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return emit(AuthSuccess());
     } catch (e, st) {
       emit(AuthFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 }

@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/data_cubit.dart';
+import 'package:interview_master/core/utils/cubits/data_cubit.dart';
+import 'package:interview_master/data/enums/direction.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_network_failure.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
-import '../../../core/utils/dialog_helper.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/helpers/dialog_helper.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -28,9 +30,13 @@ class RatingPage extends StatelessWidget {
       create: (context) => UsersBloc(
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
-        GetIt.I<NetworkInfo>(),
+        GetIt.I<NetworkService>(),
+        GetIt.I<Talker>(),
       )..add(GetUsers()),
-      child: DefaultTabController(length: 2, child: _RatingPageView()),
+      child: DefaultTabController(
+        length: Direction.values.length + 1,
+        child: _RatingPageView(),
+      ),
     );
   }
 }
@@ -44,6 +50,16 @@ class _RatingPageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(s.rating),
+        bottom: TabBar(
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
+          tabs: [
+            Tab(child: Text(s.general)),
+            ...Direction.values.map(
+              (direction) => Tab(child: Text(direction.name)),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             onPressed: () => context.push(AppRouterNames.settings),
@@ -61,35 +77,76 @@ class _UsersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPressed = context.read<UsersBloc>().add(GetUsers());
+    final usersBloc = context.read<UsersBloc>();
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
         if (state is UsersNetworkFailure) {
-          return CustomNetworkFailure(onPressed: () => onPressed);
+          return CustomNetworkFailure(
+            onPressed: () => usersBloc.add(GetUsers()),
+          );
         } else if (state is UsersFailure) {
-          return CustomUnknownFailure(onPressed: () => onPressed);
+          return CustomUnknownFailure(
+            onPressed: () => usersBloc.add(GetUsers()),
+          );
         } else if (state is UsersSuccess) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-              itemCount: state.users.length,
+          return TabBarView(
+            children: [
+              _DirectionTab(
+                users: UserData.filterUsers(state.users),
+                currentUser: state.currentUser,
+              ),
+              ...Direction.values.map(
+                (direction) => _DirectionTab(
+                  users: UserData.filterUsersByDirection(
+                    state.users,
+                    direction,
+                  ),
+                  currentUser: state.currentUser,
+                ),
+              ),
+            ],
+          );
+        }
+        return const CustomLoadingIndicator();
+      },
+    );
+  }
+}
+
+class _DirectionTab extends StatelessWidget {
+  final List<UserData> users;
+  final UserData currentUser;
+
+  const _DirectionTab({required this.users, required this.currentUser});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: users.isEmpty
+          ? Center(
+              child: Text(
+                s.no_users_yet,
+                style: theme.textTheme.displayLarge,
+              ),
+            )
+          : ListView.builder(
+              itemCount: users.length,
               itemBuilder: (context, index) {
-                final filteredUser = state.users[index];
-                final user = state.users.firstWhere(
+                final filteredUser = users[index];
+                final user = users.firstWhere(
                   (user) => user.id == filteredUser.id,
                 );
                 return _UserCard(
                   user: user,
                   filteredUser: filteredUser,
-                  currentUser: state.currentUser,
+                  currentUser: currentUser,
                   index: index,
                 );
               },
             ),
-          );
-        }
-        return const CustomLoadingIndicator();
-      },
     );
   }
 }

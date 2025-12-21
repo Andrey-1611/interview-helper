@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../generated/l10n.dart';
+import '../../../generated/l10n.dart';
 
 class ToastHelper {
   static void _showToast(String msg, BuildContext context) {

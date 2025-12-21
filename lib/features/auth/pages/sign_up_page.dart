@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
@@ -48,7 +49,8 @@ class _SignUpPageState extends State<SignUpPage> {
         GetIt.I<RemoteRepository>(),
         GetIt.I<LocalRepository>(),
         GetIt.I<SettingsRepository>(),
-        GetIt.I<NetworkInfo>(),
+        GetIt.I<NetworkService>(),
+        GetIt.I<Talker>(),
       ),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {

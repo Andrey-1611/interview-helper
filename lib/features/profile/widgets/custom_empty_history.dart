@@ -20,8 +20,8 @@ class CustomEmptyHistory extends StatelessWidget {
           isCurrentUser
               ? TextButton(
                   onPressed: () {
-                    StatefulNavigationShell.of(context).goBranch(0);
                     context.push(AppRouterNames.initial);
+                    StatefulNavigationShell.of(context).goBranch(0);
                   },
                   child: Text(s.take_interview),
                 )

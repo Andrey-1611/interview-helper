@@ -1058,6 +1058,51 @@ class S {
       args: [],
     );
   }
+
+  /// `Notifications`
+  String get notifications {
+    return Intl.message(
+      'Notifications',
+      name: 'notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `General`
+  String get general {
+    return Intl.message('General', name: 'general', desc: '', args: []);
+  }
+
+  /// `Ready for the interview?`
+  String get ready_for_the_interview {
+    return Intl.message(
+      'Ready for the interview?',
+      name: 'ready_for_the_interview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new question is already waiting for you!`
+  String get question_waiting {
+    return Intl.message(
+      'A new question is already waiting for you!',
+      name: 'question_waiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No users yet`
+  String get no_users_yet {
+    return Intl.message(
+      'No users yet',
+      name: 'no_users_yet',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

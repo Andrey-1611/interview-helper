@@ -4,10 +4,10 @@ import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/generated/l10n.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ShareInfo {
+class ShareService {
   final SharePlus _sharePlus;
 
-  ShareInfo(this._sharePlus);
+  ShareService(this._sharePlus);
 
   void shareInterviewResults(InterviewData interview, BuildContext context) {
     final s = S.of(context);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/utils/dialog_helper.dart';
+import '../../core/utils/helpers/dialog_helper.dart';
 import '../../generated/l10n.dart';
 
 class CustomFilterButton extends StatelessWidget {

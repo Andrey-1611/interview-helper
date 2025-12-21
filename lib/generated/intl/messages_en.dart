@@ -137,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgot_password_change": MessageLookupByLibrary.simpleMessage(
       "Forgot password? Change password",
     ),
+    "general": MessageLookupByLibrary.simpleMessage("General"),
     "goal": MessageLookupByLibrary.simpleMessage("Goal"),
     "history": MessageLookupByLibrary.simpleMessage("History"),
     "interview": MessageLookupByLibrary.simpleMessage("Interview"),
@@ -170,7 +171,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No tasks for this filter",
     ),
     "no_tasks_yet": MessageLookupByLibrary.simpleMessage("No tasks yet"),
+    "no_users_yet": MessageLookupByLibrary.simpleMessage("No users yet"),
     "nothing_found": MessageLookupByLibrary.simpleMessage("Nothing found"),
+    "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "or": MessageLookupByLibrary.simpleMessage("or"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "password_reset_sent": m5,
@@ -180,12 +183,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "progress": MessageLookupByLibrary.simpleMessage("Progress"),
     "question": MessageLookupByLibrary.simpleMessage("Question: "),
     "questionN": m7,
+    "question_waiting": MessageLookupByLibrary.simpleMessage(
+      "A new question is already waiting for you!",
+    ),
     "questions_count": m8,
     "questions_database": MessageLookupByLibrary.simpleMessage(
       "Questions database",
     ),
     "rate_app": MessageLookupByLibrary.simpleMessage("Rate app"),
     "rating": MessageLookupByLibrary.simpleMessage("Rating"),
+    "ready_for_the_interview": MessageLookupByLibrary.simpleMessage(
+      "Ready for the interview?",
+    ),
     "resend_email": MessageLookupByLibrary.simpleMessage("Resend email"),
     "reset_filter": MessageLookupByLibrary.simpleMessage("Reset filter"),
     "reset_interview_confirmation": MessageLookupByLibrary.simpleMessage(

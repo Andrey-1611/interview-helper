@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:interview_master/core/constants/hive_data.dart';
@@ -21,11 +22,14 @@ import '../../data/models/user_data.dart';
 import 'firebase_options.dart';
 
 class AppInitializer {
+  static final _getIt = GetIt.I;
+
   static Future<void> init() async {
     await _initTalker();
     await _initFirebase();
     await _initHive();
     await _loadApi();
+    await _initNotifications();
   }
 
   static Future<void> _initFirebase() async {
@@ -55,18 +59,26 @@ class AppInitializer {
   }
 
   static Future<void> _initTalker() async {
-    final talker = GetIt.I<Talker>();
+    final talker = _getIt<Talker>();
     FlutterError.onError = (details) =>
         talker.handle(details.exception, details.stack);
     Bloc.observer = TalkerBlocObserver(
       talker: talker,
       settings: TalkerBlocLoggerSettings(printStateFullData: false),
     );
-    GetIt.I<Dio>().interceptors.add(
+    _getIt<Dio>().interceptors.add(
       TalkerDioLogger(
         talker: talker,
         settings: TalkerDioLoggerSettings(printResponseData: false),
       ),
     );
+  }
+
+  static Future<void> _initNotifications() async {
+    final settings = const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(),
+    );
+    await _getIt<FlutterLocalNotificationsPlugin>().initialize(settings);
   }
 }

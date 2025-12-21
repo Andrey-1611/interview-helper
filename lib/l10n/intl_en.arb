@@ -129,5 +129,10 @@
   "score": "Score",
   "russian": "Russian",
   "english": "English",
-  "choose_language": "Choose language"
+  "choose_language": "Choose language",
+  "notifications": "Notifications",
+  "general": "General",
+  "ready_for_the_interview": "Ready for the interview?",
+  "question_waiting": "A new question is already waiting for you!",
+  "no_users_yet": "No users yet"
 }

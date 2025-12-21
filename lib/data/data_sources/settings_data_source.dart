@@ -9,41 +9,54 @@ class SettingsDataSource implements SettingsRepository {
 
   @override
   Future<void> setTheme(bool isDark) async {
-    await _sharedPreferences.setBool(SharedPrefsData.themeKey, isDark);
+    await _sharedPreferences.setBool(SharedPrefsKeys.themeKey, isDark);
   }
 
   @override
   Future<void> setVoice(bool isEnable) async {
-    await _sharedPreferences.setBool(SharedPrefsData.voiceKey, isEnable);
+    await _sharedPreferences.setBool(SharedPrefsKeys.voiceKey, isEnable);
   }
 
   @override
   Future<void> setLanguage(bool isRussian) async {
-    await _sharedPreferences.setBool(SharedPrefsData.languageKey, isRussian);
+    await _sharedPreferences.setBool(SharedPrefsKeys.languageKey, isRussian);
   }
 
   @override
   bool isDarkTheme() {
-    final theme = _sharedPreferences.getBool(SharedPrefsData.themeKey);
+    final theme = _sharedPreferences.getBool(SharedPrefsKeys.themeKey);
     return theme ?? true;
   }
 
   @override
   bool isVoiceEnable() {
-    final voice = _sharedPreferences.getBool(SharedPrefsData.voiceKey);
+    final voice = _sharedPreferences.getBool(SharedPrefsKeys.voiceKey);
     return voice ?? true;
   }
 
   @override
   bool? isRussianLanguage() {
-    return _sharedPreferences.getBool(SharedPrefsData.languageKey);
+    return _sharedPreferences.getBool(SharedPrefsKeys.languageKey);
   }
 
   @override
-  bool isAuth() => _sharedPreferences.getBool(SharedPrefsData.authKey) ?? false;
+  bool isAuth() => _sharedPreferences.getBool(SharedPrefsKeys.authKey) ?? false;
 
   @override
   Future<void> setAuth(bool isAuth) async {
-    await _sharedPreferences.setBool(SharedPrefsData.authKey, isAuth);
+    await _sharedPreferences.setBool(SharedPrefsKeys.authKey, isAuth);
+  }
+
+  @override
+  bool? isNotificationsEnable() {
+    return _sharedPreferences.getBool(SharedPrefsKeys.notificationsKey);
+  }
+
+  @override
+  Future<void> setNotifications(bool isEnable) async {
+    await _sharedPreferences.setBool(
+      SharedPrefsKeys.notificationsKey,
+      isEnable,
+    );
   }
 }

@@ -7,6 +7,8 @@ abstract interface class SettingsRepository {
 
   Future<void> setAuth(bool isAuth);
 
+  Future<void> setNotifications(bool isEnable);
+
   bool isDarkTheme();
 
   bool isVoiceEnable();
@@ -14,4 +16,6 @@ abstract interface class SettingsRepository {
   bool? isRussianLanguage();
 
   bool isAuth();
+
+  bool? isNotificationsEnable();
 }

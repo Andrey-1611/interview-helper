@@ -25,7 +25,7 @@ final class CreateTask extends TrackerEvent {
 }
 
 final class SetDirections extends TrackerEvent {
-  final List<String> directions;
+  final List<Direction> directions;
 
   const SetDirections({required this.directions});
 

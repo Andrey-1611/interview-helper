@@ -4,15 +4,16 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
-import 'package:interview_master/core/utils/filter_text_formatter.dart';
-import 'package:interview_master/core/utils/time_formatter.dart';
+import 'package:interview_master/core/utils/formatters/filter_text_formatter.dart';
+import 'package:interview_master/core/utils/formatters/time_formatter.dart';
 import 'package:interview_master/data/enums/difficulty.dart';
 import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/enums/direction.dart';
 import '../../../data/models/user_data.dart';
 import '../../../data/repositories/local_repository.dart';
@@ -33,7 +34,8 @@ class AnalysisPage extends StatelessWidget {
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<Talker>(),
           )..add(GetUser()),
         ),
         BlocProvider(create: (context) => FilterAnalysisCubit()),

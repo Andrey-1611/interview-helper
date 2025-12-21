@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:interview_master/data/models/interview_data.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../../../core/utils/network_info.dart';
-import '../../../../core/utils/stopwatch_info.dart';
+import '../../../../core/utils/services/network_service.dart';
+import '../../../../core/utils/services/stopwatch_service.dart';
 import '../../../../data/models/interview_info.dart';
 import '../../../../data/models/user_data.dart';
 import '../../../../data/repositories/ai_repository.dart';
@@ -21,8 +20,9 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
   final RemoteRepository _remoteRepository;
   final LocalRepository _localRepository;
   final SettingsRepository _settingsRepository;
-  final NetworkInfo _networkInfo;
-  final StopwatchInfo _stopwatchInfo;
+  final NetworkService _networkInfo;
+  final StopwatchService _stopwatchInfo;
+  final Talker _talker;
 
   InterviewBloc(
     this._aiRepository,
@@ -31,6 +31,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
     this._settingsRepository,
     this._networkInfo,
     this._stopwatchInfo,
+    this._talker,
   ) : super(InterviewInitial()) {
     on<StartInterview>(_startInterview);
     on<GetQuestions>(_getQuestions);
@@ -50,7 +51,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
       emit(InterviewStartSuccess());
     } catch (e, st) {
       emit(InterviewFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -89,7 +90,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
       }
     } catch (e, st) {
       emit(InterviewFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 
@@ -115,7 +116,7 @@ class InterviewBloc extends Bloc<InterviewEvent, InterviewState> {
       emit(InterviewFinishSuccess(interview: interview));
     } catch (e, st) {
       emit(InterviewFailure());
-      GetIt.I<Talker>().handle(e, st);
+      _talker.handle(e, st);
     }
   }
 }

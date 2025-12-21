@@ -4,16 +4,17 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
-import 'package:interview_master/core/utils/settings_cubit/settings_cubit.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
-import 'package:interview_master/core/utils/url_launch.dart';
+import 'package:interview_master/core/utils/cubits/settings_cubit.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
+import 'package:interview_master/core/utils/services/url_service.dart';
 import 'package:interview_master/data/repositories/auth_repository.dart';
 import 'package:interview_master/data/repositories/settings_repository.dart';
 import 'package:interview_master/features/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/widgets/custom_unknown_failure.dart';
-import '../../../core/utils/dialog_helper.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/helpers/dialog_helper.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/repositories/local_repository.dart';
 import '../../../data/repositories/remote_repository.dart';
 import '../../../generated/l10n.dart';
@@ -30,7 +31,8 @@ class SettingsPage extends StatelessWidget {
           create: (context) => UsersBloc(
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<Talker>(),
           )..add(GetUser()),
         ),
         BlocProvider(
@@ -39,7 +41,8 @@ class SettingsPage extends StatelessWidget {
             GetIt.I<RemoteRepository>(),
             GetIt.I<LocalRepository>(),
             GetIt.I<SettingsRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+            GetIt.I<Talker>(),
           ),
         ),
       ],
@@ -76,43 +79,35 @@ class _SettingsPageView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _UserInfo(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _SettingsToggleCard(
-                  title: s.voice,
-                  value: settings.state.voice,
-                  onChanged: (_) => settings.setVoice(!settings.state.voice),
-                ),
-                _SettingsToggleCard(
-                  title: s.russian_language,
-                  value: settings.state.language,
-                  onChanged: (_) =>
-                      settings.setLanguage(!settings.state.language),
-                ),
-                _SettingsToggleCard(
-                  title: s.dark_theme,
-                  value: settings.state.theme,
-                  onChanged: (_) => settings.setTheme(!settings.state.theme),
-                ),
-                _SettingsCard(
-                  title: s.rate_app,
-                  onTap: () => GetIt.I<UrlLaunch>().openAppInRuStore(),
-                  icon: Icon(Icons.favorite, color: theme.primaryColor),
-                ),
-                _SettingsCard(
-                  title: s.sign_out,
-                  onTap: () => DialogHelper.showCustomDialog(
-                    dialog: _SignOutDialog(authBloc: context.read<AuthBloc>()),
-                    context: context,
-                  ),
-                  icon: Icon(Icons.logout, color: theme.colorScheme.error),
-                ),
-              ],
+            _SettingsToggleCard(
+              title: s.voice,
+              value: settings.state.voice,
+              onChanged: (_) => settings.setVoice(!settings.state.voice),
             ),
+            _SettingsToggleCard(
+              title: s.russian_language,
+              value: settings.state.language,
+              onChanged: (_) => settings.setLanguage(!settings.state.language),
+            ),
+            _SettingsToggleCard(
+              title: s.dark_theme,
+              value: settings.state.theme,
+              onChanged: (_) => settings.setTheme(!settings.state.theme),
+            ),
+            _SettingsToggleCard(
+              title: s.notifications,
+              value: settings.state.notifications,
+              onChanged: (_) =>
+                  settings.setNotifications(!settings.state.notifications),
+            ),
+            _SettingsCard(
+              title: s.rate_app,
+              onTap: () => GetIt.I<UrlService>().openAppInRuStore(),
+              icon: Icon(Icons.favorite, color: theme.primaryColor),
+            ),
+            const Spacer(),
             Text(
               '${appInfo.appName}, ${appInfo.version}+${appInfo.buildNumber}',
             ),
@@ -129,7 +124,6 @@ class _UserInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final size = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
@@ -139,24 +133,21 @@ class _UserInfo extends StatelessWidget {
           );
         } else if (state is UserSuccess) {
           return Card(
-            child: SizedBox(
-              width: double.infinity,
-              height: size.height * 0.12,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(s.user, style: theme.textTheme.displayMedium),
-                  SizedBox(height: size.height * 0.01),
-                  Text(
-                    s.user_name(state.user.name),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  Text(
-                    s.user_email(state.user.email),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ],
+            child: ListTile(
+              title: Text(
+                s.user_name(state.user.name),
+                style: theme.textTheme.displaySmall,
+              ),
+              subtitle: Text(
+                s.user_email(state.user.email),
+                style: theme.textTheme.bodyMedium,
+              ),
+              trailing: IconButton(
+                onPressed: () => DialogHelper.showCustomDialog(
+                  dialog: _SignOutDialog(authBloc: context.read<AuthBloc>()),
+                  context: context,
+                ),
+                icon: Icon(Icons.logout, color: theme.colorScheme.error),
               ),
             ),
           );

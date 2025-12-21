@@ -5,19 +5,20 @@ import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
-import 'package:interview_master/core/utils/data_cubit.dart';
-import 'package:interview_master/core/utils/dialog_helper.dart';
-import 'package:interview_master/core/utils/filter_text_formatter.dart';
-import 'package:interview_master/core/utils/toast_helper.dart';
+import 'package:interview_master/core/utils/cubits/data_cubit.dart';
+import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
+import 'package:interview_master/core/utils/formatters/filter_text_formatter.dart';
+import 'package:interview_master/core/utils/helpers/toast_helper.dart';
 import 'package:interview_master/features/tracker/blocs/selector_subit/selector_cubit.dart';
 import 'package:interview_master/features/tracker/blocs/tracker_bloc/tracker_bloc.dart';
 import 'package:interview_master/generated/l10n.dart';
 import 'package:intl/intl.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
 import '../../../app/widgets/custom_dropdown_menu.dart';
 import '../../../app/widgets/custom_filter_button.dart';
-import '../../../core/utils/network_info.dart';
+import '../../../core/utils/services/network_service.dart';
 import '../../../data/enums/direction.dart';
 import '../../../data/enums/task_type.dart';
 import '../../../data/models/task.dart';
@@ -37,7 +38,8 @@ class TrackerPage extends StatelessWidget {
           create: (context) => TrackerBloc(
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
-            GetIt.I<NetworkInfo>(),
+            GetIt.I<NetworkService>(),
+              GetIt.I<Talker>()
           )..add(GetTasks()),
         ),
         BlocProvider(create: (context) => FilterTasksCubit()),
