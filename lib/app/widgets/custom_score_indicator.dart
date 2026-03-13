@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 
 class CustomScoreIndicator extends StatelessWidget {
   final int score;
@@ -16,7 +17,7 @@ class CustomScoreIndicator extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           CircularProgressIndicator(value: score / 100),
-          Text('$score %'),
+          Text(score.percent),
         ],
       ),
     );

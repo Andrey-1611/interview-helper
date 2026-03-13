@@ -200,6 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_interview_confirmation": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to reset the interview?",
     ),
+    "results_data": MessageLookupByLibrary.simpleMessage("Results Data"),
     "russian": MessageLookupByLibrary.simpleMessage("Russian"),
     "russian_language": MessageLookupByLibrary.simpleMessage(
       "Russain language",
@@ -238,6 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "time": MessageLookupByLibrary.simpleMessage("Time"),
     "timeT": m11,
+    "time_data": MessageLookupByLibrary.simpleMessage("Time Data"),
     "total_score": MessageLookupByLibrary.simpleMessage("Total score"),
     "total_time": MessageLookupByLibrary.simpleMessage("Total time"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),

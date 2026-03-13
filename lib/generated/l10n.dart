@@ -1103,6 +1103,21 @@ class S {
       args: [],
     );
   }
+
+  /// `Results Data`
+  String get results_data {
+    return Intl.message(
+      'Results Data',
+      name: 'results_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time Data`
+  String get time_data {
+    return Intl.message('Time Data', name: 'time_data', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -134,5 +134,7 @@
   "general": "General",
   "ready_for_the_interview": "Ready for the interview?",
   "question_waiting": "A new question is already waiting for you!",
-  "no_users_yet": "No users yet"
+  "no_users_yet": "No users yet",
+  "results_data": "Results Data",
+  "time_data": "Time Data"
 }

@@ -198,6 +198,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_interview_confirmation": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите сбросить собседование?",
     ),
+    "results_data": MessageLookupByLibrary.simpleMessage(
+      "Данные о результатах",
+    ),
     "russian": MessageLookupByLibrary.simpleMessage("Русский"),
     "russian_language": MessageLookupByLibrary.simpleMessage("Русский язык"),
     "saving_data": MessageLookupByLibrary.simpleMessage("Сохранение данных..."),
@@ -236,6 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "time": MessageLookupByLibrary.simpleMessage("Время"),
     "timeT": m11,
+    "time_data": MessageLookupByLibrary.simpleMessage("Данные о времени"),
     "total_score": MessageLookupByLibrary.simpleMessage(
       "Общее количество очков",
     ),

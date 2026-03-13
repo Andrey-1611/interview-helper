@@ -140,7 +140,7 @@ class _UserInfo extends StatelessWidget {
               ),
               subtitle: Text(
                 s.user_email(state.user.email),
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.displaySmall,
               ),
               trailing: IconButton(
                 onPressed: () => DialogHelper.showCustomDialog(

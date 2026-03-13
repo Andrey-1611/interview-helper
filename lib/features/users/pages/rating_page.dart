@@ -52,8 +52,8 @@ class _RatingPageView extends StatelessWidget {
         title: Text(s.rating),
         bottom: TabBar(
           isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          indicatorSize: TabBarIndicatorSize.tab,
+          tabAlignment: .start,
+          indicatorSize: .tab,
           dividerColor: Colors.transparent,
           tabs: [
             Tab(child: Text(s.general)),
@@ -126,13 +126,10 @@ class _DirectionTab extends StatelessWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const .all(16.0),
       child: users.isEmpty
           ? Center(
-              child: Text(
-                s.no_users_yet,
-                style: theme.textTheme.displayLarge,
-              ),
+              child: Text(s.no_users_yet, style: theme.textTheme.displayLarge),
             )
           : ListView.builder(
               itemCount: users.length,
@@ -186,10 +183,7 @@ class _UserCard extends StatelessWidget {
                 context: context,
               )
             : null,
-        leading: Text(
-          '${index + 1}',
-          style: Theme.of(context).textTheme.displayMedium,
-        ),
+        leading: Text('${index + 1}', style: theme.textTheme.displayMedium),
         title: Text(
           isCurrentUser ? s.you : user.name,
           style: theme.textTheme.displaySmall,

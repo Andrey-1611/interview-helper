@@ -14,11 +14,11 @@ class CustomUserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const .symmetric(horizontal: 16.0, vertical: 8.0),
       child: ListView(
         children: [
           InfoBloc(
-            title: 'Данные о результатах',
+            title: s.results_data,
             children: [
               InfoRow(
                 title: s.directions,
@@ -29,12 +29,12 @@ class CustomUserInfo extends StatelessWidget {
                 value: user.totalInterviews.toString(),
               ),
               InfoRow(title: s.total_score, value: user.totalScore.toString()),
-              InfoRow(title: s.average_score, value: '${user.averageScore} % '),
-              InfoRow(title: s.best_score, value: '${user.bestScore} %'),
+              InfoRow(title: s.average_score, value: user.averageScore.percent),
+              InfoRow(title: s.best_score, value: user.bestScore.percent),
             ],
           ),
           InfoBloc(
-            title: 'Данные о времени',
+            title: s.time_data,
             children: [
               InfoRow(title: s.total_time, value: user.totalDuration.time),
               InfoRow(title: s.average_time, value: user.averageDuration.time),

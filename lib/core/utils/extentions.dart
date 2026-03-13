@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../generated/l10n.dart';
@@ -21,4 +22,14 @@ extension DateFormatter on DateTime {
   String get hourFormat => DateFormat('dd.MM.yyyy HH:mm').format(this);
 
   String get dayFormat => DateFormat('dd.MM.yyyy').format(this);
+}
+
+extension ContextX on BuildContext {
+  ThemeData get theme => Theme.of(this);
+
+  S get s => S.of(this);
+}
+
+extension PriceFormatter on int {
+  String get percent => '$this %';
 }

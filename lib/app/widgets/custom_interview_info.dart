@@ -13,11 +13,11 @@ class CustomInterviewInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: .center,
       children: [
         _MainResultPanel(
           data:
-              '${interview.direction}, ${interview.difficulty}, ${interview.score} %',
+              '${interview.direction}, ${interview.difficulty}, ${interview.score.percent}',
           duration: s.timeT(interview.duration.time),
         ),
         const SizedBox(height: 20),
