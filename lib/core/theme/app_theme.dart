@@ -21,7 +21,7 @@ final darkTheme = ThemeData(
   cardColor: _darkCard,
   textTheme: _textTheme,
   switchTheme: _switchTheme,
-  bottomNavigationBarTheme: _bottomNavigationBarTheme(_darkCard),
+  navigationBarTheme: _navigationBarTheme(_darkCard, Colors.white),
   textButtonTheme: _textButtonTheme,
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _darkBackground,
@@ -41,7 +41,7 @@ final lightTheme = ThemeData(
   cardColor: _darkCard,
   textTheme: _textTheme,
   switchTheme: _switchTheme,
-  bottomNavigationBarTheme: _bottomNavigationBarTheme(Colors.white),
+  navigationBarTheme: _navigationBarTheme(Colors.white, Colors.black),
   textButtonTheme: _textButtonTheme,
   elevatedButtonTheme: _elevatedButtonTheme,
   scaffoldBackgroundColor: _lightBackground,
@@ -52,13 +52,22 @@ final lightTheme = ThemeData(
 );
 
 final _textTheme = TextTheme(
-  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 60.sp),
-  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 45.sp),
-  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 27.sp),
-  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 22.sp),
-  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
-  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 17.sp),
-  bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp),
+  titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 56.sp),
+  titleMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 42.sp),
+  displayLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.sp),
+  displayMedium: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.sp),
+  displaySmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
+  bodyLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp),
+  bodyMedium: TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    color: _hintColor,
+  ),
+  bodySmall: TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    color: _hintColor,
+  ),
   labelLarge: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.sp),
 );
 
@@ -74,14 +83,19 @@ InputDecorationTheme _inputDecorationTheme(Color color) => InputDecorationTheme(
 );
 
 final _listTileTheme = ListTileThemeData(
-  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+  contentPadding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 8.sp),
+  subtitleTextStyle: TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    color: _hintColor,
+  ),
 );
 
 CardThemeData _cardTheme(Color color) => CardThemeData(
   color: color,
-  margin: EdgeInsets.all(8.0),
+  margin: EdgeInsets.all(8.sp),
   shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(8.0),
+    borderRadius: BorderRadius.circular(8.sp),
     side: BorderSide.none,
   ),
 );
@@ -90,23 +104,18 @@ AppBarTheme _appBarTheme(Color color, Color titleColor) => AppBarTheme(
   centerTitle: true,
   backgroundColor: color,
   titleTextStyle: TextStyle(
-    fontSize: 28.sp,
+    fontSize: 26.sp,
     fontWeight: FontWeight.bold,
     color: titleColor,
   ),
   surfaceTintColor: Colors.transparent,
 );
 
-BottomNavigationBarThemeData _bottomNavigationBarTheme(Color color) =>
-    BottomNavigationBarThemeData(
+NavigationBarThemeData _navigationBarTheme(Color color, Color iconColor) =>
+    NavigationBarThemeData(
       backgroundColor: color,
-      selectedItemColor: _primary,
-      type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: TextStyle(fontSize: 12.sp),
-      selectedIconTheme: IconThemeData(size: 26),
-      unselectedLabelStyle: TextStyle(fontSize: 10.sp),
-      showSelectedLabels: true,
-      showUnselectedLabels: false,
+      indicatorColor: _primary,
+      iconTheme: WidgetStateProperty.all(IconThemeData(color: iconColor)),
     );
 
 final _textButtonTheme = TextButtonThemeData(

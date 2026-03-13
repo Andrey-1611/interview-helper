@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import 'package:interview_master/data/models/task.dart';
-import 'package:intl/intl.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import '../../../generated/l10n.dart';
 
@@ -32,14 +32,12 @@ class TaskPage extends StatelessWidget {
             _DetailItem(
               leading: Icon(Icons.schedule),
               title: s.created,
-              value: DateFormat('dd.MM.yyyy HH:mm').format(task.createdAt),
+              value: task.createdAt.hourFormat,
             ),
             _DetailItem(
               leading: Icon(Icons.check_circle),
               title: s.created,
-              value: task.isCompleted
-                  ? DateFormat('dd.MM.yyyy HH:mm').format(task.completedAt!)
-                  : '?',
+              value: task.isCompleted ? task.completedAt!.hourFormat : '?',
             ),
             _DetailItem(
               leading: Icon(Icons.category),

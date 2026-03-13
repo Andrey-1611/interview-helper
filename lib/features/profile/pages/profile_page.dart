@@ -139,6 +139,8 @@ class _ProfileAppBar extends StatelessWidget {
           ),
         ),
         TabBar(
+          indicatorSize: TabBarIndicatorSize.tab,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(text: s.statistics),
             Tab(text: s.history),

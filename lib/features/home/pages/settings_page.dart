@@ -53,10 +53,10 @@ class SettingsPage extends StatelessWidget {
             context.pushReplacement(AppRouterNames.signIn);
           } else if (state is AuthNetworkFailure) {
             context.pop();
-            ToastHelper.networkError(context);
+            ToastHelper.networkError();
           } else if (state is AuthFailure) {
             context.pop();
-            ToastHelper.unknownError(context);
+            ToastHelper.unknownError();
           }
         },
         child: _SettingsPageView(),

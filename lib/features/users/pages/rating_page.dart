@@ -53,6 +53,8 @@ class _RatingPageView extends StatelessWidget {
         bottom: TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
+          indicatorSize: TabBarIndicatorSize.tab,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(child: Text(s.general)),
             ...Direction.values.map(

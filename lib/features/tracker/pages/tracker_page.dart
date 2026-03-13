@@ -6,13 +6,13 @@ import 'package:interview_master/app/widgets/custom_loading_indicator.dart';
 import 'package:interview_master/app/widgets/custom_score_indicator.dart';
 import 'package:interview_master/app/widgets/custom_unknown_failure.dart';
 import 'package:interview_master/core/utils/cubits/data_cubit.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import 'package:interview_master/core/utils/helpers/dialog_helper.dart';
 import 'package:interview_master/core/utils/formatters/filter_text_formatter.dart';
 import 'package:interview_master/core/utils/helpers/toast_helper.dart';
 import 'package:interview_master/features/tracker/blocs/selector_subit/selector_cubit.dart';
 import 'package:interview_master/features/tracker/blocs/tracker_bloc/tracker_bloc.dart';
 import 'package:interview_master/generated/l10n.dart';
-import 'package:intl/intl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_button.dart';
@@ -39,7 +39,7 @@ class TrackerPage extends StatelessWidget {
             GetIt.I<LocalRepository>(),
             GetIt.I<RemoteRepository>(),
             GetIt.I<NetworkService>(),
-              GetIt.I<Talker>()
+            GetIt.I<Talker>(),
           )..add(GetTasks()),
         ),
         BlocProvider(create: (context) => FilterTasksCubit()),
@@ -137,7 +137,7 @@ class _TasksList extends StatelessWidget {
     return BlocConsumer<TrackerBloc, TrackerState>(
       listener: (context, state) {
         if (state is TrackerNetworkFailure) {
-          ToastHelper.networkError(context);
+          ToastHelper.networkError();
         }
       },
       builder: (context, state) {
@@ -191,9 +191,7 @@ class _TasksListView extends StatelessWidget {
               score: task.progress,
               height: size.height * 0.055,
             ),
-            title: Text(
-              '${task.direction}, ${DateFormat('dd/MM/yyyy').format(task.createdAt)}',
-            ),
+            title: Text('${task.direction}, ${task.createdAt.hourFormat}'),
             subtitle: Text(
               '${task.targetValue} ${task.type.localizedWord(task.targetValue, s)}',
             ),
@@ -383,7 +381,7 @@ class _CreateTaskDialog extends StatelessWidget {
       selectorCubit.reset();
       context.pop();
     } else {
-      ToastHelper.taskSelectorError(context);
+      ToastHelper.taskSelectorError();
     }
   }
 }

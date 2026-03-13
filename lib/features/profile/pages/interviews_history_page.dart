@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import 'package:interview_master/features/profile/blocs/profile_bloc/profile_bloc.dart';
-import 'package:intl/intl.dart';
 import '../../../app/router/app_router_names.dart';
 import '../../../app/widgets/custom_loading_indicator.dart';
 import '../../../app/widgets/custom_score_indicator.dart';
@@ -90,10 +90,7 @@ class _InterviewCard extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(interview.date),
-                style: theme.textTheme.bodyMedium,
-              ),
+              Text(interview.date.hourFormat, style: theme.textTheme.bodySmall),
             ],
           ),
           trailing: isCurrentUser

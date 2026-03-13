@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_master/app/widgets/custom_question_card.dart';
-import 'package:interview_master/core/utils/formatters/time_formatter.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import '../../data/models/interview_data.dart';
 import '../../generated/l10n.dart';
 
@@ -18,7 +18,7 @@ class CustomInterviewInfo extends StatelessWidget {
         _MainResultPanel(
           data:
               '${interview.direction}, ${interview.difficulty}, ${interview.score} %',
-          duration: s.timeT(TimeFormatter.time(interview.duration, context)),
+          duration: s.timeT(interview.duration.time),
         ),
         const SizedBox(height: 20),
         Expanded(

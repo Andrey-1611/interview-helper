@@ -12,20 +12,17 @@ class HomePage extends StatelessWidget {
     final s = S.of(context);
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(index),
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: s.interview),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: s.profile,
-          ),
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: navigationShell.goBranch,
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.chat), label: s.interview),
+          NavigationDestination(icon: Icon(Icons.bar_chart), label: s.profile),
+          NavigationDestination(
             icon: Icon(Icons.workspace_premium),
             label: s.tracker,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: s.rating),
+          NavigationDestination(icon: Icon(Icons.star), label: s.rating),
         ],
       ),
     );
