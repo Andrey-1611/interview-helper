@@ -2,10 +2,10 @@ name: interview_master
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.5.0+20
+version: 2.5.1+21
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.10.0
 
 dependencies:
   flutter:

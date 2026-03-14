@@ -128,11 +128,11 @@ class _InterviewButton extends StatelessWidget {
     return BlocListener<InterviewBloc, InterviewState>(
       listener: (context, state) {
         if (state is InterviewAttemptsFailure) {
-          ToastHelper.attemptsError(context);
+          ToastHelper.attemptsError();
         } else if (state is InterviewNetworkFailure) {
-          ToastHelper.networkError(context);
+          ToastHelper.networkError();
         } else if (state is InterviewFailure) {
-          ToastHelper.unknownError(context);
+          ToastHelper.unknownError();
         } else if (state is InterviewStartSuccess) {
           context.push(
             AppRouterNames.interview,
@@ -152,7 +152,7 @@ class _InterviewButton extends StatelessWidget {
               form.language != null) {
             return context.read<InterviewBloc>().add(StartInterview());
           }
-          ToastHelper.interviewFormError(context);
+          ToastHelper.interviewFormError();
         },
       ),
     );

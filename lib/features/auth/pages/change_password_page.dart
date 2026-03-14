@@ -115,12 +115,12 @@ class _ChangePasswordButton extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          ToastHelper.sendPasswordResetEmail(emailController.text, context);
+          ToastHelper.sendPasswordResetEmail(emailController.text);
           context.pushReplacement(AppRouterNames.signIn);
         } else if (state is AuthNetworkFailure) {
-          ToastHelper.networkError(context);
+          ToastHelper.networkError();
         } else if (state is AuthFailure) {
-          ToastHelper.unknownError(context);
+          ToastHelper.unknownError();
         }
       },
       child: CustomAuthButton(

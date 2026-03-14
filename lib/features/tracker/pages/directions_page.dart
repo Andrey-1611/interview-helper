@@ -44,11 +44,11 @@ class DirectionsPage extends StatelessWidget {
             context.go(AppRouterNames.initial);
           } else if (state is TrackerFailure) {
             context.pop();
-            ToastHelper.networkError(context);
+            ToastHelper.networkError();
           } else if (state is TrackerFailure) {
             context.pop();
             context.pushReplacement(AppRouterNames.signIn);
-            ToastHelper.unknownError(context);
+            ToastHelper.unknownError();
           }
         },
         child: _DirectionsPageView(),

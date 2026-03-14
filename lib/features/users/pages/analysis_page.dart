@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interview_master/app/router/app_router_names.dart';
 import 'package:interview_master/app/widgets/custom_filter_button.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import 'package:interview_master/core/utils/formatters/filter_text_formatter.dart';
-import 'package:interview_master/core/utils/formatters/time_formatter.dart';
 import 'package:interview_master/data/enums/difficulty.dart';
 import 'package:interview_master/features/users/blocs/filter_analysis_cubit/filter_analysis_cubit.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -313,7 +313,7 @@ class _CompareTimeCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  TimeFormatter.time(currentUserDuration, context),
+                  currentUserDuration.time,
                   style: style(
                     theme,
                     currentUserDuration,
@@ -322,7 +322,7 @@ class _CompareTimeCard extends StatelessWidget {
                 ),
                 const Text('vs'),
                 Text(
-                  TimeFormatter.time(selectedUserDuration, context),
+                  selectedUserDuration.time,
                   style: style(
                     theme,
                     selectedUserDuration,

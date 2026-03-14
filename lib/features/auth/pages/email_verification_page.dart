@@ -86,10 +86,10 @@ class _EmailVerificationForm extends StatelessWidget {
           context.read<DataCubit>().updateKeyValue();
           context.pushReplacement(AppRouterNames.directions);
         } else if (state is AuthNetworkFailure) {
-          ToastHelper.networkError(context);
+          ToastHelper.networkError();
         } else if (state is AuthFailure) {
           context.pushReplacement(AppRouterNames.signUp);
-          ToastHelper.unknownError(context);
+          ToastHelper.unknownError();
         }
       },
       child: Text(

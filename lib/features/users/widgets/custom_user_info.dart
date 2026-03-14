@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:interview_master/core/utils/formatters/time_formatter.dart';
+import 'package:interview_master/app/widgets/custom_info_bloc.dart';
+import 'package:interview_master/app/widgets/custom_info_row.dart';
+import 'package:interview_master/core/utils/extentions.dart';
 import 'package:interview_master/data/models/user_data.dart';
 import '../../../generated/l10n.dart';
 
@@ -12,71 +14,35 @@ class CustomUserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const .symmetric(horizontal: 16.0, vertical: 8.0),
       child: ListView(
         children: [
-          _InfoCard(
-            iconData: Icons.assignment_turned_in,
-            title:
-                '${s.directions}: ${user.directions.map((d) => d.name).toList().join(', ')}',
+          InfoBloc(
+            title: s.results_data,
+            children: [
+              InfoRow(
+                title: s.directions,
+                value: user.directions.map((d) => d.name).toList().join(', '),
+              ),
+              InfoRow(
+                title: s.interview,
+                value: user.totalInterviews.toString(),
+              ),
+              InfoRow(title: s.total_score, value: user.totalScore.toString()),
+              InfoRow(title: s.average_score, value: user.averageScore.percent),
+              InfoRow(title: s.best_score, value: user.bestScore.percent),
+            ],
           ),
-          _InfoCard(
-            iconData: Icons.assignment_turned_in,
-            title: '${s.interviews}:  ${user.totalInterviews}',
-          ),
-          _InfoCard(
-            iconData: Icons.score,
-            title: '${s.total_score}:  ${user.totalScore} ',
-          ),
-          _InfoCard(
-            iconData: Icons.analytics,
-            title: '${s.average_score}:  ${user.averageScore} % ',
-          ),
-          _InfoCard(
-            iconData: Icons.emoji_events,
-            title: '${s.best_score}:  ${user.bestScore} %',
-          ),
-          _InfoCard(
-            iconData: Icons.timer,
-            title:
-                '${s.total_time}:  ${TimeFormatter.time(user.totalDuration, context)}',
-          ),
-          _InfoCard(
-            iconData: Icons.av_timer,
-            title:
-                '${s.average_time}:  ${TimeFormatter.time(user.averageDuration, context)} ',
-          ),
-          _InfoCard(
-            iconData: Icons.arrow_upward,
-            title:
-                '${s.max_time}:  ${TimeFormatter.time(user.maxDuration, context)}',
-          ),
-          _InfoCard(
-            iconData: Icons.arrow_downward,
-            title:
-                '${s.min_time}:  ${TimeFormatter.time(user.minDuration, context)}',
+          InfoBloc(
+            title: s.time_data,
+            children: [
+              InfoRow(title: s.total_time, value: user.totalDuration.time),
+              InfoRow(title: s.average_time, value: user.averageDuration.time),
+              InfoRow(title: s.max_time, value: user.maxDuration.time),
+              InfoRow(title: s.min_time, value: user.minDuration.time),
+            ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  final IconData iconData;
-  final String title;
-
-  const _InfoCard({required this.iconData, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Card(
-        child: ListTile(
-          leading: Icon(iconData),
-          title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-        ),
       ),
     );
   }

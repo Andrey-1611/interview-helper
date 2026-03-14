@@ -62,7 +62,7 @@ class _ResultsInfo extends StatelessWidget {
         } else if (state is InterviewFailure) {
           context.pop();
           context.pushReplacement(AppRouterNames.initial);
-          ToastHelper.unknownError(context);
+          ToastHelper.unknownError();
         }
       },
       builder: (context, state) {
@@ -97,8 +97,10 @@ class _ResultsPageView extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () =>
-                GetIt.I<ShareService>().shareInterviewResults(interview, context),
+            onPressed: () => GetIt.I<ShareService>().shareInterviewResults(
+              interview,
+              context,
+            ),
             icon: Icon(Icons.share),
           ),
           IconButton(

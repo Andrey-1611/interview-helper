@@ -133,5 +133,7 @@
   "general": "Общий",
   "ready_for_the_interview": "Готов к собеседованию?",
   "question_waiting": "Новый вопрос уже ждёт!",
-  "no_users_yet": "Пока нет пользователей"
+  "no_users_yet": "Пока нет пользователей",
+  "results_data": "Данные о результатах",
+  "time_data": "Данные о времени"
 }

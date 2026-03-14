@@ -70,10 +70,10 @@ class _InterviewPageState extends State<InterviewPage> {
               context.read<SpeechCubit>().speak(state.questions.first);
             }
           } else if (state is InterviewNetworkFailure) {
-            ToastHelper.networkError(context);
+            ToastHelper.networkError();
             context.pop();
           } else if (state is InterviewFailure) {
-            ToastHelper.unknownError(context);
+            ToastHelper.unknownError();
             context.pop();
           }
         },
