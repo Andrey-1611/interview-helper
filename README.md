@@ -1,16 +1,111 @@
-# interview_master
+# SkiilAI
 
-A new Flutter project.
+**Обучающее приложение для подготовки к IT-собеседованиям, разработанное на Flutter.**  
+Приложение помогает разработчикам системно готовиться к техническим интервью, изучать популярные вопросы и проверять свои знания.
 
-## Getting Started
+SkiilAI содержит большую базу вопросов по различным технологиям и позволяет отслеживать прогресс обучения. Пользователи могут тренироваться, анализировать результаты и сравнивать свой уровень подготовки с другими разработчиками.
 
-This project is a starting point for a Flutter application.
+Подходит как начинающим разработчикам, готовящимся к первому интервью, так и более опытным специалистам, которые хотят освежить знания и подготовиться к следующему карьерному шагу.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🚀 Функционал
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+✨ Основные возможности:
+
+- 📚 База из **4000+ вопросов** по более чем **10 IT-технологиям**
+- 💡 Подробные ответы и объяснения к каждому вопросу
+- 📊 Отслеживание прогресса обучения
+- 🏆 Система рейтинга и сравнение результатов с другими пользователями
+- 🎯 Системная подготовка к техническим интервью
+- 🔎 Удобная навигация и быстрый поиск вопросов
+- 🎤 Голосовые функции (озвучивание и распознавание)
+
+---
+
+## 📱 Платформы
+
+- Android  
+- iOS
+
+---
+
+## 🛠️ Технологии
+
+- **Flutter / Dart**
+- **Bloc** — управление состоянием
+- **GoRouter** — навигация
+- **Dio** — работа с API
+- **Firebase**
+  - Authentication
+  - Cloud Firestore
+- **Hive** — локальное хранилище
+- **Speech To Text** — распознавание речи
+- **Flutter TTS** — озвучивание текста
+- **Talker** — логирование
+- **SharedPreferences** — локальные настройки
+
+---
+
+## 📲 Скачать приложение
+
+Приложение доступно в RuStore:
+
+https://www.rustore.ru/catalog/app/com.example.interview_master
+
+---
+
+## 📂 Установка и запуск
+
+1️⃣ Клонирование репозитория
+
+```bash
+git clone https://github.com/username/interview-helper.git
+cd interview-helper
+```
+
+2️⃣ Установка зависимостей
+
+```bash
+flutter pub get
+```
+
+3️⃣ Запуск проекта
+
+```bash
+flutter run
+```
+
+## 📌 Структура проекта
+
+```bash
+lib/
+├── main.dart
+├── app/
+│   ├── app_runner/
+│   ├── router/
+│   ├── widgets/
+│   └── app.dart
+├── core/
+│   ├── constants/
+│   ├── theme/
+│   └── utils/
+├── data/
+│   ├── data_sources/
+│   ├── enums/
+│   ├── models/
+│   └── repositories/
+├── features/
+│   ├── auth/
+│   ├── home/
+│   ├── interview/
+│   ├── profile/
+│   ├── tracker/
+│   └── users/
+├── generated/
+└── l10n/
+```
+
+---
+
+<img src="assets/screenshots/1.png" width="230"/> <img src="assets/screenshots/2.png" width="232"/> <img src="assets/screenshots/3.png" width="236"/> <img src="assets/screenshots/4.png" width="230"/>
